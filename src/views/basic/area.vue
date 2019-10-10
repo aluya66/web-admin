@@ -305,8 +305,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .select-bar,
-.table,
-.title{
+.table{
   margin-bottom: 10px
 }
 .selectWidth{

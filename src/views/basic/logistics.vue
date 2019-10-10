@@ -195,7 +195,6 @@ export default {
 </script>
 
 <style scoped>
-.title,
 .table,
 .select-bar,
 .update-item,.control-bar {
