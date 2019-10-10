@@ -1,0 +1,107 @@
+<template>
+	<el-dialog
+		:title="title"
+		:width="width"
+		:visible="isShow"
+		:before-close="handleClose"
+		:close-on-click-modal="closeModal"
+		:show-close="closeBtn"
+	>
+		<div class="dialog-content">
+			<slot />
+		</div>
+		<div v-if="!noBtn" slot="footer" class="dialog-footer">
+			<el-button
+				v-for="(btn, index) in btns"
+				:key="index"
+				:type="btn.type"
+				:disabled="btn.disabled"
+				:size="btn.size"
+				:loading="btn.loading"
+				@click="btnHandle(btn, index)"
+			>
+				{{ btn.label }}
+			</el-button>
+		</div>
+	</el-dialog>
+</template>
+
+<script>
+export default {
+  name: 'c-dialog',
+  props: {
+    title: {
+      type: String,
+      default: '提示'
+    },
+    isShow: {
+      type: Boolean,
+      default: false
+    },
+    width: {
+      type: String,
+      default: '60%'
+    },
+    noBtn: {
+      type: Boolean,
+      default: false
+    },
+    closeBtn: {
+      type: Boolean,
+      default: false
+    },
+    btns: {
+      type: Array,
+      default () {
+        return [
+          { label: '取 消', name: 'cancel' },
+          { label: '确 认', name: 'submit', type: 'primary' }
+        ]
+      }
+    },
+    closeModal: {
+      // 点击空白区域关闭对话框
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      dialogFormVisible: false
+    }
+  },
+  watch: {
+    isShow (val) {
+      this.dialogFormVisible = val
+    }
+  },
+  methods: {
+    btnHandle (btn) {
+      if (btn.name === 'cancel') {
+        this.onCancel()
+      }
+      if (btn.name === 'submit') {
+        this.onSubmit()
+      }
+      btn.handle && btn.handle()
+    },
+    onCancel () {
+      this.$emit('on-cancel')
+      this.handleClose()
+    },
+    onSubmit () {
+      this.$emit('on-submit')
+    },
+    handleClose () {
+      this.$emit('before-close')
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.dialog-content {
+	max-height: 500px;
+	overflow: auto;
+}
+</style>

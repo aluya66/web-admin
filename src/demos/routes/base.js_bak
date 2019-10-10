@@ -1,0 +1,51 @@
+import Layout from '@/views/layout'
+
+export default {
+  path: '/base',
+  name: 'baseModel',
+  component: Layout,
+  redirect: '/base/area',
+  meta: {
+    title: 'baseModel',
+    icon: 'nested'
+  },
+  children: [
+    {
+      path: '/base/menu',
+      name: 'menu',
+      component: () => import('@/demos/base/menu/info'),
+      meta: {
+        title: 'menu',
+        icon: 'table'
+      }
+    },
+    {
+      path: '/base/role',
+      name: 'role',
+      component: () => import('@/demos/base/role/list'),
+      meta: {
+        title: 'role',
+        icon: 'table'
+      }
+    },
+    {
+      path: '/base/user',
+      name: 'user',
+      component: () => import('@/demos/base/user/list'),
+      meta: {
+        title: 'user',
+        icon: 'table'
+      }
+    },
+    {
+      path: 'roleinfo/:id?',
+      name: 'roleInfo',
+      hidden: true,
+      component: () => import('@/demos/base/role/info'),
+      meta: {
+        title: 'role',
+        icon: 'Form'
+      }
+    }
+  ]
+}
