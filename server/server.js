@@ -6,7 +6,7 @@ const address = require("address");
 // 前端服务端口
 const serverPort = process.argv.slice(2)[0] || 3000;
 // 页面访问目录
-const outPath = "mobile";
+const outPath = "console";
 
 const app = new Koa();
 

@@ -59,16 +59,13 @@ instance.interceptors.response.use((response) => {
 const setHeaderMethod = mtd => {
   let method = 'post'
   let contentType = 'application/json'
+  // contentType = 'application/x-www-form-urlencoded'
   switch (mtd) {
+    case 'post':
     case 'get':
-      method = mtd
-      break
+    case 'detele':
     case 'put':
       method = mtd
-      contentType = 'application/x-www-form-urlencoded'
-      break
-    case 'postJson':
-      method = 'post'
       break
   }
   return {
@@ -121,13 +118,14 @@ const setParams = (url, params = {}, opt = {}) => {
     method,
     contentType
   } = setHeaderMethod(opt.method)
-  // const { token } = utils.getStore('SET_USERINFO')
+  const {
+    token
+  } = utils.getStore('SET_USERINFO')
   let curParams = {
     url,
     headers: {
       'Content-Type': contentType,
-      'token': 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzA3OTMzOTEsImxvZ2luTmFtZSI6Imh1YW5nIiwiaXNzIjoieW9zYXItdXBtcyIsImV4cCI6MTU3MDgyOTM5MSwidXNlcklkIjo5NCwiaWF0IjoxNTcwNzkzMzkxfQ._b0W-ED9gKIIlcbW8SsyI_ravE3t0p4HGKCP2_-zsY4'
-      // 'token': opt.token || token
+      'token': opt.token || token
     },
     method
   }
@@ -160,7 +158,7 @@ export default {
    * }]
    * @returns prmoise对象
    */
-  fetch (url, params = {}, opt = {}) {
+  fetch(url, params = {}, opt = {}) {
     const options = setParams(url, params, opt)
     return new Promise((resolve, reject) => {
       // 判断是否需要缓存

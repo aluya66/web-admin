@@ -25,7 +25,7 @@ export default {
 .app-content {
 	header {
 		background-color: @bg-main;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     padding: 8px 10px;
 		.title {
 			font-size: @f18;
@@ -33,12 +33,13 @@ export default {
 		}
 	}
 	main {
-		overflow: hidden;
+    overflow: hidden;
+    margin: 0 5px;
 		.box {
 			overflow: hidden;
 			padding: 15px 20px;
 			background-color: @bg-main;
-			min-height: calc(100vh - 150px);
+			min-height: calc(100vh - 100px);
 		}
 	}
 }

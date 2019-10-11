@@ -5,7 +5,7 @@ export default {
      * @param {*} name 需要处理的i18n 的key值
      * @param {*} model key对应的对象
      */
-    generateTitle (name, model) {
+    setTitleLang (name, model) {
       const hasKey = model ? this.$te(`${model}.${name}`) : this.$te(name)
 
       if (hasKey) {
