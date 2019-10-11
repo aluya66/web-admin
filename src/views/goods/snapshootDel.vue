@@ -136,12 +136,9 @@
 </template>
 
 <script>
-// const columns=[
-
-// ]
 import E from 'wangeditor'
 export default {
-  name: 'Editor',
+  name: 'snapshootDel',
   data() {
     return {
       editor: null,

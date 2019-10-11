@@ -73,7 +73,7 @@
       width="800"
       footer-hide
       >
-      <Form :model="formLeft" label-position="right" :label-width="70" >
+      <Form :model="formLeft" label-position="right" :label-width="70" class="fromStyle">
         <FormItem label="app版本">
           <Input v-model="formLeft.versionName" placeholder='请填写app版本'/>
         </FormItem>
@@ -101,9 +101,9 @@
             :maxlength="200"
             />
         </FormItem>
-        <FormItem>
-          <Button type="primary" class="addBtn" @click="addReleaseBtn">确认</Button>
-          <Button class="cancelBtn" @click="closeBtn">取消</Button>
+        <FormItem class="addBtn"> 
+          <Button type="primary" @click="addReleaseBtn">确认</Button>
+          <Button @click="closeBtn">取消</Button>
         </FormItem>
       </Form>
     </Modal>
@@ -290,9 +290,12 @@ export default {
   margin:0;margin-bottom:6px;display:inline-block;text-decoration:none
 }
 .addBtn{
-  margin-left: 40px
+  text-align: right;
 }
 .cancelBtn{
   margin-left: 8px
+}
+.fromStyle{
+  margin-right: 10px
 }
 </style>

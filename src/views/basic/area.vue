@@ -45,7 +45,7 @@
       <Modal
         v-model="showModal" 
         :title="modelTitle"
-        width="500"
+        width="400"
         footer-hide
         >
         <Form :model="curCategoryDetail" label-position="right" :label-width="75" class="formStyle">
@@ -55,9 +55,9 @@
           <FormItem label="code:" v-if="typeStatus!==2">
             <Input  placeholder='请填写code' v-model="curCategoryDetail.code"/>
           </FormItem>
-          <FormItem class="addBtn">
-            <Button type="primary"  @click="addModal">确认</Button>
-            <Button @click="closBtn">取消</Button>
+          <FormItem>
+            <Button type="primary" class="addBtn" @click="addModal">确认</Button>
+            <Button class="cancelBtn" @click="closBtn">取消</Button>
           </FormItem>
         </Form>
       </Modal>
@@ -404,17 +404,16 @@ export default {
   width: 200px;
 }
 .addBtn{
-  /* margin-left: 80px; */
-  text-align: right;
+  margin-left: 50px
 }
-.btnStyle{
-  /* margin-bottom:10px  */
+.cancelBtn{
+  margin-left: 8px
 }
 .iconStyle{
   size: 20
 }
 .formStyle{
-  margin-right: 10px;
+  margin-right: 16px;
 }
 .backBtn{
   text-align: right;

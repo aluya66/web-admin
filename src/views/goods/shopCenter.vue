@@ -157,7 +157,7 @@ export default {
       })
     },
     addModal(row, index) {
-      this.$router.push({ path: '/basic/shopCenterDel', query: { modelType: 2, id: row.id } })
+      this.$router.push({ path: '/goods/shopCenterDel', query: { modelType: 2, id: row.id } })
     },
     closBtn() {
       this.showModal = false

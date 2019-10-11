@@ -126,8 +126,7 @@ const setParams = (url, params = {}, opt = {}) => {
     url,
     headers: {
       'Content-Type': contentType,
-      'token': 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzA3NTcyNzAsImxvZ2luTmFtZSI6Imh1YW5nIiwiaXNzIjoieW9zYXItdXBtcyIsImV4cCI6MTU3MDc5MzI3MCwidXNlcklkIjo5NCwiaWF0IjoxNTcwNzU3MjcwfQ.5PQxjCesKgzvgKrV5jCVDkHIRmLsgS3RyFlfZiftCEM'
-      // 'token': opt.token || token
+      'token': opt.token || token
     },
     method
   }

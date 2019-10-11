@@ -162,7 +162,7 @@ const columns = [
   }
 ]
 export default {
-  name: 'Editor',
+  name: 'shopCenterDel',
   data() {
     return {
       showModal: false,
