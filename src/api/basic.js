@@ -1,5 +1,4 @@
 import Http from '../utils/request'
-import { get } from 'https'
 
 const context = process.env.VUE_APP_CONSOLE_BASIC
 
@@ -22,14 +21,18 @@ export const businessDetail = params =>
  * @param {*} params
  */
 export const businessList = params =>
-  Http.fetch(`${context}/v1/app/list`, params, { method: 'get' })
+  Http.fetch(`${context}/v1/app/list`, params, {
+    method: 'get'
+  })
 
 /**
  * 修改业务线
  * @param {*} params
  */
 export const updateBusiness = params =>
-  Http.fetch(`${context}/v1/app/update`, params, { method: 'put' })
+  Http.fetch(`${context}/v1/app/update`, params, {
+    method: 'put'
+  })
 
 /**
  * 查询区域详情信息
@@ -64,7 +67,9 @@ export const getParentcode = params =>
  * @param {*} params
  */
 export const queryCategory = params =>
-  Http.fetch(`${context}/v1/category/querypage`, params, { method: 'get' })
+  Http.fetch(`${context}/v1/category/querypage`, params, {
+    method: 'get'
+  })
 
 // 添加版本信息
 export const addRelease = params =>
@@ -79,7 +84,9 @@ export const queryCategoryDetail = params =>
 
 // 发布版本
 export const releaseRelease = params =>
-  Http.fetch(`${context}/v1/version`, params, { method: 'put' })
+  Http.fetch(`${context}/v1/version`, params, {
+    method: 'put'
+  })
 
 /**
  * 添加商品类目
@@ -90,14 +97,18 @@ export const addCategory = params =>
 
 // 修改商品类目
 export const updateCategory = params =>
-  Http.fetch(`${context}/v1/category`, params, { method: 'put' })
+  Http.fetch(`${context}/v1/category`, params, {
+    method: 'put'
+  })
 
 /**
  * 删除商品类目
  * @param {*} params
  */
 export const deleteCategory = params =>
-  Http.fetch(`${context}/v1/category`, params, { method: 'detele' })
+  Http.fetch(`${context}/v1/category`, params, {
+    method: 'detele'
+  })
 
 /**
  * 查询父子结构商品类目
@@ -113,15 +124,21 @@ export const queryParentCategory = params =>
  * @param {*} params
  */
 export const queryAllVersion = params =>
-  Http.fetch(`${context}/v1/version/list`, params, { method: 'get' })
+  Http.fetch(`${context}/v1/version/list`, params, {
+    method: 'get'
+  })
 
 // 区域列表
 export const queryAllRegion = params =>
-  Http.fetch(`${context}/v1/region/querypage`, params, { method: 'get' })
+  Http.fetch(`${context}/v1/region/querypage`, params, {
+    method: 'get'
+  })
 
 // 区域下拉框列表
 export const queryAllParentcodes = params =>
-  Http.fetch(`${context}/v1/region/list/parentcodes`, params, { method: 'get' })
+  Http.fetch(`${context}/v1/region/list/parentcodes`, params, {
+    method: 'get'
+  })
 
 // 区域添加
 export const addRegionInsert = params =>
@@ -129,11 +146,15 @@ export const addRegionInsert = params =>
 
 // 区域修改
 export const updataRegionInsert = params =>
-  Http.fetch(`${context}/v1/region/update`, params, { method: 'put' })
+  Http.fetch(`${context}/v1/region/update`, params, {
+    method: 'put'
+  })
 
 // 品牌列表
 export const brandList = params =>
-  Http.fetch(`${context}/v1/brand/querypage`, params, { method: 'get' })
+  Http.fetch(`${context}/v1/brand/querypage`, params, {
+    method: 'get'
+  })
 
 // 新增品牌
 export const addBrandList = params =>
@@ -141,15 +162,21 @@ export const addBrandList = params =>
 
 // 修改品牌
 export const updateBrandList = params =>
-  Http.fetch(`${context}/v1/brand`, params, { method: 'put' })
+  Http.fetch(`${context}/v1/brand`, params, {
+    method: 'put'
+  })
 
 // 删除品牌
 export const deleteBrandList = params =>
-  Http.fetch(`${context}/v1/brand`, params, { method: 'detele' })
+  Http.fetch(`${context}/v1/brand`, params, {
+    method: 'detele'
+  })
 
 // 商品类型列表
 export const getGoodsattrval = params =>
-  Http.fetch(`${context}/v1/attr/querypage`, params, { method: 'get' })
+  Http.fetch(`${context}/v1/attr/querypage`, params, {
+    method: 'get'
+  })
 
 // 商品类型新增
 export const addGoodsattrval = params =>
@@ -157,15 +184,21 @@ export const addGoodsattrval = params =>
 
 // 商品类型修改
 export const updateGoodsattrval = params =>
-  Http.fetch(`${context}/v1/attr/update`, params, { method: 'put' })
+  Http.fetch(`${context}/v1/attr/update`, params, {
+    method: 'put'
+  })
 
 // 商品类型删除
 export const deleteGoodsattrval = params =>
-  Http.fetch(`${context}/v1/attr`, params, { method: 'put' })
+  Http.fetch(`${context}/v1/attr`, params, {
+    method: 'put'
+  })
 
 // 标签列表
 export const getQuerypage = params =>
-  Http.fetch(`${context}/v1/label/querypage`, params, { method: 'get' })
+  Http.fetch(`${context}/v1/label/querypage`, params, {
+    method: 'get'
+  })
 
 // 标签新增
 export const addQuerypage = params =>
@@ -177,7 +210,9 @@ export const updateQuerypage = params =>
 
 // 标签删除
 export const deleteQuerypage = params =>
-  Http.fetch(`${context}/v1/label/physicaldelete`, params, { method: 'delete' })
+  Http.fetch(`${context}/v1/label/physicaldelete`, params, {
+    method: 'delete'
+  })
 
 // 标签分类/风格
 export const addSoreQuerypage = params =>
@@ -185,7 +220,9 @@ export const addSoreQuerypage = params =>
 
 // 物流列表
 export const getLogistics = params =>
-  Http.fetch(`${context}//v1/logistics/list`, params, { method: 'get' })
+  Http.fetch(`${context}//v1/logistics/list`, params, {
+    method: 'get'
+  })
 
 // 新增物流
 export const addLogistics = params =>
@@ -193,7 +230,9 @@ export const addLogistics = params =>
 
 // 更新物流
 export const updateLogistics = params =>
-  Http.fetch(`${context}/v1/logistics/update`, params, { method: 'put' })
+  Http.fetch(`${context}/v1/logistics/update`, params, {
+    method: 'put'
+  })
 
 // 物流详情
 export const getLogisticsDel = params =>
@@ -201,4 +240,6 @@ export const getLogisticsDel = params =>
 
 // 商品中心风格、sku
 export const getStyle = params =>
-  Http.fetch(`${context}/v1/attr/querypage`, params, { method: 'get' })
+  Http.fetch(`${context}/v1/attr/querypage`, params, {
+    method: 'get'
+  })

@@ -269,7 +269,7 @@ export default {
     },
     getShopList() {
       let data = {
-        id: this.$route.query.id
+        id: this.$route.params.id
       }
       this.$api.goods.getGoodsBnsDel(data).then(res => {
         this.goodsStaticFiles = []

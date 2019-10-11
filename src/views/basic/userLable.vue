@@ -91,8 +91,8 @@ const columns = [
     key: 'createdby'
   },
   {
-  title: '创建时间',
-  key: 'created'
+    title: '创建时间',
+    key: 'created'
   },
   {
     title: '更新时间',

@@ -196,9 +196,9 @@ export default {
       }
       this.loading = !this.loading
       this.$api.basic.queryCategory(params).then(res => {
-          that.loading = !that.loading
-          that.categoryList = res.data
-          that.listTotal = res.totalCount
+        that.loading = !that.loading
+        that.categoryList = res.data
+        that.listTotal = res.totalCount
       })
     },
     pageChange(page) {
