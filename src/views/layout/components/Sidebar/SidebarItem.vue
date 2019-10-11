@@ -15,7 +15,7 @@
 					<item
 						:icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"
 						:title="
-							onlyOneChild.meta.name || generateTitle(onlyOneChild.meta.title)
+							onlyOneChild.meta.name || setTitleLang(onlyOneChild.meta.title, 'route')
 						"
 					/>
 				</el-menu-item>
@@ -26,7 +26,7 @@
 				<item
 					v-if="item.meta"
 					:icon="item.meta.icon"
-					:title="item.meta.name || generateTitle(item.meta.title)"
+					:title="item.meta.name || setTitleLang(item.meta.title, 'route')"
 				/>
 			</template>
 
@@ -46,7 +46,7 @@
 								<item
 									v-if="child.meta"
 									:icon="child.meta.icon"
-									:title="child.meta.name || generateTitle(child.meta.title)"
+									:title="child.meta.name || setTitleLang(child.meta.title)"
 								/>
 							</el-menu-item>
 						</app-link>

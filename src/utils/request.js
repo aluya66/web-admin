@@ -59,16 +59,13 @@ instance.interceptors.response.use((response) => {
 const setHeaderMethod = mtd => {
   let method = 'post'
   let contentType = 'application/json'
+  // contentType = 'application/x-www-form-urlencoded'
   switch (mtd) {
+    case 'post':
     case 'get':
-      method = mtd
-      break
+    case 'detele':
     case 'put':
       method = mtd
-      contentType = 'application/x-www-form-urlencoded'
-      break
-    case 'postJson':
-      method = 'post'
       break
   }
   return {
@@ -121,7 +118,9 @@ const setParams = (url, params = {}, opt = {}) => {
     method,
     contentType
   } = setHeaderMethod(opt.method)
-  const { token } = utils.getStore('SET_USERINFO')
+  const {
+    token
+  } = utils.getStore('SET_USERINFO')
   let curParams = {
     url,
     headers: {
@@ -159,7 +158,7 @@ export default {
    * }]
    * @returns prmoise对象
    */
-  fetch (url, params = {}, opt = {}) {
+  fetch(url, params = {}, opt = {}) {
     const options = setParams(url, params, opt)
     return new Promise((resolve, reject) => {
       // 判断是否需要缓存

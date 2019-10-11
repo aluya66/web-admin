@@ -9,25 +9,15 @@
 		<breadcrumb class="breadcrumb-container" />
 
 		<div class="right-menu">
-			<template v-if="device !== 'mobile'">
-				<!-- <search id="header-search" class="right-menu-item" /> -->
+			<!-- <template>
+				<search id="header-search" class="right-menu-item" />
 
-				<!-- <error-log class="errLog-container right-menu-item hover-effect" /> -->
+				<screenfull class="right-menu-item hover-effect" />
 
-				<!-- <screenfull class="right-menu-item hover-effect" /> -->
+        <lang-select class="right-menu-item hover-effect" />
+			</template> -->
 
-				<!-- <el-tooltip
-          :content="$t('navbar.size')"
-          effect="dark"
-          placement="bottom"
-        >
-          <size-select class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-        <lang-select class="right-menu-item hover-effect" /> -->
-			</template>
-
-			<el-dropdown class="avatar-container" trigger="click">
+			<!-- <el-dropdown class="avatar-container" trigger="click">
 				<div class="avatar-wrapper">
 					<span class="user-name">{{ userInfo.userName }}</span>
 					<svg-icon icon-class="user-pic" class="user-avatar" />
@@ -36,7 +26,7 @@
 				<el-dropdown-menu slot="dropdown" class="user-dropdown">
 					<router-link class="inlineBlock" to="/">
 						<el-dropdown-item>
-							{{ $t("navbar.dashboard") }}
+							{{ $t("navbar.home") }}
 						</el-dropdown-item>
 					</router-link>
 					<el-dropdown-item divided>
@@ -45,7 +35,7 @@
 						>
 					</el-dropdown-item>
 				</el-dropdown-menu>
-			</el-dropdown>
+			</el-dropdown> -->
 		</div>
 	</div>
 </template>
@@ -54,20 +44,14 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from 'components/breadcrumb'
 import Hamburger from 'components/hamburger'
-// import ErrorLog from "@/components/ErrorLog";
 // import Screenfull from "@/components/Screenfull";
-// import SizeSelect from "@/components/SizeSelect";
-// import LangSelect from "@/components/LangSelect";
 // import Search from "@/components/HeaderSearch";
 
 export default {
   components: {
     Breadcrumb,
     Hamburger
-    // ErrorLog,
     // Screenfull,
-    // SizeSelect,
-    // LangSelect,
     // Search
   },
   computed: {
@@ -77,10 +61,10 @@ export default {
     toggleSideBar () {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout () {
-      await this.$store.dispatch('user/logout')
-      this.$router.push('/login')
-    }
+    // async logout () {
+    //   await this.$store.dispatch('user/logout')
+    //   this.$router.push('/login')
+    // }
   }
 }
 </script>

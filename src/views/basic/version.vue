@@ -101,7 +101,7 @@
             :maxlength="200"
             />
         </FormItem>
-        <FormItem class="addBtn"> 
+        <FormItem class="addBtn">
           <Button type="primary" @click="addReleaseBtn">确认</Button>
           <Button @click="closeBtn">取消</Button>
         </FormItem>

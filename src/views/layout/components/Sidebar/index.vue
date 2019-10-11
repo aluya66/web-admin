@@ -2,12 +2,12 @@
 	<div :class="{ 'has-logo': showLogo }">
 		<logo v-if="showLogo" :collapse="isCollapse" />
 		<el-scrollbar wrap-class="scrollbar-wrapper">
+      <!-- background-color="#304156"
+				text-color="#bfcbd9"
+				active-text-color="#409EFF" -->
 			<el-menu
 				:default-active="$route.path"
 				:collapse="isCollapse"
-				background-color="#304156"
-				text-color="#bfcbd9"
-				active-text-color="#409EFF"
 				:collapse-transition="false"
 				mode="vertical"
 			>
