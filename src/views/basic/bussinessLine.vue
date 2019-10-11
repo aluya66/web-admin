@@ -248,10 +248,10 @@ export default {
 }
 .selectWidth{
   width: 200px;
-  margin-bottom:10px 
+  margin-bottom:10px
 }
 .btnStyle{
-  margin-bottom:10px 
+  margin-bottom:10px
 }
 .addBtn{
   margin-left: 40px

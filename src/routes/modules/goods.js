@@ -28,9 +28,10 @@ export default {
     }
   },
   {
-    path: '/goods/shopCenterDel',
+    path: '/goods/shopCenterDel/:id',
     name: 'shopCenterDel',
     component: () => import('@/views/goods/shopCenterDel'),
+    hidden: true,
     meta: {
       title: 'shopCenterDel',
       icon: 'table'
@@ -48,6 +49,7 @@ export default {
   {
     path: '/goods/snapshootDel',
     name: 'snapshootDel',
+    hidden: true,
     component: () => import('@/views/goods/snapshootDel'),
     meta: {
       title: 'snapshootDel',

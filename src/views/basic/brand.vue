@@ -152,12 +152,12 @@ const columns = [
     key: 'sort'
   },
   {
-  title: '创建人',
-  key: 'createdby'
+    title: '创建人',
+    key: 'createdby'
   },
   {
-  title: '更新人',
-  key: 'updatedby'
+    title: '更新人',
+    key: 'updatedby'
   },
   {
     title: '时间',
@@ -400,13 +400,13 @@ export default {
 }
 .selectWidth{
   width: 200px;
-  margin-bottom:10px 
+  margin-bottom:10px
 }
 .deleteBtn{
   margin-right: 5px
 }
 .btnStyle{
-  margin-bottom:10px 
+  margin-bottom:10px
 }
 .addBtn{
   margin-left: 250px

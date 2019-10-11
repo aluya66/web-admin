@@ -16,7 +16,7 @@
     </div>
     <Table :loading="loading" border :columns="columns" :data="list" class="table">
       <template slot-scope="{ row, index }" slot="action">
-        <Button size="small" type="success"class="deteleBtn" @click="addModal(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
+        <Button size="small" type="success" class="deteleBtn" @click="addModal(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
       </template>
     </Table>
     <Page :total="listTotal" show-total @on-change="pageChange" />

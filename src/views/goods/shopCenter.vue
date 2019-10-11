@@ -38,8 +38,8 @@
       <template slot-scope="{ row }" slot="coverImg">
           <img class="md-img" :src="row.coverImg" alt=""/>
       </template>
-      <template slot-scope="{ row, index }" slot="action">
-        <Button size="small" type="success" @click="addModal(row,index)" ><Icon :size='14' type="md-create" />编辑</Button>
+      <template slot-scope="{ row }" slot="action">
+        <Button size="small" type="success" @click="routerLink(`/goods/shopCenterDel/${row.id}`)" ><Icon :size='14' type="md-create" />编辑</Button>
       </template>
     </Table>
     <Page :total="listTotal" show-total @on-change="pageChange" />

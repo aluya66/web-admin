@@ -1,7 +1,4 @@
 // import { login, logout } from 'api/auth'
-import {
-  OPERATOROBJ
-} from '../contants'
 
 import utils from 'utils'
 import {
@@ -10,8 +7,7 @@ import {
 
 const state = {
   userInfo: utils.getStore('SET_USERINFO'),
-  roles: [],
-  operatorObj: OPERATOROBJ
+  roles: []
 }
 
 const mutations = {
