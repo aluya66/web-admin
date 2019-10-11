@@ -2,7 +2,9 @@
 <c-view>
 		<template v-slot:header>
 			<div class="title">
-				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+				<!-- {{ $route.meta.name || $t(`route.${$route.meta.title}`) }} -->
+        商品快照详情
+        <Button type="primary" @click="goBack">返回</Button>
 			</div>
 		</template>
   <Card>
@@ -16,8 +18,8 @@
         </FormItem>
         <FormItem label="商品封面图:" >
           <div class="itemImg">
-            <a href="https://via.placeholder.com/300.png/09f/fff" target="_blank" >
-              <img src="https://via.placeholder.com/300.png/09f/fff" alt="">
+            <a :href="coverImg" target="_blank" >
+              <img :src="coverImg" alt="">
             </a>
             <!-- <img :src="coverImg" alt=""> -->
           </div>
@@ -101,9 +103,7 @@
         <Table border :columns="columns" :data="reportList" class="table">
           <template slot-scope="{ row }" slot="imageUrl">
             <div class="tableImg">
-              <a :href="row.imageUrl" target="_blank" >
                 <img :src="row.imageUrl" alt="">
-              </a>
             </div>
           </template>
         </Table>
@@ -408,9 +408,9 @@ export default {
         id: this.$route.query.id
       }
       this.$api.goods.getGoodssnapshotDel(data).then(res => {
-        this.goodsName = res.data.goodsName
+        this.goodsName = res.goodsName
         // console.log(res.data.goodsSnapshot)
-        let data = JSON.parse(res.data.goodsSnapshot)
+        let data = JSON.parse(res.goodsSnapshot)
         this.goodsChannelValue = data.goodsChannelValue
         this.place = data.place
         this.intro = data.intro
@@ -461,7 +461,7 @@ export default {
       })
     },
     goBack() {
-      this.$router.go(-2)
+      this.$router.go(-1)
     }
   },
   props: ['catchData'],
@@ -505,6 +505,10 @@ export default {
 .select-bar,
 .table{
   margin-bottom: 10px;
+}
+.title{
+  display: flex;
+  justify-content: space-between
 }
 .message{
   border-bottom: 1px solid #eee;
@@ -556,11 +560,10 @@ export default {
 .itemImg{
   width: 200px;
   height: 200px;
-  border: 1px solid #000;
 }
 .itemImg img{
   display: inline-block;
-  width: 100%
+  height: 100%
 }
 .selectWidth{
   width: 200px;

@@ -97,9 +97,11 @@ export default {
   position: relative;
   bottom: 0;
   height: 40px;
+  line-height: 40px;
 	overflow: hidden;
   background: @white;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  text-align: center;
 }
 
 .hideSidebar .fixed-header {

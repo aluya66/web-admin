@@ -2,7 +2,9 @@
 <c-view>
 		<template v-slot:header>
 			<div class="title">
-				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+				<!-- {{ $route.meta.name || $t(`route.${$route.meta.title}`) }} -->
+        商品中心详情
+        <Button type="primary" @click="goBack">返回</Button>
 			</div>
 		</template>
   <Card>
@@ -79,9 +81,7 @@
         <Table border :columns="columns" :data="list" class="table">
           <template slot-scope="{ row }" slot="imageUrl">
             <div class="tableImg">
-              <a :href="row.imageUrl" target="_blank" >
-                <img :src="row.imageUrl" alt="">
-              </a>
+              <img :src="row.imageUrl" alt="">
             </div>
           </template>
           <template slot-scope="{ row, index }" slot="memberPrice">
@@ -118,9 +118,11 @@
             </div>
           </div>
         </FormItem>
+        <FormItem class="addBtn">
+          <Button type="primary" @click="addModalBtn">保存</Button>
+          <Button @click="cancelBtn">取消</Button>
+        </FormItem>
       </Form>
-    <Button type="primary" class="addBtn" @click="addModalBtn">保存</Button>
-    <Button class="cancelBtn" @click="cancelBtn">取消</Button>
   </Card>
 </c-view>
 </template>
@@ -271,37 +273,37 @@ export default {
       let data = {
         id: this.$route.params.id
       }
-      this.$api.goods.getGoodsBnsDel(data).then(res => {
+      this.$api.goods.getGoodsBnsDel(data).then(data => {
         this.goodsStaticFiles = []
-        this.dataList = res.data
-        this.list = res.data.skus
-        this.formDynamic.brandName = res.data.goodsName
-        this.formDynamic.id = res.data.id
-        this.formDynamic.marketable = res.data.marketable
+        this.dataList = data
+        this.list = data.skus
+        this.formDynamic.brandName = data.goodsName
+        this.formDynamic.id = data.id
+        this.formDynamic.marketable = data.marketable
 
-        this.formDynamic.categoryCode = res.data.categoryCode
-        this.formDynamic.categoryName = res.data.categoryName
-        this.formDynamic.coverImg = res.data.coverImg
+        this.formDynamic.categoryCode = data.categoryCode
+        this.formDynamic.categoryName = data.categoryName
+        this.formDynamic.coverImg = data.coverImg
 
-        this.formDynamic.goodsAttrs = res.data.goodsAttrs.map(({ attributeId }) => {
+        this.formDynamic.goodsAttrs = data.goodsAttrs.map(({ attributeId }) => {
           return attributeId
         })
-        this.formDynamic.goodsBn = res.data.goodsBn
-        this.formDynamic.goodsBrief = res.data.goodsBrief
-        this.formDynamic.goodsBusinessValue = res.data.goodsBusinessValue
-        this.formDynamic.goodsChannelValue = res.data.goodsChannelValue
-        this.formDynamic.goodsName = res.data.goodsName
-        this.formDynamic.place = res.data.place
-        this.formDynamic.unit = res.data.unit
-        this.formDynamic.weight = res.data.weight
-        this.formDynamic.weightUnit = res.data.weightUnit
+        this.formDynamic.goodsBn = data.goodsBn
+        this.formDynamic.goodsBrief = data.goodsBrief
+        this.formDynamic.goodsBusinessValue = data.goodsBusinessValue
+        this.formDynamic.goodsChannelValue = data.goodsChannelValue
+        this.formDynamic.goodsName = data.goodsName
+        this.formDynamic.place = data.place
+        this.formDynamic.unit = data.unit
+        this.formDynamic.weight = data.weight
+        this.formDynamic.weightUnit = data.weightUnit
         // 富文本
-        this.formDynamic.intro = res.data.intro
+        this.formDynamic.intro = data.intro
         let text = this.formDynamic.intro
         text.indexOf('http') > -1 || text.indexOf('https') > -1 ? this.showImg = true : this.showImg = false
         console.log('qwe', text, this.showImg)
 
-        let skusData = res.data.skus.map(({ goodsSkuExtends }) => {
+        let skusData = data.skus.map(({ goodsSkuExtends }) => {
           return {
             goodsSkuExtends: goodsSkuExtends.map(({ attributeId, attributeValue }) => ({
               attributeId,
@@ -324,7 +326,7 @@ export default {
           arr2.push(skusSize[i].attributeId)
         }
         this.formDynamic.goodsSkus.push(...arr1, ...arr2)
-        let imgData = res.data.goodsStaticFiles.map(({ imageUrl, isDefault }) => {
+        let imgData = data.goodsStaticFiles.map(({ imageUrl, isDefault }) => {
           return {
             imageUrl,
             isDefault
@@ -335,7 +337,7 @@ export default {
             this.goodsStaticFilesImgUrl.push(imgData[i])
           }
         }
-        let videoData = res.data.goodsStaticFiles.map(({ videoUrl }) => {
+        let videoData = data.goodsStaticFiles.map(({ videoUrl }) => {
           return {
             videoUrl
           }
@@ -356,13 +358,8 @@ export default {
 
     changeInput(row, index, target) {
       this.$set(this.list[index], target, row[target])
-      // console.log(target)
-      // console.log(row[target])
-      // console.log(this.list)
     },
     addModalBtn() {
-      console.log(this.dataList)
-      console.log('????????????????????????')
       let that = this
       this.$set(this.dataList, 'marketable', this.formDynamic.marketable)
       let data = this.dataList
@@ -378,7 +375,7 @@ export default {
       })
     },
     goBack() {
-      this.$router.go(-2)
+      this.$router.go(-1)
     },
     cancelBtn() {
       this.getShopList()
@@ -425,6 +422,10 @@ export default {
 .select-bar,
 .table{
   margin-bottom: 10px;
+}
+.title{
+  display: flex;
+  justify-content: space-between;
 }
 .message{
   border-bottom: 1px solid #eee;
@@ -485,7 +486,7 @@ export default {
   width: 200px;
 }
 .addBtn{
-  margin-left: 40px
+  text-align: center;
 }
 .cancelBtn{
   margin-left: 8px
