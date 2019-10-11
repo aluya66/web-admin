@@ -19,8 +19,8 @@
           <Option value="1">启用</Option>
           <Option value="2">禁用</Option>
         </Select>
-        <Button type="primary" @click="searchBtn">搜索</Button>
-        <Button type="primary" @click="addInsert(1)">新增</Button>
+        <Button class="btnStyle" type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+        <Button class="btnStyle" type="primary" @click="addInsert(1)"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
       </div>
       <Table :loading="loading" border :columns="columns" :data="list" class="table">
         <template slot-scope="{ row }" slot="status">
@@ -28,7 +28,7 @@
           <span v-else>禁用</span>
         </template>
         <template slot-scope="{ row, index }" slot="action">
-          <Button size="small" @click="addInsert(2, index)">修改</Button>
+          <Button type='success' size="small" @click="addInsert(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
         </template>
       </Table>
       <!-- 新增 -->
@@ -97,16 +97,16 @@ export default {
           key: 'appKey'
         },
         {
-          title: '创建时间',
-          key: 'created'
-        },
-        {
           title: '状态',
           slot: 'status'
         },
         {
           title: '描述',
           key: 'description'
+        },
+        {
+          title: '创建时间',
+          key: 'created'
         },
         {
           title: '操作',
@@ -248,6 +248,10 @@ export default {
 }
 .selectWidth{
   width: 200px;
+  margin-bottom:10px 
+}
+.btnStyle{
+  margin-bottom:10px 
 }
 .addBtn{
   margin-left: 40px

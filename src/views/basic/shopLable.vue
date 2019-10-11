@@ -9,13 +9,13 @@
     <div class="select-bar">
       标签名称：
       <Input placeholder="请输入名称" class="selectWidth" v-model="labelName"/>
-      <Button type="primary" @click="searchBtn"><Icon class="iconSize" type="ios-add-circle-outline"/>搜索</Button>
-      <Button type="primary" @click="addModel(1)"><Icon class="iconSize" type="ios-add-circle-outline"/>添加</Button>
+      <Button type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+      <Button type="primary" @click="addModel(1)"><Icon :size='16' type="md-arrow-down" />新增</Button>
     </div>
     <Table :loading="loading" border :columns="columns" :data="list" class="table">
       <template slot-scope="{ row, index }" slot="action">
-        <a size="small" href="#" class="deteleBtn" @click="addModel(2,index)" >编辑</a>
-        <a size="small" href="#" class="deteleBtn" @click="deleteModel(row,index)">删除</a>
+        <Button size="small" type="success" class="deteleBtn" @click="addModel(2,index)" ><Icon :size='14' type="md-create" />编辑</Button>
+        <Button size="small" type="error" class="deteleBtn" @click="deleteModel(row,index)"><Icon :size='14' type="ios-trash-outline" />删除</Button>
       </template>
     </Table>
     <Page :total="listTotal" show-total @on-change="pageChange" />
@@ -87,12 +87,12 @@ const columns = [
     key: 'initial'
   },
   {
-    title: '创建时间',
-    key: 'created'
-  },
-  {
     title: '创建人',
     key: 'createdby'
+  },
+  {
+    title: '创建时间',
+    key: 'created'
   },
   {
     title: '更新时间',

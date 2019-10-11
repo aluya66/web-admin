@@ -30,7 +30,7 @@ const actions = {
   }, userInfo) {
     return new Promise((resolve, reject) => {
       const data = {
-        token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzA2OTMxMTEsImxvZ2luTmFtZSI6InplZ2FuZyIsImlzcyI6Inlvc2FyLXVwbXMiLCJleHAiOjE1NzA3MjkxMTEsInVzZXJJZCI6MTA1LCJpYXQiOjE1NzA2OTMxMTF9.mOGJl8tX2M3kjLbbu7mkdjhNhvR0xX1_lvTXBbZniao',
+        token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzA3NTcyNzAsImxvZ2luTmFtZSI6Imh1YW5nIiwiaXNzIjoieW9zYXItdXBtcyIsImV4cCI6MTU3MDc5MzI3MCwidXNlcklkIjo5NCwiaWF0IjoxNTcwNzU3MjcwfQ.5PQxjCesKgzvgKrV5jCVDkHIRmLsgS3RyFlfZiftCEM',
         id: '5'
       }
       commit('SET_USERINFO', data)

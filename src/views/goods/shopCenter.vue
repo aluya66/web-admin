@@ -15,12 +15,11 @@
       <Input placeholder="请输入名称" class="selectWidth" v-model="businessValue"/>
       经营类型：
       <Input placeholder="请输入名称" class="selectWidth" v-model="categoryName"/>
+      <br>
       商品类型：
       <Input placeholder="请输入名称" class="selectWidth" v-model="categoryName"/>
       品牌：
       <Input placeholder="请输入名称" class="selectWidth" v-model="brandName"/>
-      <!-- 供应商: -->
-      <!-- <Input placeholder="请输入名称" class="selectWidth" v-model="origin"/> -->
       上货人：
       <Input placeholder="请输入名称" class="selectWidth" v-model="tagPrice"/>
       添加时间：
@@ -32,17 +31,15 @@
         class="selectWidth"
         >
       </DatePicker>
-      <Button type="primary"  @click="searchBtn"><Icon class="iconSize" type="ios-add-circle-outline"/>搜索</Button>
-      <Button type="primary" @click="exprotFun">导出商品</Button>
+      <Button type="primary"  @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+      <Button type="primary" @click="exprotFun"><Icon :size='16' type="md-arrow-down" />导出商品</Button>
     </div>
      <Table :loading="loading" ref="myTable" border :columns="columns" :data="list" class="table">
       <template slot-scope="{ row }" slot="coverImg">
-        <a :href="row.coverImg" target="_blank" >
           <img class="md-img" :src="row.coverImg" alt=""/>
-        </a>
       </template>
       <template slot-scope="{ row, index }" slot="action">
-        <a size="small" href="#" @click="addModal(row,index)" >编辑</a>
+        <Button size="small" type="success" @click="addModal(row,index)" ><Icon :size='14' type="md-create" />编辑</Button>
       </template>
     </Table>
     <Page :total="listTotal" show-total @on-change="pageChange" />
@@ -80,14 +77,6 @@ const columns = [
     title: '品牌',
     key: 'brandName'
   },
-  // {
-  //   title: '供应商',
-  //   key: 'origin'
-  // },
-  {
-    title: '上货人',
-    key: 'tagPrice'
-  },
   {
     title: '库存',
     key: 'retailPrice'
@@ -103,6 +92,10 @@ const columns = [
   {
     title: '销售价',
     key: 'mktPrice'
+  },
+  {
+    title: '上货人',
+    key: 'tagPrice'
   },
   {
     title: '上架时间',
@@ -205,5 +198,6 @@ export default {
 }
 .selectWidth{
   width: 200px;
+  margin-bottom: 10px
 }
 </style>

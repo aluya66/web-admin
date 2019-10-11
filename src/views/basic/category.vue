@@ -19,13 +19,13 @@
         <Option value="">全部</Option>
         <Option v-for="(item, index) in showFlagList" :key="index" :value="index" >{{item}}</Option>
       </Select>
-      <Button type="primary" @click="searchBtn">搜索</Button>
-      <Button type="primary" @click="addModal(1)">新增</Button>
+      <Button type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+      <Button type="primary" @click="addModal(1)"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
     </div>
     <Table :loading="loading" border :columns="columns" :data="categoryList" class="table">
       <template slot-scope="{ row, index }" slot="action">
-        <a size="small" href="#" class="deteleBtn" @click="addModal(2, index)">修改</a>
-        <a size="small" href="#" class="deteleBtn" @click="deleteItem(row, index)">删除</a>
+        <Button type="success" size="small" class="deteleBtn" @click="addModal(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
+        <Button type="error" size="small" class="deteleBtn" @click="deleteItem(row, index)"><Icon :size='14' type="ios-trash-outline" />删除</Button>
       </template>
     </Table>
     <Page :total="listTotal" show-total @on-change="pageChange" />
@@ -189,24 +189,17 @@ export default {
     // 获取品类列表
     queryCategoryList() {
       let that = this
-      let data = {
+      let params = {
         ...this.query,
         categoryLevel: this.categoryLevel,
         categoryName: this.categoryName,
         showFlag: this.showFlag
       }
       this.loading = !this.loading
-      this.$api.basic.queryCategory(data).then(res => {
-        if (res.code === 0) {
+      this.$api.basic.queryCategory(params).then(res => {
           that.loading = !that.loading
           that.categoryList = res.data
           that.listTotal = res.totalCount
-        } else {
-          that.loading = !that.loading
-          that.$message.info(res.message)
-        }
-      }).catch(err => {
-        console.log(err)
       })
     },
     pageChange(page) {

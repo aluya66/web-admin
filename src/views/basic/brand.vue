@@ -13,8 +13,8 @@
         <Input placeholder="请输入品牌名称" v-model="optionData.name" class="selectWidth" />
         品牌别名：
         <Input placeholder="请输入品牌别名" v-model="optionData.ename" class="selectWidth" />
-        <Button type="primary" @click="searchBtn">搜索</Button>
-        <Button type="primary" @click="addModal(1)">新增</Button>
+        <Button class="btnStyle" type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+        <Button class="btnStyle" type="primary" @click="addModal(1)"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
       </div>
       <Table :loading="loading" border :columns="columns" :data="brandList" class="table">
         <template slot-scope="{ row }" slot="status">
@@ -23,20 +23,16 @@
           <span v-if="row.status==3">删除</span>
         </template>
         <template slot-scope="{ row }" slot="previewUrl">
-          <a :href="row.previewUrl" target="_blank" >
             <img class="md-img" :src="row.previewUrl" alt=""/>
-          </a>
         </template>
         <template slot-scope="{ row }" slot="videoUrl">
           <a :href="row.videoUrl" target="_blank" >
-            <!-- <img class="md-img" :src="row.videoUrl" alt=""/> -->
-            <!-- <video :src="row.videoUrl" controls="controls" class="videoItem"/> -->
-            {{ row.videoUrl }}
+           <Button>查看视频</Button>
           </a>
         </template>
         <template slot-scope="{ row, index }" slot="action">
-          <a size="small" href="#" class="deleteBtn" @click="addModal(2, index)">修改</a>
-          <a size="small" href="#" class="deleteBtn" @click="deleteModal(row, index)">删除</a>
+          <Button size="small" type="success" class="deleteBtn" @click="addModal(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
+          <Button size="small" type="error" class="deleteBtn" @click="deleteModal(row, index)"><Icon :size='14' type="ios-trash-outline" />删除</Button>
         </template>
       </Table>
       <Page :total="listTotal" show-total @on-change="pageChange" />
@@ -148,20 +144,20 @@ const columns = [
     slot: 'videoUrl'
   },
   {
-    title: '创建人',
-    key: 'createdby'
-  },
-  {
-    title: '更新人',
-    key: 'updatedby'
+    title: '状态',
+    slot: 'status'
   },
   {
     title: '品牌排序',
     key: 'sort'
   },
   {
-    title: '状态',
-    slot: 'status'
+  title: '创建人',
+  key: 'createdby'
+  },
+  {
+  title: '更新人',
+  key: 'updatedby'
   },
   {
     title: '时间',
@@ -405,9 +401,13 @@ export default {
 }
 .selectWidth{
   width: 200px;
+  margin-bottom:10px 
 }
 .deleteBtn{
   margin-right: 5px
+}
+.btnStyle{
+  margin-bottom:10px 
 }
 .addBtn{
   margin-left: 250px

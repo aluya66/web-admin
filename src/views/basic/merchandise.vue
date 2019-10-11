@@ -7,10 +7,10 @@
       </template>
     <Card>
       <div class="select-bar">
-        名称：
-        <Input placeholder="请输入名称" v-model="name" class="selectWidth" />
-        <Button type="primary"  @click="searchBtn"><Icon class="iconSize" type="ios-add-circle-outline"/>搜索</Button>
-        <Button type="primary"  @click="addModal(1)"><Icon class="iconSize" type="ios-add-circle-outline"/>添加</Button>
+        类型名称：
+        <Input placeholder="请输入类型名称" v-model="name" class="selectWidth" />
+        <Button type="primary"  @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+        <Button type="primary"  @click="addModal(1)"><Icon :size='16' type="ios-add-circle-outline"/>添加</Button>
       </div>
       <Table :loading="loading" border :columns="columns" :data="list" class="table">
         <template slot="bmsGoodsAttrVals">
@@ -21,8 +21,8 @@
           <span v-else-if="row.type===2">属性</span>
         </template>
         <template slot-scope="{ row, index }" slot="action">
-          <a size="small" href="#" class="deteleBtn" @click="addModal(2, index)">编辑</a>
-          <a size="small" href="#" class="deteleBtn" @click="deleteModal(row, index)">删除</a>
+          <Button type="success" size="small" class="deteleBtn" @click="addModal(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
+          <Button type="error" size="small" class="deteleBtn" @click="deleteModal(row, index)"><Icon :size='14' type="ios-trash-outline" />删除</Button>
         </template>
       </Table>
       <Page :total="listTotal" show-total @on-change="pageChange" />
@@ -97,24 +97,12 @@
 <script>
 const columns = [
   {
-    title: '名称',
+    title: '类型名称',
     key: 'name'
   },
   {
     title: '属性值',
     key: 'value'
-  },
-  {
-    title: '时间',
-    key: 'created'
-  },
-  {
-    title: '创建人',
-    key: 'createdby'
-  },
-  {
-    title: '更新人',
-    key: 'updatedby'
   },
   {
     title: '状态',
@@ -127,6 +115,18 @@ const columns = [
   {
     title: '排序',
     key: 'sort'
+  },
+  {
+    title: '创建人',
+    key: 'createdby'
+  },
+  {
+    title: '更新人',
+    key: 'updatedby'
+  },
+  {
+    title: '时间',
+    key: 'created'
   },
   {
     title: '操作',
@@ -169,12 +169,12 @@ export default {
   methods: {
     getGoodsattrvalList() {
       let that = this
-      let data = {
+      let params = {
         ...this.query,
         name: this.name
       }
       this.loading = !this.loading
-      this.$api.basic.getGoodsattrval(data).then(res => {
+      this.$api.basic.getGoodsattrval(params).then(res => {
         that.loading = !that.loading
         that.list = res.data
         res.data.map((item, index) => {

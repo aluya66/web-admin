@@ -15,8 +15,8 @@
         <Option value="0">安卓</Option>
         <Option value="1">IOS</Option>
       </Select>
-      <Button type="primary" @click="searchBtn">搜索</Button>
-      <Button type="primary" @click="addNewRelease">新增</Button>
+      <Button type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+      <Button type="primary" @click="addNewRelease"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
     </div>
     <Table :loading="loading" border :columns="columns" :data="versionList" class="table" size="large">
 
@@ -253,9 +253,9 @@ export default {
         versionName: this.versionName,
         platform: this.platform
       }
-      this.loading = !this.loading
+      // this.loading = !this.loading
       this.$api.basic.queryAllVersion(data).then(res => {
-        that.loading = !that.loading
+        // that.loading = !that.loading
         that.versionList = res.data
         that.listTotal = res.totalCount
       })

@@ -11,12 +11,12 @@
       <Input placeholder="请输入物流名称" class="selectWidth" v-model="logiName"/>
       logiCode:
       <Input placeholder="请输入物流名称" class="selectWidth" v-model="logiCode"/>
-      <Button type="primary"  @click="searchBtn"><Icon class="iconSize" type="ios-add-circle-outline"/>搜索</Button>
-      <Button type="primary"  @click="addModal(1)"><Icon class="iconSize" type="ios-add-circle-outline"/>添加</Button>
+      <Button type="primary"  @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+      <Button type="primary"  @click="addModal(1)"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
     </div>
     <Table :loading="loading" border :columns="columns" :data="list" class="table">
       <template slot-scope="{ row, index }" slot="action">
-        <a size="small" href="#" class="deteleBtn" @click="addModal(2, index)">编辑</a>
+        <Button size="small" type="success"class="deteleBtn" @click="addModal(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
       </template>
     </Table>
     <Page :total="listTotal" show-total @on-change="pageChange" />
@@ -92,13 +92,13 @@ export default {
   methods: {
     getLogisticsList() {
       let that = this
-      let data = {
+      let params = {
         ...this.query,
         logiCode: this.logiCode,
         logiName: this.logiName
       }
       this.loading = !this.loading
-      this.$api.basic.getLogistics(data).then(res => {
+      this.$api.basic.getLogistics(params).then(res => {
         that.loading = !that.loading
         console.log(res.data)
         that.list = res.data
@@ -121,10 +121,9 @@ export default {
           logiCode: this.formLeft.logiCode
         }
         this.$api.basic.addLogistics(data).then(res => {
-          console.log(res.data)
           that.$Message.info('添加成功')
           that.contentModal = false
-          this.getLogisticsList()
+          that.getLogisticsList()
         })
       } else if (this.statusType === 2) {
         let data = {
@@ -137,7 +136,7 @@ export default {
           console.log(res.data)
           that.$Message.info('修改成功')
           that.contentModal = false
-          this.getLogisticsList()
+          that.getLogisticsList()
         })
       }
     },

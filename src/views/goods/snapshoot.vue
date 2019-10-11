@@ -20,8 +20,8 @@
         class="selectWidth"
         >
       </DatePicker>
-      <Button type="primary"  @click="searchBtn">搜索</Button>
-      <Button type="primary" @click="exprotFun">导出商品</Button>
+      <Button type="primary"  @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+      <Button type="primary" @click="exprotFun"><Icon :size='16' type="md-arrow-down" />导出商品</Button>
     </div>
     <Table
       :loading="loading"
@@ -32,7 +32,7 @@
       ref="myTable"
       >
       <template slot-scope="{ row, index }" slot="action">
-        <a size="small" href="#" @click="addModal(row,index)" >查看详情</a>
+        <Button size="small" type="info" @click="addModal(row,index)" ><Icon type="ios-eye" />查看详情</Button>
       </template>
     </Table>
      <Page :total="listTotal" show-total @on-change="pageChange" />
@@ -110,7 +110,7 @@ export default {
       this.getGoodssnapshot()
     },
     addModal(row, index) {
-      this.$router.push({ path: '/basic/snapshootDel', query: { id: row.id } })
+      this.$router.push({ path: '/goods/snapshootDel', query: { id: row.id } })
     },
     chengeDate(e) {
       this.beginDate = e[0]
@@ -151,5 +151,6 @@ export default {
 }
 .selectWidth{
   width: 200px;
+  margin-bottom: 10px
 }
 </style>
