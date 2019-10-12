@@ -142,7 +142,7 @@ export const queryAllParentcodes = params =>
 
 // 区域添加
 export const addRegionInsert = params =>
-  Http.fetch(`${context}/v1/region/add`, params)
+  Http.fetch(`${context}/v1/region`, params)
 
 // 区域修改
 export const updataRegionInsert = params =>
