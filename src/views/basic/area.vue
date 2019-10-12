@@ -41,34 +41,34 @@
           ></el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" @click="searchBtn">搜索</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="addRegion(3)">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="append(3)">新增</el-button>
       </div>
-
-
       <el-container v-loading="loading">
-        <el-aside width="400px">
+        <el-aside width="600px">
           <el-tree
             :data="areaList"
-            show-checkbox
-           
+            :expand-on-click-node="false"
             >
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span>{{ node.label }}</span>
               <span>
                 <el-button
+                  v-if="data.children.length>0"
                   type="text"
                   size="mini"
-                  @click="()=>append(data)">
-                  <i class="el-icon-plus"></i>
+                  @click="()=>append(1, data)">
+                  新增
+                </el-button>
+                <el-button
+                  type="text"
+                  size="mini"
+                  @click="() => modification(node, data)">
+                  编辑
                 </el-button>
               </span>
             </span>
           </el-tree>
         </el-aside>
-        <el-main>
-          <template>
-          </template>
-        </el-main>
       </el-container>
       <Modal
         v-model="showModal"
@@ -92,7 +92,6 @@
     </Card>
   </c-view>
 </template>
-
 <script>
 const columns = [
   {
@@ -111,7 +110,6 @@ const columns = [
     align: 'center'
   }
 ]
-
 export default {
   name: 'area',
   data() {
@@ -173,25 +171,30 @@ export default {
     this.queryAllParentcodes()
   },
   methods: {
-    renderContent(h, { node, data, store }) {
-        return (
-          <span class="custom-tree-node">
-            <span>{node.label}</span>
-            <span>
-              <el-button size="mini" type="text" on-click={ () => this.append(data) }>Append</el-button>
-              <el-button size="mini" type="text" on-click={ () => this.remove(node, data) }>Delete</el-button>
-            </span>
-          </span>);
-      },
-    append(data) {
-        const newChild = { id: id++, label: 'testtest', children: [] };
-        if (!data.children) {
-          this.$set(data, 'children', []);
-        }
-        data.children.push(newChild);
-      },
-    handleNodeClick(data) {
-      console.log(data)
+    modification(node, data) {
+      this.showModal = true
+      this.modelTitle = '编辑'
+      this.typeStatus = 2
+      this.curCategoryDetail.name = data.label
+      this.curCategoryDetail.code = data.code
+    },
+    append(type, data) {
+      this.showModal = true
+      if(type===1){
+        // console.log('节点新增')
+        this.modelTitle = '新增'
+        this.typeStatus = 1
+        this.curCategoryDetail.name = ''
+        this.curCategoryDetail.code = ''
+        this.curCategoryDetail.parentCode = data.code
+        console.log('code'+data.code)
+      }else if(type===3){
+        // console.log('全局新增')
+        this.modelTitle = '新增'
+        this.typeStatus = 3
+        this.curCategoryDetail.name = ''
+        this.curCategoryDetail.code = ''
+      }
     },
     getAreaAllList() {
       let that = this
@@ -201,40 +204,7 @@ export default {
         that.loading=!that.loading
         let dataList = JSON.stringify(data)
         that.areaList = JSON.parse(dataList.replace(/name/g, 'label'))
-        // this.areaList = data
       })
-    },
-    // 删除
-    // deleteRegion(){
-    //   console.log('删除')
-    // },
-    // 添加
-    addRegion(type, index) {
-      this.showModal = true
-      if (type === 1) {
-        this.modelTitle = '新增'
-        this.typeStatus = 1
-        this.curCategoryDetail.name = ''
-        this.curCategoryDetail.code = ''
-        this.curCategoryDetail.parentCode = this.list[index].code
-      } else if (type === 2) {
-        this.modelTitle = '修改'
-        this.typeStatus = 2
-        this.curCategoryDetail.name = this.list[index].name
-        this.curCategoryDetail.code = this.list[index].code
-        this.curCategoryDetail.parentCode = this.list[index].parentCode
-      } else if (type === 3) {
-        this.modelTitle = '新增'
-        this.typeStatus = 3
-        this.curCategoryDetail.name = ''
-        this.curCategoryDetail.code = ''
-      }
-    },
-    // 地区名称添加
-    addDel(index) {
-      this.query.pageNum = 1
-      this.parentCode = this.list[index].code
-      this.queryAreaList()
     },
     searchBtn() {
       this.query.pageNum = 1
@@ -352,6 +322,7 @@ export default {
       this.queryAreaList()
     },
     addModal() {
+      console.log('请求')
       let that = this
       if (!this.curCategoryDetail.name) {
         this.$Message.warning('请填写地区名称')
