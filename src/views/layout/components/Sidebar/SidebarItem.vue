@@ -46,7 +46,7 @@
 								<item
 									v-if="child.meta"
 									:icon="child.meta.icon"
-									:title="child.meta.name || setTitleLang(child.meta.title)"
+									:title="child.meta.name || setTitleLang(child.meta.title, 'route')"
 								/>
 							</el-menu-item>
 						</app-link>

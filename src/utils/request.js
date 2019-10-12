@@ -118,9 +118,7 @@ const setParams = (url, params = {}, opt = {}) => {
     method,
     contentType
   } = setHeaderMethod(opt.method)
-  const {
-    token
-  } = utils.getStore('SET_USERINFO')
+  const token = utils.getStore('SET_USERINFO') ? utils.getStore('SET_USERINFO').token : ''
   let curParams = {
     url,
     headers: {
@@ -137,8 +135,8 @@ const setParams = (url, params = {}, opt = {}) => {
     }
   } else {
     curParams = {
-      data: contentType === 'application/x-www-form-urlencoded' ? utils.serializeParam(params)
-        : params,
+      data: contentType === 'application/x-www-form-urlencoded' ? utils.serializeParam(params) :
+        params,
       ...curParams
     }
   }

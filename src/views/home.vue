@@ -8,15 +8,12 @@
 </template>
 
 <script>
-
 export default {
   name: 'Dashboard',
   data() {
     return {
       title: process.env.VUE_APP_COMPANY
     }
-  },
-  components: {
   }
 }
 </script>

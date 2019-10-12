@@ -26,7 +26,7 @@ const actions = {
   }, userInfo) {
     return new Promise((resolve, reject) => {
       const data = {
-        token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzA3NTcyNzAsImxvZ2luTmFtZSI6Imh1YW5nIiwiaXNzIjoieW9zYXItdXBtcyIsImV4cCI6MTU3MDc5MzI3MCwidXNlcklkIjo5NCwiaWF0IjoxNTcwNzU3MjcwfQ.5PQxjCesKgzvgKrV5jCVDkHIRmLsgS3RyFlfZiftCEM',
+        token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzA4NDYwOTksImxvZ2luTmFtZSI6InplZ2FuZyIsImlzcyI6Inlvc2FyLXVwbXMiLCJleHAiOjE1NzA4ODIwOTksInVzZXJJZCI6MTA1LCJpYXQiOjE1NzA4NDYwOTl9.Bd05FCd4gP1UvNxyKfMLEQeuwE0X7ToYBR55AiZM4qs',
         id: '5'
       }
       commit('SET_USERINFO', data)
@@ -40,8 +40,9 @@ const actions = {
     commit
   }) {
     return new Promise(resolve => {
+      let role = utils.getUrlParam('parentId')
       const data = {
-        roles: state.userInfo.id
+        roles: role || state.userInfo.id
       }
       commit('SET_ROLES', data.roles)
       resolve(data)
