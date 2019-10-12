@@ -5,7 +5,7 @@ export default {
      * @param {*} name 需要处理的i18n 的key值
      * @param {*} model key对应的对象
      */
-    setTitleLang (name, model) {
+    setTitleLang(name, model) {
       const hasKey = model ? this.$te(`${model}.${name}`) : this.$te(name)
 
       if (hasKey) {
@@ -21,7 +21,7 @@ export default {
      * @param {*} replace
      * @param {*} url
      */
-    routerLink (to, replace, url) {
+    routerLink(to, replace, url) {
       const {
         $router
       } = this
@@ -30,37 +30,6 @@ export default {
       } else if (url) {
         replace ? location.replace(url) : (location.href = url)
       }
-    },
-
-    /**
-     * 路由打开新窗口
-     * 还可以通过<router-link target="_blank" 和 <a target="_blank"这两种方式开新窗口
-     */
-    openNewWin (routerOpts) {
-      const {
-        $router
-      } = this
-      let routePath = ''
-      if (routerOpts.url) {
-        routePath = routerOpts.url
-      } else {
-        routePath = $router.resolve({
-          name: routerOpts.name,
-          query: routerOpts.query,
-          params: routerOpts.params
-        })
-      }
-      window.open(routePath, '_blank')
-    },
-    /**
-     *  统一跳转到登陆页面
-     */
-    goToLogin (page = 'login', type = 'push', time = 1.5) {
-      setTimeout(() => {
-        this.$router[type]({
-          path: `/${page}?redirect=${this.$route.fullPath}`
-        })
-      }, time * 1000)
     }
   }
 }
