@@ -135,8 +135,8 @@ const setParams = (url, params = {}, opt = {}) => {
     }
   } else {
     curParams = {
-      data: contentType === 'application/x-www-form-urlencoded' ? utils.serializeParam(params) :
-        params,
+      data: contentType === 'application/x-www-form-urlencoded' ? utils.serializeParam(params)
+        : params,
       ...curParams
     }
   }

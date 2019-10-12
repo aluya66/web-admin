@@ -180,15 +180,15 @@ export default {
     },
     append(type, data) {
       this.showModal = true
-      if(type===1){
+      if (type === 1) {
         // console.log('节点新增')
         this.modelTitle = '新增'
         this.typeStatus = 1
         this.curCategoryDetail.name = ''
         this.curCategoryDetail.code = ''
         this.curCategoryDetail.parentCode = data.code
-        console.log('code'+data.code)
-      }else if(type===3){
+        console.log('code' + data.code)
+      } else if (type === 3) {
         // console.log('全局新增')
         this.modelTitle = '新增'
         this.typeStatus = 3
@@ -199,9 +199,9 @@ export default {
     getAreaAllList() {
       let that = this
       let params = {}
-      this.loading=!this.loading
+      this.loading = !this.loading
       this.$api.basic.getAreaAll(params).then(data => {
-        that.loading=!that.loading
+        that.loading = !that.loading
         let dataList = JSON.stringify(data)
         that.areaList = JSON.parse(dataList.replace(/name/g, 'label'))
       })

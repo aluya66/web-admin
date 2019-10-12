@@ -55,10 +55,10 @@ export default {
     /**
      *  统一跳转到登陆页面
      */
-    goToLogin (time = 1.5, type = 'push') {
+    goToLogin (page = 'login', type = 'push', time = 1.5) {
       setTimeout(() => {
         this.$router[type]({
-          path: `/login?redirect=${this.$route.fullPath}`
+          path: `/${page}?redirect=${this.$route.fullPath}`
         })
       }, time * 1000)
     }
