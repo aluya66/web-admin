@@ -63,7 +63,7 @@ const setHeaderMethod = mtd => {
   switch (mtd) {
     case 'post':
     case 'get':
-    case 'detele':
+    case 'delete':
     case 'put':
       method = mtd
       break
