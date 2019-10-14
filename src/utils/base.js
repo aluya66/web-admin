@@ -34,7 +34,7 @@ export const goToLogin = (page = 'login', type = 'push', time = 1.5) => {
   }, time * 1000)
 }
 /**
- *  统一消息提示
+ *  消息提示
  *
  * @param {string} [message=''] 消息
  * @param {string} [type='warning'] 类型，error，warning，info

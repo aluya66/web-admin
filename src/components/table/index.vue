@@ -1,10 +1,11 @@
 <template>
-	<div class="table-box">
+	<div class="c-table">
 		<slot name="header" />
 		<el-table
 			ref="multipleTable"
 			stripe
-			size="small"
+      :border="hasBorder"
+			:size="size"
 			:height="fixedHeight"
 			v-loading="loading"
 			:data="tableList"
@@ -22,20 +23,23 @@
 				:label="item.label"
 				:prop="item.prop"
 				:width="item.width"
+        :fixed="item.fixed"
 				:show-overflow-tooltip="item.inline"
 			>
 				<template slot-scope="scope">
-					<div v-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
+          <c-image v-if="item.isImage" :url="scope.row[item.prop]" fit="contain" :preview-src-list="[scope.row[item.prop]]" lazy></c-image>
+          <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
 					<template v-else>
 						{{
-							item.formatter ? item.formatter(scope.row) : scope.row[item.prop]
+							item.formatter ? item.formatter(scope.row, scope.index) : scope.row[item.prop]
 						}}
 					</template>
 				</template>
 			</el-table-column>
 			<el-table-column
-				v-if="innerBtns.length"
-				:width="innerBtns.length && innerBtns[0].width"
+				v-if="tableInnerBtns.length"
+				:width="tableInnerBtns.length && tableInnerBtns[0].width"
+        fixed="right"
 				label="操作"
 			>
 				<!-- <slot name="inline" /> -->
@@ -43,8 +47,9 @@
 					<el-button
 						v-for="(btn, index) in curBtns(scope.row)"
 						:key="index"
-						type="text"
-						size="small"
+						:type="btn.type || 'text'"
+            :icon="btn.icon"
+						:size="btn.size || 'mini'"
 						@click="
 							btn.handle && handleClick(btn.handle, scope.row, scope.$index)
 						"
@@ -82,9 +87,9 @@
 		<slot name="footer" />
 		<c-pagination
 			v-show="!noPage && tableList.length > 0"
-			:total="pageInfo.totalCount"
+			:total="pageInfo.totalNum"
 			:page.sync="pageInfo.pageNum"
-			:limit.sync="pageInfo.pageSize"
+			:limit.sync="pageInfo.numPerPage"
 			@pagination="changePagination"
 		></c-pagination>
 	</div>
@@ -92,10 +97,12 @@
 
 <script>
 import CPagination from '@/components/pagination'
+import CImage from 'components/image'
 export default {
   name: 'c-table',
   components: {
-    CPagination
+    CPagination,
+    CImage
   },
   props: {
     tableHeader: {
@@ -114,7 +121,7 @@ export default {
       type: Boolean,
       default: false
     },
-    innerBtns: {
+    tableInnerBtns: {
       type: Array,
       default () {
         return []
@@ -133,7 +140,7 @@ export default {
       default () {
         return {
           pageNum: 1,
-          pageSize: 10,
+          numPerPage: 10,
           totalCount: 0
         }
       }
@@ -146,10 +153,15 @@ export default {
       type: Boolean,
       default: true
     },
-    fixedHeight: {
-      type: Number,
-      default: 0
-    }
+    size: {
+      type: String,
+      default: 'medium'
+    },
+    hasBorder: {
+      type: Boolean,
+      default: false
+    },
+    fixedHeight: Number
   },
   data () {
     return {
@@ -165,7 +177,7 @@ export default {
   },
   methods: {
     curBtns (row) {
-      return this.innerBtns.filter(res => {
+      return this.tableInnerBtns.filter(res => {
         if (res.notBtn) {
           return !!row[res.notBtn]
         } else {
@@ -226,7 +238,11 @@ export default {
 
 <style lang="less">
 .c-table {
-	position: relative;
-	min-height: calc(100vh - 150px);
+  position: relative;
+  margin-top: 10px;
+  // min-height: calc(100vh - 150px);
+  .el-form-item {
+    margin-bottom: 10px;
+  }
 }
 </style>

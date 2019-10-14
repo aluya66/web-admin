@@ -4,55 +4,55 @@ export default {
   path: '/goods',
   name: 'goods',
   component: Layout,
-  redirect: '/goods/shopCenter',
+  redirect: '/goods',
   meta: {
     title: 'goods',
     icon: 'nested'
   },
   children: [{
-    path: '/goods/shopCenter',
-    name: 'shopCenter',
-    component: () => import('@/views/goods/shopCenter'),
+    path: '/goods/list',
+    name: 'goodsList',
+    component: () => import('@/views/goods/list'),
     meta: {
-      title: 'shopCenter',
+      title: 'goodsList',
       icon: 'table'
     }
   },
   {
-    path: '/goods/shopCenterLog',
-    name: 'shopCenterLog',
-    component: () => import('@/views/goods/shopCenterLog'),
-    meta: {
-      title: 'shopCenterLog',
-      icon: 'table'
-    }
-  },
-  {
-    path: '/goods/shopCenterDel/:id',
-    name: 'shopCenterDel',
-    component: () => import('@/views/goods/shopCenterDel'),
+    path: '/goods/detail/:id',
+    name: 'goodsDetail',
+    component: () => import('@/views/goods/detail'),
     hidden: true,
     meta: {
-      title: 'shopCenterDel',
+      title: 'goodsDetail',
+      icon: 'table'
+    }
+  },
+  {
+    path: '/goods/logs',
+    name: 'goodsLogs',
+    component: () => import('@/views/goods/logs/list'),
+    meta: {
+      title: 'goodsLogs',
       icon: 'table'
     }
   },
   {
     path: '/goods/snapshoot',
-    name: 'snapshoot',
-    component: () => import('@/views/goods/snapshoot'),
+    name: 'goodsSnapshoot',
+    component: () => import('@/views/goods/snapshoot/list'),
     meta: {
-      title: 'snapshoot',
+      title: 'goodsSnapshoot',
       icon: 'table'
     }
   },
   {
-    path: '/goods/snapshootDel',
-    name: 'snapshootDel',
+    path: '/goods/snapshootDetail/:id',
+    name: 'goodsSnapshootDetail',
     hidden: true,
-    component: () => import('@/views/goods/snapshootDel'),
+    component: () => import('@/views/goods/snapshoot/detail'),
     meta: {
-      title: 'snapshootDel',
+      title: 'goodsSnapshootDetail',
       icon: 'table'
     }
   }]

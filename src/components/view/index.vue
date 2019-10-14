@@ -1,12 +1,12 @@
 <template>
 	<div class="app-content">
-		<header>
+		<header v-if="$slots.header">
 			<slot name="header"></slot>
 		</header>
-		<main>
+		<main class="main">
 			<slot></slot>
 		</main>
-		<footer>
+		<footer v-if="$slots.footer">
 			<slot name="footer"></slot>
 		</footer>
 	</div>
@@ -24,22 +24,22 @@ export default {
 <style lang="less">
 .app-content {
 	header {
-		background-color: @bg-main;
-    margin-bottom: 5px;
-    padding: 8px 10px;
+    background-color: @bg-main;
+    margin-top: 2px;
+    padding: 8px 15px;
+    border-bottom: 1px solid @border-default;
 		.title {
 			font-size: @f18;
-      line-height: 32px;
+      line-height: 30px;
 		}
 	}
-	main {
+	.main {
     overflow: hidden;
-    margin: 0 5px;
-		.box {
+		&__box {
 			overflow: hidden;
-			padding: 15px 20px;
+			padding: 10px 15px;
 			background-color: @bg-main;
-			min-height: calc(100vh - 100px);
+			min-height: calc(100vh - 133px);
 		}
 	}
 }

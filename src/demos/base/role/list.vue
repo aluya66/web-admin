@@ -17,7 +17,7 @@
 				:table-header="tableHeader"
 				:table-list="tableList"
 				:page-info="pageInfo"
-				:inner-btns="innerBtns"
+				:table-inner-btns="tableInnerBtns"
 				:fixed-height="546"
 				@change-pagination="changePagination"
 			>
@@ -162,7 +162,7 @@ export default {
           }
         }
       ],
-      innerBtns: [
+      tableInnerBtns: [
         {
           name: '配置菜单',
           handle (row) {

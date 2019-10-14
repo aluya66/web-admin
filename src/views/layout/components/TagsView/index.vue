@@ -12,7 +12,7 @@
 				@click.middle.native="closeSelectedTag(tag)"
 				@contextmenu.prevent.native="openMenu(tag, $event)"
 			>
-				{{ tag.metaName || setTitleLang(tag.title) }}
+				{{ tag.metaName || setTitleLang(tag.title, 'route') }}
 				<span
 					v-if="!tag.meta.affix"
 					class="el-icon-close"
@@ -210,7 +210,6 @@ export default {
 
 <style lang="less" scoped>
 .tags-view-container {
-	height: 34px;
 	width: 100%;
 	background: @bg-main;
 	border-bottom: 1px solid @light_gray;
@@ -220,16 +219,16 @@ export default {
 			display: inline-block;
 			position: relative;
 			cursor: pointer;
-			height: 26px;
-			line-height: 26px;
+			height: 30px;
+			line-height: 30px;
 			border: 1px solid @active-bg;
 			border-radius: 3px;
 			color: @menuBg;
 			background: @bg-main;
 			padding: 0 8px;
 			font-size: 12px;
-			margin-left: 5px;
-			margin-top: 4px;
+			margin:4px 5px 2px 5px;
+
 			&:first-of-type {
 				margin-left: 15px;
 			}

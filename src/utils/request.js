@@ -128,10 +128,12 @@ const setParams = (url, params = {}, opt = {}) => {
     method
   }
   // get请求和post请求参数和
-  if (method === 'get') {
+  if (method.toLowerCase() === 'get' || method.toLowerCase() === 'delete') {
+    const curUrl = opt.joinUrl ? `${url}/${utils.serializeParam(params, opt.joinUrl)}` : url
     curParams = {
-      params: opt.splitStr ? utils.serializeParam(params, opt.splitStr) : params,
-      ...curParams
+      ...curParams,
+      url: curUrl,
+      params: opt.joinUrl ? {} : params
     }
   } else {
     curParams = {
