@@ -93,7 +93,7 @@ export const releaseRelease = params =>
  * @param {*} params
  */
 export const addCategory = params =>
-  Http.fetch(`${context}/v1/category/add`, params)
+  Http.fetch(`${context}/v1/category`, params)
 
 // 修改商品类目
 export const updateCategory = params =>
@@ -106,8 +106,8 @@ export const updateCategory = params =>
  * @param {*} params
  */
 export const deleteCategory = params =>
-  Http.fetch(`${context}/v1/category`, params, {
-    method: 'detele'
+  Http.fetch(`${context}/v1/category/${params.categoryId}`, params, {
+    method: 'delete'
   })
 
 /**

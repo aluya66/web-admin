@@ -43,7 +43,7 @@
         <template slot-scope="{ row, index }" slot="action">
             <el-button type="primary" size="small" icon="el-icon-edit" @click="addModal(2, index)">编辑
               </el-button>
-              <el-button type="danger" size="small" icon="el-icon-delete-solid" @click="deleteItem(row, index)">编辑
+              <el-button type="danger" size="small" icon="el-icon-delete-solid" @click="deleteItem(row, index)">删除
                 </el-button>
           <!-- <Button type="success" size="small" class="deteleBtn" @click="addModal(2, index)">
             <Icon :size='14' type="md-create" />编辑</Button> -->
