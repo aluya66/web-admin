@@ -118,30 +118,37 @@
         loading: false,
         columns: [{
             title: 'app名称',
+            align: 'center',
             key: 'appName'
           },
           {
             title: 'appCode',
+            align: 'center',
             key: 'appCode'
           },
           {
             title: 'appKey',
+            align: 'center',
             key: 'appKey'
           },
           {
             title: '状态',
+            align: 'center',
             slot: 'status'
           },
           {
             title: '描述',
+            align: 'center',
             key: 'description'
           },
           {
             title: '创建时间',
+            align: 'center',
             key: 'created'
           },
           {
             title: '操作',
+            align: 'center',
             slot: 'action'
           }
         ],

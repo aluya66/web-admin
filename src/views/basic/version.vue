@@ -25,8 +25,8 @@
             <el-form-item label="平台:" class="inputLabel">
               <el-select placeholder="请选择平台" v-model="platform" size="small">
                 <el-option label="全部" value=""></el-option>
-                <el-option label="安卓" value="1"></el-option>
-                <el-option label="IOS" value="2"></el-option>
+                <el-option label="安卓" value="0"></el-option>
+                <el-option label="IOS" value="1"></el-option>
               </el-select>
             </el-form-item>
 
@@ -273,8 +273,14 @@
         // this.loading = !this.loading
         this.$api.basic.queryAllVersion(data).then(res => {
           // that.loading = !that.loading
-          that.versionList = res.data
-          that.listTotal = res.totalCount
+          if(res){
+            that.versionList = res.data
+            that.listTotal = res.totalCount
+          }else{
+            that.versionList = []
+            that.listTotal = 1
+          }
+          
         })
       },
       pageChange(page) {
@@ -366,7 +372,7 @@
     white-space: nowrap;
     line-height: 18px;
     cursor: pointer;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 </style>

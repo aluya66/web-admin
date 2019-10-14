@@ -73,7 +73,7 @@ export const queryCategory = params =>
 
 // 添加版本信息
 export const addRelease = params =>
-  Http.fetch(`${context}/v1/version/add`, params)
+  Http.fetch(`${context}/v1/version`, params)
 
 /**
  * 查询所有品类列表
