@@ -82,8 +82,8 @@
 		<slot name="footer" />
 		<c-pagination
 			v-show="!noPage && tableList.length > 0"
-			:total="pageInfo.totalSize"
-			:page.sync="pageInfo.currentPage"
+			:total="pageInfo.totalCount"
+			:page.sync="pageInfo.pageNum"
 			:limit.sync="pageInfo.pageSize"
 			@pagination="changePagination"
 		></c-pagination>
@@ -132,9 +132,9 @@ export default {
       type: Object,
       default () {
         return {
-          totalSize: 0,
+          pageNum: 1,
           pageSize: 10,
-          currentPage: 1
+          totalCount: 0
         }
       }
     },

@@ -4,6 +4,36 @@
 export const isDebug = process.env.NODE_ENV === 'development'
 
 /**
+ * 路由打开新窗口
+ * 还可以通过<router-link target="_blank" 和 <a target="_blank"这两种方式开新窗口
+ */
+export const openNewWin = (routerOpts) => {
+  const {
+    $router
+  } = this
+  let routePath = ''
+  if (routerOpts.url) {
+    routePath = routerOpts.url
+  } else {
+    routePath = $router.resolve({
+      name: routerOpts.name,
+      query: routerOpts.query,
+      params: routerOpts.params
+    })
+  }
+  window.open(routePath, '_blank')
+}
+/**
+ *  统一跳转到登陆页面
+ */
+export const goToLogin = (page = 'login', type = 'push', time = 1.5) => {
+  setTimeout(() => {
+    this.$router[type]({
+      path: `/${page}?redirect=${this.$route.fullPath}`
+    })
+  }, time * 1000)
+}
+/**
  *  统一消息提示
  *
  * @param {string} [message=''] 消息
@@ -38,7 +68,7 @@ export const formartTreeData = (res, options) => {
         if (val.child.length) {
           if (options && options.hasAll) {
             const name =
-							val.level + 1 === 2 ? '所有街道' : val.level + 1 === 3 ? '所有社区' : '所有区域'
+              val.level + 1 === 2 ? '所有街道' : val.level + 1 === 3 ? '所有社区' : '所有区域'
             val.child.unshift({
               id: options.noId ? -val.id : val.id,
               level: val.level + 1,
@@ -50,15 +80,14 @@ export const formartTreeData = (res, options) => {
           }
           if (options && options.noSelect) {
             const name =
-							val.level + 1 === 2 ? '不选择街道' : val.level + 1 === 3 ? '不选择社区' : '不选择区域'
+              val.level + 1 === 2 ? '不选择街道' : val.level + 1 === 3 ? '不选择社区' : '不选择区域'
             val.child.unshift({
               id: val.id,
               level: val.level,
               regionName: name,
               path: val.regionName,
               subId: val.subId,
-              disabled:
-								options.disabledId && options.disabledId.includes(val.id),
+              disabled: options.disabledId && options.disabledId.includes(val.id),
               child: []
             })
           }
@@ -71,10 +100,9 @@ export const formartTreeData = (res, options) => {
           label: val.regionName,
           subId: val.subId,
           path: val.path,
-          disabled:
-						options &&
-						options.disabledId &&
-						options.disabledId.includes(val.id),
+          disabled: options &&
+            options.disabledId &&
+            options.disabledId.includes(val.id),
           children
         }
       }
@@ -349,5 +377,7 @@ export default {
   getRandomNum,
   formartTreeData,
   isExternal,
-  getUrlParam
+  getUrlParam,
+  openNewWin,
+  goToLogin
 }

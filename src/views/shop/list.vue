@@ -260,7 +260,7 @@ export default {
           ? '编辑用户'
           : '新增用户'
     },
-    ...mapGetters(['userInfo', 'operatorObj'])
+    ...mapGetters(['userInfo'])
   },
   created () {
     this.supplyList = Object.keys(this.operatorObj).map(res => ({

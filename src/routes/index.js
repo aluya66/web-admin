@@ -99,10 +99,10 @@ const createRouter = () =>
   })
 
 const router = createRouter()
-
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
-  if (store.getters.userInfo && store.getters.userInfo.token) {
+  const token = utils.getUrlParam('token')
+  if (token || (store.getters.userInfo && store.getters.userInfo.token)) {
     if (to.path === '/login') {
       next({
         path: '/'
@@ -128,7 +128,7 @@ router.beforeEach(async (to, from, next) => {
         } catch (error) {
           await store.dispatch('user/resetToken')
           utils.errFun(error || 'Has Error')
-          next(`/?redirect=${to.path}`)
+          next(`/404?redirect=${to.path}`)
           NProgress.done()
         }
       }
@@ -137,7 +137,7 @@ router.beforeEach(async (to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       next()
     } else {
-      next(`/?redirect=${to.path}`) // 否则全部重定向到登录页
+      next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
       NProgress.done()
     }
   }

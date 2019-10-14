@@ -144,5 +144,6 @@ export default {
   fomartDate,
   formatTime,
   getTime,
-  getCurMonthDays
+  getCurMonthDays,
+  pickerOptions
 }

@@ -1,6 +1,22 @@
 export default {
   route: {
-    home: '首页'
+    home: '首页',
+    basic: '基础服务',
+    bussiness: '业务线',
+    area: '区域管理',
+    version: '版本管理',
+    category: '商品类目',
+    brand: '品牌管理',
+    merchandise: '商品类型',
+    shopLable: '商品标签',
+    userLable: '用户标签',
+    logistics: '物流管理',
+    goods: '商品中心',
+    shopCenter: '商品中心',
+    shopCenterLog: '商品日志',
+    shopCenterDel: '商品详情',
+    snapshoot: '商品快照',
+    snapshootDel: '快照详情'
   },
   navbar: {
     logout: '退出',

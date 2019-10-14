@@ -392,6 +392,7 @@ export default {
 }
 .selectWidth {
   width: 200px;
+  margin-right: 20px;
 }
 .addBtn {
   margin-left: 50px;

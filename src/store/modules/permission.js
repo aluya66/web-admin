@@ -20,7 +20,7 @@ const actions = {
       getMenuList({
         parentId: menuId
       }).then(res => {
-        let accessedRoutes = !utils.isDebug ? asyncRoutes : filterAsyncRoutes(asyncRoutes, res)
+        let accessedRoutes = utils.isDebug ? asyncRoutes : filterAsyncRoutes(asyncRoutes, res)
         store.commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       })
