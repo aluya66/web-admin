@@ -82,7 +82,6 @@
 </template>
 
 <script>
-import CTable from 'components/table'
 import mixinTable from 'mixins/table'
 import utils from 'utils'
 
@@ -160,9 +159,6 @@ export default {
         }
       })
     }
-  },
-  components: {
-    CTable
   }
 }
 </script>

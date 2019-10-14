@@ -1,4 +1,5 @@
 import utils from 'utils'
+import CTable from 'components/table'
 
 export default {
   data() {
@@ -45,5 +46,8 @@ export default {
       this.pageInfo.pageNum = 1
       this.fetchData()
     }
+  },
+  components: {
+    CTable
   }
 }

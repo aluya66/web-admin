@@ -41,7 +41,7 @@
                 v-model="searchObj.categoryCode"
                 class="search-item"
                 :size="size"
-                placeholder="请输入操作人"
+                placeholder="请输入商品类目"
                 clearable
               />
             </el-form-item>
@@ -53,18 +53,24 @@
                 placeholder="请输入操作人"
                 clearable
               />
-            </el-form-item> -->
+            </el-form-item>-->
             <el-form-item label="品牌">
               <el-input
                 v-model="searchObj.brandName"
                 class="search-item"
                 :size="size"
-                placeholder="请输入操作人"
+                placeholder="请输入品牌"
                 clearable
               />
             </el-form-item>
             <el-form-item label="上下架">
-              <el-select v-model="searchObj.marketable" class="search-item" placeholder="请选择" clearable>
+              <el-select
+                v-model="searchObj.marketable"
+                :size="size"
+                class="search-item"
+                placeholder="请选择"
+                clearable
+              >
                 <el-option
                   v-for="item in marketableSelect"
                   :key="item.value"
@@ -102,8 +108,6 @@
 </template>
 
 <script>
-import CTable from 'components/table'
-
 import mixinTable from 'mixins/table'
 import utils from 'utils'
 
@@ -239,9 +243,6 @@ export default {
         }
       })
     }
-  },
-  components: {
-    CTable
   }
 }
 </script>

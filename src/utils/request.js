@@ -123,8 +123,7 @@ const setParams = (url, params = {}, opt = {}) => {
     url,
     headers: {
       'Content-Type': contentType,
-      'token': 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzEwMTkzNDksImxvZ2luTmFtZSI6InRzaiIsImlzcyI6Inlvc2FyLXVwbXMiLCJleHAiOjE1NzEwNTUzNDksInVzZXJJZCI6OTAsImlhdCI6MTU3MTAxOTM0OX0.0jVYfWoCLmJrsf6KM7yWyJSRC5KM5-vaLuaxLXQMC4s'
-      // 'token': opt.token || token
+      'token': opt.token || token
     },
     method
   }

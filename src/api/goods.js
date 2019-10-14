@@ -52,5 +52,6 @@ export const getSnapshot = params =>
 // 商品快照详情
 export const getSnapshotDetail = params =>
   Http.fetch(`${context}/v1/snapshot`, params, {
-    method: 'get'
+    method: 'get',
+    joinUrl: '/'
   })
