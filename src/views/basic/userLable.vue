@@ -7,12 +7,10 @@
 			</div>
 		</template>
   <Card>
-    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
-      <el-row type="flex" class="row-bg">
+    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
         <el-form-item label="标签名称:">
           <el-input v-model="formInline.labelName" placeholder="请输入名称"></el-input>
         </el-form-item>
-      </el-row>
       <el-form-item>
         <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn" >搜索</el-button>
       </el-form-item>
@@ -22,17 +20,24 @@
       border
       style="width: 100%">
       <el-table-column
-        label="标签编码"
-        >
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.labelCode }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
         label="标签名称"
         >
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.labelName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="拼音大写"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.initial }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="标签编码"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.labelCode }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -54,13 +59,6 @@
         >
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.labelStatusCN }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="拼音大写"
-        >
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.initial }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -112,7 +110,9 @@
       </el-table-column>
     </el-table>
 
-    <Page :total="listTotal" show-total @on-change="pageChange" />
+    <div class="block">
+      <Page :total="listTotal" show-total @on-change="pageChange" />
+    </div>
     <Modal
       v-model="showModal"
       :title="modelTitle"
@@ -132,9 +132,6 @@
             <Radio label="无效" true-value='2'></Radio>
           </RadioGroup>
         </FormItem>
-        <FormItem label="标签描述:" >
-          <Input v-model="formDynamic.labelDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入标签描述" />
-        </FormItem>
         <FormItem label="创建人:" v-if="statusType===1">
           <Input  placeholder='请输入创建人' v-model="formDynamic.createdby"/>
         </FormItem>
@@ -148,6 +145,9 @@
             </Checkbox>
           </CheckboxGroup >
         </FormItem>
+        <FormItem label="标签描述:" >
+          <Input v-model="formDynamic.labelDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入标签描述" />
+        </FormItem>
         <FormItem>
           <Button type="primary" class="addBtn" @click="addModalBtn">保存</Button>
           <Button class="cancelBtn" @click="closBtn">取消</Button>
@@ -158,54 +158,11 @@
 </c-view>
 </template>
 <script>
-const columns = [
-  {
-    title: '标签code',
-    key: 'labelCode'
-  },
-  {
-    title: '标签名称',
-    key: 'labelName'
-  },
-  {
-    title: '标签类型',
-    key: 'labelTypeCN'
-  },
-  {
-    title: '标签描述',
-    key: 'labelDesc'
-  },
-  {
-    title: '状态',
-    key: 'labelStatusCN'
-  },
-  {
-    title: '拼音大写',
-    key: 'initial'
-  },
-  {
-    title: '创建人',
-    key: 'createdby'
-  },
-  {
-    title: '创建时间',
-    key: 'created'
-  },
-  {
-    title: '更新时间',
-    key: 'updated'
-  },
-  {
-    title: '操作',
-    slot: 'action'
-  }
-]
 export default {
   name: 'shopLable',
   data() {
     return {
       visible: false,
-      columns,
       list: [],
       addSoreList: [],
       query: {
@@ -393,5 +350,8 @@ export default {
 }
 .fromStyle{
   margin-right: 10px
+}
+.block{
+  margin-top: 10px
 }
 </style>

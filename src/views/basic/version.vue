@@ -6,7 +6,7 @@
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
         </el-col>
         <el-col :span="1" class="searchBtn">
-          <el-button type="primary" size="small" icon="el-icon-circle-plus" @click="addNewRelease">
+          <el-button type="primary" size="small" icon="el-icon-plus" @click="addNewRelease">
             新增</el-button>
         </el-col>
       </el-row>
@@ -19,8 +19,6 @@
             <el-form-item label="版本名称:" class="inputLabel">
               <el-input placeholder="请输入版本名称" v-model="versionName" size="small"></el-input>
             </el-form-item>
-
-
 
             <el-form-item label="平台:" class="inputLabel">
               <el-select placeholder="请选择平台" v-model="platform" size="small">
@@ -55,7 +53,7 @@
               <el-button type="primary" size="small" icon="el-icon-finished">发布</el-button>
             </Poptip>
             <el-button v-else type="info" disabled size="small">已发布</el-button>
-            
+
         </template>
         <template slot-scope="{ row }" slot="url">
           <div class="urlBox">
@@ -125,188 +123,187 @@
   </c-view>
 </template>
 <script>
-  const columns = [{
-      title: 'app版本',
-      key: 'versionName',
-      align: 'center'
-    },
-    {
-      title: '平台',
-      slot: 'platform',
-      align: 'center'
-    },
-    {
-      title: 'url',
-      slot: 'url',
-      align: 'center',
-      width: '300'
-    },
-    {
-      title: '是否强制更新',
-      slot: 'force',
-      align: 'center'
-    },
-    {
-      title: '描述',
-      slot: 'description',
-      align: 'center',
-      width: '300'
-    },
-    {
-      title:'状态',
-      slot:'status',
-      align:'center'
-    },
-    {
-      title: '操作',
-      slot: 'action',
-      align: 'center'
+const columns = [{
+  title: 'app版本',
+  key: 'versionName',
+  align: 'center'
+},
+{
+  title: '平台',
+  slot: 'platform',
+  align: 'center'
+},
+{
+  title: 'url',
+  slot: 'url',
+  align: 'center',
+  width: '300'
+},
+{
+  title: '是否强制更新',
+  slot: 'force',
+  align: 'center'
+},
+{
+  title: '描述',
+  slot: 'description',
+  align: 'center',
+  width: '300'
+},
+{
+  title: '状态',
+  slot: 'status',
+  align: 'center'
+},
+{
+  title: '操作',
+  slot: 'action',
+  align: 'center'
+}
+]
+export default {
+  name: 'version',
+  data() {
+    return {
+      query: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      loading: false,
+      listTotal: 0,
+      versionList: [],
+      columns,
+      appCode: '',
+      versionName: '',
+      contentModal: false,
+      formLeft: {
+        // appCode: null,
+        force: '', // 更新
+        platform: '', // 0：安卓 1： ios
+        // versionCode: '',      //版本号
+        versionName: '', // 版本名称
+        url: '', // 路径
+        description: '' // 描述
+      },
+      platform: '',
+      force: ''
     }
-  ]
-  export default {
-    name: 'version',
-    data() {
-      return {
-        query: {
-          pageNum: 1,
-          pageSize: 10
-        },
-        loading: false,
-        listTotal: 0,
-        versionList: [],
-        columns,
-        appCode: '',
-        versionName: '',
-        contentModal: false,
-        formLeft: {
-          // appCode: null,
-          force: '', // 更新
-          platform: '', // 0：安卓 1： ios
-          // versionCode: '',      //版本号
-          versionName: '', // 版本名称
-          url: '', // 路径
-          description: '' // 描述
-        },
-        platform: '',
-        force: ''
+  },
+  created() {
+    this.queryVersionList()
+  },
+  methods: {
+    okPublish(e) {
+      let that = this
+      let data = {
+        versionId: e.id
       }
+      this.$api.basic.releaseRelease(data).then(res => {
+        that.$Message.info('发布成功')
+        that.queryVersionList()
+      })
     },
-    created() {
+    cancel() {},
+    closeBtn() {
+      this.contentModal = false
+    },
+    searchBtn() {
+      this.query.pageNum = 1
       this.queryVersionList()
     },
-    methods: {
-      okPublish(e) {
-        let that = this
-        let data = {
-          versionId: e.id
-        }
-        this.$api.basic.releaseRelease(data).then(res => {
-          that.$Message.info('发布成功')
-          that.queryVersionList()
-        })
-      },
-      cancel() {},
-      closeBtn() {
-        this.contentModal = false
-      },
-      searchBtn() {
-        this.query.pageNum = 1
-        this.queryVersionList()
-      },
-      addNewRelease() {
-        this.contentModal = true
-        this.formLeft = {}
-      },
-      addReleaseBtn() {
-        let that = this
-        if (!this.formLeft.versionName) {
-          this.$Message.info('请填写app版本')
-          return
-        }
-        if (!this.formLeft.url) {
-          this.$Message.info('请填写路径')
-          return
-        }
-        if (!this.formLeft.platform) {
-          this.$Message.info('请选择平台')
-          return
-        }
-        // if(!this.formLeft.force){
-        //   this.$Message.info('请选择是否强制更新')
-        //   return
-        // }
-        if (!this.formLeft.description) {
-          this.$Message.info('请填写描述')
-          return
-        }
-        if (this.formLeft.platform === '安卓') {
-          this.platform = 0
-        } else if (this.formLeft.platform === 'IOS') {
-          this.platform = 1
-        }
-        if (this.formLeft.force === '不强制更新') {
-          this.force = 0
-        } else if (this.formLeft.force === '强制更新') {
-          this.force = 1
-        }
-        let data = {
-          ...this.formLeft,
-          force: this.force,
-          platform: this.platform
-        }
-        this.loading = !this.loading
-        this.$api.basic.addRelease(data).then(res => {
-          that.loading = !that.loading
-          that.$Message.info('新增成功')
-          that.platform = ''
-          that.queryVersionList()
-          that.contentModal = false
-        })
-      },
-      queryVersionList() {
-        let that = this
-        let data = {
-          ...this.query,
-          versionName: this.versionName,
-          platform: this.platform
-        }
-        // this.loading = !this.loading
-        this.$api.basic.queryAllVersion(data).then(res => {
-          // that.loading = !that.loading
-          if(res){
-            that.versionList = res.data
-            that.listTotal = res.totalCount
-          }else{
-            that.versionList = []
-            that.listTotal = 1
-          }
-          
-        })
-      },
-      pageChange(page) {
-        this.query.pageNum = page
-        this.queryVersionList()
-      },
-      // 复制粘贴
-      copySpecialTopicUrl(url){
-        console.log(url);
-        var oInput = document.createElement('input'); //创建一个隐藏input（重要！）
-        oInput.value = url;    //赋值
-        document.body.appendChild(oInput);
-        oInput.select(); // 选择对象
-        document.execCommand("Copy"); // 执行浏览器复制命令
-        oInput.className = 'oInput';
-        oInput.style.display = 'none';
-        this.$message.success('复制成功');
-      },
-      downPackage(){
-        this.$message({
-          message: '该功能尚未开放,敬请期待',
-          type: 'warning'
-        });
+    addNewRelease() {
+      this.contentModal = true
+      this.formLeft = {}
+    },
+    addReleaseBtn() {
+      let that = this
+      if (!this.formLeft.versionName) {
+        this.$Message.info('请填写app版本')
+        return
       }
+      if (!this.formLeft.url) {
+        this.$Message.info('请填写路径')
+        return
+      }
+      if (!this.formLeft.platform) {
+        this.$Message.info('请选择平台')
+        return
+      }
+      // if(!this.formLeft.force){
+      //   this.$Message.info('请选择是否强制更新')
+      //   return
+      // }
+      if (!this.formLeft.description) {
+        this.$Message.info('请填写描述')
+        return
+      }
+      if (this.formLeft.platform === '安卓') {
+        this.platform = 0
+      } else if (this.formLeft.platform === 'IOS') {
+        this.platform = 1
+      }
+      if (this.formLeft.force === '不强制更新') {
+        this.force = 0
+      } else if (this.formLeft.force === '强制更新') {
+        this.force = 1
+      }
+      let data = {
+        ...this.formLeft,
+        force: this.force,
+        platform: this.platform
+      }
+      this.loading = !this.loading
+      this.$api.basic.addRelease(data).then(res => {
+        that.loading = !that.loading
+        that.$Message.info('新增成功')
+        that.platform = ''
+        that.queryVersionList()
+        that.contentModal = false
+      })
+    },
+    queryVersionList() {
+      let that = this
+      let data = {
+        ...this.query,
+        versionName: this.versionName,
+        platform: this.platform
+      }
+      // this.loading = !this.loading
+      this.$api.basic.queryAllVersion(data).then(res => {
+        // that.loading = !that.loading
+        if (res) {
+          that.versionList = res.data
+          that.listTotal = res.totalCount
+        } else {
+          that.versionList = []
+          that.listTotal = 1
+        }
+      })
+    },
+    pageChange(page) {
+      this.query.pageNum = page
+      this.queryVersionList()
+    },
+    // 复制粘贴
+    copySpecialTopicUrl(url) {
+      console.log(url)
+      var oInput = document.createElement('input') // 创建一个隐藏input（重要！）
+      oInput.value = url // 赋值
+      document.body.appendChild(oInput)
+      oInput.select() // 选择对象
+      document.execCommand('Copy') // 执行浏览器复制命令
+      oInput.className = 'oInput'
+      oInput.style.display = 'none'
+      this.$message.success('复制成功')
+    },
+    downPackage() {
+      this.$message({
+        message: '该功能尚未开放,敬请期待',
+        type: 'warning'
+      })
     }
   }
+}
 
 </script>
 

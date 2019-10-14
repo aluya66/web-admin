@@ -6,7 +6,7 @@
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
         </el-col>
         <el-col :span="1">
-          <el-button type="primary" size="small" icon="el-icon-circle-plus" @click="addInsert(1)">新增
+          <el-button type="primary" size="small" icon="el-icon-plus" @click="addInsert(1)">新增
           </el-button>
         </el-col>
       </el-row>
@@ -41,8 +41,6 @@
                 <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn()">搜索
                 </el-button>
             </el-col>
-            
-
 
           </el-row>
         </el-form>
@@ -103,181 +101,181 @@
   </c-view>
 </template>
 <script>
-  export default {
-    name: 'bussinessLine',
-    data() {
-      return {
-        list: [], // 应用列表
-        listTotal: 0,
-        contentModal: false,
-        curBussinessContent: {},
-        query: {
-          pageNum: 1,
-          pageSize: 10
-        },
-        loading: false,
-        columns: [{
-            title: 'app名称',
-            align: 'center',
-            key: 'appName'
-          },
-          {
-            title: 'appCode',
-            align: 'center',
-            key: 'appCode'
-          },
-          {
-            title: 'appKey',
-            align: 'center',
-            key: 'appKey'
-          },
-          {
-            title: '状态',
-            align: 'center',
-            slot: 'status'
-          },
-          {
-            title: '描述',
-            align: 'center',
-            key: 'description'
-          },
-          {
-            title: '创建时间',
-            align: 'center',
-            key: 'created'
-          },
-          {
-            title: '操作',
-            align: 'center',
-            slot: 'action'
-          }
-        ],
-        basicTitle: '',
-        modal1: false,
+export default {
+  name: 'bussinessLine',
+  data() {
+    return {
+      list: [], // 应用列表
+      listTotal: 0,
+      contentModal: false,
+      curBussinessContent: {},
+      query: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      loading: false,
+      columns: [{
+        title: 'app名称',
+        align: 'center',
+        key: 'appName'
+      },
+      {
+        title: 'appCode',
+        align: 'center',
+        key: 'appCode'
+      },
+      {
+        title: 'appKey',
+        align: 'center',
+        key: 'appKey'
+      },
+      {
+        title: '状态',
+        align: 'center',
+        slot: 'status'
+      },
+      {
+        title: '描述',
+        align: 'center',
+        key: 'description'
+      },
+      {
+        title: '创建时间',
+        align: 'center',
+        key: 'created'
+      },
+      {
+        title: '操作',
+        align: 'center',
+        slot: 'action'
+      }
+      ],
+      basicTitle: '',
+      modal1: false,
+      appName: '',
+      appCode: '',
+      appKey: '',
+      formLeft: {
         appName: '',
         appCode: '',
-        appKey: '',
-        formLeft: {
-          appName: '',
-          appCode: '',
-          // appKey: '',
-          description: '',
-          input5: '',
-          id: ''
-        },
-        status: '',
-        statusType: '',
-        statusName: '',
-        typeStatus: ''
+        // appKey: '',
+        description: '',
+        input5: '',
+        id: ''
+      },
+      status: '',
+      statusType: '',
+      statusName: '',
+      typeStatus: ''
+    }
+  },
+  created() {
+    this.queryBussinessList()
+  },
+  methods: {
+    // 添加/修改业务
+    addInsert(type, index) {
+      if (type === 1) {
+        this.contentModal = true
+        this.basicTitle = '新增'
+        this.typeStatus = 1
+        this.formLeft = {}
+      } else if (type === 2) {
+        if (this.list[index].status === 1) {
+          this.statusName = '启用'
+        } else if (this.list[index].status === 2) {
+          this.statusName = '禁用'
+        }
+        this.contentModal = true
+        this.basicTitle = '修改'
+        this.typeStatus = 2
+        this.formLeft.appName = this.list[index].appName
+        this.formLeft.appCode = this.list[index].appCode
+        this.formLeft.appKey = this.list[index].appKey
+        this.formLeft.description = this.list[index].description
+        this.formLeft.input5 = this.statusName
+        this.formLeft.id = this.list[index].id
       }
     },
-    created() {
+    cancel() {
+      this.contentModal = false
+      this.contentModal = false
+    },
+    // 搜索
+    searchBtn() {
+      this.query.pageNum = 1
       this.queryBussinessList()
     },
-    methods: {
-      // 添加/修改业务
-      addInsert(type, index) {
-        if (type === 1) {
-          this.contentModal = true
-          this.basicTitle = '新增'
-          this.typeStatus = 1
-          this.formLeft = {}
-        } else if (type === 2) {
-          if (this.list[index].status === 1) {
-            this.statusName = '启用'
-          } else if (this.list[index].status === 2) {
-            this.statusName = '禁用'
-          }
-          this.contentModal = true
-          this.basicTitle = '修改'
-          this.typeStatus = 2
-          this.formLeft.appName = this.list[index].appName
-          this.formLeft.appCode = this.list[index].appCode
-          this.formLeft.appKey = this.list[index].appKey
-          this.formLeft.description = this.list[index].description
-          this.formLeft.input5 = this.statusName
-          this.formLeft.id = this.list[index].id
-        }
-      },
-      cancel() {
-        this.contentModal = false
-        this.contentModal = false
-      },
-      // 搜索
-      searchBtn() {
-        this.query.pageNum = 1
-        this.queryBussinessList()
-      },
-      // 获取业务列表
-      queryBussinessList() {
-        let that = this
-        let data = {
-          ...this.query,
-          appName: this.appName,
-          appCode: this.appCode,
-          appKey: this.appKey,
-          status: this.statusType
-        }
-        this.loading = !this.loading
-        this.$api.basic.businessList(data).then(res => {
-          that.loading = !that.loading
-          that.list = res.data
-          that.listTotal = res.totalCount
-        })
-      },
-      // 打开添加业务详情弹窗
-      addContentModal() {
-        console.log(this.typeStatus)
-        let that = this
-        if (!this.formLeft.appName) {
-          this.$Message.info('请填写app名称')
-          return
-        }
-        if (!this.formLeft.appCode) {
-          this.$Message.info('请填写appCode')
-          return
-        }
-        if (!this.formLeft.description) {
-          this.$Message.info('请填写描述')
-          return
-        }
-        if (this.formLeft.input5 === '启用') {
-          this.status = 1
-        } else if (this.formLeft.input5 === '禁用') {
-          this.status = 2
-        }
-        this.loading = !this.loading
-        if (this.typeStatus === 1) {
-          let data = {
-            status: this.status,
-            ...this.formLeft
-          }
-          this.$api.basic.addBusiness(data).then(res => {
-            that.loading = !that.loading
-            that.$Message.info('添加成功')
-            that.contentModal = false
-            that.queryBussinessList()
-          })
-        } else if (this.typeStatus === 2) {
-          let data = {
-            status: Number(this.status),
-            ...this.formLeft
-          }
-          this.$api.basic.updateBusiness(data).then(res => {
-            that.loading = !that.loading
-            that.$Message.info('修改成功')
-            that.contentModal = false
-            that.queryBussinessList()
-          })
-        }
-      },
-      // 分页器
-      pageChange(page) {
-        this.query.pageNum = page
-        this.queryBussinessList()
+    // 获取业务列表
+    queryBussinessList() {
+      let that = this
+      let data = {
+        ...this.query,
+        appName: this.appName,
+        appCode: this.appCode,
+        appKey: this.appKey,
+        status: this.statusType
       }
+      this.loading = !this.loading
+      this.$api.basic.businessList(data).then(res => {
+        that.loading = !that.loading
+        that.list = res.data
+        that.listTotal = res.totalCount
+      })
+    },
+    // 打开添加业务详情弹窗
+    addContentModal() {
+      console.log(this.typeStatus)
+      let that = this
+      if (!this.formLeft.appName) {
+        this.$Message.info('请填写app名称')
+        return
+      }
+      if (!this.formLeft.appCode) {
+        this.$Message.info('请填写appCode')
+        return
+      }
+      if (!this.formLeft.description) {
+        this.$Message.info('请填写描述')
+        return
+      }
+      if (this.formLeft.input5 === '启用') {
+        this.status = 1
+      } else if (this.formLeft.input5 === '禁用') {
+        this.status = 2
+      }
+      this.loading = !this.loading
+      if (this.typeStatus === 1) {
+        let data = {
+          status: this.status,
+          ...this.formLeft
+        }
+        this.$api.basic.addBusiness(data).then(res => {
+          that.loading = !that.loading
+          that.$Message.info('添加成功')
+          that.contentModal = false
+          that.queryBussinessList()
+        })
+      } else if (this.typeStatus === 2) {
+        let data = {
+          status: Number(this.status),
+          ...this.formLeft
+        }
+        this.$api.basic.updateBusiness(data).then(res => {
+          that.loading = !that.loading
+          that.$Message.info('修改成功')
+          that.contentModal = false
+          that.queryBussinessList()
+        })
+      }
+    },
+    // 分页器
+    pageChange(page) {
+      this.query.pageNum = page
+      this.queryBussinessList()
     }
   }
+}
 
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

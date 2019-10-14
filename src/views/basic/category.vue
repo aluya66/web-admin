@@ -6,7 +6,7 @@
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
         </el-col>
         <el-col :span="1">
-          <el-button type="primary" size="small" icon="el-icon-circle-plus" @click="addModal(1)">新增
+          <el-button type="primary" size="small" icon="el-icon-plus" @click="addModal(1)">新增
           </el-button>
         </el-col>
       </el-row>
@@ -93,268 +93,268 @@
   </c-view>
 </template>
 <script>
-  export default {
-    name: 'category',
-    data() {
-      return {
-        query: {
-          pageNum: 1,
-          pageSize: 10
-        },
-        loading: false,
-        listTotal: 0,
-        categoryList: [],
-        showModal: false,
-        curCategoryDetail: {
-          categoryName: '',
-          imageUrl: '',
-          parentCode: '',
-          safeLevel: '',
-          sortNumber: 100,
-          categoryId: '',
-          showFlag: '',
-          createUser: ''
-        },
-        columns: [{
-            title: '类别编码',
-            align: 'center',
-            key: 'categoryCode'
-          },
-          {
-            title: '级别',
-            align: 'center',
-            key: 'categoryLevelText'
-          },
-          {
-            title: '类目名称',
-            align: 'center',
-            key: 'categoryName'
-          },
-          {
-            title: '是否展示',
-            align: 'center',
-            key: 'showFlagText'
-          },
-          {
-            title: '状态',
-            align: 'center',
-            key: 'deleteFlagText'
-          },
-          {
-            title: '标准',
-            align: 'center',
-            key: 'standard'
-          },
-          // {
-          //   title: '大小',
-          //   key: 'sizeName'
-          // },
-          // {
-          //   title: 'parentId',
-          //   key: 'parentId'
-          // },
-          // {
-          //   title: 'parentCode',
-          //   key: 'parentCode'
-          // },
-          {
-            title: '更新时间',
-            align: 'center',
-            key: 'updated'
-          },
-          {
-            title: '修改',
-            align: 'center',
-            slot: 'action'
-            // render: (h, params) => {
-            //   const This = this
-            //   return h('div', [
-            //     h('a', {
-            //       on: {
-            //         click: () => {
-            //           This.openEditModal(params.row.categoryCode)
-            //         }
-            //       }
-            //     }, '修改'),
-            //     h('Divider', { props: { type: 'vertical' } }),
-            //     h('a', {
-            //       on: {
-            //         click: () => {
-            //           This.deleteItem(params.row)
-            //         }
-            //       }
-            //     }, '删除')
-            //   ])
-
-            // }
-          }
-        ],
-        categoryLevelList: ['一级类目', '二级类目', '三级类目', '四级类目', '五级类目'],
-        showFlagList: ['不显示', '显示'],
-        categoryLevel: '',
+export default {
+  name: 'category',
+  data() {
+    return {
+      query: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      loading: false,
+      listTotal: 0,
+      categoryList: [],
+      showModal: false,
+      curCategoryDetail: {
         categoryName: '',
+        imageUrl: '',
+        parentCode: '',
+        safeLevel: '',
+        sortNumber: 100,
+        categoryId: '',
         showFlag: '',
-        modalTitle: '',
-        categoryType: ''
+        createUser: ''
+      },
+      columns: [{
+        title: '类别编码',
+        align: 'center',
+        key: 'categoryCode'
+      },
+      {
+        title: '级别',
+        align: 'center',
+        key: 'categoryLevelText'
+      },
+      {
+        title: '类目名称',
+        align: 'center',
+        key: 'categoryName'
+      },
+      {
+        title: '是否展示',
+        align: 'center',
+        key: 'showFlagText'
+      },
+      {
+        title: '状态',
+        align: 'center',
+        key: 'deleteFlagText'
+      },
+      {
+        title: '标准',
+        align: 'center',
+        key: 'standard'
+      },
+      // {
+      //   title: '大小',
+      //   key: 'sizeName'
+      // },
+      // {
+      //   title: 'parentId',
+      //   key: 'parentId'
+      // },
+      // {
+      //   title: 'parentCode',
+      //   key: 'parentCode'
+      // },
+      {
+        title: '更新时间',
+        align: 'center',
+        key: 'updated'
+      },
+      {
+        title: '修改',
+        align: 'center',
+        slot: 'action'
+        // render: (h, params) => {
+        //   const This = this
+        //   return h('div', [
+        //     h('a', {
+        //       on: {
+        //         click: () => {
+        //           This.openEditModal(params.row.categoryCode)
+        //         }
+        //       }
+        //     }, '修改'),
+        //     h('Divider', { props: { type: 'vertical' } }),
+        //     h('a', {
+        //       on: {
+        //         click: () => {
+        //           This.deleteItem(params.row)
+        //         }
+        //       }
+        //     }, '删除')
+        //   ])
+
+        // }
+      }
+      ],
+      categoryLevelList: ['一级类目', '二级类目', '三级类目'],
+      showFlagList: ['不显示', '显示'],
+      categoryLevel: '',
+      categoryName: '',
+      showFlag: '',
+      modalTitle: '',
+      categoryType: ''
+    }
+  },
+  created() {
+    this.queryCategoryList()
+    // this.queryParentType()
+  },
+  methods: {
+    closBtn() {
+      this.showModal = false
+    },
+    searchBtn() {
+      this.query.pageNum = 1
+      this.queryCategoryList()
+    },
+    // 获取品类列表
+    queryCategoryList() {
+      let that = this
+      let params = {
+        ...this.query,
+        categoryLevel: this.categoryLevel,
+        categoryName: this.categoryName,
+        showFlag: this.showFlag
+      }
+      this.loading = !this.loading
+      this.$api.basic.queryCategory(params).then(res => {
+        that.loading = !that.loading
+        that.categoryList = res.data
+        that.listTotal = res.totalCount
+      })
+    },
+    pageChange(page) {
+      this.query.pageNum = page
+      this.queryCategoryList()
+    },
+    // openEditModal(categoryCode) {
+    //   this.showModal = true
+    //   this.queryDetail(categoryCode)
+    // },
+    // 获取品类详情
+    // queryDetail(categoryCode) {
+    //   this.$api.basic.queryCategoryDetail({ categoryCode }).then(res => {
+    //     console.log('详情', res)
+    //     this.curCategoryDetail = res.data
+    //   }).catch(err => {
+
+    //   })
+    // },
+    // 查询父类品类
+    // queryParentType(){
+    //   let that = this
+    //   this.$api.basic.queryParentCategory().then(res=>{
+    //     if(res.code == 0){
+    //       console.log('父类的返回',res)
+    //       console.log(res.data)
+    //     }else {
+
+    //     }
+    //   }).catch(err=>{
+
+    //   })
+    // },
+    // 删除品类
+    deleteItem(row) {
+      const This = this
+      const params = {
+        categoryId: row.categoryId
+      }
+      this.$Modal.confirm({
+        title: '提示',
+        content: '是否确定删除该品类？',
+        onOk: () => {
+          This.$api.basic.deleteCategory(params).then(res => {
+            This.$Message.success(res.message)
+            // 更新列表数据
+            This.queryCategoryList()
+          })
+        },
+        onCancel: () => {}
+      })
+    },
+    // 打开新增类目弹框
+    addModal(type, index) {
+      if (type === 1) {
+        this.showModal = true
+        this.modalTitle = '新增'
+        this.categoryType = 1
+        this.curCategoryDetail = {}
+        this.curCategoryDetail.sortNumber = 100
+      } else if (type === 2) {
+        this.showModal = true
+        this.modalTitle = '修改'
+        this.categoryType = 2
+        this.curCategoryDetail.categoryName = this.categoryList[index].categoryName
+        this.curCategoryDetail.createUser = this.categoryList[index].createUser
+        this.curCategoryDetail.imageUrl = this.categoryList[index].imageUrl
+        this.curCategoryDetail.safeLevel = this.categoryList[index].safeLevel
+        this.curCategoryDetail.sortNumber = this.categoryList[index].sortNumber
+        this.curCategoryDetail.standard = this.categoryList[index].standard
+        this.curCategoryDetail.categoryId = this.categoryList[index].categoryId
+        this.curCategoryDetail.parentCode = this.categoryList[index].parentCode
       }
     },
-    created() {
-      this.queryCategoryList()
-      // this.queryParentType()
-    },
-    methods: {
-      closBtn() {
-        this.showModal = false
-      },
-      searchBtn() {
-        this.query.pageNum = 1
-        this.queryCategoryList()
-      },
-      // 获取品类列表
-      queryCategoryList() {
-        let that = this
-        let params = {
-          ...this.query,
-          categoryLevel: this.categoryLevel,
-          categoryName: this.categoryName,
-          showFlag: this.showFlag
+    addNotarizeModal() {
+      let that = this
+      if (!this.curCategoryDetail.categoryName) {
+        this.$Message.info('请填写类目名称')
+        return
+      }
+      if (!this.curCategoryDetail.imageUrl) {
+        this.$Message.info('请填写图片地址')
+        return
+      }
+      if (!this.curCategoryDetail.parentCode) {
+        this.$Message.info('请填写父级分类编码')
+        return
+      }
+      if (!this.curCategoryDetail.safeLevel) {
+        this.$Message.info('请填写安全级别')
+        return
+      }
+      if (!this.curCategoryDetail.sortNumber) {
+        this.$Message.info('请填写排序值')
+        return
+      }
+      if (!this.curCategoryDetail.standard) {
+        this.$Message.info('请填写执行标准')
+        return
+      }
+
+      this.loading = !this.loading
+      if (this.categoryType === 1) {
+        let data = {
+          categoryName: this.curCategoryDetail.categoryName,
+          createUser: this.curCategoryDetail.createUser,
+          imageUrl: this.curCategoryDetail.imageUrl,
+          safeLevel: this.curCategoryDetail.safeLevel,
+          sortNumber: this.curCategoryDetail.sortNumber,
+          standard: this.curCategoryDetail.standard
         }
-        this.loading = !this.loading
-        this.$api.basic.queryCategory(params).then(res => {
+        this.$api.basic.addCategory(data).then(res => {
           that.loading = !that.loading
-          that.categoryList = res.data
-          that.listTotal = res.totalCount
+          that.$Message.info('添加成功')
+          that.queryCategoryList()
+          that.showModal = false
         })
-      },
-      pageChange(page) {
-        this.query.pageNum = page
-        this.queryCategoryList()
-      },
-      // openEditModal(categoryCode) {
-      //   this.showModal = true
-      //   this.queryDetail(categoryCode)
-      // },
-      // 获取品类详情
-      // queryDetail(categoryCode) {
-      //   this.$api.basic.queryCategoryDetail({ categoryCode }).then(res => {
-      //     console.log('详情', res)
-      //     this.curCategoryDetail = res.data
-      //   }).catch(err => {
-
-      //   })
-      // },
-      // 查询父类品类
-      // queryParentType(){
-      //   let that = this
-      //   this.$api.basic.queryParentCategory().then(res=>{
-      //     if(res.code == 0){
-      //       console.log('父类的返回',res)
-      //       console.log(res.data)
-      //     }else {
-
-      //     }
-      //   }).catch(err=>{
-
-      //   })
-      // },
-      // 删除品类
-      deleteItem(row) {
-        const This = this
-        const params = {
-          categoryId: row.categoryId
+      } else if (this.categoryType === 2) {
+        let data = {
+          ...this.curCategoryDetail
         }
-        this.$Modal.confirm({
-          title: '提示',
-          content: '是否确定删除该品类？',
-          onOk: () => {
-            This.$api.basic.deleteCategory(params).then(res => {
-              This.$Message.success(res.message)
-              // 更新列表数据
-              This.queryCategoryList()
-            })
-          },
-          onCancel: () => {}
+        this.$api.basic.updateCategory(data).then(res => {
+          that.loading = !that.loading
+          that.$Message.info('修改成功')
+          that.queryCategoryList()
+          that.showModal = false
         })
-      },
-      // 打开新增类目弹框
-      addModal(type, index) {
-        if (type === 1) {
-          this.showModal = true
-          this.modalTitle = '新增'
-          this.categoryType = 1
-          this.curCategoryDetail = {}
-          this.curCategoryDetail.sortNumber = 100
-        } else if (type === 2) {
-          this.showModal = true
-          this.modalTitle = '修改'
-          this.categoryType = 2
-          this.curCategoryDetail.categoryName = this.categoryList[index].categoryName
-          this.curCategoryDetail.createUser = this.categoryList[index].createUser
-          this.curCategoryDetail.imageUrl = this.categoryList[index].imageUrl
-          this.curCategoryDetail.safeLevel = this.categoryList[index].safeLevel
-          this.curCategoryDetail.sortNumber = this.categoryList[index].sortNumber
-          this.curCategoryDetail.standard = this.categoryList[index].standard
-          this.curCategoryDetail.categoryId = this.categoryList[index].categoryId
-          this.curCategoryDetail.parentCode = this.categoryList[index].parentCode
-        }
-      },
-      addNotarizeModal() {
-        let that = this
-        if (!this.curCategoryDetail.categoryName) {
-          this.$Message.info('请填写类目名称')
-          return
-        }
-        if (!this.curCategoryDetail.imageUrl) {
-          this.$Message.info('请填写图片地址')
-          return
-        }
-        if (!this.curCategoryDetail.parentCode) {
-          this.$Message.info('请填写父级分类编码')
-          return
-        }
-        if (!this.curCategoryDetail.safeLevel) {
-          this.$Message.info('请填写安全级别')
-          return
-        }
-        if (!this.curCategoryDetail.sortNumber) {
-          this.$Message.info('请填写排序值')
-          return
-        }
-        if (!this.curCategoryDetail.standard) {
-          this.$Message.info('请填写执行标准')
-          return
-        }
-
-        this.loading = !this.loading
-        if (this.categoryType === 1) {
-          let data = {
-            categoryName: this.curCategoryDetail.categoryName,
-            createUser: this.curCategoryDetail.createUser,
-            imageUrl: this.curCategoryDetail.imageUrl,
-            safeLevel: this.curCategoryDetail.safeLevel,
-            sortNumber: this.curCategoryDetail.sortNumber,
-            standard: this.curCategoryDetail.standard
-          }
-          this.$api.basic.addCategory(data).then(res => {
-            that.loading = !that.loading
-            that.$Message.info('添加成功')
-            that.queryCategoryList()
-            that.showModal = false
-          })
-        } else if (this.categoryType === 2) {
-          let data = {
-            ...this.curCategoryDetail
-          }
-          this.$api.basic.updateCategory(data).then(res => {
-            that.loading = !that.loading
-            that.$Message.info('修改成功')
-            that.queryCategoryList()
-            that.showModal = false
-          })
-        }
       }
     }
   }
+}
 
 </script>
 

@@ -7,7 +7,7 @@
         </div>
       </template>
     <Card>
-    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
+    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
       <el-form-item label="类型名称:">
         <el-input v-model="formInline.name" placeholder="请输入类型名称"></el-input>
       </el-form-item>
@@ -33,13 +33,6 @@
           <span style="margin-left: 10px">{{ scope.row.value }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        label="状态"
-        >
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.deleteFlagCN }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column
         label="参数分类"
         >
@@ -92,7 +85,7 @@
             trigger="click"
             v-model="scope.row.visible">
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="scope.row.visible = false">取消</el-button>
+              <el-button size="mini" type="danger" @click="scope.row.visible = false">取消</el-button>
               <el-button type="primary" size="mini" @click="deleteModal(scope.$index, scope.row, scope.row.visible = false)">确定</el-button>
             </div>
           <el-button
@@ -102,12 +95,6 @@
             class="el-icon-delete"
             >删除</el-button>
           </el-popover>
-          
-          <!-- <el-button
-            size="mini"
-            type="danger"
-            class="el-icon-delete"
-            @click="deleteModal(scope.$index, scope.row)">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -436,6 +423,6 @@ export default {
   display: block
 }
 .el-select {
-  display: block 
+  display: block
 }
 </style>

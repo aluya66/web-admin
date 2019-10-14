@@ -7,7 +7,7 @@
 			</div>
 		</template>
     <Card>
-      <el-form :inline="true" :model="optionData" class="demo-form-inline" size="mini">
+      <el-form :inline="true" :model="optionData" class="demo-form-inline" size="small">
         <el-row type="flex" class="row-bg">
           <el-col :span="5">
             <el-form-item label="品牌国家:">
@@ -151,7 +151,7 @@
               trigger="click"
               v-model="scope.row.visible">
               <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="scope.row.visible = false">取消</el-button>
+                <el-button size="mini" type="danger" @click="scope.row.visible = false">取消</el-button>
                 <el-button type="primary" size="mini" @click="deleteModal(scope.$index, scope.row, scope.row.visible = false)">确定</el-button>
               </div>
             <el-button
@@ -164,7 +164,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <Page :total="listTotal" show-total @on-change="pageChange" />
+      <div class="black">
+        <Page :total="listTotal" show-total @on-change="pageChange" />
+      </div>
 
       <el-dialog
       :title="modalTitle"
@@ -207,7 +209,6 @@
         </el-form-item>
         <el-form-item label="封面图:">
           <!-- <el-input v-model="curCategoryDetail.previewUrl" placeholder='请填写封面图URL'></el-input> -->
-
           <el-upload
             class="upload-demo"
             action="//jsonplaceholder.typicode.com/posts/"
@@ -221,11 +222,9 @@
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
-
         </el-form-item>
         <el-form-item label="封面视频:">
           <!-- <el-input v-model="curCategoryDetail.videoUrl" placeholder='请填写封面视频URL'></el-input> -->
-
            <el-upload
             class="upload-demo"
             action="//jsonplaceholder.typicode.com/posts/"
@@ -239,7 +238,6 @@
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过1M</div>
           </el-upload>
-
 
         </el-form-item>
         <el-row v-if="brandType===1">
@@ -276,81 +274,17 @@
   </c-view>
 </template>
 <script>
-const columns = [
-  {
-    title: '品牌国家',
-    key: 'country'
-  },
-  {
-    title: '品牌名称',
-    key: 'name'
-  },
-  {
-    title: '品牌LOGO',
-    key: 'logo'
-  },
-  {
-    title: '品牌介绍',
-    key: 'intro'
-  },
-  {
-    title: '品牌描述',
-    key: 'description'
-  },
-  {
-    title: '品牌别名',
-    key: 'ename'
-  },
-  {
-    title: '消费人群',
-    key: 'consumer'
-  },
-  {
-    title: '封面图url',
-    slot: 'previewUrl'
-  },
-  {
-    title: '封面视频url',
-    slot: 'videoUrl'
-  },
-  {
-    title: '状态',
-    slot: 'status'
-  },
-  {
-    title: '品牌排序',
-    key: 'sort'
-  },
-  {
-    title: '创建人',
-    key: 'createdby'
-  },
-  {
-    title: '更新人',
-    key: 'updatedby'
-  },
-  {
-    title: '时间',
-    key: 'created'
-  },
-  {
-    title: '操作',
-    slot: 'action'
-  }
-]
 export default {
   name: 'brand',
   data() {
     return {
-      fileList: [{name: 'a.jpg', url: 'http://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg'}], // 封面图list
-      fileVideoList: [{name: 'a.jpg', url: 'http://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg'}], // 视频
+      fileList: [{ name: 'a.jpg', url: 'http://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg' }], // 封面图list
+      fileVideoList: [{ name: 'a.jpg', url: 'http://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg' }], // 视频
       defaultList: [],
       imgName: '',
       visible: false,
       uploadList: [],
-
       loading: false,
-      columns,
       brandList: [],
       listTotal: 0,
       query: {
@@ -387,18 +321,18 @@ export default {
     this.brandLista()
   },
   methods: {
-    handleRemove(file, fileList) {  // 删除文件
-        console.log(file, fileList);
-      },
-      handlePreview(file) {    // 已上传的文件时的钩子
-        console.log(file);
-      },
-      handleExceed(files, fileList) {   // 文件超出个数限制时的钩子
-        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-      },
-      beforeRemove(file, fileList) {    // 删除文件之前的钩子
-        return this.$confirm(`确定移除 ${ file.name }？`);
-      },
+    handleRemove(file, fileList) { // 删除文件
+      console.log(file, fileList)
+    },
+    handlePreview(file) { // 已上传的文件时的钩子
+      console.log(file)
+    },
+    handleExceed(files, fileList) { // 文件超出个数限制时的钩子
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove(file, fileList) { // 删除文件之前的钩子
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
     addModal() {
       this.showModal = true
       this.modalTitle = '新增'
@@ -406,7 +340,7 @@ export default {
       this.curCategoryDetail = {}
       this.curCategoryDetail.sort = 100
     },
-    modifModal(index, data){
+    modifModal(index, data) {
       this.showModal = true
       this.modalTitle = '修改'
       this.brandType = 2
@@ -427,7 +361,7 @@ export default {
       this.curCategoryDetail.sort = this.brandList[index].sort // 品牌排序 越小越靠前
       this.curCategoryDetail.videoUrl = this.brandList[index].videoUrl // 封面视频url
     },
-    handleChange(val){
+    handleChange(val) {
       console.log(val)
     },
     addModalBtn() {
@@ -507,7 +441,7 @@ export default {
           this.showModal = false
         })
       } else if (this.brandType === 2) {
-        console.log('this.brandType:'+ this.brandType)
+        console.log('this.brandType:' + this.brandType)
         if (!this.curCategoryDetail.updatedby) {
           this.$Message.info('请输入更新人')
           return
@@ -607,10 +541,13 @@ export default {
 }
 .title{
   display: flex;
-  justify-content: space-between
+  justify-content: space-between;
 }
 .imgStyle{
   width: 60px;
   height: 60px;
+}
+.black{
+  margin-top: 10px;
 }
 </style>

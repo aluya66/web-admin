@@ -7,7 +7,7 @@
 			</div>
 		</template>
   <Card>
-    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
+    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
       <el-form-item label="物流名称:">
         <el-input v-model="formInline.logiName" placeholder="请输入物流名称"></el-input>
       </el-form-item>

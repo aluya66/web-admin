@@ -3,12 +3,13 @@
     <template v-slot:header>
       <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+        <el-button type="primary" size="small" icon="el-icon-plus" @click="append(3)">新增</el-button>
       </div>
     </template>
     <Card>
-      <div class="select-bar">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
         <!-- 地区管理： -->
-        <el-select v-model="pname" @change="choseProvince" placeholder="省级地区">
+        <el-select v-model="pname" @change="choseProvince" placeholder="省级地区" size="small">
           <el-option
             v-for="(item,index) in regionList"
             :key="index"
@@ -16,7 +17,7 @@
             :value="index"
           ></el-option>
         </el-select>
-        <el-select v-model="cname" @change="choseCity" placeholder="市级地区" v-if="changeCityItem==true">
+        <el-select v-model="cname" @change="choseCity" placeholder="市级地区" v-if="changeCityItem==true" size="small">
           <el-option
             v-for="(item,index) in regionListItem"
             :key="index"
@@ -24,7 +25,7 @@
             :value="index"
           ></el-option>
         </el-select>
-        <el-select v-model="bname" @change="choseBlock" placeholder="区级地区" v-if="changeregionDistrict==true">
+        <el-select v-model="bname" @change="choseBlock" placeholder="区级地区" v-if="changeregionDistrict==true" size="small">
           <el-option
             v-for="(item,index) in regionDistrict"
             :key="index"
@@ -32,7 +33,7 @@
             :value="index"
           ></el-option>
         </el-select>
-        <el-select v-model="sname" @change="changeCityStreet" placeholder="街道办" v-if="changeStreet==true">
+        <el-select v-model="sname" @change="changeCityStreet" placeholder="街道办" v-if="changeStreet==true" size="small">
           <el-option
             v-for="(item,index) in regionStreet"
             :key="index"
@@ -40,9 +41,8 @@
             :value="index"
           ></el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="searchBtn">搜索</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="append(3)">新增</el-button>
-      </div>
+        <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn">搜索</el-button>
+      </el-form>
       <el-container v-loading="loading">
         <el-aside width="600px">
           <el-tree
@@ -55,13 +55,13 @@
                 <el-button
                   v-if="data.children.length>0"
                   type="text"
-                  size="mini"
+                  size="small"
                   @click="()=>append(1, data)">
                   新增
                 </el-button>
                 <el-button
                   type="text"
-                  size="mini"
+                  size="small"
                   @click="() => modification(node, data)">
                   编辑
                 </el-button>
