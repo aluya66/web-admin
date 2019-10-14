@@ -158,7 +158,7 @@ export const brandList = params =>
 
 // 新增品牌
 export const addBrandList = params =>
-  Http.fetch(`${context}/v1/brand/add`, params)
+  Http.fetch(`${context}/v1/brand`, params)
 
 // 修改品牌
 export const updateBrandList = params =>
@@ -169,7 +169,7 @@ export const updateBrandList = params =>
 // 删除品牌
 export const deleteBrandList = params =>
   Http.fetch(`${context}/v1/brand`, params, {
-    method: 'detele'
+    method: 'delete'
   })
 
 // 商品类型列表
@@ -191,7 +191,7 @@ export const updateGoodsattrval = params =>
 // 商品类型删除
 export const deleteGoodsattrval = params =>
   Http.fetch(`${context}/v1/attr`, params, {
-    method: 'put'
+    method: 'delete'
   })
 
 // 标签列表
@@ -202,7 +202,7 @@ export const getQuerypage = params =>
 
 // 标签新增
 export const addQuerypage = params =>
-  Http.fetch(`${context}/v1/label/add`, params)
+  Http.fetch(`${context}/v1/label`, params)
 
 // 标签更新
 export const updateQuerypage = params =>
@@ -210,13 +210,15 @@ export const updateQuerypage = params =>
 
 // 标签删除
 export const deleteQuerypage = params =>
-  Http.fetch(`${context}/v1/label/physicaldelete`, params, {
+  Http.fetch(`${context}/v1/label/logicdelete`, params, {
     method: 'delete'
   })
 
 // 标签分类/风格
 export const addSoreQuerypage = params =>
-  Http.fetch(`${context}/v1/labelcategory/querypage`, params)
+  Http.fetch(`${context}/v1/labelcategory/querypage`, params, {
+    method: 'get'
+  })
 
 // 物流列表
 export const getLogistics = params =>
@@ -226,7 +228,7 @@ export const getLogistics = params =>
 
 // 新增物流
 export const addLogistics = params =>
-  Http.fetch(`${context}/v1/logistics/add`, params)
+  Http.fetch(`${context}/v1/logistics`, params)
 
 // 更新物流
 export const updateLogistics = params =>
@@ -236,7 +238,7 @@ export const updateLogistics = params =>
 
 // 物流详情
 export const getLogisticsDel = params =>
-  Http.fetch(`${context}/v1/logistics/add`, params)
+  Http.fetch(`${context}/v1/logistics`, params)
 
 // 商品中心风格、sku
 export const getStyle = params =>

@@ -3,46 +3,47 @@
 		<template v-slot:header>
 			<div class="title">
 				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+        <el-button type="primary" size="small" icon="el-icon-plus" @click="addModal(1)">新增</el-button>
 			</div>
 		</template>
   <Card>
-    <div class="select-bar">
-      物流名称：
-      <Input placeholder="请输入物流名称" class="selectWidth" v-model="logiName"/>
-      logiCode:
-      <Input placeholder="请输入物流名称" class="selectWidth" v-model="logiCode"/>
-      <Button type="primary"  @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
-      <Button type="primary"  @click="addModal(1)"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
-    </div>
+    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
+      <el-form-item label="物流名称:">
+        <el-input v-model="formInline.logiName" placeholder="请输入物流名称"></el-input>
+      </el-form-item>
+      <el-form-item label="物流编码:">
+        <el-input v-model="formInline.logiCode" placeholder="请输入物流编码"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn" >搜索</el-button>
+      </el-form-item>
+    </el-form>
+
     <Table :loading="loading" border :columns="columns" :data="list" class="table">
       <template slot-scope="{ row, index }" slot="action">
-        <Button size="small" type="success" class="deteleBtn" @click="addModal(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
+        <el-button type="primary" size="small" icon="el-icon-edit" @click="addModal(2, index)" >编辑</el-button>
       </template>
     </Table>
     <Page :total="listTotal" show-total @on-change="pageChange" />
-    <Modal
-      v-model="contentModal"
-      :title="modalTitle"
-      width="350"
-      footer-hide
-      >
-      <Form :model="formLeft" label-position="right" :label-width="70" >
-        <FormItem label="物流名称">
-          <Input  placeholder='物流名称' v-model="formLeft.logiName"/>
-        </FormItem>
-        <FormItem label="物流名称">
-          <Input  placeholder='物流名称' v-model="formLeft.logiCode"/>
-        </FormItem>
-        <!-- <FormItem label="排序">
-          <InputNumber :max="10000" :min="0" v-model="formLeft.sort"></InputNumber>
-        </FormItem> -->
 
-        <FormItem>
-          <Button type="primary" class="addBtn" @click="addReleaseBtn">确认</Button>
-          <Button class="cancel" @click="closeBtn">取消</Button>
-        </FormItem>
-      </Form>
-    </Modal>
+    <el-dialog
+      :title="modalTitle"
+      :visible.sync="contentModal"
+      width="30%"
+      >
+      <el-form ref="form" :model="formLeft" label-width="80px" class="modelStyle">
+        <el-form-item label="物流名称:">
+          <el-input v-model="formLeft.logiName" placeholder='物流名称'></el-input>
+          </el-form-item>
+        <el-form-item label="物流编码:">
+          <el-input v-model="formLeft.logiCode" placeholder='物流编码'></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" @click="contentModal = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="addReleaseBtn">确 定</el-button>
+      </span>
+    </el-dialog>
   </Card>
 </c-view>
 </template>
@@ -50,11 +51,11 @@
 <script>
 const columns = [
   {
-    title: '名称',
+    title: '物流名称',
     key: 'logiName'
   },
   {
-    title: 'logiCode',
+    title: '物流编码',
     key: 'logiCode'
   },
   {
@@ -66,6 +67,10 @@ export default {
   name: 'logistics',
   data() {
     return {
+      formInline: {
+        logiCode: '',
+        logiName: ''
+      },
       loading: false,
       columns,
       query: {
@@ -81,9 +86,7 @@ export default {
         logiName: '',
         logiCode: '',
         sort: 100
-      },
-      logiCode: '',
-      logiName: ''
+      }
     }
   },
   created() {
@@ -94,13 +97,12 @@ export default {
       let that = this
       let params = {
         ...this.query,
-        logiCode: this.logiCode,
-        logiName: this.logiName
+        logiCode: this.formInline.logiCode,
+        logiName: this.formInline.logiName
       }
       this.loading = !this.loading
       this.$api.basic.getLogistics(params).then(res => {
         that.loading = !that.loading
-        console.log(res.data)
         that.list = res.data
         that.listTotal = res.totalCount
       })
@@ -133,15 +135,11 @@ export default {
           sort: this.formLeft.sort
         }
         this.$api.basic.updateLogistics(data).then(res => {
-          console.log(res.data)
           that.$Message.info('修改成功')
           that.contentModal = false
           that.getLogisticsList()
         })
       }
-    },
-    closeBtn() {
-      this.contentModal = false
     },
     addModal(type, index) {
       this.contentModal = true
@@ -153,7 +151,6 @@ export default {
       } else if (type === 2) {
         this.statusType = 2
         this.modalTitle = '修改'
-        // this.formLeft.target=this.list[index].target
         this.formLeft.logiName = this.list[index].logiName
         this.formLeft.logiCode = this.list[index].logiCode
         this.formLeft.sort = this.list[index].sort
@@ -168,27 +165,6 @@ export default {
       this.query.pageNum = 1
       this.getLogisticsList()
     }
-    // deleteModal(row){
-    //   const that = this
-    //   const params = {
-    //     id:row.id,
-    //   }
-    //   this.$Modal.confirm({
-    //     title: '提示',
-    //     content: '是否确定删除该品类？',
-    //     onOk: () => {
-    //       that.$api.basic.aaaaaaaaaaaaaaaaaa(params).then(res => {
-    //         that.$Message.success(res.message);
-    //         //更新列表数据
-    //         that.getGoodsattrvalList()
-    //       }).catch(err => {
-
-    //       })
-    //     },
-    //     onCancel: () => {
-    //     }
-    //   });
-    // }
   }
 }
 </script>
@@ -198,6 +174,10 @@ export default {
 .select-bar,
 .update-item,.control-bar {
   margin-bottom: 10px
+}
+.title{
+  display: flex;
+  justify-content: space-between
 }
 .selectWidth{
   width: 200px;
@@ -210,5 +190,8 @@ export default {
 }
 .cancelBtn{
   margin-left: 8px
+}
+.modelStyle{
+  margin: 0 20px;
 }
 </style>
