@@ -55,9 +55,9 @@ export const constantRoutes = [{
   children: [{
     path: 'home',
     component: () => import('@/views/home'),
-    name: 'Dashboard',
+    name: 'home',
     meta: {
-      title: 'dashboard',
+      title: 'home',
       icon: 'dashboard',
       noCache: true,
       affix: true
@@ -99,10 +99,10 @@ const createRouter = () =>
   })
 
 const router = createRouter()
-
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
-  if (store.getters.userInfo && store.getters.userInfo.token) {
+  const token = utils.getUrlParam('token')
+  if (token || (store.getters.userInfo && store.getters.userInfo.token)) {
     if (to.path === '/login') {
       next({
         path: '/'
@@ -128,7 +128,7 @@ router.beforeEach(async (to, from, next) => {
         } catch (error) {
           await store.dispatch('user/resetToken')
           utils.errFun(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
+          next(`/404?redirect=${to.path}`)
           NProgress.done()
         }
       }

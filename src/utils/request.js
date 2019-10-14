@@ -121,12 +121,13 @@ const setParams = (url, params = {}, opt = {}) => {
     method,
     contentType
   } = setHeaderMethod(opt.method)
-  const { token } = utils.getStore('SET_USERINFO')
+  // const { token } = utils.getStore('SET_USERINFO')
   let curParams = {
     url,
     headers: {
       'Content-Type': contentType,
-      'token': opt.token || token
+      'token': 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzEwMTY0NzAsImxvZ2luTmFtZSI6InRzaiIsImlzcyI6Inlvc2FyLXVwbXMiLCJleHAiOjE1NzEwNTI0NzAsInVzZXJJZCI6OTAsImlhdCI6MTU3MTAxNjQ3MH0.nZUpTwcWKJAwuozReqfQg7Ea74oAn0FjV0G88kQrxx0'
+      // 'token': opt.token || token
     },
     method
   }

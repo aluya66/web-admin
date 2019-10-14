@@ -1,13 +1,57 @@
 <template>
   <c-view>
 		<template v-slot:header>
-			<div class="title">
-				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-			</div>
+      <el-row type="flex" justify="space-between">
+          <el-col :span="6">
+            <div class="title">
+              {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+            </div>
+          </el-col>
+          <el-col :span="1">
+            <el-button type="primary" size="small" icon="el-icon-circle-plus" @click="addInsert(1)">新增</el-button>
+          </el-col>
+      </el-row>
+			<!-- <div class="title">
+        {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+      </div> -->
+
 		</template>
     <Card>
+
       <div class="select-bar">
-        app名称：
+          <el-form :inline="true"  class="demo-form-inline">
+            <el-row type="flex">
+                <el-col :span="5">
+                    <el-form-item label="app名称:" class="inputLabel">
+                        <el-input  placeholder="请输入app名称" v-model="appName" size="small"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                    <el-form-item label="appCode:">
+                        <el-input  placeholder="请输入appcode" v-model="appCode" size="small"></el-input>
+                    </el-form-item>
+                </el-col>
+               <el-col :span="5">
+                  <el-form-item label="appKey:">
+                      <el-input  placeholder="请输入appKey" v-model="appKey" size="small"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                    <el-form-item label="状态:">
+                        <el-select  placeholder="请选择状态" v-model="statusType" size="small">
+                          <el-option label="全部" value=""></el-option>
+                          <el-option label="启用" value="1"></el-option>
+                          <el-option label="禁用" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4" class="searchBtn">
+                    <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn()">搜索</el-button>
+                </el-col>
+
+            </el-row>
+          </el-form>
+        <!-- app名称：
         <Input placeholder="请输入app名称" v-model="appName" class="selectWidth" />
         appCode：
         <Input placeholder="请输入appcode" v-model="appCode" class="selectWidth" />
@@ -20,7 +64,8 @@
           <Option value="2">禁用</Option>
         </Select>
         <Button class="btnStyle" type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
-        <Button class="btnStyle" type="primary" @click="addInsert(1)"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
+                  <Button class="btnStyle" type="primary" @click="addInsert(1)"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
+         -->
       </div>
       <Table :loading="loading" border :columns="columns" :data="list" class="table">
         <template slot-scope="{ row }" slot="status">
@@ -28,7 +73,8 @@
           <span v-else>禁用</span>
         </template>
         <template slot-scope="{ row, index }" slot="action">
-          <Button type='success' size="small" @click="addInsert(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
+          <!-- <Button type='success' size="small" @click="addInsert(2, index)"><Icon :size='14' type="md-create" />编辑</Button> -->
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="addInsert(2, index)">编辑</el-button>
         </template>
       </Table>
       <!-- 新增 -->
@@ -258,5 +304,11 @@ export default {
 }
 .cancelBtn{
   margin-left: 8px
+}
+.el-form-item >>> label{
+  font-weight: 400;
+}
+.searchBtn{
+  padding:7px;
 }
 </style>

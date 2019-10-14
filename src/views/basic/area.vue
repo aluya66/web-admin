@@ -1,41 +1,65 @@
 <template>
   <c-view>
     <template v-slot:header>
-        <div class="title">
+      <el-row type="flex">
+        <el-col class="title">
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
           <Button class="backBtn" type="primary" @click="goBack">返回</Button>
-        </div>
+        </el-col>
+        <el-col>
+            <el-button type="primary" size="small" icon="el-icon-circle-plus" @click="addRegion(3)">新增</el-button>
+        </el-col>
+      </el-row>
+        
       </template>
     <Card>
       <div class="select-bar">
         <!-- 地区管理： -->
-        <Select class="selectWidth" @on-change="changeCity">
-          <Option v-for="(item, index) in regionList" :key="index" :value="index">{{ item.name }}</Option>
-        </Select>
-        <Select class="selectWidth" @on-change="changeCityTown" v-if="changeCityItem==true">
-          <Option v-for="(item, index) in regionListItem" :key="index" :value="index">{{item.name}}</Option>
-        </Select>
-        <Select  class="selectWidth" @on-change="changeCityDistrict" v-if="changeregionDistrict==true">
-          <Option v-for="(item, index) in regionDistrict" :key="index" :value="index">{{item.name}}</Option>
-        </Select>
-        <Select  class="selectWidth" @on-change="changeCityStreet" v-if="changeStreet==true">
-          <Option v-for="(item, index) in regionStreet" :key="index" :value="index">{{item.name}}</Option>
-        </Select>
+          <el-row type="flex" justify="start">
+              <Select class="selectWidth" @on-change="changeCity">
+                  <Option v-for="(item, index) in regionList" :key="index" :value="index">{{ item.name }}</Option>
+              </Select>
+              <Select class="selectWidth" @on-change="changeCityTown" v-if="changeCityItem==true">
+                <Option v-for="(item, index) in regionListItem" :key="index" :value="index">{{item.name}}</Option>
+              </Select>
 
+
+              <Select  class="selectWidth" @on-change="changeCityDistrict" v-if="changeregionDistrict==true">
+                  <Option v-for="(item, index) in regionDistrict" :key="index" :value="index">{{item.name}}</Option>
+                </Select>
+
+              <Select  class="selectWidth" @on-change="changeCityStreet" v-if="changeStreet==true">
+                <Option v-for="(item, index) in regionStreet" :key="index" :value="index">{{item.name}}</Option>
+              </Select>
+
+              <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn">搜索</el-button>
+
+
+              
+
+          </el-row>
+
+       
+       
+        
         <!-- <Cascader :data="regionList" :load-data="loadData" class="selectWidth"></Cascader> -->
+       
+        
 
-        <Button type="primary" class="btnStyle" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
-        <Button type="primary" class="btnStyle" @click="addRegion(3)"><Icon :size='16' type="ios-add-circle-outline" />新增</Button>
+        <!-- <Button type="primary" class="btnStyle" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+        <Button type="primary" class="btnStyle" @click="addRegion(3)"><Icon :size='16' type="ios-add-circle-outline" />新增</Button> -->
       </div>
       <Table :loading="loading" border :columns="columns" :data="list" class="table">
         <template slot-scope="{ row, index }" slot="name">
           <span><Icon v-if="row.exitChildren==true" type="ios-add-circle-outline" :size='16' @click="addDel(index)"/>{{ row.name }}</span>
         </template>
         <template slot-scope="{ row, index }" slot="add">
-          <Button type="primary" @click="addRegion(1, index)"><Icon :size='16' type="ios-add-circle-outline" />新增</Button>
+          <el-button type="primary" size="small" icon="el-icon-circle-plus" @click="addRegion(1, index)">新增</el-button>
+          <!--<Button type="primary" @click="addRegion(1, index)"><Icon :size='16' type="ios-add-circle-outline" />新增</Button> -->
         </template>
         <template slot-scope="{ row, index }" slot="redact">
-          <Button type="success" @click="addRegion(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="addRegion(2, index)">编辑</el-button>
+          <!-- <Button type="success" @click="addRegion(2, index)"><Icon :size='14' type="md-create" />编辑</Button> -->
         </template>
         <!-- <template slot-scope="{ row, index }" slot="delete">
           <Button type="error" @click="deleteRegion">删除</Button>
@@ -401,6 +425,7 @@ export default {
 }
 .selectWidth{
   width: 200px;
+  margin-right: 20px;
 }
 .addBtn{
   /* margin-left: 80px; */

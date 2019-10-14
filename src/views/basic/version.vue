@@ -1,22 +1,49 @@
 <template>
 <c-view>
 		<template v-slot:header>
-			<div class="title">
-				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-			</div>
+      <el-row type="flex">
+          <el-col class="title">
+              {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+            </el-col>
+            <el-col :span="1" class="searchBtn">
+                <el-button type="primary" size="small" icon="el-icon-circle-plus" @click="addNewRelease">新增</el-button>
+            </el-col>
+      </el-row>
 		</template>
   <Card>
     <div class="select-bar">
-      版本名称：
+        <el-form :inline="true"  class="demo-form-inline">
+            <el-row type="flex" class="selectBox">
+               
+                    <el-form-item label="版本名称:" class="inputLabel">
+                        <el-input  placeholder="请输入版本名称" v-model="versionName" size="small"></el-input>
+                    </el-form-item>
+           
+
+    
+                    <el-form-item label="平台:" class="inputLabel">
+                        <el-select  placeholder="请选择平台" v-model="platform" size="small">
+                          <el-option label="全部" value=""></el-option>
+                          <el-option label="安卓" value="1"></el-option>
+                          <el-option label="IOS" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+          
+                <el-col :span="1" class="searchBtn">
+                    <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn">搜索</el-button>
+                </el-col>
+            </el-row>
+          </el-form>
+      <!-- 版本名称：
       <Input placeholder="请输入appcode" v-model="versionName" class="selectWidth" />
       平台：
       <Select v-model="platform" class="selectWidth">
         <Option value="">全部</Option>
         <Option value="0">安卓</Option>
         <Option value="1">IOS</Option>
-      </Select>
-      <Button type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
-      <Button type="primary" @click="addNewRelease"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
+      </Select> -->
+      <!-- <Button type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+      <Button type="primary" @click="addNewRelease"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button> -->
     </div>
     <Table :loading="loading" border :columns="columns" :data="versionList" class="table" size="large">
 
@@ -270,6 +297,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.selectBox{
+  flex-wrap: wrap;
+}
+.inputLabel{margin-right: 40px;}
 .select-bar,.table{
   margin-bottom: 10px
 }
@@ -294,5 +325,9 @@ export default {
 }
 .cancelBtn{
   margin-left: 8px
+}
+.searchBtn{
+  padding:7px;
+  margin-right: 20px;
 }
 </style>
