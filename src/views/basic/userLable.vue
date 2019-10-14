@@ -3,22 +3,116 @@
 		<template v-slot:header>
 			<div class="title">
 				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+        <el-button type="primary" size="small" icon="el-icon-plus" @click="addModal">新增</el-button>
 			</div>
 		</template>
   <Card>
-    <div class="select-bar">
-      标签名称：
-      <Input placeholder="请输入名称" class="selectWidth" v-model="labelName"/>
-      <Button type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
-      <Button type="primary" @click="addModel(1)"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
+    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
+        <el-form-item label="标签名称:">
+          <el-input v-model="formInline.labelName" placeholder="请输入名称"></el-input>
+        </el-form-item>
+      <el-form-item>
+        <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn" >搜索</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table
+      :data="list"
+      border
+      style="width: 100%">
+      <el-table-column
+        label="标签名称"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.labelName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="拼音大写"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.initial }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="标签编码"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.labelCode }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="标签类型"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.labelTypeCN }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="标签描述"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.labelDesc }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="状态"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.labelStatusCN }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="创建人"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.createdby }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="创建时间"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.created }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="更新时间"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.updated }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="200">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="primary"
+            icon="el-icon-edit"
+            @click="modifModal(scope.$index, scope.row)">编辑</el-button>
+          <el-popover
+            placement="top"
+            width="160"
+            title="确定删除吗？"
+            trigger="click"
+            v-model="scope.row.visible">
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="scope.row.visible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="deleteModal(scope.$index, scope.row, scope.row.visible = false)">确定</el-button>
+            </div>
+          <el-button
+            slot="reference"
+            size="mini"
+            type="danger"
+            class="el-icon-delete"
+            >删除</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div class="block">
+      <Page :total="listTotal" show-total @on-change="pageChange" />
     </div>
-    <Table :loading="loading" border :columns="columns" :data="list" class="table">
-      <template slot-scope="{ row, index }" slot="action">
-        <Button size="small" type="success" class="deteleBtn" @click="addModel(2,index)" ><Icon :size='14' type="md-create" />编辑</Button>
-        <Button size="small" type="error" class="deteleBtn" @click="deleteModel(row,index)"><Icon :size='14' type="ios-trash-outline" />删除</Button>
-      </template>
-    </Table>
-    <Page :total="listTotal" show-total @on-change="pageChange" />
     <Modal
       v-model="showModal"
       :title="modelTitle"
@@ -29,14 +123,14 @@
         <FormItem label="标签名称:" >
           <Input  placeholder='请输入标签名称' v-model="formDynamic.labelName"/>
         </FormItem>
+        <FormItem label="标签拼音:" >
+          <Input  placeholder='请输入标签拼音' v-model="formDynamic.initial"/>
+        </FormItem>
         <FormItem label="标签状态:" v-if="statusType===2">
           <RadioGroup v-model="formDynamic.labelStatus">
             <Radio label="有效" true-value='1'></Radio>
             <Radio label="无效" true-value='2'></Radio>
           </RadioGroup>
-        </FormItem>
-        <FormItem label="标签描述:" >
-          <Input  placeholder='请输入标签描述' v-model="formDynamic.labelDesc"/>
         </FormItem>
         <FormItem label="创建人:" v-if="statusType===1">
           <Input  placeholder='请输入创建人' v-model="formDynamic.createdby"/>
@@ -51,6 +145,9 @@
             </Checkbox>
           </CheckboxGroup >
         </FormItem>
+        <FormItem label="标签描述:" >
+          <Input v-model="formDynamic.labelDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入标签描述" />
+        </FormItem>
         <FormItem>
           <Button type="primary" class="addBtn" @click="addModalBtn">保存</Button>
           <Button class="cancelBtn" @click="closBtn">取消</Button>
@@ -61,53 +158,11 @@
 </c-view>
 </template>
 <script>
-const columns = [
-  {
-    title: '标签code',
-    key: 'labelCode'
-  },
-  {
-    title: '标签名称',
-    key: 'labelName'
-  },
-  {
-    title: '标签类型',
-    key: 'labelTypeCN'
-  },
-  {
-    title: '标签描述',
-    key: 'labelDesc'
-  },
-  {
-    title: '状态',
-    key: 'labelStatusCN'
-  },
-  {
-    title: '拼音大写',
-    key: 'initial'
-  },
-  {
-    title: '创建人',
-    key: 'createdby'
-  },
-  {
-    title: '创建时间',
-    key: 'created'
-  },
-  {
-    title: '更新时间',
-    key: 'updated'
-  },
-  {
-    title: '操作',
-    slot: 'action'
-  }
-]
 export default {
   name: 'shopLable',
   data() {
     return {
-      columns,
+      visible: false,
       list: [],
       addSoreList: [],
       query: {
@@ -116,11 +171,14 @@ export default {
       },
       listTotal: 0,
       loading: false,
-      labelName: '',
+      formInline: {
+        labelName: ''
+      },
       statusType: '',
       showModal: false,
       modelTitle: '',
       formDynamic: {
+        initial: '', // 标签拼音
         labelDesc: '', // 标签描述
         labelName: '', // 标签名称
         labelStatus: '', // 标签状态 1 有效 2 无效
@@ -139,31 +197,32 @@ export default {
     this.getaddSoreQuerypage()
   },
   methods: {
-    addModel(type, index) {
+    addModal() {
       this.showModal = true
-      if (type === 1) {
-        this.statusType = 1
-        this.modelTitle = '新增'
-        this.formDynamic = {}
-      } else if (type === 2) {
-        this.statusType = 2
-        this.modelTitle = '编辑'
-        // this.formDynamic.target=this.list[index].target
-        this.formDynamic.labelDesc = this.list[index].labelDesc
-        this.formDynamic.labelName = this.list[index].labelName
-        this.formDynamic.labelStatus = this.list[index].labelStatusCN
-        this.formDynamic.labelType = this.list[index].labelTypeCN
-        this.formDynamic.createdby = this.list[index].createdby
-        this.formDynamic.updatedby = this.list[index].updatedby
-        this.formDynamic.id = this.list[index].id
-        let checkData = this.list[index].labelCategoryModels.map(({ id }) => {
-          return {
-            id
-          }
-        })
-        for (let i in checkData) {
-          this.formDynamic.labelParentIds.push(checkData[i].id)
+      this.statusType = 1
+      this.modelTitle = '新增'
+      this.formDynamic = {}
+    },
+    modifModal(index, data) {
+      this.showModal = true
+      this.statusType = 2
+      this.modelTitle = '编辑'
+      this.formDynamic.initial = this.list[index].initial
+      this.formDynamic.labelDesc = this.list[index].labelDesc
+      this.formDynamic.labelName = this.list[index].labelName
+      this.formDynamic.labelStatus = this.list[index].labelStatusCN
+      this.formDynamic.labelType = this.list[index].labelTypeCN
+      this.formDynamic.createdby = this.list[index].createdby
+      this.formDynamic.updatedby = this.list[index].updatedby
+      this.formDynamic.id = this.list[index].id
+      let checkData = this.list[index].labelCategoryModels.map(({ id }) => {
+        return {
+          id
         }
+      })
+      this.formDynamic.labelParentIds = []
+      for (let i in checkData) {
+        this.formDynamic.labelParentIds.push(checkData[i].id)
       }
     },
     addModalBtn() {
@@ -192,7 +251,6 @@ export default {
         }
         let data = {
           ...this.formDynamic,
-          // labelStatus: this.labelStatus,
           labelType: 2,
           labelParentIds: this.formDynamic.labelParentIds
         }
@@ -232,30 +290,22 @@ export default {
     closBtn() {
 
     },
-    deleteModel(row) {
+    deleteModal(row, index) {
       const that = this
-      const params = {
-        id: row.id
+      const data = {
+        id: index.id
       }
-      this.$Modal.confirm({
-        title: '提示',
-        content: '是否确定删除该品类？',
-        onOk: () => {
-          that.$api.basic.deleteQuerypage(params).then(res => {
-            that.$Message.success(res.message)
-            // 更新列表数据
-            that.getQuerypageList()
-          })
-        },
-        onCancel: () => {
-        }
+      this.$api.basic.deleteQuerypage(data).then(res => {
+        that.$Message.success('删除成功')
+        // 更新列表数据
+        that.getQuerypageList()
       })
     },
     getQuerypageList() {
       let that = this
       let data = {
         ...this.query,
-        labelName: this.labelName,
+        labelName: this.formInline.labelName,
         labelType: 2
       }
       this.loading = !this.loading
@@ -282,6 +332,10 @@ export default {
 .update-item,.control-bar {
   margin-bottom: 10px
 }
+.title{
+  display: flex;
+  justify-content: space-between;
+}
 .selectWidth{
   width: 200px;
 }
@@ -296,5 +350,8 @@ export default {
 }
 .fromStyle{
   margin-right: 10px
+}
+.block{
+  margin-top: 10px
 }
 </style>

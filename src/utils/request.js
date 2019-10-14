@@ -63,7 +63,7 @@ const setHeaderMethod = mtd => {
   switch (mtd) {
     case 'post':
     case 'get':
-    case 'detele':
+    case 'delete':
     case 'put':
       method = mtd
       break
@@ -123,7 +123,8 @@ const setParams = (url, params = {}, opt = {}) => {
     url,
     headers: {
       'Content-Type': contentType,
-      'token': opt.token || token
+      'token': 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzEwMTkzNDksImxvZ2luTmFtZSI6InRzaiIsImlzcyI6Inlvc2FyLXVwbXMiLCJleHAiOjE1NzEwNTUzNDksInVzZXJJZCI6OTAsImlhdCI6MTU3MTAxOTM0OX0.0jVYfWoCLmJrsf6KM7yWyJSRC5KM5-vaLuaxLXQMC4s'
+      // 'token': opt.token || token
     },
     method
   }

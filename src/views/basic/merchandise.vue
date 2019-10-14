@@ -3,136 +3,165 @@
       <template v-slot:header>
         <div class="title">
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+          <el-button type="primary" size="small" icon="el-icon-plus" @click="addModal">新增</el-button>
         </div>
       </template>
     <Card>
-      <div class="select-bar">
-        类型名称：
-        <Input placeholder="请输入类型名称" v-model="name" class="selectWidth" />
-        <Button type="primary"  @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
-        <Button type="primary"  @click="addModal(1)"><Icon :size='16' type="ios-add-circle-outline"/>添加</Button>
-      </div>
-      <Table :loading="loading" border :columns="columns" :data="list" class="table">
-        <template slot="bmsGoodsAttrVals">
-          <span v-for="(item, index) in valueList" :key="index">{{item.value}}</span>
-        </template>
-        <template slot-scope="{ row }" slot="type">
-          <span v-if="row.type===1">参数</span>
-          <span v-else-if="row.type===2">属性</span>
-        </template>
-        <template slot-scope="{ row, index }" slot="action">
-          <Button type="success" size="small" class="deteleBtn" @click="addModal(2, index)"><Icon :size='14' type="md-create" />编辑</Button>
-          <Button type="error" size="small" class="deteleBtn" @click="deleteModal(row, index)"><Icon :size='14' type="ios-trash-outline" />删除</Button>
-        </template>
-      </Table>
-      <Page :total="listTotal" show-total @on-change="pageChange" />
-      <Modal
-        v-model="showModal"
-        :title="modelTitle"
-        width="400"
-        footer-hide
+    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
+      <el-form-item label="类型名称:">
+        <el-input v-model="formInline.name" placeholder="请输入类型名称"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn" >搜索</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table
+      :data="list"
+      border
+      style="width: 100%">
+      <el-table-column
+        label="类型名称"
         >
-        <Form :model="formDynamic" label-position="right" :label-width="75" class="fromStyle">
-          <!-- <FormItem label="属性名称:">
-            <Select v-model="formDynamic.name">
-              <Option value="上衣">上衣</Option>
-              <Option value="裤子">裤子</Option>
-              <Option value="鞋子">鞋子</Option>
-            </Select>
-          </FormItem> -->
-          <FormItem label="参数分类:" >
-            <Select v-model="formDynamic.type" v-if="this.typeStatus===1">
-              <!-- <Option value="0">类型</Option> -->
-              <Option value="1">参数</Option>
-              <Option value="2">属性</Option>
-            </Select>
-            <Input v-else v-model="formDynamic.type" disabled />
-          </FormItem>
-          <FormItem label="名称:" >
-            <Input  placeholder='请输入名称' v-model="formDynamic.name"/>
-          </FormItem>
-          <FormItem label="排序:">
-            <Input value="100" v-model="formDynamic.sort"/>
-          </FormItem>
-          <FormItem label="创建人：" v-if="this.typeStatus===1">
-            <Input  placeholder='请输入创建人' v-model="formDynamic.createdby"/>
-          </FormItem>
-          <FormItem label="更新人：" v-if="this.typeStatus===2">
-            <Input  placeholder='请输入更新人' v-model="formDynamic.updatedby"/>
-          </FormItem>
-          <!-- v-if="item.status" -->
-          <FormItem
-            v-for="(item, index) in formDynamic.items"
-            :key="index"
-            :label="'属性值:'"
-            :prop="'items.' + index + '.value'"
-            >
-            <!-- :rules="{required: true, message: '属性值 ' + item.index +'不能为空', trigger: 'blur'}" -->
-            <Row>
-              <Col span="9">
-                <Input type="text" v-model="item.value" placeholder="属性值" />
-              </Col>
-              <Col span="9">
-                <Input type="text" v-model="item.description" placeholder="备注" />
-              </Col>
-              <Col span="4" offset="1" v-if="index>0">
-                <Button @click="handleRemove(index)">删除</Button>
-              </Col>
-            </Row>
-          </FormItem>
-          <FormItem>
-            <Row>
-              <Col span="16"><Button type="dashed" long @click="handleAdd" >添加</Button></Col>
-            </Row>
-          </FormItem>
-          <FormItem>
-            <Button type="primary" class="addBtn" @click="addModalBtn">保存</Button>
-            <Button class="cancelBtn" @click="closBtn">取消</Button>
-          </FormItem>
-        </Form>
-      </Modal>
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="属性值"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.value }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="参数分类"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px" v-if="scope.row.type===0">分类</span>
+          <span style="margin-left: 10px" v-else-if="scope.row.type===1">参数</span>
+          <span style="margin-left: 10px" v-else>属性</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="排序"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.sort }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="创建人"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.createdby }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="更新人"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.updatedby }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="时间"
+        >
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.created }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="primary"
+            icon="el-icon-edit"
+            @click="modifModal(scope.$index, scope.row)">编辑</el-button>
+
+          <el-popover
+            placement="top"
+            width="160"
+            title="确定删除吗？"
+            trigger="click"
+            v-model="scope.row.visible">
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="danger" @click="scope.row.visible = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="deleteModal(scope.$index, scope.row, scope.row.visible = false)">确定</el-button>
+            </div>
+          <el-button
+            slot="reference"
+            size="mini"
+            type="danger"
+            class="el-icon-delete"
+            >删除</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
+    </el-table>
+    <Page class="pageStyle" :total="listTotal" show-total @on-change="pageChange" />
+    <el-dialog
+      :title="modelTitle"
+      :visible.sync="showModal"
+      width="30%"
+      >
+      <el-form ref="formDynamic" :model="formDynamic" label-width="80px" class="demo-ruleForm fromStyle">
+        <el-form-item label="参数分类:" v-if="this.typeStatus!==1">
+          <el-input v-model="formDynamic.logiName" disabled />
+        </el-form-item>
+        <el-form-item label="参数分类:" v-else class="selectStyle">
+          <el-select v-model="formDynamic.logiName" placeholder="请选择">
+            <el-option label="参数" value="1"></el-option>
+            <el-option label="属性" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="名称:">
+          <el-input v-model="formDynamic.name" placeholder='请输入名称'></el-input>
+          </el-form-item>
+        <el-form-item label="排序:">
+          <el-input v-model="formDynamic.sort" value="100" placeholder='排序'></el-input>
+        </el-form-item>
+        <el-form-item label="创建人:" v-if="this.typeStatus===1">
+          <el-input v-model="formDynamic.createdby" placeholder='创建人'></el-input>
+        </el-form-item>
+        <el-form-item label="更新人:" v-if="this.typeStatus===2">
+          <el-input v-model="formDynamic.updatedby" placeholder='更新人'></el-input>
+        </el-form-item>
+
+         <el-form-item
+          v-for="(item, index) in formDynamic.items"
+          :label="'属性值'"
+          :key="item.key"
+          :prop="'items.' + index + '.value'"
+
+          :rules="{
+            required: true, message: '属性值不能为空', trigger: 'blur'
+          }"
+        >
+          <el-col :span="9">
+            <el-input v-model="item.value" style="width: 100%;" placeholder="属性值"></el-input>
+          </el-col>
+          <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
+          <el-col :span="9">
+            <el-input v-model="item.description" style="width: 100%;" placeholder="备注"></el-input>
+          </el-col>
+          <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
+          <el-col :span="4">
+            <el-button @click.prevent="removeDomain(item)" v-if="index>0">删除</el-button>
+          </el-col>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="addDomain">新增</el-button>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="contentModal = false">取 消</el-button>
+        <el-button type="primary" @click="addModalBtn">确 定</el-button>
+      </span>
+    </el-dialog>
     </Card>
   </c-view>
 </template>
 <script>
-const columns = [
-  {
-    title: '类型名称',
-    key: 'name'
-  },
-  {
-    title: '属性值',
-    key: 'value'
-  },
-  {
-    title: '状态',
-    key: 'deleteFlagCN'
-  },
-  {
-    title: '参数分类',
-    slot: 'type'
-  },
-  {
-    title: '排序',
-    key: 'sort'
-  },
-  {
-    title: '创建人',
-    key: 'createdby'
-  },
-  {
-    title: '更新人',
-    key: 'updatedby'
-  },
-  {
-    title: '时间',
-    key: 'created'
-  },
-  {
-    title: '操作',
-    slot: 'action'
-  }
-]
 export default {
   name: 'merchandise',
   data() {
@@ -145,12 +174,13 @@ export default {
       loading: false,
       list: [],
       valueList: {},
-      columns,
       showModal: false,
       modelTitle: '',
       typeStatus: '',
       index: 1,
-      name: '',
+      formInline: {
+        name: ''
+      },
       type: '',
       formDynamic: {
         name: '',
@@ -167,11 +197,17 @@ export default {
     this.getGoodsattrvalList()
   },
   methods: {
+    removeDomain(item) {
+      var index = this.formDynamic.items.indexOf(item)
+      if (index !== -1) {
+        this.formDynamic.items.splice(index, 1)
+      }
+    },
     getGoodsattrvalList() {
       let that = this
       let params = {
         ...this.query,
-        name: this.name
+        name: this.formInline.name
       }
       this.loading = !this.loading
       this.$api.basic.getGoodsattrval(params).then(res => {
@@ -186,8 +222,8 @@ export default {
         that.listTotal = res.totalCount
       })
     },
-    handleAdd () {
-      this.index++
+    // 属性值新增
+    addDomain () {
       this.formDynamic.items.push({
         value: '',
         index: this.index,
@@ -195,62 +231,56 @@ export default {
         deleteFlag: 0
       })
     },
-    handleRemove (index) {
-      this.formDynamic.items[index].status = 0
-      this.formDynamic.items[index].value = ''
-      this.formDynamic.items[index].description = ''
-      this.formDynamic.items[index].deleteFlag = 1
-    },
-    addModal(type, index) {
+    // 新增
+    addModal() {
       this.showModal = true
       this.formDynamic.items = []
-      if (type === 1) {
-        this.modelTitle = '添加属性'
-        this.typeStatus = 1
-        this.formDynamic.sort = 100
-        this.formDynamic.name = ''
-        this.formDynamic.type = ''
-        this.formDynamic.createdby = ''
+      this.modelTitle = '添加属性'
+      this.typeStatus = 1
+      this.formDynamic.name = ''
+      this.formDynamic.type = ''
+      this.formDynamic.createdby = ''
+      this.formDynamic.sort = 100
+      let item = {
+        value: '',
+        description: '',
+        index: 1,
+        status: 1,
+        deleteFlag: 0
+      }
+      this.formDynamic.items.push(item)
+    },
+    modifModal(index, data) {
+      this.showModal = true
+      this.modelTitle = '编辑属性'
+      this.typeStatus = 2
+      this.formDynamic.sort = this.list[index].sort
+      if (this.list[index].type === 0) {
+        this.formDynamic.logiName = '类型'
+      } else if (this.list[index].type === 1) {
+        this.formDynamic.logiName = '参数'
+      } else if (this.list[index].type === 2) {
+        this.formDynamic.logiName = '属性'
+      }
+      this.formDynamic.name = this.list[index].name
+      this.formDynamic.id = this.list[index].id
+
+      this.formDynamic.items = []
+      for (var i = 0, len = this.list[index].bmsGoodsAttrVals.length; i < len; i++) {
+        let target = this.list[index].bmsGoodsAttrVals[i]
         let item = {
-          value: '',
-          description: '',
-          index: 1,
-          status: 1,
-          deleteFlag: 0
+          value: target.value,
+          description: target.description || '',
+          id: target.id,
+          index: i + 1,
+          status: 1
         }
         this.formDynamic.items.push(item)
-      } else if (type === 2) {
-        this.modelTitle = '编辑属性'
-        this.typeStatus = 2
-        this.formDynamic.sort = this.list[index].sort
-        if (this.list[index].type === 0) {
-          this.formDynamic.type = '类型'
-        } else if (this.list[index].type === 1) {
-          this.formDynamic.type = '参数'
-        } else if (this.list[index].type === 2) {
-          this.formDynamic.type = '属性'
-        }
-        this.formDynamic.name = this.list[index].name
-        this.formDynamic.id = this.list[index].id
-
-        for (var i = 0, len = this.list[index].bmsGoodsAttrVals.length; i < len; i++) {
-          let target = this.list[index].bmsGoodsAttrVals[i]
-          let item = {
-            value: target.value,
-            description: target.description || '',
-            id: target.id,
-            index: i + 1,
-            status: 1
-          }
-          this.formDynamic.items.push(item)
-          console.log(this.formDynamic.items)
-        }
-        console.log(this.list[index].bmsGoodsAttrVals.length)
       }
     },
     addModalBtn() {
       let that = this
-      if (!this.formDynamic.type) {
+      if (!this.formDynamic.logiName) {
         this.$Message.info('请选择参数分类')
         return
       }
@@ -278,14 +308,13 @@ export default {
           // paramType: '1',       //参数分类为1时:text文本框，radio单选，checkbox复选框 (默认空)
           parentId: 0, // 父类类型id,默认：null
           sort: this.formDynamic.sort, // 商品类型属性排序 越小越靠前，默认100
-          type: this.formDynamic.type // 参数分类：0:一级类型，1:参数，2:属性
+          type: this.formDynamic.logiName // 参数分类：0:一级类型，1:参数，2:属性
         }
         for (var i = 0; i < this.formDynamic.items.length; i++) {
           var obj = {
             description: this.formDynamic.items[i].description, // 值备注信息
             value: this.formDynamic.items[i].value // 参数类型值
           }
-          console.log(obj.value)
           if (obj.value !== '') {
             data.bmsGoodsAttrValAddReqs.push(obj)
           }
@@ -337,23 +366,15 @@ export default {
         })
       }
     },
-    deleteModal(row) {
+    deleteModal(row, index) {
       const that = this
       const params = {
-        id: row.id
+        id: index.id
       }
-      this.$Modal.confirm({
-        title: '提示',
-        content: '是否确定删除该品类？',
-        onOk: () => {
-          that.$api.basic.deleteGoodsattrval(params).then(res => {
-            that.$Message.success(res.message)
-            // 更新列表数据
-            that.getGoodsattrvalList()
-          })
-        },
-        onCancel: () => {
-        }
+      this.$api.basic.deleteGoodsattrval(params).then(res => {
+        that.$Message.success('删除成功')
+        // 更新列表数据
+        that.getGoodsattrvalList()
       })
     },
     closBtn() {
@@ -376,6 +397,10 @@ export default {
 .update-item,.control-bar {
   margin-bottom: 10px
 }
+.title{
+  display: flex;
+  justify-content: space-between
+}
 .selectWidth{
   width: 200px;
 }
@@ -389,6 +414,15 @@ export default {
   margin-right: 5px
 }
 .fromStyle{
-  margin-right: 10px
+  margin: 0 10px
+}
+.pageStyle{
+  margin-top: 10px;
+}
+.selectStyle{
+  display: block
+}
+.el-select {
+  display: block
 }
 </style>
