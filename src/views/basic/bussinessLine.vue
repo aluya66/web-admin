@@ -81,10 +81,10 @@
       <Modal
         v-model="contentModal"
         :title="basicTitle"
-        width="800"
+        width="400"
         footer-hide
         >
-        <Form :model="formLeft" label-position="right" :label-width="70" >
+        <Form :model="formLeft" label-position="right" :label-width="70" class="fromStyle">
           <FormItem label="app名称">
             <Input v-model="formLeft.appName" placeholder='请填写app名称'/>
           </FormItem>
@@ -105,7 +105,7 @@
             :autosize="{minRows: 2,maxRows: 10}"
             />
           </FormItem>
-          <FormItem>
+          <FormItem >
             <Button type="primary" class="addBtn" @click="addContentModal">确认</Button>
             <Button class="cancelBtn" @click="cancel">取消</Button>
           </FormItem>
@@ -300,7 +300,7 @@ export default {
   margin-bottom:10px
 }
 .addBtn{
-  margin-left: 40px
+  margin-left: 50px
 }
 .cancelBtn{
   margin-left: 8px
@@ -310,5 +310,8 @@ export default {
 }
 .searchBtn{
   padding:7px;
+}
+.fromStyle{
+  margin-right: 10px
 }
 </style>

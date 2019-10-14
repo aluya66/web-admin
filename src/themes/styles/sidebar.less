@@ -65,32 +65,38 @@
 		}
 
 		.el-menu {
-			border: none;
 			height: 100%;
 			width: 100% !important;
+		}
+
+		.submenu-title-noDropdown.is-active, .el-menu-item.is-active{
+			color: @active;
+			border-right: 3px solid @active;
+			background-color: @menuHover;
 		}
 
 		// menu hover
 		.submenu-title-noDropdown,
 		.el-submenu__title {
 			font-size: @f16;
-
 			&:hover {
-				background-color: @menuHover  !important;
+				color: @active;
 			}
 		}
 
+		// 一级菜单点击获焦点
 		.is-active>.el-submenu__title {
-			color: @subMenuActiveText  !important;
+			background-color: @subMenuBg  !important;
+
 		}
 
 		& .nest-menu .el-submenu>.el-submenu__title,
 		& .el-submenu .el-menu-item {
-			min-width: @sideBarWidth  !important;
-			background-color: @subMenuBg  !important;
+			min-width: @sideBarWidth - 10px  !important;
 
 			&:hover {
-				background-color: @subMenuHover  !important;
+				// background-color: @subMenuBg;
+				color: @active;
 			}
 		}
 	}
@@ -151,32 +157,8 @@
 			}
 		}
 	}
-
-	.el-menu--collapse .el-menu .el-submenu {
-		min-width: @sideBarWidth  !important;
-	}
-
-	// 适配移动端, Mobile responsive
-	.mobile {
-		.main-container {
-			margin-left: 0px;
-		}
-
-		.sidebar-container {
-			transition: transform .28s;
-			width: @sideBarWidth  !important;
-		}
-
-		&.hideSidebar {
-			.sidebar-container {
-				pointer-events: none;
-				transition-duration: 0.3s;
-				transform: translate3d(-@sideBarWidth, 0, 0);
-			}
-		}
-	}
-
 	.withoutAnimation {
+
 		.main-container,
 		.sidebar-container {
 			transition: none;
@@ -197,25 +179,7 @@
 		&:hover {
 			// you can use @subMenuHover
 			background-color: @menuHover  !important;
-		}
-	}
-
-	// the scroll bar appears when the subMenu is too long
-	>.el-menu--popup {
-		max-height: 100vh;
-		overflow-y: auto;
-
-		&::-webkit-scrollbar-track-piece {
-			background: #d3dce6;
-		}
-
-		&::-webkit-scrollbar {
-			width: 6px;
-		}
-
-		&::-webkit-scrollbar-thumb {
-			background: #99a9bf;
-			border-radius: 20px;
+			color: @active;
 		}
 	}
 }

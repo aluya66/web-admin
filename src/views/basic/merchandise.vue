@@ -32,7 +32,7 @@
         width="400"
         footer-hide
         >
-        <Form :model="formDynamic" label-position="right" :label-width="75" >
+        <Form :model="formDynamic" label-position="right" :label-width="75" class="fromStyle">
           <!-- <FormItem label="属性名称:">
             <Select v-model="formDynamic.name">
               <Option value="上衣">上衣</Option>
@@ -387,5 +387,8 @@ export default {
 }
 .deteleBtn{
   margin-right: 5px
+}
+.fromStyle{
+  margin-right: 10px
 }
 </style>

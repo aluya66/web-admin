@@ -59,16 +59,13 @@ instance.interceptors.response.use((response) => {
 const setHeaderMethod = mtd => {
   let method = 'post'
   let contentType = 'application/json'
+  // contentType = 'application/x-www-form-urlencoded'
   switch (mtd) {
+    case 'post':
     case 'get':
-      method = mtd
-      break
+    case 'detele':
     case 'put':
       method = mtd
-      contentType = 'application/x-www-form-urlencoded'
-      break
-    case 'postJson':
-      method = 'post'
       break
   }
   return {
@@ -121,12 +118,12 @@ const setParams = (url, params = {}, opt = {}) => {
     method,
     contentType
   } = setHeaderMethod(opt.method)
-  // const { token } = utils.getStore('SET_USERINFO')
+  const token = utils.getStore('SET_USERINFO') ? utils.getStore('SET_USERINFO').token : ''
   let curParams = {
     url,
     headers: {
       'Content-Type': contentType,
-      'token': 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzEwMTY0NzAsImxvZ2luTmFtZSI6InRzaiIsImlzcyI6Inlvc2FyLXVwbXMiLCJleHAiOjE1NzEwNTI0NzAsInVzZXJJZCI6OTAsImlhdCI6MTU3MTAxNjQ3MH0.nZUpTwcWKJAwuozReqfQg7Ea74oAn0FjV0G88kQrxx0'
+      'token': 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzEwMTkzNDksImxvZ2luTmFtZSI6InRzaiIsImlzcyI6Inlvc2FyLXVwbXMiLCJleHAiOjE1NzEwNTUzNDksInVzZXJJZCI6OTAsImlhdCI6MTU3MTAxOTM0OX0.0jVYfWoCLmJrsf6KM7yWyJSRC5KM5-vaLuaxLXQMC4s'
       // 'token': opt.token || token
     },
     method
@@ -160,7 +157,7 @@ export default {
    * }]
    * @returns prmoise对象
    */
-  fetch (url, params = {}, opt = {}) {
+  fetch(url, params = {}, opt = {}) {
     const options = setParams(url, params, opt)
     return new Promise((resolve, reject) => {
       // 判断是否需要缓存

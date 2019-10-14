@@ -42,7 +42,7 @@
         width="800"
         footer-hide
         >
-        <Form :model="curCategoryDetail" label-position="right" :label-width="85" >
+        <Form :model="curCategoryDetail" label-position="right" :label-width="85" class="fromStyle">
           <FormItem label="品牌国家：">
             <Input  placeholder='请填写品牌国家' v-model="curCategoryDetail.country" />
           </FormItem>
@@ -89,7 +89,7 @@
               <Radio label="删除" true-value='3'></Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem label="品牌排序：">
+          <FormItem label="品牌排序：" class="fromNumStyle">
             <InputNumber :max="10000" :min="0" v-model="curCategoryDetail.sort"></InputNumber>
           </FormItem>
           <FormItem>
@@ -414,8 +414,13 @@ export default {
   margin-left: 8px
 }
 .md-img{
-  /* width: 100px; */
   height: 60px;
-  /* display: inline-block */
+}
+.fromStyle{
+  margin-right: 10px;
+  text-align: right;
+}
+.fromNumStyle{
+  text-align: left;
 }
 </style>

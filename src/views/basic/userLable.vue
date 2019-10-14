@@ -25,7 +25,7 @@
       width="400"
       footer-hide
       >
-      <Form :model="formDynamic" label-position="right" :label-width="75" >
+      <Form :model="formDynamic" label-position="right" :label-width="75" class="fromStyle">
         <FormItem label="标签名称:" >
           <Input  placeholder='请输入标签名称' v-model="formDynamic.labelName"/>
         </FormItem>
@@ -293,5 +293,8 @@ export default {
 }
 .cancelBtn{
   margin-left: 8px
+}
+.fromStyle{
+  margin-right: 10px
 }
 </style>

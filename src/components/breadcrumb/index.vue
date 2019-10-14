@@ -5,10 +5,10 @@
 				<span
 					v-if="item.redirect === 'noredirect' || index == levelList.length - 1"
 					class="no-redirect"
-					>{{ item.meta.name || generateTitle(item.meta.title) }}</span
+					>{{ item.meta.name || setTitleLang(item.meta.title, 'route') }}</span
 				>
 				<a v-else @click.prevent="handleLink(item)">{{
-					item.meta.name || generateTitle(item.meta.title)
+					item.meta.name || setTitleLang(item.meta.title, 'route')
 				}}</a>
 			</el-breadcrumb-item>
 		</transition-group>
@@ -38,8 +38,8 @@ export default {
       let matched = this.$route.matched.filter(item => item.name)
 
       const first = matched[0]
-      if (first && first.name !== 'Dashboard') {
-        matched = [{ path: '/dashboard', meta: { title: 'dashboard' } }].concat(
+      if (first && first.name !== 'home') {
+        matched = [{ path: '/home', meta: { title: this.setTitleLang('home', 'route') } }].concat(
           matched
         )
       }
@@ -47,6 +47,7 @@ export default {
       this.levelList = matched.filter(
         item => item.meta && item.meta.title && item.meta.breadcrumb !== false
       )
+      console.log(this.levelList)
     },
     pathCompile (path) {
       const { params } = this.$route

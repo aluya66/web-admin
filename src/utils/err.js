@@ -7,13 +7,21 @@
  * @returns null
  *
  */
+import utils from 'utils'
+
 export default (err, callBackFun, time) => {
   const errCode = err.code
   let errMsg = ''
   console.log('err', err)
   switch (errCode) {
-    case 101:
-      errMsg = ''
+    case 9:
+      errMsg = 'token失效'
+      const token = utils.getUrlParam('token')
+      if (token) {
+        window.globalVue.goToLogin('404')
+      } else {
+        window.globalVue.goToLogin()
+      }
       break
     case 102:
       errMsg = ''

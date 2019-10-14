@@ -34,7 +34,7 @@
 				<el-button
 					icon="arrow-left"
 					class="bullshit__return-home"
-					@click="$router.push({ path: '/dashboard' })"
+					@click="$router.push({ path: '/home' })"
 				>
 					返回
 				</el-button>

@@ -30,7 +30,7 @@
         class="selectWidth"
         >
       </DatePicker>
-      <Button class="styleBtn" type="primary"  @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
+      <Button type="primary"  @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
     </div>
 
     <Table :loading="loading" border :columns="columns" :data="list" class="table">
@@ -138,8 +138,5 @@ export default {
 .selectWidth{
   width: 200px;
   margin-bottom: 10px
-}
-.styleBtn{
-  /* margin-bottom: 10px */
 }
 </style>

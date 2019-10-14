@@ -57,10 +57,10 @@
             transfer
              v-if="row.publish === 0 &&row.enablePublish===true"
             >
-            <Button type="primary">未发布</Button>
+            <Button type="primary"><Icon :size='16' type="md-checkbox-outline" />未发布</Button>
           </Poptip>
-          <a v-else-if="row.publish === 0" href="#" class="lowEdition">低版本</a>
-          <a v-else href="#" class="lowEdition">已发布</a>
+          <a v-else-if="row.publish === 0" href="#" class="lowEdition"><Icon :size='16' type="md-close" />低版本</a>
+          <a v-else href="#" class="lowEdition"><Icon :size='16' type="md-checkmark" />已发布</a>
         </span>
       </template>
       <template slot-scope="{ row }" slot="url">
@@ -100,7 +100,7 @@
       width="800"
       footer-hide
       >
-      <Form :model="formLeft" label-position="right" :label-width="70" >
+      <Form :model="formLeft" label-position="right" :label-width="70" class="fromStyle">
         <FormItem label="app版本">
           <Input v-model="formLeft.versionName" placeholder='请填写app版本'/>
         </FormItem>
@@ -128,9 +128,9 @@
             :maxlength="200"
             />
         </FormItem>
-        <FormItem>
-          <Button type="primary" class="addBtn" @click="addReleaseBtn">确认</Button>
-          <Button class="cancelBtn" @click="closeBtn">取消</Button>
+        <FormItem class="addBtn">
+          <Button type="primary" @click="addReleaseBtn">确认</Button>
+          <Button @click="closeBtn">取消</Button>
         </FormItem>
       </Form>
     </Modal>
@@ -321,7 +321,7 @@ export default {
   margin:0;margin-bottom:6px;display:inline-block;text-decoration:none
 }
 .addBtn{
-  margin-left: 40px
+  text-align: right;
 }
 .cancelBtn{
   margin-left: 8px
@@ -329,5 +329,8 @@ export default {
 .searchBtn{
   padding:7px;
   margin-right: 20px;
+}
+.fromStyle{
+  margin-right: 10px
 }
 </style>

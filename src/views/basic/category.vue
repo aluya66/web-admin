@@ -35,7 +35,7 @@
       width="800"
       footer-hide
       >
-      <Form :model="curCategoryDetail" label-position="right" :label-width="85" >
+      <Form :model="curCategoryDetail" label-position="right" :label-width="85" class="fromStyle">
         <FormItem label="类目名称：">
           <Input  placeholder='请填写类目名称' v-model="curCategoryDetail.categoryName"/>
         </FormItem>
@@ -59,8 +59,7 @@
             <Option value="2">不显示</Option>
           </Select>
         </FormItem> -->
-        <FormItem label="排序值：">
-          <!-- <Input type="number" placeholder='请填写排序值' v-model="curCategoryDetail.sortNumber "/> -->
+        <FormItem label="排序值：" class="fromNumStyle">
            <InputNumber :max="10000" :min="0" v-model="curCategoryDetail.sortNumber"></InputNumber>
         </FormItem>
         <FormItem label="执行标准：">
@@ -352,5 +351,12 @@ export default {
 }
 .cancelBtn{
   margin-left: 8px
+}
+.fromStyle{
+  text-align: right;
+  margin-right: 10px
+}
+.fromNumStyle{
+  text-align: left;
 }
 </style>

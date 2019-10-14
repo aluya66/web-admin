@@ -7,7 +7,7 @@ const context = process.env.VUE_APP_CONSOLE_BASIC
  * @param {*} params
  */
 export const addBusiness = params =>
-  Http.fetch(`${context}/v1/app/add`, params)
+  Http.fetch(`${context}/v1/app`, params)
 
 /**
  * 查询业务线详情
@@ -30,7 +30,7 @@ export const businessList = params =>
  * @param {*} params
  */
 export const updateBusiness = params =>
-  Http.fetch(`${context}/v1/app/update`, params, {
+  Http.fetch(`${context}/v1/app`, params, {
     method: 'put'
   })
 
@@ -142,11 +142,11 @@ export const queryAllParentcodes = params =>
 
 // 区域添加
 export const addRegionInsert = params =>
-  Http.fetch(`${context}/v1/region/add`, params)
+  Http.fetch(`${context}/v1/region`, params)
 
 // 区域修改
 export const updataRegionInsert = params =>
-  Http.fetch(`${context}/v1/region/update`, params, {
+  Http.fetch(`${context}/v1/region`, params, {
     method: 'put'
   })
 
@@ -184,7 +184,7 @@ export const addGoodsattrval = params =>
 
 // 商品类型修改
 export const updateGoodsattrval = params =>
-  Http.fetch(`${context}/v1/attr/update`, params, {
+  Http.fetch(`${context}/v1/attr`, params, {
     method: 'put'
   })
 
@@ -206,7 +206,7 @@ export const addQuerypage = params =>
 
 // 标签更新
 export const updateQuerypage = params =>
-  Http.fetch(`${context}/v1/label/update`, params)
+  Http.fetch(`${context}/v1/label`, params)
 
 // 标签删除
 export const deleteQuerypage = params =>
@@ -230,7 +230,7 @@ export const addLogistics = params =>
 
 // 更新物流
 export const updateLogistics = params =>
-  Http.fetch(`${context}/v1/logistics/update`, params, {
+  Http.fetch(`${context}/v1/logistics`, params, {
     method: 'put'
   })
 
@@ -241,5 +241,11 @@ export const getLogisticsDel = params =>
 // 商品中心风格、sku
 export const getStyle = params =>
   Http.fetch(`${context}/v1/attr/querypage`, params, {
+    method: 'get'
+  })
+
+// 区域整体返回接口
+export const getAreaAll = params =>
+  Http.fetch(`${context}/v1/region/all`, params, {
     method: 'get'
   })

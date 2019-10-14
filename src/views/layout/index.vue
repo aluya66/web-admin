@@ -15,7 +15,7 @@
 			<right-panel v-if="showSettings">
 				<settings />
 			</right-panel>
-      <div class="footer">云尚星科技有限公司</div>
+      <!-- <div class="footer">云尚星科技有限公司</div> -->
 		</div>
 	</div>
 </template>
@@ -68,10 +68,6 @@ export default {
 	height: 100%;
 	width: 100%;
 
-	&.mobile.openSidebar {
-		position: fixed;
-		top: 0;
-	}
 }
 
 .drawer-bg {
@@ -97,16 +93,14 @@ export default {
   position: relative;
   bottom: 0;
   height: 40px;
+  line-height: 40px;
 	overflow: hidden;
   background: @white;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  text-align: center;
 }
 
 .hideSidebar .fixed-header {
 	width: calc(100% - 54px);
-}
-
-.mobile .fixed-header {
-	width: 100%;
 }
 </style>

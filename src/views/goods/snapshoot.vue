@@ -32,7 +32,7 @@
       ref="myTable"
       >
       <template slot-scope="{ row, index }" slot="action">
-        <Button size="small" type="info" @click="addModal(row,index)" ><Icon type="ios-eye" />查看详情</Button>
+        <Button size="small" type="info" @click="addModal(row,index)" ><Icon :size='16' type="ios-eye" />查看详情</Button>
       </template>
     </Table>
      <Page :total="listTotal" show-total @on-change="pageChange" />
