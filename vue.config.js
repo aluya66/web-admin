@@ -54,6 +54,7 @@ module.exports = {
       .set('components', path.resolve('src/components'))
       .set('api', path.resolve('src/api'))
       .set('utils', path.resolve('src/utils'))
+      .set('mixins', path.resolve('src/views/mixins'))
       .set('plugins', path.resolve('src/plugins'))
 
     // set preserveWhitespace

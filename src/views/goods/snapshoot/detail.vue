@@ -405,9 +405,9 @@ export default {
     },
     getShopList() {
       let data = {
-        id: this.$route.query.id
+        id: this.$route.params.id
       }
-      this.$api.goods.getGoodssnapshotDel(data).then(res => {
+      this.$api.goods.getSnapshotDetail(data).then(res => {
         this.goodsName = res.goodsName
         // console.log(res.data.goodsSnapshot)
         let data = JSON.parse(res.goodsSnapshot)

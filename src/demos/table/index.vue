@@ -3,7 +3,7 @@
 		selection
 		:table-header="headerList"
 		:table-list="tableData"
-		:inner-btns="innerBtns"
+		:table-inner-btns="tableInnerBtns"
 		:current-page="curPage"
 		@change-page="changePage"
 		@choose-item="chooseItem"
@@ -58,7 +58,7 @@ export default {
         region: ''
       },
       searchLoading: true,
-      innerBtns: [
+      tableInnerBtns: [
         {
           name: '查看',
           handle: 'view'

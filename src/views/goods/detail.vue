@@ -273,7 +273,7 @@ export default {
       let data = {
         id: this.$route.params.id
       }
-      this.$api.goods.getGoodsBnsDel(data).then(data => {
+      this.$api.goods.getDetail(data).then(data => {
         this.goodsStaticFiles = []
         this.dataList = data
         this.list = data.skus

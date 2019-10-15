@@ -14,7 +14,7 @@
         :table-header="tableHeader"
         :table-list="tableList"
         :page-info="pageInfo"
-        :inner-btns="innerBtns"
+        :table-inner-btns="tableInnerBtns"
         @change-pagination="changePagination"
       >
         <template v-slot:header>
@@ -105,7 +105,7 @@ export default {
       },
       tableList: [],
       isLoading: false,
-      innerBtns: [
+      tableInnerBtns: [
         {
           name: '修改密码',
           handle (row) {

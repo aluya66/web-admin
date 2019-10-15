@@ -49,7 +49,6 @@ const globalVue = new Vue({
   beforeCreate () {
     // 添加全局事件bus
     Vue.prototype.$api = serviceApi
-    Vue.prototype.eventBus = this
     Vue.prototype.$msgTip = (message, type = 'success', duration = 1500) => {
       this.$message({
         message,

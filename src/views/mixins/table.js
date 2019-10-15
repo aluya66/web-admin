@@ -1,11 +1,15 @@
+import utils from 'utils'
+import CTable from 'components/table'
+
 export default {
   data() {
     return {
-      isLoading: false,
-      pageInfo: {
+      isLoading: false, // 数据加载状态
+      size: 'medium', // 表格、按钮大小
+      pageInfo: { // 页码信息
         pageNum: 1,
-        pageSize: 10,
-        totalCount: 0
+        numPerPage: 10,
+        totalNum: 0
       }
     }
   },
@@ -17,15 +21,33 @@ export default {
      */
     changePagination(pageInfo, fetchData) {
       this.pageInfo.pageNum = pageInfo.page
-      this.pageInfo.pageSize = pageInfo.limit
+      this.pageInfo.numPerPage = pageInfo.limit
       fetchData ? fetchData() : this.fetchData()
+    },
+    /**
+     * 获取搜索时间
+     * @param {*} dataTime
+     */
+    getSearchDate(dataTime) {
+      if (dataTime) {
+        const beginDate = utils.fomartDate(dataTime[0], '{y}-{m}-{d}')
+        const endDate = utils.fomartDate(dataTime[1], '{y}-{m}-{d}')
+        return {
+          beginDate,
+          endDate
+        }
+      }
+      return {}
     },
     /**
      *  搜索按钮
      */
-    searchSubmit () {
+    searchSubmit() {
       this.pageInfo.pageNum = 1
       this.fetchData()
     }
+  },
+  components: {
+    CTable
   }
 }
