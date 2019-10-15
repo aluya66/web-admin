@@ -24,16 +24,23 @@ export default {
 <style lang="less">
 .app-content {
 	header {
+    position: relative;
     background-color: @bg-main;
     margin-top: 2px;
     padding: 8px 15px;
     border-bottom: 1px solid @border-default;
+    display: flex;
 		.title {
 			font-size: @f18;
       line-height: 30px;
-		}
+    }
+    .header-btn{
+      position: absolute;
+      right: 15px;
+    }
 	}
 	.main {
+    position: relative;
     overflow: hidden;
 		&__box {
 			overflow: hidden;
