@@ -402,23 +402,23 @@ export default {
       //   this.$Message.info('请输入封面视频url')
       //   return
       // }
-      if (!this.curCategoryDetail.createdby) {
-        this.$Message.info('请输入创建人')
-        return
-      }
       if (!this.curCategoryDetail.sort) {
         this.$Message.info('请输入排序')
         return
       }
       // if (this.curCategoryDetail.status === '启用') {
-      //   this.status = 1
+        //   this.status = 1
       // } else if (this.curCategoryDetail.status === '禁用') {
-      //   this.status = 2
+        //   this.status = 2
       // } else {
-      //   this.status = 3
+        //   this.status = 3
       // }
       this.loading = !this.loading
       if (this.brandType === 1) {
+        if (!this.curCategoryDetail.createdby) {
+          this.$Message.info('请输入创建人')
+          return
+        }
         let data = {
           consumer: this.curCategoryDetail.consumer, // 消费人群:小年轻,老头子,大妈,阿姨
           country: this.curCategoryDetail.country, // 品牌国家

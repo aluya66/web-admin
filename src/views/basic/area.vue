@@ -7,7 +7,7 @@
       </div>
     </template>
     <Card>
-      <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
+      <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small"> -->
         <!-- 地区管理： -->
         <el-select v-model="pname" @change="choseProvince" placeholder="省级地区" size="small">
           <el-option
@@ -42,7 +42,7 @@
           ></el-option>
         </el-select>
         <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn">搜索</el-button>
-      </el-form>
+      <!-- </el-form> -->
       <el-container v-loading="loading">
         <el-aside width="600px">
           <el-tree
@@ -198,17 +198,22 @@ export default {
     },
     getAreaAllList() {
       let that = this
-      let params = {}
+      let params = {
+        parentCode: this.parentCode,
+      }
       this.loading = !this.loading
       this.$api.basic.getAreaAll(params).then(data => {
         that.loading = !that.loading
         let dataList = JSON.stringify(data)
         that.areaList = JSON.parse(dataList.replace(/name/g, 'label'))
+        console.log(that.areaList)
+        console.log(that.parentCode)
+        console.log('888888888888888888888888888')
       })
     },
     searchBtn() {
-      this.query.pageNum = 1
-      this.queryAreaList()
+      // this.query.pageNum = 1
+      this.getAreaAllList()
     },
     queryAreaList() {
       let that = this
@@ -216,11 +221,14 @@ export default {
         parentCode: this.parentCode,
         ...this.query
       }
+      console.log(this.parentCode)
+      console.log('重新请求')
       this.loading = !this.loading
       this.$api.basic.queryAllRegion(params).then(res => {
+        console.log(res.data)
         that.loading = !that.loading
         that.list = res.data
-        that.listTotal = res.totalCount
+        // that.listTotal = res.totalCount
       })
     },
     // 省
@@ -256,6 +264,7 @@ export default {
       let params = {
         parentCode: this.parentCode
       }
+      console.log(this.parentCode)
       this.$api.basic.queryAllParentcodes(params).then(data => {
         this.regionListItem = data
       })
@@ -282,6 +291,7 @@ export default {
       let params = {
         parentCode: this.parentCode
       }
+      console.log(this.parentCode)
       this.$api.basic.queryAllParentcodes(params).then(data => {
         this.regionDistrict = data
       })
@@ -307,12 +317,14 @@ export default {
       let params = {
         parentCode: this.parentCode
       }
+      console.log(this.parentCode)
       this.$api.basic.queryAllParentcodes(params).then(data => {
         this.regionStreet = data
       })
     },
     // // 街道下拉
     changeCityStreet(index) {
+      console.log(this.regionStreet[index].code)
       this.parentCode = this.regionStreet[index].code
     },
 

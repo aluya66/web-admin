@@ -311,7 +311,7 @@ export default {
       this.loading = !this.loading
       this.$api.basic.getQuerypage(data).then(res => {
         that.loading = !that.loading
-        that.list = res.data
+        that.list = res.data || []
         that.listTotal = res.totalCount
       })
     },

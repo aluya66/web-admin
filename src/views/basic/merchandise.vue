@@ -118,7 +118,8 @@
           <el-input v-model="formDynamic.name" placeholder='请输入名称'></el-input>
           </el-form-item>
         <el-form-item label="排序:">
-          <el-input v-model="formDynamic.sort" value="100" placeholder='排序'></el-input>
+          <!-- <el-input v-model="formDynamic.sort" value="100" placeholder='排序'></el-input> -->
+          <el-input-number v-model="formDynamic.sort" controls-position="right" :min="1" :max="10000"></el-input-number>
         </el-form-item>
         <el-form-item label="创建人:" v-if="this.typeStatus===1">
           <el-input v-model="formDynamic.createdby" placeholder='创建人'></el-input>
@@ -240,6 +241,7 @@ export default {
       this.formDynamic.name = ''
       this.formDynamic.type = ''
       this.formDynamic.createdby = ''
+      this.formDynamic.logiName = ''
       this.formDynamic.sort = 100
       let item = {
         value: '',
