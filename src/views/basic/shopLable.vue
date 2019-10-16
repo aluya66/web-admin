@@ -52,7 +52,7 @@
       >
       <el-form ref="form" :model="formLeft" label-width="80px" class="modelStyle">
         <el-form-item label="标签名称:">
-          <el-input 
+          <el-input
             v-model="formLeft.labelName"
             :size="size"
             placeholder='请输入标签名称'
@@ -60,7 +60,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="标签拼音:">
-          <el-input 
+          <el-input
             v-model="formLeft.initial"
             :size="size"
             placeholder='请输入标签拼音'
@@ -102,8 +102,8 @@
         <el-form-item label="标签分类:">
           <el-checkbox-group v-model="formLeft.labelParentIds">
             <el-checkbox
-            :label="item.id" 
-            v-for="(item, index) in addSoreList" 
+            :label="item.id"
+            v-for="(item, index) in addSoreList"
             :key="index"
             name="type"
             >{{ item.categoryName }}</el-checkbox>
@@ -111,7 +111,7 @@
         </el-form-item>
         <el-form-item label="描述:" v-if="statusType==1">
           <el-input
-          type="textarea" 
+          type="textarea"
           v-model="formLeft.labelDesc"
           :size="size"
           placeholder='请填写描述'

@@ -2,14 +2,6 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
-      <div class="header-btn">
-        <el-button
-          :size="size"
-          type="primary"
-          icon="el-icon-plus"
-          @click="routerLink('/goods/add')"
-        >新增</el-button>
-      </div>
     </template>
     <div class="main__box">
       <c-table
@@ -148,18 +140,7 @@ export default {
         handle(row) {
           vm.routerLink(`/goods/detail/${row.id}`)
         }
-      }
-      // {
-      //   name: '删除',
-      //   icon: 'el-icon-delete',
-      //   handle(row) {
-      //     const { goodsName, id } = row
-      //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
-      //       vm.deleteData({ id })
-      //     })
-      //   }
-      // }
-      ],
+      }],
       tableHeader: [
         {
           label: '商品ID',

@@ -11,11 +11,22 @@ export default {
   redirect: '/demo/table',
   children: [
     {
+      path: 'goods/list',
+      name: 'goodsList',
+      component: () => import('@/demos/list-dialog'),
+      meta: {
+        name: 'dialog-table',
+        title: 'goodsList',
+        icon: 'table'
+      }
+    },
+    {
       path: 'table',
       name: 'Table',
       component: () => import('@/demos/table/index'),
       meta: {
-        title: 'Table',
+        name: '单纯table',
+        title: 'table',
         icon: 'table'
       }
     },
@@ -26,15 +37,6 @@ export default {
       meta: {
         title: 'icon',
         icon: 'icon'
-      }
-    },
-    {
-      path: 'form',
-      name: 'Form',
-      component: () => import('@/demos/form/index'),
-      meta: {
-        title: 'Form',
-        icon: 'form'
       }
     },
     {

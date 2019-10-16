@@ -100,12 +100,11 @@ export default {
           prop: 'logiName',
           fixed: true
         },
-         {
+        {
           label: '物流编码',
-          prop: 'logiCode',
-        },
+          prop: 'logiCode'
+        }
       ],
-
 
       formInline: {
         logiCode: '',
@@ -132,7 +131,7 @@ export default {
     this.fetchData()
   },
   methods: {
-     /**
+    /**
      * 获取表格数据
     */
     fetchData() {
@@ -159,8 +158,6 @@ export default {
         }
       })
     },
-
-
 
     getLogisticsList() {
       let that = this
