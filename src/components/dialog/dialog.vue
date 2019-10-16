@@ -40,7 +40,7 @@ export default {
     },
     width: {
       type: String,
-      default: '60%'
+      default: '50%'
     },
     noBtn: {
       type: Boolean,

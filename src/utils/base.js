@@ -33,21 +33,25 @@ export const goToLogin = (page = 'login', type = 'push', time = 1.5) => {
     })
   }, time * 1000)
 }
+
 /**
  * 二次确认提醒消息提示
  *
- * @param {string} [message=''] 消息
- * @param {string} [type='warning'] 类型，error，warning，info
+ * @param {string} [msg=''] 消息
+ * @param {function} confirmBack 确认执行函数
+ * @param {function} cancelBack 取消执行函数
  */
-export const confirmTip = (msg, callBack) => {
+export const confirmTip = (msg, confirmBack, cancelBack) => {
   window.globalVue.$confirm(msg, '温馨提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
+    closeOnClickModal: false,
     type: 'warning',
     center: true
   }).then(() => {
-    callBack && callBack()
+    confirmBack && confirmBack()
   }).catch(() => {
+    cancelBack && cancelBack()
     console.log('取消')
   })
 }
