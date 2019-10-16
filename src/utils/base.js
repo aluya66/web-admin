@@ -34,23 +34,21 @@ export const goToLogin = (page = 'login', type = 'push', time = 1.5) => {
   }, time * 1000)
 }
 /**
- *  消息提示
+ * 二次确认提醒消息提示
  *
  * @param {string} [message=''] 消息
  * @param {string} [type='warning'] 类型，error，warning，info
  */
-export const messageTip = (msg = '', type = 'warning', time = 1500) => {
-  let message = {}
-  if (typeof msg === 'string') {
-    message.msg = ''
-    message.name = msg
-  } else {
-    message = msg
-  }
-  window.globalVal.$message({
-    message: message.name,
-    type,
-    duration: time
+export const confirmTip = (msg, callBack) => {
+  window.globalVue.$confirm(msg, '温馨提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+    center: true
+  }).then(() => {
+    callBack && callBack()
+  }).catch(() => {
+    console.log('取消')
   })
 }
 
@@ -362,7 +360,7 @@ export const isExternal = path => {
 
 export default {
   isDebug,
-  messageTip,
+  confirmTip,
   getCurrentUserLanguage,
   donwFile,
   camelize,

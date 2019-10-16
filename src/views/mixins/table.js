@@ -6,6 +6,7 @@ export default {
     return {
       isLoading: false, // 数据加载状态
       size: 'medium', // 表格、按钮大小
+      tableList: [], // 列表数据
       pageInfo: { // 页码信息
         pageNum: 1,
         numPerPage: 10,
@@ -14,6 +15,8 @@ export default {
     }
   },
   methods: {
+    // 删除二次确认
+    confirmTip: utils.confirmTip,
     /**
      * 页码翻页处理
      * @param {*} pageInfo  页码参数

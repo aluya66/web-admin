@@ -2,6 +2,14 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
+      <div class="header-btn">
+        <el-button
+        :size="size"
+        type="primary"
+        icon="el-icon-plus"
+        @click="routerLink('/goods/add')"
+      >新增</el-button>
+      </div>
     </template>
     <div class="main__box">
       <c-table
@@ -133,12 +141,21 @@ export default {
         label: '下架'
       }],
       pickerOptions: utils.pickerOptions,
-      tableList: [],
       tableInnerBtns: [{
+        width: 130,
         name: '编辑',
         icon: 'el-icon-edit',
         handle(row) {
           vm.routerLink(`/goods/detail/${row.id}`)
+        }
+      }, {
+        name: '删除',
+        icon: 'el-icon-delete',
+        handle(row) {
+          const { goodsName, id } = row
+          vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
+            vm.deleteData({ id })
+          })
         }
       }],
       tableHeader: [
@@ -221,6 +238,9 @@ export default {
     this.fetchData()
   },
   methods: {
+    /**
+     * 获取表格数据
+    */
     fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
@@ -241,6 +261,22 @@ export default {
         } else {
           this.tableList = res
         }
+      })
+    },
+    /**
+     * 删除表格单条数据
+     *
+     * @param {*} curPromise
+     * @param {string} [msgTip='删除成功']
+     */
+    deleteData(param, msgTip = '删除成功') {
+      this.$api.basic.deleteBrand(param).then(() => {
+        this.$msgTip(msgTip)
+        if (this.tableList.length === 1) {
+          const { pageNum } = this.pageInfo
+          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
+        }
+        this.fetchData()
       })
     }
   }

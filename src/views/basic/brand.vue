@@ -434,7 +434,7 @@ export default {
           // videoUrl: this.curCategoryDetail.videoUrl // 封面视频urls
           videoUrl: 'http://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg'
         }
-        this.$api.basic.addBrandList(data).then(res => {
+        this.$api.basic.addBrand(data).then(res => {
           that.loading = !that.loading
           that.$Message.info('添加成功')
           that.brandLista()
@@ -454,7 +454,7 @@ export default {
           ...this.curCategoryDetail,
           status: this.curCategoryDetail.status // 状态 1:启用 2:禁用 3:删除
         }
-        this.$api.basic.updateBrandList(data).then(res => {
+        this.$api.basic.updateBrand(data).then(res => {
           that.loading = !that.loading
           that.$Message.info('修改成功')
           that.brandLista()
@@ -491,7 +491,7 @@ export default {
       const params = {
         id: index.id
       }
-      that.$api.basic.deleteBrandList(params).then(res => {
+      that.$api.basic.deleteBrand(data).then(res => {
         that.$Message.success('删除成功')
         // 更新列表数据
         that.brandLista()

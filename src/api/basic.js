@@ -157,17 +157,17 @@ export const brandList = params =>
   })
 
 // 新增品牌
-export const addBrandList = params =>
+export const addBrand = params =>
   Http.fetch(`${context}/v1/brand`, params)
 
 // 修改品牌
-export const updateBrandList = params =>
+export const updateBrand = params =>
   Http.fetch(`${context}/v1/brand`, params, {
     method: 'put'
   })
 
 // 删除品牌
-export const deleteBrandList = params =>
+export const deleteBrand = params =>
   Http.fetch(`${context}/v1/brand`, params, {
     method: 'delete'
   })
