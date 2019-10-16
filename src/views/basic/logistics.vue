@@ -35,7 +35,7 @@
         <el-form-item label="物流名称:">
           <el-input v-model="formLeft.logiName" placeholder='物流名称'></el-input>
           </el-form-item>
-        <el-form-item label="物流编码:">
+        <el-form-item label="物流编码:" v-if="statusType===1">
           <el-input v-model="formLeft.logiCode" placeholder='物流编码'></el-input>
         </el-form-item>
       </el-form>
@@ -176,6 +176,7 @@ export default {
   margin-bottom: 10px
 }
 .title{
+  width: 100%;
   display: flex;
   justify-content: space-between
 }

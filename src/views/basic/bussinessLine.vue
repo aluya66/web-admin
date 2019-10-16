@@ -1,318 +1,222 @@
 <template>
   <c-view>
     <template v-slot:header>
-      <el-row type="flex" justify="space-between">
-        <el-col class="title">
-          {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        </el-col>
-        <el-col :span="1">
-          <el-button type="primary" size="small" icon="el-icon-plus" @click="addInsert(1)">新增
-          </el-button>
-        </el-col>
-      </el-row>
-
+     <div class="title">
+        {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+        <el-button type="primary" :size="size" icon="el-icon-plus" @click="addInsert">新增</el-button>
+      </div>
     </template>
-    <Card>
-
-      <div class="select-bar">
-        <el-form :inline="true" class="demo-form-inline">
-          <el-row type="flex">
-
-            <el-form-item label="app名称:" class="inputLabel">
-              <el-input placeholder="请输入app名称" v-model="appName" size="small"></el-input>
+    <div class="main__box">
+      <c-table
+        hasBorder
+        :size="size"
+        :loading="isLoading"
+        :table-header="tableHeader"
+        :table-list="tableList"
+        :page-info="pageInfo"
+        :table-inner-btns="tableInnerBtns"
+        @change-pagination="changePagination"
+      >
+        <template v-slot:header>
+          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
+            <el-form-item label="app名称">
+              <el-input
+                v-model="searchObj.appName"
+                class="search-item"
+                :size="size"
+                placeholder="请输入app名称"
+                clearable
+              />
             </el-form-item>
-
-            <el-form-item label="appCode:" class="inputLabel">
-              <el-input placeholder="请输入appcode" v-model="appCode" size="small"></el-input>
+            <el-form-item label="app编码">
+              <el-input
+                v-model="searchObj.appCode"
+                class="search-item"
+                :size="size"
+                placeholder="请输入app编码"
+                clearable
+              />
             </el-form-item>
-
-            <el-form-item label="appKey:" class="inputLabel">
-              <el-input placeholder="请输入appKey" v-model="appKey" size="small"></el-input>
+            <el-form-item label="appKey">
+              <el-input
+                v-model="searchObj.appKey"
+                class="search-item"
+                :size="size"
+                placeholder="请输入appKey"
+                clearable
+              />
             </el-form-item>
-
-            <el-form-item label="状态:" class="inputLabel">
-              <el-select placeholder="请选择状态" v-model="statusType" size="small">
-                <el-option label="全部" value=""></el-option>
-                <el-option label="启用" value="1"></el-option>
-                <el-option label="禁用" value="2"></el-option>
+            <el-form-item label="状态">
+              <el-select
+                v-model="searchObj.status"
+                :size="size"
+                class="search-item"
+                placeholder="请选择状态"
+                clearable
+              >
+                <el-option
+                  v-for="item in marketableSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-form-item>
-            <el-col :span="1" class="searchBtn">
-                <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn()">搜索
-                </el-button>
-            </el-col>
-
-          </el-row>
-        </el-form>
-        <!-- app名称：
-        <Input placeholder="请输入app名称" v-model="appName" class="selectWidth" />
-        appCode：
-        <Input placeholder="请输入appcode" v-model="appCode" class="selectWidth" />
-        appKey：
-        <Input placeholder="请输入appKey" v-model="appKey" class="selectWidth" />
-        状态：
-        <Select v-model="statusType" class="selectWidth">
-          <Option value="">全部</Option>
-          <Option value="1">启用</Option>
-          <Option value="2">禁用</Option>
-        </Select>
-        <Button class="btnStyle" type="primary" @click="searchBtn"><Icon :size='16' type="ios-search" />搜索</Button>
-                  <Button class="btnStyle" type="primary" @click="addInsert(1)"><Icon :size='16' type="ios-add-circle-outline"/>新增</Button>
-         -->
-      </div>
-      <Table :loading="loading" border :columns="columns" :data="list" class="table">
-        <template slot-scope="{ row }" slot="status">
-          <span v-if="row.status ===1">启用</span>
-          <span v-else>禁用</span>
+           
+            <el-form-item>
+              <el-button
+                type="primary"
+                class="search-btn"
+                :size="size"
+                icon="el-icon-search"
+                @click="searchSubmit"
+              >查询</el-button>
+            </el-form-item>
+          </el-form>
         </template>
-        <template slot-scope="{ row, index }" slot="action">
-          <!-- <Button type='success' size="small" @click="addInsert(2, index)"><Icon :size='14' type="md-create" />编辑</Button> -->
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="addInsert(2, index)">编辑
-          </el-button>
-        </template>
-      </Table>
-      <!-- 新增 -->
-      <Modal v-model="contentModal" :title="basicTitle" width="400" footer-hide>
-        <Form :model="formLeft" label-position="right" :label-width="70" class="fromStyle">
-          <FormItem label="app名称">
-            <Input v-model="formLeft.appName" placeholder='请填写app名称' />
-          </FormItem>
-          <FormItem label="appCode" v-if="typeStatus===1">
-            <Input v-model="formLeft.appCode" placeholder='请填写appCode' />
-          </FormItem>
-          <FormItem label="状态" v-if="typeStatus===2">
-            <RadioGroup v-model="formLeft.input5">
-              <Radio label="启用" true-value='1'></Radio>
-              <Radio label="禁用" true-value='2'></Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="描述">
-            <Input v-model="formLeft.description" placeholder='请填写描述' type="textarea"
-              :autosize="{minRows: 2,maxRows: 10}" />
-          </FormItem>
-          <FormItem>
-            <Button type="primary" class="addBtn" @click="addContentModal">确认</Button>
-            <Button class="cancelBtn" @click="cancel">取消</Button>
-          </FormItem>
-        </Form>
-      </Modal>
-      <Page :total="listTotal" show-total @on-change="pageChange" />
-    </Card>
+      </c-table>
+    </div>
   </c-view>
 </template>
+
 <script>
+import mixinTable from 'mixins/table'
+import utils from 'utils'
+
 export default {
-  name: 'bussinessLine',
-  data() {
+  mixins: [mixinTable],
+  data(vm) {
     return {
-      list: [], // 应用列表
-      listTotal: 0,
-      contentModal: false,
-      curBussinessContent: {},
-      query: {
-        pageNum: 1,
-        pageSize: 10
-      },
-      loading: false,
-      columns: [{
-        title: 'app名称',
-        align: 'center',
-        key: 'appName'
-      },
-      {
-        title: 'appCode',
-        align: 'center',
-        key: 'appCode'
-      },
-      {
-        title: 'appKey',
-        align: 'center',
-        key: 'appKey'
-      },
-      {
-        title: '状态',
-        align: 'center',
-        slot: 'status'
-      },
-      {
-        title: '描述',
-        align: 'center',
-        key: 'description'
-      },
-      {
-        title: '创建时间',
-        align: 'center',
-        key: 'created'
-      },
-      {
-        title: '操作',
-        align: 'center',
-        slot: 'action'
-      }
-      ],
-      basicTitle: '',
-      modal1: false,
-      appName: '',
-      appCode: '',
-      appKey: '',
-      formLeft: {
+      searchObj: {
         appName: '',
         appCode: '',
-        // appKey: '',
-        description: '',
-        input5: '',
-        id: ''
+        appKey: '',
+        status: ''
       },
-      status: '',
-      statusType: '',
-      statusName: '',
-      typeStatus: ''
+      marketableSelect: [
+        {
+          value: '',
+          label: '全部'
+        },
+        {
+          value: '1',
+          label: '启用'
+        },
+        {
+          value: '2',
+          label: '下架'
+        }
+      ],
+      pickerOptions: utils.pickerOptions,
+      tableList: [],
+      tableInnerBtns: [{
+        width: 130,
+        name: '编辑',
+        icon: 'el-icon-edit',
+        handle(row) {
+          console.log(row)
+        }
+      }],
+      tableHeader: [
+        {
+          label: 'app名称',
+          prop: 'appName',
+          width: 120,
+          fixed: true
+        },
+        {
+          label: 'app编码',
+          prop: 'appCode',
+          width: 120,
+        },
+        {
+          label: 'appKey',
+          prop: 'appKey',
+          width: 120,
+        },
+        {
+          label: '状态',
+          prop: 'status'
+        },
+        {
+          label: '描述',
+          prop: 'description'
+        },
+        {
+          label: '创建时间',
+          prop: 'created'
+        }
+       
+        // {
+        //   label: '上架状态',
+        //   prop: 'marketable',
+        //   width: 100,
+        //   formatter(row) {
+        //     return row.marketable ? vm.marketableSelect[row.marketable - 1].label : ''
+        //   }
+        // },
+       
+        // {
+        //   label: '更新时间',
+        //   prop: 'updated',
+        //   width: 100
+        // }
+      ]
     }
   },
   created() {
-    this.queryBussinessList()
+    this.fetchData()
   },
   methods: {
-    // 添加/修改业务
-    addInsert(type, index) {
-      if (type === 1) {
-        this.contentModal = true
-        this.basicTitle = '新增'
-        this.typeStatus = 1
-        this.formLeft = {}
-      } else if (type === 2) {
-        if (this.list[index].status === 1) {
-          this.statusName = '启用'
-        } else if (this.list[index].status === 2) {
-          this.statusName = '禁用'
+    /**
+     * 获取表格数据
+    */
+    fetchData() {
+      console.log(';;;;;;;;;;;;;;;;;;;;;;')
+      const { dataTime, ...other } = this.searchObj
+      const { totalNum, ...page } = this.pageInfo
+      const searchDate = this.getSearchDate(dataTime)
+      this.isLoading = true
+      this.$api.basic.businessList(
+        {
+          ...searchDate,
+          ...other,
+          pageNum: 1,
+          pageSize: 10,
+          totalNum: 0
         }
-        this.contentModal = true
-        this.basicTitle = '修改'
-        this.typeStatus = 2
-        this.formLeft.appName = this.list[index].appName
-        this.formLeft.appCode = this.list[index].appCode
-        this.formLeft.appKey = this.list[index].appKey
-        this.formLeft.description = this.list[index].description
-        this.formLeft.input5 = this.statusName
-        this.formLeft.id = this.list[index].id
-      }
-    },
-    cancel() {
-      this.contentModal = false
-      this.contentModal = false
-    },
-    // 搜索
-    searchBtn() {
-      this.query.pageNum = 1
-      this.queryBussinessList()
-    },
-    // 获取业务列表
-    queryBussinessList() {
-      let that = this
-      let data = {
-        ...this.query,
-        appName: this.appName,
-        appCode: this.appCode,
-        appKey: this.appKey,
-        status: this.statusType
-      }
-      this.loading = !this.loading
-      this.$api.basic.businessList(data).then(res => {
-        that.loading = !that.loading
-        that.list = res.data
-        that.listTotal = res.totalCount
+      ).then(res => {
+        console.log(res)
+        this.isLoading = false
+        if (res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data
+        } else {
+          this.tableList = res
+        }
       })
     },
-    // 打开添加业务详情弹窗
-    addContentModal() {
-      console.log(this.typeStatus)
-      let that = this
-      if (!this.formLeft.appName) {
-        this.$Message.info('请填写app名称')
-        return
-      }
-      if (!this.formLeft.appCode) {
-        this.$Message.info('请填写appCode')
-        return
-      }
-      if (!this.formLeft.description) {
-        this.$Message.info('请填写描述')
-        return
-      }
-      if (this.formLeft.input5 === '启用') {
-        this.status = 1
-      } else if (this.formLeft.input5 === '禁用') {
-        this.status = 2
-      }
-      this.loading = !this.loading
-      if (this.typeStatus === 1) {
-        let data = {
-          status: this.status,
-          ...this.formLeft
-        }
-        this.$api.basic.addBusiness(data).then(res => {
-          that.loading = !that.loading
-          that.$Message.info('添加成功')
-          that.contentModal = false
-          that.queryBussinessList()
-        })
-      } else if (this.typeStatus === 2) {
-        let data = {
-          status: Number(this.status),
-          ...this.formLeft
-        }
-        this.$api.basic.updateBusiness(data).then(res => {
-          that.loading = !that.loading
-          that.$Message.info('修改成功')
-          that.contentModal = false
-          that.queryBussinessList()
-        })
-      }
-    },
-    // 分页器
-    pageChange(page) {
-      this.query.pageNum = page
-      this.queryBussinessList()
+    addInsert(){
+      console.log('/////////////')
     }
   }
 }
-
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .inputLabel{margin-right: 40px;}
-  .select-bar,
-  .table {
+
+<style lang="less" scoped>
+.main__box {
+  .search {
     margin-bottom: 10px;
+    width: 100%;
+    .search-item {
+      width: 250px;
+    }
   }
-
-  .selectWidth {
-    width: 200px;
-    margin-bottom: 10px
-  }
-
-  .btnStyle {
-    margin-bottom: 10px
-  }
-
-  .addBtn {
-    margin-left: 50px
-  }
-
-  .cancelBtn {
-    margin-left: 8px
-  }
-
-  .el-form-item>>>label {
-    font-weight: 400;
-  }
-
-  .searchBtn {
-    padding: 7px;
-  }
-
-  .fromStyle {
-    margin-right: 10px
-  }
-
+}
+.title{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 </style>

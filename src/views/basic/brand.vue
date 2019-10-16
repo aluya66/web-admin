@@ -173,7 +173,7 @@
       :visible.sync="showModal"
       width="50%"
       >
-      <el-form ref="curCategoryDetail" :model="curCategoryDetail" label-width="90px" class="demo-ruleForm fromStyle">
+      <el-form ref="curCategoryDetail" style="height: 500px; overflow: auto" :model="curCategoryDetail" label-width="90px" class="demo-ruleForm fromStyle">
         <el-row>
           <el-col :span="12">
              <el-form-item label="品牌国家:" >
@@ -258,7 +258,6 @@
           <el-radio-group v-model="curCategoryDetail.status">
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="2">禁用</el-radio>
-            <el-radio :label="3">删除</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序:">
@@ -402,10 +401,6 @@ export default {
       //   this.$Message.info('请输入封面视频url')
       //   return
       // }
-      if (!this.curCategoryDetail.createdby) {
-        this.$Message.info('请输入创建人')
-        return
-      }
       if (!this.curCategoryDetail.sort) {
         this.$Message.info('请输入排序')
         return
@@ -419,6 +414,10 @@ export default {
       // }
       this.loading = !this.loading
       if (this.brandType === 1) {
+        if (!this.curCategoryDetail.createdby) {
+          this.$Message.info('请输入创建人')
+          return
+        }
         let data = {
           consumer: this.curCategoryDetail.consumer, // 消费人群:小年轻,老头子,大妈,阿姨
           country: this.curCategoryDetail.country, // 品牌国家
@@ -488,7 +487,7 @@ export default {
     },
     deleteModal(row, index) {
       const that = this
-      const data = {
+      const params = {
         id: index.id
       }
       that.$api.basic.deleteBrand(data).then(res => {
@@ -542,6 +541,7 @@ export default {
 .title{
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
 .imgStyle{
   width: 60px;

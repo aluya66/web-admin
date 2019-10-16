@@ -118,7 +118,8 @@
           <el-input v-model="formDynamic.name" placeholder='请输入名称'></el-input>
           </el-form-item>
         <el-form-item label="排序:">
-          <el-input v-model="formDynamic.sort" value="100" placeholder='排序'></el-input>
+          <!-- <el-input v-model="formDynamic.sort" value="100" placeholder='排序'></el-input> -->
+          <el-input-number v-model="formDynamic.sort" controls-position="right" :min="1" :max="10000"></el-input-number>
         </el-form-item>
         <el-form-item label="创建人:" v-if="this.typeStatus===1">
           <el-input v-model="formDynamic.createdby" placeholder='创建人'></el-input>
@@ -146,7 +147,7 @@
           </el-col>
           <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
           <el-col :span="4">
-            <el-button @click.prevent="removeDomain(item)" v-if="index>0">删除</el-button>
+            <el-button @click.prevent="removeDomain(item, index)" v-if="index>0">删除</el-button>
           </el-col>
         </el-form-item>
         <el-form-item>
@@ -197,10 +198,11 @@ export default {
     this.getGoodsattrvalList()
   },
   methods: {
-    removeDomain(item) {
-      var index = this.formDynamic.items.indexOf(item)
-      if (index !== -1) {
-        this.formDynamic.items.splice(index, 1)
+    removeDomain(item, index) {
+      // this.formDynamic.items[index].deleteFlag = 1;
+      var indexItem = this.formDynamic.items.indexOf(item)
+      if (indexItem !== -1) {
+        this.formDynamic.items.splice(indexItem, 1)
       }
     },
     getGoodsattrvalList() {
@@ -240,6 +242,7 @@ export default {
       this.formDynamic.name = ''
       this.formDynamic.type = ''
       this.formDynamic.createdby = ''
+      this.formDynamic.logiName = ''
       this.formDynamic.sort = 100
       let item = {
         value: '',
@@ -355,6 +358,9 @@ export default {
             id: this.formDynamic.items[i].id,
             deleteFlag: this.formDynamic.items[i].deleteFlag
           }
+          console.log(this.formDynamic.items[i].deleteFlag)
+          console.log(this.formDynamic.items[i].id)
+          console.log('0000000000000000')
           data.bmsGoodsAttrValUpdateReqs.push(obj)
         }
         this.loading = !this.loading
@@ -398,6 +404,7 @@ export default {
   margin-bottom: 10px
 }
 .title{
+  width: 100%;
   display: flex;
   justify-content: space-between
 }
@@ -414,7 +421,9 @@ export default {
   margin-right: 5px
 }
 .fromStyle{
-  margin: 0 10px
+  /* margin: 0 10px; */
+  max-height: 500px; 
+  overflow: auto;
 }
 .pageStyle{
   margin-top: 10px;

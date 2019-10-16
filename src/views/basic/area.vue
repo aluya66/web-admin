@@ -7,53 +7,24 @@
       </div>
     </template>
     <Card>
-      <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
-        <!-- 地区管理： -->
-        <el-select v-model="pname" @change="choseProvince" placeholder="省级地区" size="small">
-          <el-option
-            v-for="(item,index) in regionList"
-            :key="index"
-            :label="item.name"
-            :value="index"
-          ></el-option>
-        </el-select>
-        <el-select v-model="cname" @change="choseCity" placeholder="市级地区" v-if="changeCityItem==true" size="small">
-          <el-option
-            v-for="(item,index) in regionListItem"
-            :key="index"
-            :label="item.name"
-            :value="index"
-          ></el-option>
-        </el-select>
-        <el-select v-model="bname" @change="choseBlock" placeholder="区级地区" v-if="changeregionDistrict==true" size="small">
-          <el-option
-            v-for="(item,index) in regionDistrict"
-            :key="index"
-            :label="item.name"
-            :value="index"
-          ></el-option>
-        </el-select>
-        <el-select v-model="sname" @change="changeCityStreet" placeholder="街道办" v-if="changeStreet==true" size="small">
-          <el-option
-            v-for="(item,index) in regionStreet"
-            :key="index"
-            :label="item.name"
-            :value="index"
-          ></el-option>
-        </el-select>
-        <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn">搜索</el-button>
-      </el-form>
       <el-container v-loading="loading">
         <el-aside width="600px">
           <el-tree
-            :data="areaList"
+            :data="list"
+            ref="tree"
+            node-key="id"
             :expand-on-click-node="false"
             >
             <span class="custom-tree-node" slot-scope="{ node, data }">
-              <span>{{ node.label }}</span>
+              <span>
+                <span class="icon">
+                  <i class="el-icon-caret-right" v-if="data.exitChildren==true" @click="getCheckedKeys(node, data)"></i>
+                </span>
+                {{ node.label }}
+              </span>
               <span>
                 <el-button
-                  v-if="data.children.length>0"
+                  v-if="data.exitChildren==true"
                   type="text"
                   size="small"
                   @click="()=>append(1, data)">
@@ -93,23 +64,6 @@
   </c-view>
 </template>
 <script>
-const columns = [
-  {
-    title: '地区名称',
-    slot: 'name',
-    align: 'center'
-  },
-  {
-    title: '添加子地区',
-    slot: 'add',
-    align: 'center'
-  },
-  {
-    title: '编辑',
-    slot: 'redact',
-    align: 'center'
-  }
-]
 export default {
   name: 'area',
   data() {
@@ -121,13 +75,11 @@ export default {
       regionStreet: [], // 街道
       loading: false,
       showModal: false,
-      columns,
       listTotal: 0,
       query: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10000
       },
-      regionLevel: '',
       parentCode: '',
       changeCityItem: false,
       changeregionDistrict: false,
@@ -139,38 +91,33 @@ export default {
       },
       modelTitle: '',
       typeStatus: '',
-      cityFlag: '',
       cityItemFlag: '',
       cityStreetFlag: '',
       cityRowFlag: '',
-      city: '',
       cityItem: '',
       cityDistrict: '',
       cityStreet: '',
 
-      optionsMessage: '',
-      ChineseDistricts: '',
-      province: [],
-      shi1: [],
-      qu1: [],
-      block: [],
       pname: '', // 省的名字
       cname: '', // 市的名字
       bname: '', // 区的名字
       sname: '', // 街道的名字
-      areaList: [],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      }
     }
   },
   created() {
-    this.getAreaAllList()
     this.queryAreaList()
-    this.queryAllParentcodes()
+    // this.queryAllParentcodes()
   },
   methods: {
+    getCheckedKeys(node, data){
+      
+      console.log(this.$refs.tree.getCheckedKeys())
+      console.log(node)
+      console.log(data)
+      console.log('-----------------')
+      this.parentCode = data.code
+      this.queryAreaList()
+    },
     modification(node, data) {
       this.showModal = true
       this.modelTitle = '编辑'
@@ -180,35 +127,15 @@ export default {
     },
     append(type, data) {
       this.showModal = true
+      this.modelTitle = '新增'
+      this.curCategoryDetail.name = ''
+      this.curCategoryDetail.code = ''
       if (type === 1) {
-        // console.log('节点新增')
-        this.modelTitle = '新增'
         this.typeStatus = 1
-        this.curCategoryDetail.name = ''
-        this.curCategoryDetail.code = ''
         this.curCategoryDetail.parentCode = data.code
-        console.log('code' + data.code)
       } else if (type === 3) {
-        // console.log('全局新增')
-        this.modelTitle = '新增'
         this.typeStatus = 3
-        this.curCategoryDetail.name = ''
-        this.curCategoryDetail.code = ''
       }
-    },
-    getAreaAllList() {
-      let that = this
-      let params = {}
-      this.loading = !this.loading
-      this.$api.basic.getAreaAll(params).then(data => {
-        that.loading = !that.loading
-        let dataList = JSON.stringify(data)
-        that.areaList = JSON.parse(dataList.replace(/name/g, 'label'))
-      })
-    },
-    searchBtn() {
-      this.query.pageNum = 1
-      this.queryAreaList()
     },
     queryAreaList() {
       let that = this
@@ -219,8 +146,21 @@ export default {
       this.loading = !this.loading
       this.$api.basic.queryAllRegion(params).then(res => {
         that.loading = !that.loading
-        that.list = res.data
-        that.listTotal = res.totalCount
+        console.log('code:'+this.parentCode)
+          let data = JSON.stringify(res.data)
+        if(this.parentCode > 0){
+          console.log('88888888888')
+          let dataList = JSON.parse(data.replace(/name/g, 'label'))
+          
+          console.log(this.parentCode)
+          let codeData = res.data.find(e=>e.parentCode === this.parentCode)
+          console.log(codeData)
+          codeData.children.push(dataList)
+        } else {
+          console.log('7777777777777')
+          that.list = JSON.parse(data.replace(/name/g, 'label'))
+        }
+        // that.listTotal = res.totalCount
       })
     },
     // 省
@@ -229,100 +169,13 @@ export default {
       let params = {
         parentCode: this.parentCode
       }
-      console.log(this.parentCode)
       this.$api.basic.queryAllParentcodes(params).then(data => {
-        that.regionList = data
+        console.log('222222222')
+        console.log(data)
+        that.list = data
       })
-    },
-    // 省下拉
-    choseProvince(index) {
-      if (index !== this.cityItemFlag) {
-        this.cityItem = ''
-        this.changeCityItem = true
-        this.cname = ''
-        this.changeregionDistrict = false
-        this.changeStreet = false
-        this.parentCode = this.regionList[index].code
-        this.regionListItem = ''
-      } else {
-        this.changeCityItem = false
-        this.regionList = ''
-      }
-      this.cityItemFlag = index
-      this.queryAllCity()
-    },
-    // 市
-    queryAllCity() {
-      let params = {
-        parentCode: this.parentCode
-      }
-      this.$api.basic.queryAllParentcodes(params).then(data => {
-        this.regionListItem = data
-      })
-    },
-    // 市下拉
-    choseCity(index) {
-      if (index !== this.cityStreetFlag) {
-        this.cityDistrict = ''
-        this.changeregionDistrict = true
-        this.bname = ''
-        this.changeStreet = false
-        this.parentCode = this.regionListItem[index].code || ''
-        this.regionDistrict = ''
-      } else {
-        this.changeregionDistrict = false
-        this.regionListItem = ''
-      }
-      this.cityStreetFlag = index
-      this.queryAllDistrict()
-    },
-
-    // 区
-    queryAllDistrict() {
-      let params = {
-        parentCode: this.parentCode
-      }
-      this.$api.basic.queryAllParentcodes(params).then(data => {
-        this.regionDistrict = data
-      })
-    },
-    // 区下拉
-    choseBlock(index) {
-      if (index !== this.cityRowFlag) {
-        this.cityStreet = ''
-        this.changeStreet = true
-        this.sname = ''
-        this.regionStreet = ''
-        this.parentCode = this.regionDistrict[index].code
-      } else {
-        this.changeStreet = false
-      }
-
-      this.cityRowFlag = index
-      this.queryAllStreet()
-    },
-
-    // 街道
-    queryAllStreet() {
-      let params = {
-        parentCode: this.parentCode
-      }
-      this.$api.basic.queryAllParentcodes(params).then(data => {
-        this.regionStreet = data
-      })
-    },
-    // // 街道下拉
-    changeCityStreet(index) {
-      this.parentCode = this.regionStreet[index].code
-    },
-
-    // 分页器
-    pageChange(page) {
-      this.query.pageNum = page
-      this.queryAreaList()
     },
     addModal() {
-      console.log('请求')
       let that = this
       if (!this.curCategoryDetail.name) {
         this.$Message.warning('请填写地区名称')
@@ -389,6 +242,7 @@ export default {
 .title {
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
 .selectWidth {
   width: 200px;
@@ -416,5 +270,9 @@ export default {
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
+  }
+  .icon{
+    width: 10px;
+    display: inline-block
   }
 </style>
