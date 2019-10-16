@@ -53,7 +53,7 @@
 import utils from 'utils'
 
 export default {
-  name: 'c-tree',
+  name: 'CTree',
   props: {
     showBtn: {
       type: Boolean,

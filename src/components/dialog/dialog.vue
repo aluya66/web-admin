@@ -28,7 +28,7 @@
 
 <script>
 export default {
-  name: 'c-dialog',
+  name: 'CDialog',
   props: {
     title: {
       type: String,

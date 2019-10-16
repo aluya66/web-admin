@@ -96,10 +96,11 @@
 </template>
 
 <script>
-import CPagination from '@/components/pagination'
-import CImage from 'components/image'
+import CPagination from '../pagination'
+import CImage from '../image'
+
 export default {
-  name: 'c-table',
+  name: 'CTable',
   components: {
     CPagination,
     CImage

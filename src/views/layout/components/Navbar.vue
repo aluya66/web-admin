@@ -42,10 +42,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from 'components/breadcrumb'
-import Hamburger from 'components/hamburger'
-// import Screenfull from "@/components/Screenfull";
-// import Search from "@/components/HeaderSearch";
+import Breadcrumb from './breadcrumb'
+import Hamburger from './hamburger'
+// import Screenfull from "./Screenfull";
+// import Search from "./HeaderSearch";
 
 export default {
   components: {

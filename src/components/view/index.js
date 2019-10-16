@@ -1,4 +1,4 @@
-import View from './index.vue'
+import View from './view.vue'
 
 const install = function (Vue) {
   Vue.component(View.name, View)

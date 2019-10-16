@@ -18,7 +18,7 @@
 import utils from 'utils'
 
 export default {
-  name: 'c-pagination',
+  name: 'CPagination',
   props: {
     total: {
       required: true,

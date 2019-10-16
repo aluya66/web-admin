@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  name: 'c-upload',
+  name: 'CUpload',
   props: {
     actionPath: {
       type: String,

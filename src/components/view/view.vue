@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  name: 'c-view',
+  name: 'CView',
   props: {
     title: String
   }
