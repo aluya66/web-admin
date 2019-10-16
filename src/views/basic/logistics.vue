@@ -3,29 +3,53 @@
 		<template v-slot:header>
 			<div class="title">
 				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" size="small" icon="el-icon-plus" @click="addModal(1)">新增</el-button>
+        <el-button type="primary" :size="size" icon="el-icon-plus" @click="addModal(1)">新增</el-button>
 			</div>
 		</template>
-  <Card>
-    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
-      <el-form-item label="物流名称:">
-        <el-input v-model="formInline.logiName" placeholder="请输入物流名称"></el-input>
-      </el-form-item>
-      <el-form-item label="物流编码:">
-        <el-input v-model="formInline.logiCode" placeholder="请输入物流编码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn" >搜索</el-button>
-      </el-form-item>
-    </el-form>
-
-    <Table :loading="loading" border :columns="columns" :data="list" class="table">
-      <template slot-scope="{ row, index }" slot="action">
-        <el-button type="primary" size="small" icon="el-icon-edit" @click="addModal(2, index)" >编辑</el-button>
-      </template>
-    </Table>
-    <Page :total="listTotal" show-total @on-change="pageChange" />
-
+    <div class="main__box">
+      <c-table
+        hasBorder
+        :size="size"
+        :loading="isLoading"
+        :table-header="tableHeader"
+        :table-list="tableList"
+        :page-info="pageInfo"
+        :table-inner-btns="tableInnerBtns"
+        @change-pagination="changePagination"
+      >
+        <template v-slot:header>
+          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
+            <el-form-item label="物流名称">
+              <el-input
+                v-model="searchObj.logiName"
+                class="search-item"
+                :size="size"
+                placeholder="请输入物流名称"
+                clearable
+              />
+            </el-form-item>
+            <el-form-item label="物流编码">
+              <el-input
+                v-model="searchObj.logiCode"
+                class="search-item"
+                :size="size"
+                placeholder="请输入物流编码"
+                clearable
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                class="search-btn"
+                :size="size"
+                icon="el-icon-search"
+                @click="searchSubmit"
+              >查询</el-button>
+            </el-form-item>
+          </el-form>
+        </template>
+      </c-table>
+    </div>
     <el-dialog
       :title="modalTitle"
       :visible.sync="contentModal"
@@ -44,35 +68,50 @@
         <el-button size="small" type="primary" @click="addReleaseBtn">确 定</el-button>
       </span>
     </el-dialog>
-  </Card>
 </c-view>
 </template>
 
 <script>
-const columns = [
-  {
-    title: '物流名称',
-    key: 'logiName'
-  },
-  {
-    title: '物流编码',
-    key: 'logiCode'
-  },
-  {
-    title: '操作',
-    slot: 'action'
-  }
-]
+import mixinTable from 'mixins/table'
+import utils from 'utils'
+
 export default {
-  name: 'logistics',
-  data() {
+  mixins: [mixinTable],
+  data(vm) {
     return {
+      searchObj: {
+        logiName: '',
+        logiCode: ''
+      },
+      marketableSelect: [],
+      pickerOptions: utils.pickerOptions,
+      tableList: [],
+      tableInnerBtns: [{
+        width: 130,
+        name: '编辑',
+        icon: 'el-icon-edit',
+        handle(row) {
+          console.log(row)
+        }
+      }],
+      tableHeader: [
+        {
+          label: '物流名称',
+          prop: 'logiName',
+          fixed: true
+        },
+         {
+          label: '物流编码',
+          prop: 'logiCode',
+        },
+      ],
+
+
       formInline: {
         logiCode: '',
         logiName: ''
       },
       loading: false,
-      columns,
       query: {
         pageNum: 1,
         pageSize: 10
@@ -90,9 +129,39 @@ export default {
     }
   },
   created() {
-    this.getLogisticsList()
+    this.fetchData()
   },
   methods: {
+     /**
+     * 获取表格数据
+    */
+    fetchData() {
+      const { dataTime, ...other } = this.searchObj
+      const { totalNum, ...page } = this.pageInfo
+      const searchDate = this.getSearchDate(dataTime)
+      this.isLoading = true
+      this.$api.basic.getLogistics(
+        {
+          ...searchDate,
+          ...other,
+          ...page,
+          pageSize: 10
+        }
+      ).then(res => {
+        console.log(res)
+        this.isLoading = false
+        if (res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data
+        } else {
+          this.tableList = res
+        }
+      })
+    },
+
+
+
     getLogisticsList() {
       let that = this
       let params = {
@@ -125,7 +194,7 @@ export default {
         this.$api.basic.addLogistics(data).then(res => {
           that.$Message.info('添加成功')
           that.contentModal = false
-          that.getLogisticsList()
+          that.fetchData()
         })
       } else if (this.statusType === 2) {
         let data = {
@@ -169,11 +238,15 @@ export default {
 }
 </script>
 
-<style scoped>
-.table,
-.select-bar,
-.update-item,.control-bar {
-  margin-bottom: 10px
+<style lang="less" scoped>
+.main__box {
+  .search {
+    margin-bottom: 10px;
+    width: 100%;
+    .search-item {
+      width: 250px;
+    }
+  }
 }
 .title{
   width: 100%;

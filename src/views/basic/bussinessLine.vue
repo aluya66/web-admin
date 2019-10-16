@@ -62,7 +62,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-           
+
             <el-form-item>
               <el-button
                 type="primary"
@@ -76,6 +76,60 @@
         </template>
       </c-table>
     </div>
+
+    <el-dialog
+      :title="modalTitle"
+      :visible.sync="contentModal"
+      width="30%"
+      >
+      <el-form ref="form" :model="formLeft" label-width="80px" class="modelStyle">
+        <el-form-item label="app名称:">
+          <el-input 
+            v-model="formLeft.appName"
+            :size="size"
+            placeholder='请填写app名称'
+            clearable
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="app编码:" v-if="statusType==1">
+          <el-input 
+            v-model="formLeft.appCode"
+            :size="size"
+            placeholder='请填写app编码'
+            clearable
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="状态:" v-if="statusType==1">
+          <el-select
+            v-model="formLeft.status"
+            :size="size"
+            class="search-item"
+            placeholder="请选择状态"
+            clearable
+          >
+            <el-option
+              v-for="item in marketableSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="描述:" v-if="statusType==1">
+          <el-input
+          type="textarea" 
+          v-model="formLeft.description"
+          :size="size"
+          placeholder='请填写描述'
+          clearable
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" @click="contentModal = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="addReleaseBtn">确 定</el-button>
+      </span>
+    </el-dialog>
   </c-view>
 </template>
 
@@ -104,7 +158,7 @@ export default {
         },
         {
           value: '2',
-          label: '下架'
+          label: '禁用'
         }
       ],
       pickerOptions: utils.pickerOptions,
@@ -127,16 +181,17 @@ export default {
         {
           label: 'app编码',
           prop: 'appCode',
-          width: 120,
         },
         {
           label: 'appKey',
           prop: 'appKey',
-          width: 120,
         },
         {
           label: '状态',
-          prop: 'status'
+          prop: 'status',
+          formatter(row) {
+            return row.status ? vm.marketableSelect[row.status].label : ''
+          }
         },
         {
           label: '描述',
@@ -146,22 +201,18 @@ export default {
           label: '创建时间',
           prop: 'created'
         }
-       
-        // {
-        //   label: '上架状态',
-        //   prop: 'marketable',
-        //   width: 100,
-        //   formatter(row) {
-        //     return row.marketable ? vm.marketableSelect[row.marketable - 1].label : ''
-        //   }
-        // },
-       
-        // {
-        //   label: '更新时间',
-        //   prop: 'updated',
-        //   width: 100
-        // }
-      ]
+      ],
+
+      statusType: '',
+      contentModal: false,
+      modalTitle: '',
+      formLeft: {
+        appName: '',
+        appCode: '',
+        description: '',
+        status: '',
+        id: ''
+      },
     }
   },
   created() {
@@ -172,7 +223,6 @@ export default {
      * 获取表格数据
     */
     fetchData() {
-      console.log(';;;;;;;;;;;;;;;;;;;;;;')
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
@@ -181,9 +231,8 @@ export default {
         {
           ...searchDate,
           ...other,
-          pageNum: 1,
-          pageSize: 10,
-          totalNum: 0
+          ...page,
+          pageSize: 10
         }
       ).then(res => {
         console.log(res)
@@ -197,9 +246,59 @@ export default {
         }
       })
     },
-    addInsert(){
-      console.log('/////////////')
-    }
+    addInsert() {
+      this.modalTitle = '新增'
+      this.contentModal = true
+      this.statusType = 1
+      this.formLeft = {}
+    },
+    addReleaseBtn(){
+      let that = this
+      if (!this.formLeft.appName) {
+        this.$Message.info('请填写app名称')
+        return
+      }
+      if (!this.formLeft.appCode) {
+        this.$Message.info('请填写app编码')
+        return
+      }
+      if (!this.formLeft.status) {
+        this.$Message.info('请选择状态')
+        return
+      }
+      if (!this.formLeft.description) {
+        this.$Message.info('请填写描述')
+        return
+      }
+      // if (this.formLeft.status === '启用') {
+      //   this.status = 1
+      // } else if (this.formLeft.status === '禁用') {
+      //   this.status = 2
+      // }
+      this.loading = !this.loading
+      if (this.statusType === 1) {
+        let data = {
+          ...this.formLeft
+        }
+        this.$api.basic.addBusiness(data).then(res => {
+          that.loading = !that.loading
+          that.$Message.info('添加成功')
+          that.contentModal = false
+          that.fetchData()
+        })
+      } else if (this.typeStatus === 2) {
+        let data = {
+          status: Number(this.status),
+          ...this.formLeft
+        }
+        this.$api.basic.updateBusiness(data).then(res => {
+          that.loading = !that.loading
+          that.$Message.info('修改成功')
+          that.contentModal = false
+          that.queryBussinessList()
+        })
+      }
+    },
   }
 }
 </script>

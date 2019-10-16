@@ -490,7 +490,7 @@ export default {
       const params = {
         id: index.id
       }
-      that.$api.basic.deleteBrand(data).then(res => {
+      that.$api.basic.deleteBrand(params).then(res => {
         that.$Message.success('删除成功')
         // 更新列表数据
         that.brandLista()

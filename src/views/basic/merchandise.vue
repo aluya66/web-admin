@@ -422,7 +422,7 @@ export default {
 }
 .fromStyle{
   /* margin: 0 10px; */
-  max-height: 500px; 
+  max-height: 500px;
   overflow: auto;
 }
 .pageStyle{
