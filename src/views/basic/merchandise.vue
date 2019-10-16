@@ -147,7 +147,7 @@
           </el-col>
           <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
           <el-col :span="4">
-            <el-button @click.prevent="removeDomain(item)" v-if="index>0">删除</el-button>
+            <el-button @click.prevent="removeDomain(item, index)" v-if="index>0">删除</el-button>
           </el-col>
         </el-form-item>
         <el-form-item>
@@ -198,10 +198,11 @@ export default {
     this.getGoodsattrvalList()
   },
   methods: {
-    removeDomain(item) {
-      var index = this.formDynamic.items.indexOf(item)
-      if (index !== -1) {
-        this.formDynamic.items.splice(index, 1)
+    removeDomain(item, index) {
+      // this.formDynamic.items[index].deleteFlag = 1;
+      var indexItem = this.formDynamic.items.indexOf(item)
+      if (indexItem !== -1) {
+        this.formDynamic.items.splice(indexItem, 1)
       }
     },
     getGoodsattrvalList() {
@@ -357,6 +358,9 @@ export default {
             id: this.formDynamic.items[i].id,
             deleteFlag: this.formDynamic.items[i].deleteFlag
           }
+          console.log(this.formDynamic.items[i].deleteFlag)
+          console.log(this.formDynamic.items[i].id)
+          console.log('0000000000000000')
           data.bmsGoodsAttrValUpdateReqs.push(obj)
         }
         this.loading = !this.loading

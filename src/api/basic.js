@@ -206,7 +206,9 @@ export const addQuerypage = params =>
 
 // 标签更新
 export const updateQuerypage = params =>
-  Http.fetch(`${context}/v1/label`, params)
+  Http.fetch(`${context}/v1/label`, params, {
+    method: 'put'
+  })
 
 // 标签删除
 export const deleteQuerypage = params =>

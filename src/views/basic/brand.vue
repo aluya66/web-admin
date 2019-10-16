@@ -407,11 +407,11 @@ export default {
         return
       }
       // if (this.curCategoryDetail.status === '启用') {
-        //   this.status = 1
+      //   this.status = 1
       // } else if (this.curCategoryDetail.status === '禁用') {
-        //   this.status = 2
+      //   this.status = 2
       // } else {
-        //   this.status = 3
+      //   this.status = 3
       // }
       this.loading = !this.loading
       if (this.brandType === 1) {
@@ -488,10 +488,10 @@ export default {
     },
     deleteModal(row, index) {
       const that = this
-      const data = {
+      const params = {
         id: index.id
       }
-      that.$api.basic.deleteBrandList(data).then(res => {
+      that.$api.basic.deleteBrandList(params).then(res => {
         that.$Message.success('删除成功')
         // 更新列表数据
         that.brandLista()

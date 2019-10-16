@@ -2,8 +2,17 @@
 <c-view>
 		<template v-slot:header>
 			<div class="title">
-				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" size="small" icon="el-icon-plus" @click="addModel">新增</el-button>
+
+        <el-tabs v-model="activeName" type="card" @tab-click="changeTitle">
+          <el-tab-pane label="商品标签" name="1" />
+          <el-tab-pane label="用户标签" name="2" />
+        </el-tabs>
+        <!-- <div>
+          <el-button type="primary" size="small" @click="changeTitle(1)">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}-商品标签</el-button>
+          <el-button type="primary" size="small" @click="changeTitle(2)" >{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}-用户标签</el-button>
+        </div> -->
+				<!-- {{ $route.meta.name || $t(`route.${$route.meta.title}`) }} -->
+        <el-button type="primary" style="height: 30px" size="small" icon="el-icon-plus" @click="addModel">新增</el-button>
 			</div>
 		</template>
   <Card>
@@ -172,7 +181,10 @@ export default {
       formInline: {
         labelName: ''
       },
+      activeName: '1',
       statusType: '',
+      labelType: 1,
+      categoryType: 1,
       showModal: false,
       modelTitle: '',
       formDynamic: {
@@ -266,7 +278,7 @@ export default {
           id: this.formDynamic.id,
           ...this.formDynamic,
           labelStatus: this.labelStatus,
-          labelType: 1,
+          labelType: this.labelType,
           labelParentIds: this.formDynamic.labelParentIds
         }
         this.$api.basic.updateQuerypage(data).then(res => {
@@ -279,7 +291,7 @@ export default {
     getaddSoreQuerypage() {
       let that = this
       let data = {
-        categoryType: 1
+        categoryType: this.categoryType
       }
       this.$api.basic.addSoreQuerypage(data).then(res => {
         that.addSoreList = res.data
@@ -304,7 +316,7 @@ export default {
       let data = {
         ...this.query,
         labelName: this.formInline.labelName,
-        labelType: 1
+        labelType: this.labelType
       }
       this.loading = !this.loading
       this.$api.basic.getQuerypage(data).then(res => {
@@ -320,6 +332,18 @@ export default {
     pageChange(page) {
       this.query.pageNum = page
       this.getQuerypageList()
+    },
+    changeTitle(tab, event) {
+      this.formInline.labelName = ''
+      if (tab.name == 1) {
+        this.labelType = 1
+        this.categoryType = 1
+      } else if (tab.name == 2) {
+        this.labelType = 2
+        this.categoryType = 2
+      }
+      this.getQuerypageList()
+      this.getaddSoreQuerypage()
     }
   }
 }
