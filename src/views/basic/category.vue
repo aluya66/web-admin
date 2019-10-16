@@ -1,15 +1,11 @@
 <template>
   <c-view>
     <template v-slot:header>
-      <el-row type="flex" justify="space-between">
-        <el-col class="title">
-          {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        </el-col>
-        <el-col :span="1">
-          <el-button type="primary" size="small" icon="el-icon-plus" @click="addModal(1)">新增
-          </el-button>
-        </el-col>
-      </el-row>
+      <div class="title">
+        {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+        <el-button type="primary" size="small" icon="el-icon-plus" @click="addModal(1)">新增
+        </el-button>
+      </div>
     </template>
     <Card>
       <div class="select-bar">
@@ -190,7 +186,7 @@ export default {
       }
       ],
       categoryLevelList: ['一级类目', '二级类目', '三级类目'],
-      showFlagList: ['不显示', '显示'],
+      showFlagList: ['显示', '不显示'],
       categoryLevel: '',
       categoryName: '',
       showFlag: '',
@@ -369,6 +365,11 @@ export default {
   .update-item,
   .control-bar {
     margin-bottom: 10px
+  }
+  .title{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
 
   .selectWidth {

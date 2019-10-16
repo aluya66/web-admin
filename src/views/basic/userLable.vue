@@ -335,6 +335,7 @@ export default {
 .title{
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
 .selectWidth{
   width: 200px;

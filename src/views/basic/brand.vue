@@ -173,7 +173,7 @@
       :visible.sync="showModal"
       width="50%"
       >
-      <el-form ref="curCategoryDetail" :model="curCategoryDetail" label-width="90px" class="demo-ruleForm fromStyle">
+      <el-form ref="curCategoryDetail" style="height: 500px; overflow: auto" :model="curCategoryDetail" label-width="90px" class="demo-ruleForm fromStyle">
         <el-row>
           <el-col :span="12">
              <el-form-item label="品牌国家:" >
@@ -258,7 +258,6 @@
           <el-radio-group v-model="curCategoryDetail.status">
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="2">禁用</el-radio>
-            <el-radio :label="3">删除</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序:">
@@ -542,6 +541,7 @@ export default {
 .title{
   display: flex;
   justify-content: space-between;
+  width: 100%;
 }
 .imgStyle{
   width: 60px;

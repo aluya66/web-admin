@@ -2,7 +2,6 @@
 <c-view>
 		<template v-slot:header>
 			<div class="title">
-
         <el-tabs v-model="activeName" type="card" @tab-click="changeTitle">
           <el-tab-pane label="商品标签" name="1" />
           <el-tab-pane label="用户标签" name="2" />
@@ -357,6 +356,8 @@ export default {
 .title{
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
 }
 .selectWidth{
   width: 200px;

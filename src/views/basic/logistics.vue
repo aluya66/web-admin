@@ -176,6 +176,7 @@ export default {
   margin-bottom: 10px
 }
 .title{
+  width: 100%;
   display: flex;
   justify-content: space-between
 }

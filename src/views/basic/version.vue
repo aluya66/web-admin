@@ -1,15 +1,11 @@
 <template>
   <c-view>
     <template v-slot:header>
-      <el-row type="flex">
-        <el-col class="title">
+      <div class="title">
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        </el-col>
-        <el-col :span="1" class="searchBtn">
           <el-button type="primary" size="small" icon="el-icon-plus" @click="addNewRelease">
             新增</el-button>
-        </el-col>
-      </el-row>
+      </div>
     </template>
     <Card>
       <div class="select-bar">
@@ -312,6 +308,11 @@ export default {
   .selectBox {
     flex-wrap: wrap;
   }
+  .title{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
 
   .inputLabel {
     margin-right: 40px;
@@ -360,16 +361,5 @@ export default {
 
   .fromStyle {
     margin-right: 10px
-  }
-  .wrap_one{
-    display: inline-block;
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    line-height: 18px;
-    cursor: pointer;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
   }
 </style>

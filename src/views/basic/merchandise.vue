@@ -404,6 +404,7 @@ export default {
   margin-bottom: 10px
 }
 .title{
+  width: 100%;
   display: flex;
   justify-content: space-between
 }
@@ -420,7 +421,9 @@ export default {
   margin-right: 5px
 }
 .fromStyle{
-  margin: 0 10px
+  /* margin: 0 10px; */
+  max-height: 500px; 
+  overflow: auto;
 }
 .pageStyle{
   margin-top: 10px;
