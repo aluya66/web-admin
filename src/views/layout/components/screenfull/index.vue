@@ -11,7 +11,7 @@
 import screenfull from 'screenfull'
 
 export default {
-  name: 'c-screenfull',
+  name: 'screenfull',
   data () {
     return {
       isFullscreen: false

@@ -20,7 +20,7 @@
 import utils from 'utils'
 
 export default {
-  name: 'c-rightPanel',
+  name: 'rightPanel',
   props: {
     clickNotClose: {
       default: false,

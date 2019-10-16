@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import ThemePicker from 'components/themePicker'
+import ThemePicker from '../themePicker'
 
 export default {
   components: { ThemePicker },

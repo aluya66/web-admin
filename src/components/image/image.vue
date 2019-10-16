@@ -12,13 +12,13 @@
 
 <script>
 import create from 'utils/create'
-import { Image } from 'element-ui'
+// import { Image } from 'element-ui'
 
 export default create({
   name: 'image',
   inheritAttrs: false,
   components: {
-    Image
+    // Image
   },
   props: {
     url: {
