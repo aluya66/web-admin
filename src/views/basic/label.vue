@@ -2,7 +2,7 @@
   <c-view>
     <template v-slot:header>
       <div class="title">
-        <el-tabs v-model="activeName" type="card" @tab-click="changeTitle">
+        <el-tabs v-model="activeName" @tab-click="changeTitle">
           <el-tab-pane label="商品标签" name="1"></el-tab-pane>
           <el-tab-pane label="用户标签" name="2"></el-tab-pane>
         </el-tabs>
@@ -54,7 +54,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <add-goods ref="childRef" :init-data="dialogObj.initData"></add-goods>
+        <label-add ref="childRef" :init-data="dialogObj.initData"></label-add>
       </c-dialog>
     </div>
   </c-view>
@@ -62,14 +62,14 @@
 <script>
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
-import AddGoods from './shopLableAdd'
+import LabelAdd from './labelAdd'
 import utils from 'utils'
 
 export default {
   mixins: [mixinTable],
   components: {
     CDialog,
-    AddGoods
+    LabelAdd
   },
   data(vm) {
     return {
@@ -235,8 +235,7 @@ export default {
       this.typeBtn = 1
       this.dialogObj = {
         isShow: true,
-        title: '新增商品标签',
-        initData: {}
+        title: '新增商品标签'
       }
     },
     /**

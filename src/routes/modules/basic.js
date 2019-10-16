@@ -64,20 +64,11 @@ export default {
     }
   },
   {
-    path: '/basic/shopLable',
-    name: 'shopLable',
-    component: () => import('@/views/basic/shopLable'),
+    path: '/basic/label',
+    name: 'label',
+    component: () => import('@/views/basic/label'),
     meta: {
-      title: 'shopLable',
-      icon: 'table'
-    }
-  },
-  {
-    path: '/basic/userLable',
-    name: 'userLable',
-    component: () => import('@/views/basic/userLable'),
-    meta: {
-      title: 'userLable',
+      title: 'label',
       icon: 'table'
     }
   },

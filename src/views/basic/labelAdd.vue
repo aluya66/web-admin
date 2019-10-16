@@ -51,7 +51,7 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="标签分类:">
-      <el-checkbox-group v-model.trim="formModel.labelParentIds">
+      <el-checkbox-group v-model="formModel.labelParentIds">
         <el-checkbox
         :label="item.id"
         v-for="(item, index) in addSoreList"
@@ -101,6 +101,7 @@ export default {
           label: '无效'
         }
       ],
+      addSoreList: [],
       rules: {
         labelName: [
           { required: true, message: '请输入标签名称', trigger: 'blur' }
@@ -123,8 +124,8 @@ export default {
         labelDesc: [
           { required: true, message: '请填写描述', trigger: 'blur' }
         ]
-      },
-      addSoreList: []
+      }
+
     }
   },
   created() {

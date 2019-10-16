@@ -322,7 +322,7 @@ export default {
         isShow: true,
         title: opts.title || '新增商品',
         isEdit: opts.isEdit || false,
-        initData: opts.initData || {}
+        initData: opts.initData
       }
     },
     /**
