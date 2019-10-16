@@ -190,7 +190,7 @@ export default {
         }
       })
     },
-       /**
+    /**
      * 删除表格单条数据
      *
      * @param {*} curPromise
@@ -244,7 +244,7 @@ export default {
     */
     editHandle(e) {
       this.typeBtn = 2
-      let checkData = e.labelCategoryModels.map(({id})=>{
+      let checkData = e.labelCategoryModels.map(({ id }) => {
         return { id }
       })
       let checkList = []

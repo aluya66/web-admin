@@ -8,14 +8,14 @@
     label-position="right"
   >
    <el-form-item label="标签名称:">
-      <el-input 
+      <el-input
         v-model.trim="formModel.labelName"
         placeholder='请输入标签名称'
         clearable
       ></el-input>
     </el-form-item>
     <el-form-item label="标签拼音:">
-      <el-input 
+      <el-input
         v-model.trim="formModel.initial"
         placeholder='请输入标签拼音'
         clearable
@@ -53,8 +53,8 @@
     <el-form-item label="标签分类:">
       <el-checkbox-group v-model.trim="formModel.labelParentIds">
         <el-checkbox
-        :label="item.id" 
-        v-for="(item, index) in addSoreList" 
+        :label="item.id"
+        v-for="(item, index) in addSoreList"
         :key="index"
         name="type"
         >{{ item.categoryName }}</el-checkbox>
@@ -62,7 +62,7 @@
     </el-form-item>
     <el-form-item label="描述:">
       <el-input
-      type="textarea" 
+      type="textarea"
       v-model.trim="formModel.labelDesc"
       placeholder='请填写描述'
       clearable
@@ -141,7 +141,7 @@ export default {
         this.addSoreList = res.data
         console.log(this.addSoreList)
       })
-    },
+    }
   },
   computed: {
     formModel() {
