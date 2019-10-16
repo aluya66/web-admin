@@ -3,12 +3,7 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button
-          :size="size"
-          type="primary"
-          icon="el-icon-plus"
-          @click="routerLink('/goods/add')"
-        >新增</el-button>
+        <el-button :size="size" type="primary" icon="el-icon-plus" @click="addHandle">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -112,17 +107,35 @@
         </template>
       </c-table>
     </div>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <add-goods ref="childRef" :init-data="dialogObj.initData"></add-goods>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
+import CDialog from 'components/dialog'
+import AddGoods from './addGoods'
 
 export default {
   mixins: [mixinTable],
+  components: {
+    CDialog,
+    AddGoods
+  },
   data(vm) {
     return {
+      dialogObj: {}, // 对话框数据
       searchObj: {
         // businessValue: '',
         categoryCode: '',
@@ -142,24 +155,22 @@ export default {
       }],
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [{
-        width: 100,
+        width: 130,
         name: '编辑',
         icon: 'el-icon-edit',
         handle(row) {
-          vm.routerLink(`/goods/detail/${row.id}`)
+          vm.editHandle()
         }
-      }
-      // {
-      //   name: '删除',
-      //   icon: 'el-icon-delete',
-      //   handle(row) {
-      //     const { goodsName, id } = row
-      //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
-      //       vm.deleteData({ id })
-      //     })
-      //   }
-      // }
-      ],
+      }, {
+        name: '删除',
+        icon: 'el-icon-delete',
+        handle(row) {
+          const { goodsName, id } = row
+          vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
+            vm.deleteData({ id })
+          })
+        }
+      }],
       tableHeader: [
         {
           label: '商品ID',
@@ -272,6 +283,8 @@ export default {
      * @param {string} [msgTip='删除成功']
      */
     deleteData(param, msgTip = '删除成功') {
+      console.log(param, msgTip)
+      // 主要修改接口
       this.$api.basic.deleteBrand(param).then(() => {
         this.$msgTip(msgTip)
         if (this.tableList.length === 1) {
@@ -280,6 +293,45 @@ export default {
         }
         this.fetchData()
       })
+    },
+    /**
+     * 对话框确认按钮，集成了表单提交功能
+     */
+    dialogConfirm() {
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const childFormModel = childRef.formModel
+          console.log(childFormModel)
+          // code...
+          this.dialogObj.isShow = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    /**
+     * 对话框新增提醒
+    */
+    addHandle() {
+      this.dialogObj = {
+        isShow: true,
+        title: '新增商品',
+        initData: {}
+      }
+    },
+    /**
+     * 对话框编辑提醒
+    */
+    editHandle() {
+      this.dialogObj = {
+        isShow: true,
+        title: '编辑商品',
+        initData: {
+          goodsName: '1213'
+        }
+      }
     }
   }
 }
