@@ -84,7 +84,7 @@
       >
       <el-form ref="form" :model="formLeft" label-width="80px" class="modelStyle">
         <el-form-item label="app名称:">
-          <el-input 
+          <el-input
             v-model="formLeft.appName"
             :size="size"
             placeholder='请填写app名称'
@@ -92,7 +92,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="app编码:" v-if="statusType==1">
-          <el-input 
+          <el-input
             v-model="formLeft.appCode"
             :size="size"
             placeholder='请填写app编码'
@@ -117,7 +117,7 @@
         </el-form-item>
         <el-form-item label="描述:" v-if="statusType==1">
           <el-input
-          type="textarea" 
+          type="textarea"
           v-model="formLeft.description"
           :size="size"
           placeholder='请填写描述'
@@ -180,11 +180,11 @@ export default {
         },
         {
           label: 'app编码',
-          prop: 'appCode',
+          prop: 'appCode'
         },
         {
           label: 'appKey',
-          prop: 'appKey',
+          prop: 'appKey'
         },
         {
           label: '状态',
@@ -212,7 +212,7 @@ export default {
         description: '',
         status: '',
         id: ''
-      },
+      }
     }
   },
   created() {
@@ -252,7 +252,7 @@ export default {
       this.statusType = 1
       this.formLeft = {}
     },
-    addReleaseBtn(){
+    addReleaseBtn() {
       let that = this
       if (!this.formLeft.appName) {
         this.$Message.info('请填写app名称')
@@ -298,7 +298,7 @@ export default {
           that.queryBussinessList()
         })
       }
-    },
+    }
   }
 }
 </script>

@@ -6,8 +6,10 @@
           <el-tab-pane label="商品标签" name="1"></el-tab-pane>
           <el-tab-pane label="用户标签" name="2"></el-tab-pane>
         </el-tabs>
-        <el-button type="primary" style="height: 40px" :size="size" icon="el-icon-plus" @click="addModel">新增</el-button>
-			</div>
+        <div class="header-btn">
+          <el-button type="primary" style="height: 40px" :size="size" icon="el-icon-plus" @click="addHandle">新增</el-button>
+        </div>
+      </div>
     </template>
     <div class="main__box">
       <c-table
@@ -44,139 +46,34 @@
         </template>
       </c-table>
     </div>
-
-    <el-dialog
-      :title="modalTitle"
-      :visible.sync="contentModal"
-      width="30%"
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
       >
-      <el-form ref="form" :model="formLeft" label-width="80px" class="modelStyle">
-        <el-form-item label="标签名称:">
-          <el-input 
-            v-model="formLeft.labelName"
-            :size="size"
-            placeholder='请输入标签名称'
-            clearable
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="标签拼音:">
-          <el-input 
-            v-model="formLeft.initial"
-            :size="size"
-            placeholder='请输入标签拼音'
-            clearable
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="标签状态:">
-          <el-select
-            v-model="formLeft.labelStatus"
-            :size="size"
-            class="search-item"
-            placeholder="请选择状态"
-            clearable
-          >
-            <el-option
-              v-for="item in marketableSelect"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="创建人:">
-          <el-input
-          v-model="formLeft.createdby"
-          :size="size"
-          placeholder='请输入创建人'
-          clearable
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="更新人:">
-          <el-input
-          v-model="formLeft.updatedby"
-          :size="size"
-          placeholder='请输入更新人'
-          clearable
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="标签分类:">
-          <el-checkbox-group v-model="formLeft.labelParentIds">
-            <el-checkbox
-            :label="item.id" 
-            v-for="(item, index) in addSoreList" 
-            :key="index"
-            name="type"
-            >{{ item.categoryName }}</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="描述:" v-if="statusType==1">
-          <el-input
-          type="textarea" 
-          v-model="formLeft.labelDesc"
-          :size="size"
-          placeholder='请填写描述'
-          clearable
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="small" @click="contentModal = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="addModalBtn">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- <Modal
-      v-model="contentModal"
-      :title="modalTitle"
-      width="400"
-      footer-hide
-      >
-      <Form :model="formDynamic" label-position="right" :label-width="75" class="fromStyle">
-        <FormItem label="标签名称:" >
-          <Input  placeholder='请输入标签名称' v-model="formDynamic.labelName"/>
-        </FormItem>
-        <FormItem label="标签拼音:" >
-          <Input  placeholder='请输入标签拼音' v-model="formDynamic.initial"/>
-        </FormItem>
-        <FormItem label="标签状态:" v-if="statusType===2">
-          <RadioGroup v-model="formDynamic.labelStatus">
-            <Radio label="有效" true-value='1'></Radio>
-            <Radio label="无效" true-value='2'></Radio>
-          </RadioGroup>
-        </FormItem>
-        <FormItem label="创建人:" v-if="statusType===1">
-          <Input  placeholder='请输入创建人' v-model="formDynamic.createdby"/>
-        </FormItem>
-        <FormItem label="更新人:" v-if="statusType===2">
-          <Input  placeholder='请输入更新人' v-model="formDynamic.updatedby"/>
-        </FormItem>
-        <FormItem label="标签分类:" >
-          <CheckboxGroup  v-model="formDynamic.labelParentIds">
-            <Checkbox  :label="item.id" :true-value='item.id'  v-for="(item, index) in addSoreList" :key="index">
-              {{item.categoryName}}
-            </Checkbox>
-          </CheckboxGroup >
-        </FormItem>
-        <FormItem label="标签描述:" >
-          <Input v-model="formDynamic.labelDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入标签描述" />
-        </FormItem>
-        <FormItem>
-          <Button type="primary" class="addBtn" @click="addModalBtn">保存</Button>
-          <Button class="cancelBtn" @click="()=>contentModal=false">取消</Button>
-        </FormItem>
-      </Form>
-    </Modal> -->
+        <add-goods ref="childRef" :init-data="dialogObj.initData"></add-goods>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
-
 <script>
 import mixinTable from 'mixins/table'
+import CDialog from 'components/dialog'
+import AddGoods from './shopLableAdd'
 import utils from 'utils'
 
 export default {
   mixins: [mixinTable],
+  components: {
+    CDialog,
+    AddGoods
+  },
   data(vm) {
     return {
+      dialogObj: {}, // 对话框数据
       searchObj: {
         labelName: ''
       },
@@ -194,40 +91,21 @@ export default {
       tableList: [],
       tableInnerBtns: [
         {
+          width: 130,
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
-            // this.contentModal = true
-            // statusType = 2
-            console.log(row)
+            vm.editHandle(row)
           }
         },
         {
           name: '删除',
           icon: 'el-icon-delete',
           handle(row) {
-            // const { id } = row
-            vm.$confirm(`是否确定删除?`, {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning',
-              center: true
+            const { labelName, id } = row
+            vm.confirmTip(`确认删除${labelName}商品标签信息`, () => {
+              vm.deleteData({ id })
             })
-              .then(() => {
-                vm.$api.basic.deleteQuerypage({
-                  id: row.id
-                }).then(() => {
-                  vm.$msgTip('删除成功')
-                  if (vm.tableList.length === 1) {
-                    vm.pageInfo.currentPage = vm.pageInfo.currentPage > 1 ? vm.pageInfo.currentPage - 1 : 1
-                  }
-                  vm.fetchData()
-                })
-              })
-              .catch(() => {
-                console.log('取消')
-              })
-            console.log(row)
           }
         }
       ],
@@ -281,19 +159,7 @@ export default {
       addSoreList: [],
       labelType: 1,
       categoryType: 1,
-      contentModal: false,
-      modalTitle: '',
-      formLeft: {
-        initial: '',
-        labelDesc: '', // 标签描述
-        labelName: '', // 标签名称
-        labelStatus: '', // 标签状态 1 有效 2 无效
-        labelType: '', // 标签类型 1 商品 2 用户
-        createdby: '', // 创建人
-        updatedby: '', // 更新人
-        labelParentIds: [] // 分类id
-      },
-      statusType: ''
+      typeBtn: 2
     }
   },
   created() {
@@ -323,13 +189,81 @@ export default {
           this.tableList = res
         }
       })
-      this.$api.basic.addSoreQuerypage(
-        {
-          categoryType: this.categoryType
+    },
+       /**
+     * 删除表格单条数据
+     *
+     * @param {*} curPromise
+     * @param {string} [msgTip='删除成功']
+     */
+    deleteData(param, msgTip = '删除成功') {
+      console.log(param, msgTip)
+      // 主要修改接口
+      this.$api.basic.deleteQuerypage(param).then(() => {
+        this.$msgTip(msgTip)
+        if (this.tableList.length === 1) {
+          const { pageNum } = this.pageInfo
+          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
         }
-      ).then(res => {
-        this.addSoreList = res.data
+        this.fetchData()
       })
+    },
+    /**
+     * 对话框确认按钮，集成了表单提交功能
+     */
+    dialogConfirm() {
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
+        console.log(this.typeBtn)
+        console.log(valid)
+        console.log('?????????????????????')
+        if (valid) {
+          const childFormModel = childRef.formModel
+          console.log(childFormModel)
+          // code...
+          this.dialogObj.isShow = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    /**
+     * 对话框新增提醒
+    */
+    addHandle() {
+      this.typeBtn = 1
+      this.dialogObj = {
+        isShow: true,
+        title: '新增商品标签',
+        initData: {}
+      }
+    },
+    /**
+     * 对话框编辑提醒
+    */
+    editHandle(e) {
+      this.typeBtn = 2
+      let checkData = e.labelCategoryModels.map(({id})=>{
+        return { id }
+      })
+      let checkList = []
+      for (let i in checkData) {
+        checkList.push(checkData[i].id)
+      }
+      this.dialogObj = {
+        isShow: true,
+        title: '编辑商品标签',
+        initData: {
+          labelName: e.labelName,
+          initial: e.initial,
+          labelStatus: e.labelStatusCN,
+          createdby: e.createdby,
+          updatedby: e.updatedby,
+          labelParentIds: checkList,
+          labelDesc: e.labelDesc
+        }
+      }
     },
     changeTitle(tab, event) {
       if (tab.name === '1') {
@@ -339,75 +273,8 @@ export default {
         this.labelType = 2
         this.categoryType = 2
       }
-      this.searchDate = ''
+      this.searchObj = {}
       this.fetchData()
-    },
-    addModel() {
-      this.contentModal = true
-      if (this.labelType === 1) {
-        this.modalTitle = '新增商品标签'
-      } else {
-        this.modalTitle = '新增用户标签'
-      }
-      this.statusType = 1
-      this.formLeft = {}
-    },
-    addModalBtn() {
-      let that = this
-      if (!this.formLeft.labelName) {
-        this.$Message.info('请填写标签名称')
-        return
-      }
-      if (!this.formLeft.initial) {
-        this.$Message.info('请填写标签拼音')
-        return
-      }
-      if (!this.formLeft.labelStatus) {
-        this.$Message.info('请选择标签状态')
-        return
-      }
-      if (!this.formLeft.labelParentIds) {
-        this.$Message.info('请选择标签分类')
-        return
-      }
-      if (!this.formLeft.labelDesc) {
-        this.$Message.info('请填写标签描述')
-        return
-      }
-      if (this.statusType === 1) {
-        if (!this.formLeft.createdby) {
-          this.$Message.info('请填写创建人')
-          return
-        }
-        let data = {
-          ...this.formLeft,
-          // labelStatus: this.labelStatus,
-          labelType: this.labelType,
-          labelParentIds: this.formLeft.labelParentIds
-        }
-        this.$api.basic.addQuerypage(data).then(res => {
-          that.contentModal = false
-          that.$Message.info('新增成功')
-          that.fetchData()
-        })
-      } else if (this.statusType === 2) {
-        if (!this.formLeft.updatedby) {
-          this.$Message.info('请填写更新人')
-          return
-        }
-        let data = {
-          id: this.formLeft.id,
-          ...this.formLeft,
-          labelStatus: this.labelStatus,
-          labelType: this.labelType,
-          labelParentIds: this.formLeft.labelParentIds
-        }
-        this.$api.basic.updateQuerypage(data).then(res => {
-          that.contentModal = false
-          that.$Message.info('修改成功')
-          that.getQuerypageList()
-        })
-      }
     }
   }
 }

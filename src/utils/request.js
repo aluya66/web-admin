@@ -128,7 +128,7 @@ const setParams = (url, params = {}, opt = {}) => {
     method
   }
   // get请求和post请求参数和
-  if (method.toLowerCase() === 'get' || method.toLowerCase() === 'delete') {
+  if (method.toLowerCase() === 'get') {
     const curUrl = opt.joinUrl ? `${url}/${utils.serializeParam(params, opt.joinUrl)}` : url
     curParams = {
       ...curParams,
