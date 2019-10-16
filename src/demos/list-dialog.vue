@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" icon="el-icon-plus" @click="addHandle">新增</el-button>
+        <el-button :size="size" type="primary" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -159,7 +159,11 @@ export default {
         name: '编辑',
         icon: 'el-icon-edit',
         handle(row) {
-          vm.editHandle()
+          vm.showDialog({
+            title: "编辑商品",
+            initData: row,
+            isEdit: true
+          })
         }
       }, {
         name: '删除',
@@ -302,36 +306,40 @@ export default {
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
           const childFormModel = childRef.formModel
-          console.log(childFormModel)
-          // code...
-          this.dialogObj.isShow = false
+          if (!this.dialogObj.isEdit) {
+            this.addHandle()
+          } else {
+            this.editHandle()
+          }
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    /**
-     * 对话框新增提醒
-    */
-    addHandle() {
+    showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        title: '新增商品',
-        initData: {}
+        title: opts.title || '新增商品',
+        isEdit: opts.isEdit || false,
+        initData: opts.initData || {}
       }
     },
     /**
-     * 对话框编辑提醒
+     * 确认新增操作
+    */
+    addHandle() {
+      // codeing ajax
+      // ajax成功方法里面加入 关闭对话框标识
+      this.dialogObj.isShow = false
+    },
+    /**
+     * 确认修改操作
     */
     editHandle() {
-      this.dialogObj = {
-        isShow: true,
-        title: '编辑商品',
-        initData: {
-          goodsName: '1213'
-        }
-      }
+      // codeing ajax
+      // ajax成功方法里面加入 关闭对话框标识
+      this.dialogObj.isShow = false
     }
   }
 }

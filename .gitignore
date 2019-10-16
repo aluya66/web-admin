@@ -22,3 +22,6 @@ yarn-error.log*
 .svn
 _bak*
 package-lock.json
+
+
+# git config core.ignorecase false  关闭git忽略文件夹大小写配置
