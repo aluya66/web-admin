@@ -101,7 +101,7 @@ export default {
       pname: '', // 省的名字
       cname: '', // 市的名字
       bname: '', // 区的名字
-      sname: '', // 街道的名字
+      sname: '' // 街道的名字
     }
   },
   created() {
@@ -109,8 +109,7 @@ export default {
     // this.queryAllParentcodes()
   },
   methods: {
-    getCheckedKeys(node, data){
-      
+    getCheckedKeys(node, data) {
       console.log(this.$refs.tree.getCheckedKeys())
       console.log(node)
       console.log(data)
@@ -146,14 +145,14 @@ export default {
       this.loading = !this.loading
       this.$api.basic.queryAllRegion(params).then(res => {
         that.loading = !that.loading
-        console.log('code:'+this.parentCode)
-          let data = JSON.stringify(res.data)
-        if(this.parentCode > 0){
+        console.log('code:' + this.parentCode)
+        let data = JSON.stringify(res.data)
+        if (this.parentCode > 0) {
           console.log('88888888888')
           let dataList = JSON.parse(data.replace(/name/g, 'label'))
-          
+
           console.log(this.parentCode)
-          let codeData = res.data.find(e=>e.parentCode === this.parentCode)
+          let codeData = res.data.find(e => e.parentCode === this.parentCode)
           console.log(codeData)
           codeData.children.push(dataList)
         } else {
