@@ -29,6 +29,16 @@ export default {
     }
   },
   {
+    path: '/goods/add/:id?',
+    name: 'goodsDetail1',
+    component: () => import('@/views/goods/add'),
+    hidden: true,
+    meta: {
+      title: 'goodsDetail',
+      icon: 'table'
+    }
+  },
+  {
     path: '/goods/logs',
     name: 'goodsLogs',
     component: () => import('@/views/goods/logs/list'),

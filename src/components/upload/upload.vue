@@ -91,11 +91,9 @@ export default {
       return {
         Authorization: token
       }
-    }
-  },
-  data () {
-    return {
-      uploadList: []
+    },
+    uploadList(){
+      return this.fileList
     }
   },
   mounted () {
@@ -105,7 +103,6 @@ export default {
         curUplist[i].style.display = 'none'
       }
     }
-    this.uploadList = this.fileList
   },
   methods: {
     handleExceed (files, fileList) {

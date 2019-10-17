@@ -63,11 +63,19 @@ export const getParentcode = params =>
   Http.fetch(`${context}/v1/region/list/parentcode`, params)
 
 /**
- * 查询所有品类列表
+ * 查询所有类目列表
  * @param {*} params
  */
 export const queryCategory = params =>
   Http.fetch(`${context}/v1/category/querypage`, params, {
+    method: 'get'
+  })
+
+/**
+ * 查询所以商品类目数据
+*/
+export const queryCategoryAll = params =>
+  Http.fetch(`${context}/v1/category/recursions`, params, {
     method: 'get'
   })
 
