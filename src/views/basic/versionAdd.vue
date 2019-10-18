@@ -1,0 +1,132 @@
+<template>
+  <el-form
+    ref="formRef"
+    :model="formModel"
+    :rules="rules"
+    label-width="120px"
+    class="form"
+    label-position="right"
+  >
+    <el-form-item label="app版本:" prop="versionName">
+      <el-input
+        v-model.trim="formModel.versionName"
+        clearable
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="URL:" prop="url">
+      <el-input
+        v-model.trim="formModel.url"
+        clearable
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="平台:" prop="platform">
+      <el-select
+        v-model="formModel.platform"
+        class="search-item"
+        clearable
+      >
+        <el-option
+          v-for="item in platformSelect"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="强制更新:" prop="force">
+      <el-select
+        v-model="formModel.force"
+        class="search-item"
+        clearable
+      >
+        <el-option
+          v-for="item in forceSelect"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="描述:" prop="description">
+      <el-input
+      type="textarea"
+      v-model.trim="formModel.description"
+      clearable
+      ></el-input>
+    </el-form-item>
+  </el-form>
+</template>
+
+<script>
+export default {
+  props: {
+    initData: {
+      type: Object,
+      default() {
+        return {
+          versionName: "",
+          url: "",
+          platform: "",
+          force: "",
+          description: ''
+        };
+      }
+    }
+  },
+  data() {
+    return {
+      rules: {
+        versionName: [
+          { required: true, message: "请填写app名称", trigger: "blur" }
+        ],
+        url: [
+          { required: true, message: "请填写app编码", trigger: "blur" }
+        ],
+        platform: [
+          { required: true, message: "请选择状态", trigger: "change" }
+        ],
+        force: [
+          { required: true, message: "请填写创建人", trigger: "change" }
+        ],
+        description: [
+          { required: true, message: "请填写描述", trigger: "blur" }
+        ]
+      },
+      forceSelect: [
+        {
+          value: 1,
+          label: '是'
+        },
+        {
+          value: 2,
+          label: '否'
+        }
+      ],
+      platformSelect: [
+        {
+          value: 1,
+          label: '安卓'
+        },
+        {
+          value: 2,
+          label: 'IOS'
+        }
+      ],
+    };
+  },
+  computed: {
+    formModel() {
+      return this.initData;
+    }
+  }
+};
+</script>
+
+<style lang="less">
+.form {
+  width: 90%;
+  .form-item {
+    width: 100%;
+  }
+}
+</style>

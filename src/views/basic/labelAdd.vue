@@ -7,21 +7,21 @@
     class="form"
     label-position="right"
   >
-   <el-form-item label="标签名称:">
+   <el-form-item label="标签名称:" prop="labelName">
       <el-input
         v-model.trim="formModel.labelName"
         placeholder='请输入标签名称'
         clearable
       ></el-input>
     </el-form-item>
-    <el-form-item label="标签拼音:">
+    <!-- <el-form-item label="标签拼音:" prop="initial">
       <el-input
         v-model.trim="formModel.initial"
         placeholder='请输入标签拼音'
         clearable
       ></el-input>
-    </el-form-item>
-    <el-form-item label="标签状态:">
+    </el-form-item> -->
+    <el-form-item label="标签状态:" prop="labelStatus">
       <el-select
         v-model.trim="formModel.labelStatus"
         class="search-item"
@@ -36,21 +36,21 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="创建人:">
+    <el-form-item label="创建人:" prop="createdby">
       <el-input
       v-model.trim="formModel.createdby"
       placeholder='请输入创建人'
       clearable
       ></el-input>
     </el-form-item>
-    <el-form-item label="更新人:">
+    <el-form-item label="更新人:" prop="updatedby">
       <el-input
       v-model.trim="formModel.updatedby"
       placeholder='请输入更新人'
       clearable
       ></el-input>
     </el-form-item>
-    <el-form-item label="标签分类:">
+    <el-form-item label="标签分类:" prop="labelParentIds">
       <el-checkbox-group v-model="formModel.labelParentIds">
         <el-checkbox
         :label="item.id"
@@ -60,7 +60,7 @@
         >{{ item.categoryName }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
-    <el-form-item label="描述:">
+    <el-form-item label="描述:" prop="labelDesc">
       <el-input
       type="textarea"
       v-model.trim="formModel.labelDesc"
@@ -87,17 +87,23 @@ export default {
           labelDesc: ''
         }
       }
+    },
+    categoryType: {
+      type: String,
+      default: '1'
     }
   },
   data() {
     return {
+      changeTab: '',
+      type: '',
       marketableSelect: [
         {
-          value: '1',
+          value: 1,
           label: '有效'
         },
         {
-          value: '2',
+          value: 2,
           label: '无效'
         }
       ],
@@ -106,20 +112,20 @@ export default {
         labelName: [
           { required: true, message: '请输入标签名称', trigger: 'blur' }
         ],
-        initial: [
-          { required: true, message: '请输入标签拼音', trigger: 'blur' }
-        ],
+        // initial: [
+        //   { required: true, message: '请输入标签拼音', trigger: 'blur' }
+        // ],
         labelStatus: [
-          { required: true, message: '请选择状态', trigger: 'blur' }
+          { required: true, message: '请选择状态', trigger: 'change' }
         ],
-        createdby: [
-          { required: true, message: '请输入创建人', trigger: 'blur' }
-        ],
-        updatedby: [
-          { required: true, message: '请输入更新人', trigger: 'blur' }
-        ],
+        // createdby: [
+        //   { required: true, message: '请输入创建人', trigger: 'blur' }
+        // ],
+        // updatedby: [
+        //   { required: true, message: '请输入更新人', trigger: 'blur' }
+        // ],
         labelParentIds: [
-          { required: true, trigger: 'blur' }
+          { required: true, message: '请选择标签分类', trigger: 'change' }
         ],
         labelDesc: [
           { required: true, message: '请填写描述', trigger: 'blur' }
@@ -129,6 +135,7 @@ export default {
     }
   },
   created() {
+    this.changeTab = this.categoryType
     this.fetchData()
   },
   methods: {
@@ -138,9 +145,7 @@ export default {
           categoryType: this.categoryType
         }
       ).then(res => {
-        console.log(res.data)
         this.addSoreList = res.data
-        console.log(this.addSoreList)
       })
     }
   },

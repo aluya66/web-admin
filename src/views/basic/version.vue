@@ -3,363 +3,302 @@
     <template v-slot:header>
       <div class="title">
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-          <el-button type="primary" size="small" icon="el-icon-plus" @click="addNewRelease">
+          <el-button type="primary" size="small" icon="el-icon-plus" @click="showDialog">
             新增</el-button>
       </div>
     </template>
-    <Card>
-      <div class="select-bar">
-        <el-form :inline="true" class="demo-form-inline">
-          <el-row type="flex" class="selectBox">
 
-            <el-form-item label="版本名称:" class="inputLabel">
-              <el-input placeholder="请输入版本名称" v-model="versionName" size="small"></el-input>
+    <div class="main__box">
+      <c-table
+        hasBorder
+        :size="size"
+        :loading="isLoading"
+        :table-header="tableHeader"
+        :table-list="tableList"
+        :page-info="pageInfo"
+        :table-inner-btns="tableInnerBtns"
+        @change-pagination="changePagination"
+      >
+        <template v-slot:header>
+          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
+            <el-form-item label="版本名称">
+              <el-input
+                v-model="searchObj.versionName"
+                class="search-item"
+                :size="size"
+                placeholder="请输入版本名称"
+                clearable
+              />
             </el-form-item>
-
-            <el-form-item label="平台:" class="inputLabel">
-              <el-select placeholder="请选择平台" v-model="platform" size="small">
-                <el-option label="全部" value=""></el-option>
-                <el-option label="安卓" value="0"></el-option>
-                <el-option label="IOS" value="1"></el-option>
+            <el-form-item label="平台">
+              <el-select
+                v-model="searchObj.platform"
+                :size="size"
+                class="search-item"
+                placeholder="请选择平台"
+                clearable
+              >
+                <el-option
+                  v-for="item in versionSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-form-item>
-
-            <el-col :span="1" class="searchBtn">
-              <el-button type="primary" size="small" icon="el-icon-search" @click="searchBtn">搜索
-              </el-button>
-            </el-col>
-          </el-row>
-        </el-form>
-      </div>
-      <Table :loading="loading" border :columns="columns" :data="versionList" class="table"
-        size="large">
-
-        <template slot-scope="{ row }" slot="status">
-            <a v-if="row.publish === 0 &&row.enablePublish===true" href="#" class="lowEdition">
-                <Icon :size='16' type="md-close" />未发布</a>
-            <a v-else-if="row.publish === 0" href="#" class="lowEdition">
-              <Icon :size='16' type="md-close" />低版本</a>
-            <a v-else href="#" class="lowEdition">
-              <Icon :size='16' type="md-checkmark" />已发布</a>
+            <el-form-item>
+              <el-button
+                type="primary"
+                class="search-btn"
+                :size="size"
+                icon="el-icon-search"
+                @click="searchSubmit"
+              >查询</el-button>
+            </el-form-item>
+          </el-form>
         </template>
-
-        <template slot-scope="{ row }" slot="action">
-            <Poptip confirm title="确定发布吗?" @on-ok="okPublish({id: row.id})" @on-cancel="cancel"
-              transfer v-if="row.publish === 0 &&row.enablePublish===true">
-              <el-button type="primary" size="small" icon="el-icon-finished">发布</el-button>
-            </Poptip>
-            <el-button v-else type="info" disabled size="small">已发布</el-button>
-
-        </template>
-        <template slot-scope="{ row }" slot="url">
-          <div class="urlBox">
-            <p class="urlCenter">
-              {{row.url}}
-            </p>
-            <Poptip trigger="hover" title="URL" :content="row.url" word-wrap width="200" transfer>
-              <el-button size="mini" round>详情</el-button>
-            </Poptip>
-            <el-button size="mini" round  @click="copySpecialTopicUrl(row.url)">复制</el-button>
-            <el-button size="mini" round @click="downPackage">下载</el-button>
-          </div>
-        </template>
-        <template slot-scope="{ row }" slot="description">
-          <div class="urlBox">
-            <p class="urlCenter">
-              {{row.description}}
-            </p>
-            <el-tooltip placement="top">
-                <div slot="content" class="text-wrapper" >{{row.description}}</div>
-                <el-button size="mini" round>详情</el-button>
-            </el-tooltip>
-          </div>
-        </template>
-        <template slot-scope="{ row }" slot="platform">
-          <span v-if="row.platform===0">安卓</span>
-          <span v-else>IOS</span>
-        </template>
-        <template slot-scope="{ row }" slot="force">
-          <span v-if="row.force===0">不强制更新</span>
-          <span v-else>强制更新</span>
-        </template>
-      </Table>
-      <Page :total="listTotal" show-total @on-change="pageChange" />
-      <!-- 新增 -->
-      <Modal v-model="contentModal" title="新增" width="800" footer-hide>
-        <Form :model="formLeft" label-position="right" :label-width="70" class="fromStyle">
-          <FormItem label="app版本">
-            <Input v-model="formLeft.versionName" placeholder='请填写app版本' />
-          </FormItem>
-          <FormItem label="URL">
-            <Input v-model="formLeft.url" placeholder='请填写URL' :maxlength="200" />
-          </FormItem>
-          <FormItem label="平台">
-            <RadioGroup v-model="formLeft.platform">
-              <Radio label="安卓" true-value='0'></Radio>
-              <Radio label="IOS" true-value='1'></Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="强制更新">
-            <RadioGroup v-model="formLeft.force">
-              <Radio label="不强制更新" true-value='0'></Radio>
-              <Radio label="强制更新" true-value='1'></Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="描述">
-            <Input v-model="formLeft.description" placeholder='请填写描述' type="textarea"
-              :autosize="{minRows: 2,maxRows: 5}" :maxlength="200" />
-          </FormItem>
-          <FormItem class="addBtn">
-            <Button type="primary" @click="addReleaseBtn">确认</Button>
-            <Button @click="closeBtn">取消</Button>
-          </FormItem>
-        </Form>
-      </Modal>
-    </Card>
+      </c-table>
+    </div>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <Version-add ref="childRef" :init-data="dialogObj.initData"></Version-add>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 <script>
-const columns = [{
-  title: 'app版本',
-  key: 'versionName',
-  align: 'center'
-},
-{
-  title: '平台',
-  slot: 'platform',
-  align: 'center'
-},
-{
-  title: 'url',
-  slot: 'url',
-  align: 'center',
-  width: '300'
-},
-{
-  title: '是否强制更新',
-  slot: 'force',
-  align: 'center'
-},
-{
-  title: '描述',
-  slot: 'description',
-  align: 'center',
-  width: '300'
-},
-{
-  title: '状态',
-  slot: 'status',
-  align: 'center'
-},
-{
-  title: '操作',
-  slot: 'action',
-  align: 'center'
-}
+import mixinTable from 'mixins/table'
+import utils from 'utils'
+import CDialog from "components/dialog";
+import VersionAdd from "./versionAdd";
+
+const columns = [
+  {
+    title: 'app版本',
+    key: 'versionName',
+    align: 'center'
+  },
+  {
+    title: '平台',
+    slot: 'platform',
+    align: 'center'
+  },
+  {
+    title: 'url',
+    slot: 'url',
+    align: 'center',
+    width: '300'
+  },
+  {
+    title: '是否强制更新',
+    slot: 'force',
+    align: 'center'
+  },
+  {
+    title: '描述',
+    slot: 'description',
+    align: 'center',
+    width: '300'
+  },
+  {
+    title: '状态',
+    slot: 'status',
+    align: 'center'
+  },
+  {
+    title: '操作',
+    slot: 'action',
+    align: 'center'
+  }
 ]
 export default {
-  name: 'version',
-  data() {
+  mixins: [mixinTable],
+  components: {
+    CDialog,
+    VersionAdd
+  },
+  data(vm) {
     return {
-      query: {
-        pageNum: 1,
-        pageSize: 10
+      dialogObj: {}, // 对话框数据
+      searchObj: {
+        versionName: '',
+        platform: ''
       },
-      loading: false,
-      listTotal: 0,
-      versionList: [],
-      columns,
-      appCode: '',
-      versionName: '',
-      contentModal: false,
-      formLeft: {
-        // appCode: null,
-        force: '', // 更新
-        platform: '', // 0：安卓 1： ios
-        // versionCode: '',      //版本号
-        versionName: '', // 版本名称
-        url: '', // 路径
-        description: '' // 描述
-      },
-      platform: '',
-      force: ''
+      versionSelect: [
+        {
+          value: '',
+          label: '全部'
+        },
+        {
+          value: '0',
+          label: '安卓'
+        },
+        {
+          value: '1',
+          label: 'IOS'
+        }
+      ],
+      tableList: [],
+      tableInnerBtns: [
+        {
+          width: 130,
+          name: '发布',
+          icon: '',
+          handle(row) {
+            console.log(row)
+            const { versionName, id } = row
+            vm.confirmTip(`确认发布${versionName}版本？`, () => {
+              vm.publishDate({ id });
+            });
+          }
+        }
+      ],
+      tableHeader: [
+       {
+          label: 'app版本',
+          prop: 'versionName',
+          width: 120,
+          fixed: true
+        },
+        {
+          label: '平台',
+          prop: 'platform',
+          formatter(row){
+            return row.platform === 0 ? '安卓' : 'IOS'
+          }
+        },
+        {
+          label: 'url',
+          prop: 'url'
+        },
+        {
+          label: '是否强制更新',
+          prop: 'force',
+          formatter(row){
+            return row.force === 0 ? '是' : '否'
+          }
+        },
+        {
+          label: '描述',
+          prop: 'description',
+          // vHtml(row){
+          //   console.log(row.description )
+          //   // return 
+          //   // `<template>
+          //   //   <el-popover
+          //   //     placement="top-start"
+          //   //     title="标题"
+          //   //     width="200"
+          //   //     trigger="hover"
+          //   //     content="${ row.description }">
+          //   //     ${ row.description }
+          //   //   </el-popover>
+          //   // </template>`
+          // }
+        },
+        {
+          label: '状态',
+          prop: 'status',
+          formatter(row){
+            return row.publish === 0 && row.enablePublish===true ? '未发布' : (row.publish === 0 ? '低版本' : '已发布')
+          }
+        }
+      ]
     }
   },
   created() {
-    this.queryVersionList()
+    this.fetchData()
   },
   methods: {
-    okPublish(e) {
-      let that = this
-      let data = {
-        versionId: e.id
-      }
-      this.$api.basic.releaseRelease(data).then(res => {
-        that.$Message.info('发布成功')
-        that.queryVersionList()
-      })
-    },
-    cancel() {},
-    closeBtn() {
-      this.contentModal = false
-    },
-    searchBtn() {
-      this.query.pageNum = 1
-      this.queryVersionList()
-    },
-    addNewRelease() {
-      this.contentModal = true
-      this.formLeft = {}
-    },
-    addReleaseBtn() {
-      let that = this
-      if (!this.formLeft.versionName) {
-        this.$Message.info('请填写app版本')
-        return
-      }
-      if (!this.formLeft.url) {
-        this.$Message.info('请填写路径')
-        return
-      }
-      if (!this.formLeft.platform) {
-        this.$Message.info('请选择平台')
-        return
-      }
-      // if(!this.formLeft.force){
-      //   this.$Message.info('请选择是否强制更新')
-      //   return
-      // }
-      if (!this.formLeft.description) {
-        this.$Message.info('请填写描述')
-        return
-      }
-      if (this.formLeft.platform === '安卓') {
-        this.platform = 0
-      } else if (this.formLeft.platform === 'IOS') {
-        this.platform = 1
-      }
-      if (this.formLeft.force === '不强制更新') {
-        this.force = 0
-      } else if (this.formLeft.force === '强制更新') {
-        this.force = 1
-      }
-      let data = {
-        ...this.formLeft,
-        force: this.force,
-        platform: this.platform
-      }
-      this.loading = !this.loading
-      this.$api.basic.addRelease(data).then(res => {
-        that.loading = !that.loading
-        that.$Message.info('新增成功')
-        that.platform = ''
-        that.queryVersionList()
-        that.contentModal = false
-      })
-    },
-    queryVersionList() {
-      let that = this
-      let data = {
-        ...this.query,
-        versionName: this.versionName,
-        platform: this.platform
-      }
-      // this.loading = !this.loading
-      this.$api.basic.queryAllVersion(data).then(res => {
-        // that.loading = !that.loading
-        if (res) {
-          that.versionList = res.data
-          that.listTotal = res.totalCount
+     fetchData() {
+      const { dataTime, ...other } = this.searchObj
+      const { totalNum, ...page } = this.pageInfo
+      const searchDate = this.getSearchDate(dataTime)
+      this.isLoading = true
+      this.$api.basic.queryAllVersion(
+        {
+          ...searchDate,
+          ...other,
+          ...page
+        }
+      ).then(res => {
+        console.log(res)
+        this.isLoading = false
+        if (res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data
         } else {
-          that.versionList = []
-          that.listTotal = 1
+          this.tableList = res
         }
       })
     },
-    pageChange(page) {
-      this.query.pageNum = page
-      this.queryVersionList()
+    dialogConfirm() {
+      const childRef = this.$refs.childRef;
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const childFormModel = childRef.formModel;
+          if (!this.dialogObj.isEdit) {
+            this.addHandle(childFormModel);
+          } else {
+            this.editHandle(childFormModel);
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
-    // 复制粘贴
-    copySpecialTopicUrl(url) {
-      console.log(url)
-      var oInput = document.createElement('input') // 创建一个隐藏input（重要！）
-      oInput.value = url // 赋值
-      document.body.appendChild(oInput)
-      oInput.select() // 选择对象
-      document.execCommand('Copy') // 执行浏览器复制命令
-      oInput.className = 'oInput'
-      oInput.style.display = 'none'
-      this.$message.success('复制成功')
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || "新增版本",
+        isEdit: opts.isEdit || false,
+        initData: opts.initData
+      }
     },
-    downPackage() {
-      this.$message({
-        message: '该功能尚未开放,敬请期待',
-        type: 'warning'
-      })
+    addHandle(childFormModel) {
+      console.log(childFormModel)
+      let data = {
+        ...childFormModel,
+      };
+      this.$api.basic.addRelease(data).then(res => {
+        this.$Message.info("添加成功")
+        this.fetchData()
+        this.dialogObj.isShow = false;
+      });
+      this.dialogObj.isShow = true
+    },
+    publishDate(param, msgTip = '发布成功'){
+       this.$api.basic.releaseRelease(param).then(() => {
+        this.$msgTip(msgTip);
+        this.fetchData();
+      });
     }
   }
 }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .selectBox {
-    flex-wrap: wrap;
-  }
-  .title{
-    display: flex;
-    justify-content: space-between;
+<style lang="less" scoped>
+.main__box {
+  .search {
+    margin-bottom: 10px;
     width: 100%;
+    .search-item {
+      width: 250px;
+    }
   }
-
-  .inputLabel {
-    margin-right: 40px;
-  }
-
-  .select-bar,
-  .table {
-    margin-bottom: 10px
-  }
-
-  .urlCenter {
-    width: 220px;
-    margin: 0 auto 4px;
-    text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  .urlBox {
-    margin: 10px 0;
-  }
-
-  .selectWidth {
-    width: 200px;
-  }
-
-  .lowEdition {
-    margin: 0;
-    display: inline-block;
-    text-decoration: none
-  }
-
-  .addBtn {
-    text-align: right;
-  }
-
-  .cancelBtn {
-    margin-left: 8px
-  }
-
-  .searchBtn {
-    padding: 7px;
-    margin-right: 20px;
-  }
-
-  .fromStyle {
-    margin-right: 10px
-  }
+}
+.title{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 </style>

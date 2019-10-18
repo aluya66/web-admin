@@ -3,7 +3,7 @@
     <template v-slot:header>
      <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" :size="size" icon="el-icon-plus" @click="addInsert">新增</el-button>
+        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -55,12 +55,21 @@
                 clearable
               >
                 <el-option
-                  v-for="item in marketableSelect"
+                  v-for="item in bussinessLineSelect"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="创建人">
+              <el-input
+                v-model="searchObj.createdby"
+                class="search-item"
+                :size="size"
+                placeholder="请输入创建人"
+                clearable
+              />
             </el-form-item>
 
             <el-form-item>
@@ -77,100 +86,87 @@
       </c-table>
     </div>
 
-    <el-dialog
-      :title="modalTitle"
-      :visible.sync="contentModal"
-      width="30%"
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
       >
-      <el-form ref="form" :model="formLeft" label-width="80px" class="modelStyle">
-        <el-form-item label="app名称:">
-          <el-input
-            v-model="formLeft.appName"
-            :size="size"
-            placeholder='请填写app名称'
-            clearable
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="app编码:" v-if="statusType==1">
-          <el-input
-            v-model="formLeft.appCode"
-            :size="size"
-            placeholder='请填写app编码'
-            clearable
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="状态:" v-if="statusType==1">
-          <el-select
-            v-model="formLeft.status"
-            :size="size"
-            class="search-item"
-            placeholder="请选择状态"
-            clearable
-          >
-            <el-option
-              v-for="item in marketableSelect"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="描述:" v-if="statusType==1">
-          <el-input
-          type="textarea"
-          v-model="formLeft.description"
-          :size="size"
-          placeholder='请填写描述'
-          clearable
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="small" @click="contentModal = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="addReleaseBtn">确 定</el-button>
-      </span>
-    </el-dialog>
+        <bussinessLine-add ref="childRef" :init-data="dialogObj.initData"></bussinessLine-add>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
+import CDialog from "components/dialog";
+import BussinessLineAdd from "./bussinessLineAdd";
+
 
 export default {
   mixins: [mixinTable],
+  components: {
+    CDialog,
+    BussinessLineAdd
+  },
   data(vm) {
     return {
+      dialogObj: {}, // 对话框数据
       searchObj: {
         appName: '',
         appCode: '',
         appKey: '',
         status: ''
       },
-      marketableSelect: [
+      bussinessLineSelect: [
         {
           value: '',
           label: '全部'
         },
         {
-          value: '1',
+          value: 1,
           label: '启用'
         },
         {
-          value: '2',
+          value: 2,
           label: '禁用'
         }
       ],
       pickerOptions: utils.pickerOptions,
       tableList: [],
-      tableInnerBtns: [{
-        width: 130,
-        name: '编辑',
-        icon: 'el-icon-edit',
-        handle(row) {
-          console.log(row)
-        }
-      }],
+      tableInnerBtns: [
+        {
+          width: 130,
+          name: "编辑",
+          icon: "el-icon-edit",
+          handle(row) {
+            const {
+              appName,
+              appCode,
+              status,
+              description,
+              createdby,
+              id
+            } = row;
+            vm.showDialog({
+              title: '编辑业务线',
+              initData: {
+                appName,
+                appCode,
+                status: status === 1 ? '启用' : '禁用',
+                description,
+                createdby,
+                id: id
+              },
+              isEdit: true
+            });
+          }
+        },
+      ],
       tableHeader: [
         {
           label: 'app名称',
@@ -190,8 +186,12 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? vm.marketableSelect[row.status].label : ''
+            return row.status ? vm.bussinessLineSelect[row.status].label : ''
           }
+        },
+        {
+          label: '创建人',
+          prop: 'createdby'
         },
         {
           label: '描述',
@@ -246,6 +246,86 @@ export default {
         }
       })
     },
+    dialogConfirm() {
+      const childRef = this.$refs.childRef;
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const childFormModel = childRef.formModel;
+          if (!this.dialogObj.isEdit) {
+            this.addHandle(childFormModel);
+          } else {
+            this.editHandle(childFormModel);
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || "新增业务线",
+        isEdit: opts.isEdit || false,
+        initData: opts.initData
+      }
+    },
+    addHandle(childFormModel) {
+      console.log(childFormModel)
+      let data = {
+        ...childFormModel,
+      };
+      this.$api.basic.addQuerypage(data).then(res => {
+        this.$Message.info("添加成功")
+        this.fetchData()
+      });
+      this.dialogObj.isShow = false;
+    },
+     editHandle(formModel) {
+       console.log(formModel.status)
+      let status
+      if(formModel.status==='启用'){
+        status = 1
+      }else {
+        status = 2
+      }
+      let data = {
+        ...formModel,
+        status
+      };
+      this.$api.basic.updateQuerypage(data).then(res => {
+        this.$Message.info("修改成功");
+        this.fetchData()
+      });
+      this.dialogObj.isShow = false;
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     addInsert() {
       this.modalTitle = '新增'
       this.contentModal = true

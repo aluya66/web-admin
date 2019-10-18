@@ -3,10 +3,120 @@
       <template v-slot:header>
         <div class="title">
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-          <el-button type="primary" size="small" icon="el-icon-plus" @click="addModal">新增</el-button>
+          <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
         </div>
       </template>
-    <Card>
+      <div class="main__box">
+      <c-table
+        hasBorder
+        :size="size"
+        :loading="isLoading"
+        :table-header="tableHeader"
+        :table-list="tableList"
+        :page-info="pageInfo"
+        :table-inner-btns="tableInnerBtns"
+        @change-pagination="changePagination"
+      >
+        <template v-slot:header>
+          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
+            <el-form-item label="类型名称">
+              <el-input
+                v-model="searchObj.name"
+                class="search-item"
+                :size="size"
+                placeholder="请输入类型名称"
+                clearable
+              />
+            </el-form-item>
+            <el-form-item label="参数分类">
+              <el-select
+                v-model="searchObj.type"
+                :size="size"
+                class="search-item"
+                placeholder="请选择平台"
+                clearable
+              >
+                <el-option
+                  v-for="item in typeSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="是否删除">
+              <el-select
+                v-model="searchObj.isDelete"
+                :size="size"
+                class="search-item"
+                placeholder="请选择"
+                clearable
+              >
+                <el-option
+                  v-for="item in isDeleteSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="操作时间">
+              <el-date-picker
+                :size="size"
+                v-model="searchObj.dataTime"
+                type="daterange"
+                :picker-options="pickerOptions"
+                range-separator="至"
+                start-placeholder="开始时间"
+                end-placeholder="结束时间"
+                :default-time="['00:00:00', '23:59:59']"
+              >align="right"></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                class="search-btn"
+                :size="size"
+                icon="el-icon-search"
+                @click="searchSubmit"
+              >查询</el-button>
+            </el-form-item>
+          </el-form>
+        </template>
+      </c-table>
+    </div>
+
+     <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <merchandise-add ref="childRef" :init-data="dialogObj.initData"></merchandise-add>
+      </c-dialog>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <Card>
     <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
       <el-form-item label="类型名称:">
         <el-input v-model="formInline.name" placeholder="请输入类型名称"></el-input>
@@ -118,7 +228,6 @@
           <el-input v-model="formDynamic.name" placeholder='请输入名称'></el-input>
           </el-form-item>
         <el-form-item label="排序:">
-          <!-- <el-input v-model="formDynamic.sort" value="100" placeholder='排序'></el-input> -->
           <el-input-number v-model="formDynamic.sort" controls-position="right" :min="1" :max="10000"></el-input-number>
         </el-form-item>
         <el-form-item label="创建人:" v-if="this.typeStatus===1">
@@ -159,45 +268,233 @@
         <el-button type="primary" @click="addModalBtn">确 定</el-button>
       </span>
     </el-dialog>
-    </Card>
+    </Card> -->
   </c-view>
 </template>
 <script>
+import mixinTable from "mixins/table";
+import CDialog from "components/dialog";
+import MerchandiseAdd from "./merchandiseAdd";
+import utils from "utils";
+
 export default {
-  name: 'merchandise',
-  data() {
+  mixins: [mixinTable],
+  components: {
+    CDialog,
+    MerchandiseAdd
+  },
+  data(vm) {
     return {
-      query: {
-        pageNum: 1,
-        numPerPage: 10
-      },
-      listTotal: 0,
-      loading: false,
-      list: [],
-      valueList: {},
-      showModal: false,
-      modelTitle: '',
-      typeStatus: '',
-      index: 1,
-      formInline: {
-        name: ''
-      },
-      type: '',
-      formDynamic: {
+      dialogObj: {}, // 对话框数据
+      searchObj: {
         name: '',
-        sort: 100,
-        createdby: '',
-        updatedby: '',
         type: '',
-        id: '',
-        items: []
-      }
+        isDelete: '',
+        dataTime: ''
+      },
+      parameterSelect: [
+       {
+         value: '',
+         label: '分类'
+       },
+       {
+         value: '1',
+         label: '参数'
+       },
+       {
+         value: '2',
+         label: '属性'
+       }
+      ],
+      typeSelect: [
+        {
+          value: '1',
+          label: '参数'
+        },
+        {
+          value: '2',
+          label: '属性'
+        }
+      ],
+      isDeleteSelect: [
+        {
+          value: '0',
+          label: '否'
+        },
+        {
+          value: '1',
+          label: '是'
+        }
+      ],
+      pickerOptions: utils.pickerOptions,
+      tableList: [],
+      tableInnerBtns: [
+        {
+          width: 130,
+          name: "编辑",
+          icon: "el-icon-edit",
+          handle(row) {
+            const {
+              type,
+              name,
+              createdby,
+              updatedby,
+              sort,
+              id,
+
+            } = row;
+            vm.showDialog({
+              title: "编辑商品类型",
+              initData: {
+                type: type === 1 ? '参数' : (type === 2 ? '属性' : '分类'),
+                name,
+                createdby,
+                updatedby,
+                sort,
+                id: id
+              },
+              isEdit: true
+            });
+          }
+        },
+        {
+          name: "删除",
+          icon: "el-icon-delete",
+          handle(row) {
+            const { name, id } = row;
+            vm.confirmTip(`确认删除${name}商品类型`, () => {
+              vm.deleteData({ id });
+            });
+          }
+        }
+      ],
+      tableHeader: [
+        {
+          label: '类型名称',
+          prop: 'name',
+          fixed: true
+        },
+        {
+          label: '属性值',
+          prop: 'value',
+          formatter(row){
+            return row.bmsGoodsAttrVals.map(item => {
+              return item.value
+            }).filter(d => d).join('/')
+          }
+        },
+        {
+          label: '参数分类',
+          prop: 'type',
+          formatter(row) {
+            return row.type ? vm.parameterSelect[row.type].label : '分类'
+          }
+        },
+        {
+          label: '排序',
+          prop: 'sort'
+        },
+        {
+          label: '创建人',
+          prop: 'createdby'
+        },
+        {
+          label: '更新人',
+          prop: 'updatedby'
+        },
+        {
+          label: '时间',
+          prop: 'created'
+        },
+      ]
     }
   },
   created() {
-    this.getGoodsattrvalList()
+    this.fetchData()
   },
   methods: {
+    fetchData() {
+      const { dataTime, ...other } = this.searchObj
+      const { totalNum, ...page } = this.pageInfo
+      const searchDate = this.getSearchDate(dataTime)
+      this.isLoading = true
+     this.$api.basic.getGoodsattrval({
+        ...searchDate,
+        ...other,
+        ...page
+      })
+      .then(res => {
+        this.isLoading = false
+        if (res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data
+        } else {
+          this.tableList = res
+        }
+      })
+    },
+     dialogConfirm() {
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const childFormModel = childRef.formModel
+          if (!this.dialogObj.isEdit) {
+            this.addHandle(childFormModel)
+          } else {
+            this.editHandle(childFormModel)
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || '新增商品类型',
+        isEdit: opts.isEdit || false,
+        initData: opts.initData
+      }
+    },
+     addHandle(formModel) {
+      this.$api.basic.addGoodsattrval(formModel).then(res => {
+        this.$Message.info('新增成功')
+        this.fetchData()
+      })
+      this.dialogObj.isShow = false
+    },
+    editHandle(formModel) {
+      let data = {
+        ...formModel
+      }
+      this.$api.basic.updateGoodsattrval(data).then(res => {
+        this.$Message.info('修改成功')
+        this.fetchData()
+      })
+      this.dialogObj.isShow = false
+    },
+    deleteData(param, msgTip = "删除成功") {
+      this.$api.basic.deleteGoodsattrval(param).then(() => {
+        this.$msgTip(msgTip);
+        if (this.tableList.length === 1) {
+          const { pageNum } = this.pageInfo;
+          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1;
+        }
+        this.fetchData();
+      });
+    },
+
+
+
+
+
+
+
+
+
+
     removeDomain(item, index) {
       // this.formDynamic.items[index].deleteFlag = 1;
       var indexItem = this.formDynamic.items.indexOf(item)
@@ -209,12 +506,15 @@ export default {
       let that = this
       let params = {
         ...this.query,
-        name: this.formInline.name
+        name: this.formInline.name,
+        pageSize: 10
       }
       this.loading = !this.loading
       this.$api.basic.getGoodsattrval(params).then(res => {
+        console.log(res)
+        console.log('???????????????')
         that.loading = !that.loading
-        that.list = res.data
+        that.list = res.data||[]
         res.data.map((item, index) => {
           let valueList = item.bmsGoodsAttrVals.map(valueList => {
             return valueList.value
@@ -397,7 +697,16 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="less" scoped>
+.main__box {
+  .search {
+    margin-bottom: 10px;
+    width: 100%;
+    .search-item {
+      width: 250px;
+    }
+  }
+}
 .table,
 .select-bar,
 .update-item,.control-bar {
