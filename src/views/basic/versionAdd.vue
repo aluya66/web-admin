@@ -64,12 +64,12 @@ export default {
       type: Object,
       default() {
         return {
-          versionName: "",
-          url: "",
-          platform: "",
-          force: "",
+          versionName: '',
+          url: '',
+          platform: '',
+          force: '',
           description: ''
-        };
+        }
       }
     }
   },
@@ -77,19 +77,19 @@ export default {
     return {
       rules: {
         versionName: [
-          { required: true, message: "请填写app名称", trigger: "blur" }
+          { required: true, message: '请填写app名称', trigger: 'blur' }
         ],
         url: [
-          { required: true, message: "请填写app编码", trigger: "blur" }
+          { required: true, message: '请填写app编码', trigger: 'blur' }
         ],
         platform: [
-          { required: true, message: "请选择状态", trigger: "change" }
+          { required: true, message: '请选择状态', trigger: 'change' }
         ],
         force: [
-          { required: true, message: "请填写创建人", trigger: "change" }
+          { required: true, message: '请选择', trigger: 'change' }
         ],
         description: [
-          { required: true, message: "请填写描述", trigger: "blur" }
+          { required: true, message: '请填写描述', trigger: 'blur' }
         ]
       },
       forceSelect: [
@@ -111,15 +111,15 @@ export default {
           value: 2,
           label: 'IOS'
         }
-      ],
-    };
+      ]
+    }
   },
   computed: {
     formModel() {
-      return this.initData;
+      return this.initData
     }
   }
-};
+}
 </script>
 
 <style lang="less">

@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-          <el-button type="primary" size="small" icon="el-icon-plus" @click="showDialog">
+          <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">
             新增</el-button>
       </div>
     </template>
@@ -74,49 +74,10 @@
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import utils from 'utils'
-import CDialog from "components/dialog";
-import VersionAdd from "./versionAdd";
+// import utils from 'utils'
+import CDialog from 'components/dialog'
+import VersionAdd from './versionAdd'
 
-const columns = [
-  {
-    title: 'app版本',
-    key: 'versionName',
-    align: 'center'
-  },
-  {
-    title: '平台',
-    slot: 'platform',
-    align: 'center'
-  },
-  {
-    title: 'url',
-    slot: 'url',
-    align: 'center',
-    width: '300'
-  },
-  {
-    title: '是否强制更新',
-    slot: 'force',
-    align: 'center'
-  },
-  {
-    title: '描述',
-    slot: 'description',
-    align: 'center',
-    width: '300'
-  },
-  {
-    title: '状态',
-    slot: 'status',
-    align: 'center'
-  },
-  {
-    title: '操作',
-    slot: 'action',
-    align: 'center'
-  }
-]
 export default {
   mixins: [mixinTable],
   components: {
@@ -154,13 +115,13 @@ export default {
             console.log(row)
             const { versionName, id } = row
             vm.confirmTip(`确认发布${versionName}版本？`, () => {
-              vm.publishDate({ id });
-            });
+              vm.publishDate({ id })
+            })
           }
         }
       ],
       tableHeader: [
-       {
+        {
           label: 'app版本',
           prop: 'versionName',
           width: 120,
@@ -169,7 +130,7 @@ export default {
         {
           label: '平台',
           prop: 'platform',
-          formatter(row){
+          formatter(row) {
             return row.platform === 0 ? '安卓' : 'IOS'
           }
         },
@@ -180,16 +141,16 @@ export default {
         {
           label: '是否强制更新',
           prop: 'force',
-          formatter(row){
+          formatter(row) {
             return row.force === 0 ? '是' : '否'
           }
         },
         {
           label: '描述',
-          prop: 'description',
+          prop: 'description'
           // vHtml(row){
           //   console.log(row.description )
-          //   // return 
+          //   // return
           //   // `<template>
           //   //   <el-popover
           //   //     placement="top-start"
@@ -205,8 +166,8 @@ export default {
         {
           label: '状态',
           prop: 'status',
-          formatter(row){
-            return row.publish === 0 && row.enablePublish===true ? '未发布' : (row.publish === 0 ? '低版本' : '已发布')
+          formatter(row) {
+            return row.publish === 0 && row.enablePublish === true ? '未发布' : (row.publish === 0 ? '低版本' : '已发布')
           }
         }
       ]
@@ -216,7 +177,7 @@ export default {
     this.fetchData()
   },
   methods: {
-     fetchData() {
+    fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
@@ -240,25 +201,25 @@ export default {
       })
     },
     dialogConfirm() {
-      const childRef = this.$refs.childRef;
+      const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
-          const childFormModel = childRef.formModel;
+          const childFormModel = childRef.formModel
           if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel);
+            this.addHandle(childFormModel)
           } else {
-            this.editHandle(childFormModel);
+            this.editHandle(childFormModel)
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        title: opts.title || "新增版本",
+        title: opts.title || '新增版本',
         isEdit: opts.isEdit || false,
         initData: opts.initData
       }
@@ -266,20 +227,20 @@ export default {
     addHandle(childFormModel) {
       console.log(childFormModel)
       let data = {
-        ...childFormModel,
-      };
+        ...childFormModel
+      }
       this.$api.basic.addRelease(data).then(res => {
-        this.$Message.info("添加成功")
+        this.$Message.info('添加成功')
         this.fetchData()
-        this.dialogObj.isShow = false;
-      });
+        this.dialogObj.isShow = false
+      })
       this.dialogObj.isShow = true
     },
-    publishDate(param, msgTip = '发布成功'){
-       this.$api.basic.releaseRelease(param).then(() => {
-        this.$msgTip(msgTip);
-        this.fetchData();
-      });
+    publishDate(param, msgTip = '发布成功') {
+      this.$api.basic.releaseRelease(param).then(() => {
+        this.$msgTip(msgTip)
+        this.fetchData()
+      })
     }
   }
 }

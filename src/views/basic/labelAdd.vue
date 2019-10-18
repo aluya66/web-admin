@@ -36,7 +36,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="创建人:" prop="createdby">
+    <!-- <el-form-item label="创建人:" prop="createdby">
       <el-input
       v-model.trim="formModel.createdby"
       placeholder='请输入创建人'
@@ -49,7 +49,7 @@
       placeholder='请输入更新人'
       clearable
       ></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="标签分类:" prop="labelParentIds">
       <el-checkbox-group v-model="formModel.labelParentIds">
         <el-checkbox
@@ -81,8 +81,8 @@ export default {
           labelName: '',
           initial: '',
           labelStatus: '',
-          createdby: '',
-          updatedby: '',
+          // createdby: '',
+          // updatedby: '',
           labelParentIds: [],
           labelDesc: ''
         }

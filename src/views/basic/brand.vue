@@ -46,6 +46,18 @@
                 clearable
               />
             </el-form-item>
+            <el-form-item label="操作时间">
+              <el-date-picker
+                :size="size"
+                v-model="searchObj.dataTime"
+                type="daterange"
+                :picker-options="pickerOptions"
+                range-separator="至"
+                start-placeholder="开始时间"
+                end-placeholder="结束时间"
+                :default-time="['00:00:00', '23:59:59']"
+              >align="right"></el-date-picker>
+            </el-form-item>
             <el-form-item>
               <el-button
                 type="primary"
@@ -73,10 +85,10 @@
   </c-view>
 </template>
 <script>
-import mixinTable from "mixins/table";
-import CDialog from "components/dialog";
-import BrandAdd from "./brandAdd";
-import utils from "utils";
+import mixinTable from 'mixins/table'
+import CDialog from 'components/dialog'
+import BrandAdd from './brandAdd'
+import utils from 'utils'
 
 export default {
   mixins: [mixinTable],
@@ -88,17 +100,18 @@ export default {
     return {
       dialogObj: {}, // 对话框数据
       searchObj: {
-        country: "",
-        name: "",
-        ename: ""
+        country: '',
+        name: '',
+        ename: '',
+        dataTime: ''
       },
       pickerOptions: utils.pickerOptions,
       tableList: [],
       tableInnerBtns: [
         {
           width: 130,
-          name: "编辑",
-          icon: "el-icon-edit",
+          name: '编辑',
+          icon: 'el-icon-edit',
           handle(row) {
             const {
               country,
@@ -115,9 +128,9 @@ export default {
               status,
               sort,
               id
-            } = row;
+            } = row
             vm.showDialog({
-              title: "编辑品牌",
+              title: '编辑品牌',
               initData: {
                 country,
                 name,
@@ -130,107 +143,112 @@ export default {
                 videoUrl,
                 createdby,
                 updatedby,
-                status: status === 1 ? "启用" : "禁用",
+                status: status === 1 ? '启用' : '禁用',
                 sort,
                 id: id
               },
               isEdit: true
-            });
+            })
           }
         },
         {
-          name: "删除",
-          icon: "el-icon-delete",
+          name: '删除',
+          icon: 'el-icon-delete',
           handle(row) {
-            const { country, id } = row;
+            const { country, id } = row
             vm.confirmTip(`确认删除${country}品牌信息`, () => {
-              vm.deleteData({ id });
-            });
+              vm.deleteData({ id })
+            })
           }
         }
       ],
       tableHeader: [
         {
-          label: "品牌国家",
-          prop: "country",
+          label: '品牌国家',
+          prop: 'country',
           width: 120,
           fixed: true
         },
         {
-          label: "品牌名称",
-          prop: "name",
+          label: '品牌名称',
+          prop: 'name',
           width: 200
         },
         {
-          label: "品牌LOGO",
-          prop: "logo"
+          label: '品牌LOGO',
+          prop: 'logo'
         },
         {
-          label: "品牌介绍",
-          prop: "intro"
+          label: '品牌介绍',
+          prop: 'intro'
         },
         {
-          label: "品牌描述",
-          prop: "description"
+          label: '品牌描述',
+          prop: 'description'
         },
         {
-          label: "品牌别名",
-          prop: "ename"
+          label: '品牌别名',
+          prop: 'ename'
         },
         {
-          label: "消费人群",
-          prop: "consumer",
+          label: '消费人群',
+          prop: 'consumer',
           width: 100
         },
         {
-          label: "封面图url",
-          prop: "previewUrl",
+          label: '封面图url',
+          prop: 'previewUrl',
           width: 100,
           isImage: true
         },
         {
-          label: "封面视频url",
-          prop: "videoUrl",
+          label: '封面视频url',
+          prop: 'videoUrl',
           width: 100,
           isImage: true
         },
         {
-          label: "状态",
-          prop: "statusCN",
+          label: '状态',
+          prop: 'statusCN',
           width: 100
         },
         {
-          label: "品牌排序",
-          prop: "sort",
+          label: '品牌排序',
+          prop: 'sort',
           width: 100
         },
         {
-          label: "创建人",
-          prop: "createdby",
+          label: '创建人',
+          prop: 'createdby',
           width: 100
         },
         {
-          label: "更新人",
-          prop: "updatedby",
+          label: '更新人',
+          prop: 'updatedby',
           width: 100
         },
         {
-          label: "创建时间",
-          prop: "created",
+          label: '创建时间',
+          prop: 'created',
+          width: 100
+        },
+        {
+          label: '更新时间',
+          prop: 'updated',
           width: 100
         }
       ]
-    };
+    }
   },
   created() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj;
-      const { totalNum, ...page } = this.pageInfo;
-      const searchDate = this.getSearchDate(dataTime);
-      this.isLoading = true;
+      const { dataTime, ...other } = this.searchObj
+      const { totalNum, ...page } = this.pageInfo
+      const searchDate = this.getSearchDate(dataTime)
+      this.isLoading = true
       this.$api.basic
         .brandList({
           ...searchDate,
@@ -238,80 +256,80 @@ export default {
           ...page
         })
         .then(res => {
-          this.isLoading = false;
+          this.isLoading = false
           if (res.totalCount) {
-            const { data, totalCount } = res;
-            this.pageInfo.totalNum = totalCount;
-            this.tableList = data;
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data
           } else {
-            this.tableList = res;
+            this.tableList = res
           }
-        });
+        })
     },
-    deleteData(param, msgTip = "删除成功") {
-      console.log(param, msgTip);
+    deleteData(param, msgTip = '删除成功') {
+      console.log(param, msgTip)
       // 主要修改接口
       this.$api.basic.deleteBrand(param).then(() => {
-        this.$msgTip(msgTip);
+        this.$msgTip(msgTip)
         if (this.tableList.length === 1) {
-          const { pageNum } = this.pageInfo;
-          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1;
+          const { pageNum } = this.pageInfo
+          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
         }
-        this.fetchData();
-      });
+        this.fetchData()
+      })
     },
     dialogConfirm() {
-      const childRef = this.$refs.childRef;
+      const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
-          const childFormModel = childRef.formModel;
+          const childFormModel = childRef.formModel
           if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel);
+            this.addHandle(childFormModel)
           } else {
-            this.editHandle(childFormModel);
+            this.editHandle(childFormModel)
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        title: opts.title || "新增品牌",
+        title: opts.title || '新增品牌',
         isEdit: opts.isEdit || false,
         initData: opts.initData
-      };
+      }
     },
     addHandle(childFormModel) {
       this.$api.basic.addBrand(childFormModel).then(res => {
-        this.$Message.info("添加成功");
-        this.fetchData();
-      });
-      this.dialogObj.isShow = false;
+        this.$Message.info('添加成功')
+        this.fetchData()
+      })
+      this.dialogObj.isShow = false
     },
 
     editHandle(formModel) {
-      let status;
-      if (formModel.status === "启用") {
-        status = 1;
+      let status
+      if (formModel.status === '启用') {
+        status = 1
       } else {
-        status = 2;
+        status = 2
       }
       let data = {
         ...formModel,
         status
-      };
+      }
       this.$api.basic.updateBrand(data).then(res => {
-        this.$Message.info("修改成功");
-        this.fetchData();
-      });
-      this.dialogObj.isShow = false;
-    },
+        this.$Message.info('修改成功')
+        this.fetchData()
+      })
+      this.dialogObj.isShow = false
+    }
 
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .main__box {
