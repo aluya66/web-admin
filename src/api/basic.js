@@ -106,7 +106,8 @@ export const updateCategory = params =>
  * @param {*} params
  */
 export const deleteCategory = params =>
-  Http.fetch(`${context}/v1/category/${params.categoryId}`, params, {
+  Http.fetch(`${context}/v1/category`, params, {
+  // Http.fetch(`${context}/v1/category/${params.categoryId}`, params, {
     method: 'delete'
   })
 

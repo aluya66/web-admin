@@ -62,7 +62,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="创建人">
+            <!-- <el-form-item label="创建人">
               <el-input
                 v-model="searchObj.createdby"
                 class="search-item"
@@ -70,8 +70,7 @@
                 placeholder="请输入创建人"
                 clearable
               />
-            </el-form-item>
-
+            </el-form-item> -->
             <el-form-item>
               <el-button
                 type="primary"
@@ -103,9 +102,8 @@
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
-import CDialog from "components/dialog";
-import BussinessLineAdd from "./bussinessLineAdd";
-
+import CDialog from 'components/dialog'
+import BussinessLineAdd from './bussinessLineAdd'
 
 export default {
   mixins: [mixinTable],
@@ -141,8 +139,8 @@ export default {
       tableInnerBtns: [
         {
           width: 130,
-          name: "编辑",
-          icon: "el-icon-edit",
+          name: '编辑',
+          icon: 'el-icon-edit',
           handle(row) {
             const {
               appName,
@@ -151,7 +149,7 @@ export default {
               description,
               createdby,
               id
-            } = row;
+            } = row
             vm.showDialog({
               title: '编辑业务线',
               initData: {
@@ -163,9 +161,9 @@ export default {
                 id: id
               },
               isEdit: true
-            });
+            })
           }
-        },
+        }
       ],
       tableHeader: [
         {
@@ -189,10 +187,10 @@ export default {
             return row.status ? vm.bussinessLineSelect[row.status].label : ''
           }
         },
-        {
-          label: '创建人',
-          prop: 'createdby'
-        },
+        // {
+        //   label: '创建人',
+        //   prop: 'createdby'
+        // },
         {
           label: '描述',
           prop: 'description'
@@ -247,25 +245,25 @@ export default {
       })
     },
     dialogConfirm() {
-      const childRef = this.$refs.childRef;
+      const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
-          const childFormModel = childRef.formModel;
+          const childFormModel = childRef.formModel
           if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel);
+            this.addHandle(childFormModel)
           } else {
-            this.editHandle(childFormModel);
+            this.editHandle(childFormModel)
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        title: opts.title || "新增业务线",
+        title: opts.title || '新增业务线',
         isEdit: opts.isEdit || false,
         initData: opts.initData
       }
@@ -273,58 +271,32 @@ export default {
     addHandle(childFormModel) {
       console.log(childFormModel)
       let data = {
-        ...childFormModel,
-      };
+        ...childFormModel
+      }
       this.$api.basic.addQuerypage(data).then(res => {
-        this.$Message.info("添加成功")
+        this.$Message.info('添加成功')
         this.fetchData()
-      });
-      this.dialogObj.isShow = false;
+      })
+      this.dialogObj.isShow = false
     },
-     editHandle(formModel) {
-       console.log(formModel.status)
+    editHandle(formModel) {
+      console.log(formModel.status)
       let status
-      if(formModel.status==='启用'){
+      if (formModel.status === '启用') {
         status = 1
-      }else {
+      } else {
         status = 2
       }
       let data = {
         ...formModel,
         status
-      };
+      }
       this.$api.basic.updateQuerypage(data).then(res => {
-        this.$Message.info("修改成功");
+        this.$Message.info('修改成功')
         this.fetchData()
-      });
-      this.dialogObj.isShow = false;
+      })
+      this.dialogObj.isShow = false
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     addInsert() {
       this.modalTitle = '新增'

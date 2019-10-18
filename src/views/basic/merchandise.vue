@@ -60,6 +60,22 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="显示方式">
+              <el-select
+                v-model="searchObj.paramType"
+                :size="size"
+                class="search-item"
+                placeholder="请选择"
+                clearable
+              >
+                <el-option
+                  v-for="item in paramTypeSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="操作时间">
               <el-date-picker
                 :size="size"
@@ -100,10 +116,10 @@
   </c-view>
 </template>
 <script>
-import mixinTable from "mixins/table";
-import CDialog from "components/dialog";
-import MerchandiseAdd from "./merchandiseAdd";
-import utils from "utils";
+import mixinTable from 'mixins/table'
+import CDialog from 'components/dialog'
+import MerchandiseAdd from './merchandiseAdd'
+import utils from 'utils'
 
 export default {
   mixins: [mixinTable],
@@ -118,21 +134,22 @@ export default {
         name: '',
         type: '',
         isDelete: '',
-        dataTime: ''
+        dataTime: '',
+        paramType: ''
       },
       parameterSelect: [
-       {
-         value: '',
-         label: '分类'
-       },
-       {
-         value: '1',
-         label: '参数'
-       },
-       {
-         value: '2',
-         label: '属性'
-       }
+        {
+          value: '',
+          label: '分类'
+        },
+        {
+          value: '1',
+          label: '参数'
+        },
+        {
+          value: '2',
+          label: '属性'
+        }
       ],
       typeSelect: [
         {
@@ -154,45 +171,63 @@ export default {
           label: '是'
         }
       ],
+      paramTypeSelect: [
+        {
+          value: 1,
+          label: 'text文本框'
+        },
+        {
+          value: 2,
+          label: 'radio单选'
+        },
+        {
+          value: 3,
+          label: 'checkbox复选框'
+        }
+      ],
       pickerOptions: utils.pickerOptions,
       tableList: [],
       tableInnerBtns: [
         {
           width: 130,
-          name: "编辑",
-          icon: "el-icon-edit",
+          name: '编辑',
+          icon: 'el-icon-edit',
           handle(row) {
             const {
               type,
               name,
-              createdby,
-              updatedby,
               sort,
+              bmsGoodsAttrVals,
               id,
+              paramType
 
-            } = row;
+            } = row
+
+            console.log(row.paramType)
+            console.log('??????????????????????????')
+
             vm.showDialog({
-              title: "编辑商品类型",
+              title: '编辑商品类型',
               initData: {
                 type: type === 1 ? '参数' : (type === 2 ? '属性' : '分类'),
                 name,
-                createdby,
-                updatedby,
                 sort,
+                items: bmsGoodsAttrVals.map(({ value, id, description }) => ({ value, id, description })),
+                paramType: paramType === 1 ? 'text文本框' : (paramType === 2 ? 'radio单选' : 'checkbox多选'),
                 id: id
               },
               isEdit: true
-            });
+            })
           }
         },
         {
-          name: "删除",
-          icon: "el-icon-delete",
+          name: '删除',
+          icon: 'el-icon-delete',
           handle(row) {
-            const { name, id } = row;
+            const { name, id } = row
             vm.confirmTip(`确认删除${name}商品类型`, () => {
-              vm.deleteData({ id });
-            });
+              vm.deleteData({ id })
+            })
           }
         }
       ],
@@ -205,7 +240,7 @@ export default {
         {
           label: '属性值',
           prop: 'value',
-          formatter(row){
+          formatter(row) {
             return row.bmsGoodsAttrVals.map(item => {
               return item.value
             }).filter(d => d).join('/')
@@ -216,6 +251,13 @@ export default {
           prop: 'type',
           formatter(row) {
             return row.type ? vm.parameterSelect[row.type].label : '分类'
+          }
+        },
+        {
+          label: '显示方式',
+          prop: 'paramType',
+          formatter(row) {
+            return row.paramType ? vm.paramTypeSelect[row.paramType].label : ''
           }
         },
         {
@@ -231,9 +273,13 @@ export default {
           prop: 'updatedby'
         },
         {
-          label: '时间',
+          label: '创建时间',
           prop: 'created'
         },
+        {
+          label: '更新时间',
+          prop: 'updated'
+        }
       ]
     }
   },
@@ -246,23 +292,23 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
       this.isLoading = true
-     this.$api.basic.getGoodsattrval({
+      this.$api.basic.getGoodsattrval({
         ...searchDate,
         ...other,
         ...page
       })
-      .then(res => {
-        this.isLoading = false
-        if (res.totalCount) {
-          const { data, totalCount } = res
-          this.pageInfo.totalNum = totalCount
-          this.tableList = data
-        } else {
-          this.tableList = res
-        }
-      })
+        .then(res => {
+          this.isLoading = false
+          if (res.totalCount) {
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data
+          } else {
+            this.tableList = res
+          }
+        })
     },
-     dialogConfirm() {
+    dialogConfirm() {
       const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
@@ -286,33 +332,50 @@ export default {
         initData: opts.initData
       }
     },
-     addHandle(formModel) {
-      this.$api.basic.addGoodsattrval(formModel).then(res => {
+    addHandle(formModel) {
+      let bmsGoodsAttrValAddReqs = []
+      bmsGoodsAttrValAddReqs.push(formModel.items)
+      let data = {
+        ...formModel,
+        bmsGoodsAttrValAddReqs: bmsGoodsAttrValAddReqs.flat()
+      }
+      this.$api.basic.addGoodsattrval(data).then(res => {
         this.$Message.info('新增成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false
     },
     editHandle(formModel) {
+      let typeStatus
+      if (formModel.type === '参数') {
+        typeStatus = 1
+      } else {
+        typeStatus = 2
+      }
+      let bmsGoodsAttrValAddReqs = []
+      bmsGoodsAttrValAddReqs.push(formModel.items)
       let data = {
-        ...formModel
+        ...formModel,
+        type: typeStatus,
+        bmsGoodsAttrValAddReqs: bmsGoodsAttrValAddReqs.flat()
       }
       this.$api.basic.updateGoodsattrval(data).then(res => {
         this.$Message.info('修改成功')
+        this.dialogObj.isShow = false
         this.fetchData()
       })
-      this.dialogObj.isShow = false
+      this.dialogObj.isShow = true
     },
-    deleteData(param, msgTip = "删除成功") {
+    deleteData(param, msgTip = '删除成功') {
       this.$api.basic.deleteGoodsattrval(param).then(() => {
-        this.$msgTip(msgTip);
+        this.$msgTip(msgTip)
         if (this.tableList.length === 1) {
-          const { pageNum } = this.pageInfo;
-          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1;
+          const { pageNum } = this.pageInfo
+          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
         }
-        this.fetchData();
-      });
-    },
+        this.fetchData()
+      })
+    }
   }
 }
 </script>

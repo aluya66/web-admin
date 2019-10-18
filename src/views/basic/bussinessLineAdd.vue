@@ -34,12 +34,12 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="创建人:" prop="createdby">
+    <!-- <el-form-item label="创建人:" prop="createdby">
       <el-input
         v-model.trim="formModel.createdby"
         clearable
       ></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="描述:" prop="description">
       <el-input
       type="textarea"
@@ -57,12 +57,12 @@ export default {
       type: Object,
       default() {
         return {
-          appName: "",
-          appCode: "",
-          status: "",
-          description: "",
-          createdby: ''
-        };
+          appName: '',
+          appCode: '',
+          status: '',
+          description: ''
+          // createdby: ''
+        }
       }
     }
   },
@@ -70,19 +70,19 @@ export default {
     return {
       rules: {
         appName: [
-          { required: true, message: "请填写app名称", trigger: "blur" }
+          { required: true, message: '请填写app名称', trigger: 'blur' }
         ],
         appCode: [
-          { required: true, message: "请填写app编码", trigger: "blur" }
+          { required: true, message: '请填写app编码', trigger: 'blur' }
         ],
         status: [
-          { required: true, message: "请选择状态", trigger: "change" }
+          { required: true, message: '请选择状态', trigger: 'change' }
         ],
-        createdby: [
-          { required: true, message: "请填写创建人", trigger: "blur" }
-        ],
+        // createdby: [
+        //   { required: true, message: "请填写创建人", trigger: "blur" }
+        // ],
         description: [
-          { required: true, message: "请填写描述", trigger: "blur" }
+          { required: true, message: '请填写描述', trigger: 'blur' }
         ]
       },
       bussinessLineSelect: [
@@ -94,15 +94,15 @@ export default {
           value: 2,
           label: '禁用'
         }
-      ],
-    };
+      ]
+    }
   },
   computed: {
     formModel() {
-      return this.initData;
+      return this.initData
     }
   }
-};
+}
 </script>
 
 <style lang="less">

@@ -76,12 +76,12 @@
       </el-upload>
     </el-form-item>
 
-    <el-form-item label="创建人" prop="createdby">
+    <!-- <el-form-item label="创建人" prop="createdby">
       <el-input v-model.trim="formModel.createdby" class="form-item"/>
     </el-form-item>
     <el-form-item label="更新人" prop="updatedby">
       <el-input v-model.trim="formModel.updatedby" class="form-item"/>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="状态" prop="status">
       <!-- <el-input v-model.trim="formModel.status" class="form-item"/> -->
       <el-select
@@ -99,10 +99,10 @@
       </el-select>
     </el-form-item>
     <el-form-item label="排序" prop="sort">
-      <el-input-number 
-        v-model.trim="formModel.sort" 
+      <el-input-number
+        v-model.trim="formModel.sort"
         controls-position="right"
-        :min="1" 
+        :min="1"
         :max="10000"
       ></el-input-number>
     </el-form-item>
@@ -125,14 +125,14 @@ export default {
           description: '',
           previewUrl: '',
           videoUrl: '',
-          createdby: '',
-          updatedby: '',
+          // createdby: '',
+          // updatedby: '',
           status: '',
           sort: 100
         }
       }
-    },
-   
+    }
+
   },
   data() {
     return {
@@ -164,29 +164,29 @@ export default {
         // videoUrl: [
         //   { required: true, message: '请填写封面视频URL', trigger: 'blur' }
         // ],
-        createdby: [
-          { required: true, message: '请填写创建人', trigger: 'blur' }
-        ],
-        updatedby: [
-          { required: true, message: '请填写更新人', trigger: 'blur' }
-        ],
+        // createdby: [
+        //   { required: true, message: '请填写创建人', trigger: 'blur' }
+        // ],
+        // updatedby: [
+        //   { required: true, message: '请填写更新人', trigger: 'blur' }
+        // ],
         status: [
           { required: true, message: '请选择状态', trigger: 'blur' }
         ],
         sort: [
           { required: true, message: '请输入排序', trigger: 'blur' }
-        ],
+        ]
       },
       fileList: [],
       fileVideoList: [],
       brandStatus: [
         {
           value: 1,
-          label: "启用"
+          label: '启用'
         },
         {
           value: 2,
-          label: "禁用"
+          label: '禁用'
         }
       ],
       isPeople: ''
@@ -197,11 +197,11 @@ export default {
       return this.initData
     }
   },
-  created(){
+  created() {
     // this.isPeople = this.isEdit
     // console.log('this.isEdit1：'+this.isEdit)
     // console.log(this.isPeople)
-  },  
+  },
   methods: {
     handleRemove(file, fileList) { // 删除文件
       console.log(file, fileList)
@@ -214,7 +214,7 @@ export default {
     },
     beforeRemove(file, fileList) { // 删除文件之前的钩子
       return this.$confirm(`确定移除 ${file.name}？`)
-    },
+    }
   }
 }
 </script>

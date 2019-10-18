@@ -223,41 +223,41 @@ export default {
         this.fetchData()
       })
       this.dialogObj.isShow = false
-    },
+    }
 
     // addReleaseBtn() {
-      //   if (!this.formLeft.logiName) {
-      //     this.$Message.info('物流名称不能为空')
-      //     return
-      //   }
-      //   if (!this.formLeft.logiCode) {
-      //     this.$Message.info('code不能为空')
-      //     return
-      //   }
-      //   let that = this
-      //   if (this.statusType === 1) {
-      //     let data = {
-      //       logiName: this.formLeft.logiName,
-      //       logiCode: this.formLeft.logiCode
-      //     }
-      //     this.$api.basic.addLogistics(data).then(res => {
-      //       that.$Message.info('添加成功')
-      //       that.contentModal = false
-      //       that.fetchData()
-      //     })
-      //   } else if (this.statusType === 2) {
-      //     let data = {
-      //       logiName: this.formLeft.logiName,
-      //       logiCode: this.formLeft.logiCode,
-      //       id: this.formLeft.id,
-      //       sort: this.formLeft.sort
-      //     }
-      //     this.$api.basic.updateLogistics(data).then(res => {
-      //       that.$Message.info('修改成功')
-      //       that.contentModal = false
-      //       that.getLogisticsList()
-      //     })
-      //   }
+    //   if (!this.formLeft.logiName) {
+    //     this.$Message.info('物流名称不能为空')
+    //     return
+    //   }
+    //   if (!this.formLeft.logiCode) {
+    //     this.$Message.info('code不能为空')
+    //     return
+    //   }
+    //   let that = this
+    //   if (this.statusType === 1) {
+    //     let data = {
+    //       logiName: this.formLeft.logiName,
+    //       logiCode: this.formLeft.logiCode
+    //     }
+    //     this.$api.basic.addLogistics(data).then(res => {
+    //       that.$Message.info('添加成功')
+    //       that.contentModal = false
+    //       that.fetchData()
+    //     })
+    //   } else if (this.statusType === 2) {
+    //     let data = {
+    //       logiName: this.formLeft.logiName,
+    //       logiCode: this.formLeft.logiCode,
+    //       id: this.formLeft.id,
+    //       sort: this.formLeft.sort
+    //     }
+    //     this.$api.basic.updateLogistics(data).then(res => {
+    //       that.$Message.info('修改成功')
+    //       that.contentModal = false
+    //       that.getLogisticsList()
+    //     })
+    //   }
     // }
   }
 }
