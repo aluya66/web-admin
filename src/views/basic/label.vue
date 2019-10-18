@@ -3,11 +3,21 @@
     <template v-slot:header>
       <div class="title">
         <el-tabs v-model="activeName" @tab-click="changeTitle">
-          <el-tab-pane label="商品标签" name="1"></el-tab-pane>
-          <el-tab-pane label="用户标签" name="2"></el-tab-pane>
+          <el-tab-pane
+            v-for="(item, index) in labelTitle"
+            :key="index"
+            :label="item.label"
+            :name="item.value"
+          ></el-tab-pane>
         </el-tabs>
         <div class="header-btn">
-          <el-button type="primary" style="height: 40px" :size="size" icon="el-icon-plus" @click="addHandle">新增</el-button>
+          <el-button
+            type="primary"
+            style="height: 40px"
+            :size="size"
+            icon="el-icon-plus"
+            @click="showDialog"
+          >新增</el-button>
         </div>
       </div>
     </template>
@@ -54,16 +64,16 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <label-add ref="childRef" :init-data="dialogObj.initData"></label-add>
+        <label-add ref="childRef" :categoryType="value" :init-data="dialogObj.initData"></label-add>
       </c-dialog>
     </div>
   </c-view>
 </template>
 <script>
-import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
-import LabelAdd from './labelAdd'
-import utils from 'utils'
+import mixinTable from "mixins/table";
+import CDialog from "components/dialog";
+import LabelAdd from "./labelAdd";
+import utils from "utils";
 
 export default {
   mixins: [mixinTable],
@@ -73,18 +83,29 @@ export default {
   },
   data(vm) {
     return {
+      value: "",
       dialogObj: {}, // 对话框数据
       searchObj: {
-        labelName: ''
+        labelName: ""
       },
       marketableSelect: [
         {
-          value: '1',
-          label: '有效'
+          value: "1",
+          label: "有效"
         },
         {
-          value: '2',
-          label: '无效'
+          value: "2",
+          label: "无效"
+        }
+      ],
+      labelTitle: [
+        {
+          value: "1",
+          label: "商品标签"
+        },
+        {
+          value: "2",
+          label: "用户标签"
         }
       ],
       pickerOptions: utils.pickerOptions,
@@ -92,103 +113,126 @@ export default {
       tableInnerBtns: [
         {
           width: 130,
-          name: '编辑',
-          icon: 'el-icon-edit',
+          name: "编辑",
+          icon: "el-icon-edit",
           handle(row) {
-            vm.editHandle(row)
+            const {
+              labelName,
+              initial,
+              labelStatus,
+              createdby,
+              updatedby,
+              labelCategoryModels,
+              labelDesc,
+              id
+            } = row;
+            vm.showDialog({
+              title: '编辑标签',
+              // title: labelType==1?'编辑商品标签':'编辑用户标签',
+              initData: {
+                labelName,
+                initial,
+                labelStatus: labelStatus===1?'有效':'无效',
+                createdby,
+                updatedby,
+                labelParentIds: labelCategoryModels.map(val => val.id),
+                labelDesc,
+                id: id
+              },
+              isEdit: true
+            });
           }
         },
         {
-          name: '删除',
-          icon: 'el-icon-delete',
+          name: "删除",
+          icon: "el-icon-delete",
           handle(row) {
-            const { labelName, id } = row
-            vm.confirmTip(`确认删除${labelName}商品标签信息`, () => {
-              vm.deleteData({ id })
-            })
+            const { labelName, id } = row;
+            vm.confirmTip(`确认删除${labelName}标签信息`, () => {
+              vm.deleteData({ id });
+            });
           }
         }
       ],
       tableHeader: [
         {
-          label: '标签名称',
-          prop: 'labelName',
+          label: "标签名称",
+          prop: "labelName",
           width: 120,
           fixed: true
         },
         {
-          label: '拼音大写',
-          prop: 'initial',
+          label: "拼音大写",
+          prop: "initial",
           width: 200
         },
         {
-          label: '标签编码',
-          prop: 'labelCode'
+          label: "标签编码",
+          prop: "labelCode"
         },
         {
-          label: '标签类型',
-          prop: 'labelTypeCN'
+          label: "标签类型",
+          prop: "labelTypeCN"
         },
         {
-          label: '标签描述',
-          prop: 'labelDesc'
+          label: "标签描述",
+          prop: "labelDesc"
         },
         {
-          label: '标签状态',
-          prop: 'labelStatusCN'
+          label: "标签状态",
+          prop: "labelStatusCN"
         },
         {
-          label: '创建人',
-          prop: 'createdby',
+          label: "创建人",
+          prop: "createdby",
           width: 100
         },
         {
-          label: '创建时间',
-          prop: 'created',
+          label: "创建时间",
+          prop: "created",
           width: 100
         },
         {
-          label: '更新时间',
-          prop: 'updated',
+          label: "更新时间",
+          prop: "updated",
           width: 100
         }
       ],
-
-      activeName: '1',
+      activeName: "1",
       name: 1,
       addSoreList: [],
       labelType: 1,
       categoryType: 1,
       typeBtn: 2
-    }
+    };
   },
   created() {
-    this.fetchData()
+    this.fetchData();
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
-      const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
-      this.isLoading = true
-      this.$api.basic.getQuerypage(
-        {
+      const { dataTime, ...other } = this.searchObj;
+      const { totalNum, ...page } = this.pageInfo;
+      const searchDate = this.getSearchDate(dataTime);
+      this.isLoading = true;
+      this.$api.basic
+        .getQuerypage({
           ...searchDate,
           ...other,
           ...page,
           labelType: this.labelType,
           categoryType: this.categoryType
-        }
-      ).then(res => {
-        this.isLoading = false
-        if (res.totalCount) {
-          const { data, totalCount } = res
-          this.pageInfo.totalNum = totalCount
-          this.tableList = data
-        } else {
-          this.tableList = res
-        }
-      })
+        })
+        .then(res => {
+          this.isLoading = false;
+          if (res.totalCount) {
+            const { data, totalCount } = res;
+            this.pageInfo.totalNum = totalCount;
+            this.tableList = data;
+          } else {
+            this.tableList = res;
+          }
+        });
     },
     /**
      * 删除表格单条数据
@@ -196,87 +240,97 @@ export default {
      * @param {*} curPromise
      * @param {string} [msgTip='删除成功']
      */
-    deleteData(param, msgTip = '删除成功') {
-      console.log(param, msgTip)
+    deleteData(param, msgTip = "删除成功") {
+      console.log(param, msgTip);
+      console.log(param)
+      console.log('00000000000000000000000000000000000000000000000----------')
       // 主要修改接口
       this.$api.basic.deleteQuerypage(param).then(() => {
-        this.$msgTip(msgTip)
+        this.$msgTip(msgTip);
         if (this.tableList.length === 1) {
-          const { pageNum } = this.pageInfo
-          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
+          const { pageNum } = this.pageInfo;
+          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1;
         }
-        this.fetchData()
-      })
+        this.fetchData();
+      });
     },
     /**
      * 对话框确认按钮，集成了表单提交功能
      */
     dialogConfirm() {
-      const childRef = this.$refs.childRef
+      const childRef = this.$refs.childRef;
       childRef.$refs.formRef.validate(valid => {
-        console.log(this.typeBtn)
-        console.log(valid)
-        console.log('?????????????????????')
         if (valid) {
-          const childFormModel = childRef.formModel
-          console.log(childFormModel)
-          // code...
-          this.dialogObj.isShow = false
+          const childFormModel = childRef.formModel;
+          if (!this.dialogObj.isEdit) {
+            this.addHandle(childFormModel);
+          } else {
+            this.editHandle(childFormModel);
+          }
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
-    /**
-     * 对话框新增提醒
-    */
-    addHandle() {
-      this.typeBtn = 1
+    showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        title: '新增商品标签'
+        title: opts.title || "新增标签",
+        isEdit: opts.isEdit || false,
+        initData: opts.initData
       }
     },
     /**
-     * 对话框编辑提醒
-    */
-    editHandle(e) {
-      this.typeBtn = 2
-      let checkData = e.labelCategoryModels.map(({ id }) => {
-        return { id }
-      })
-      let checkList = []
-      for (let i in checkData) {
-        checkList.push(checkData[i].id)
+     * 确认新增操作
+     */
+    addHandle(childFormModel) {
+      let data = {
+        ...childFormModel,
+        labelType: this.labelType
+      };
+      this.$api.basic.addQuerypage(data).then(res => {
+        this.$Message.info("添加成功")
+        this.fetchData()
+      });
+      this.dialogObj.isShow = false;
+    },
+    /**
+     * 确认修改操作
+     */
+    editHandle(formModel) {
+      let status
+      if(formModel.labelStatus==='有效'){
+        status = 1
+      }else {
+        status = 2
       }
-      this.dialogObj = {
-        isShow: true,
-        title: '编辑商品标签',
-        initData: {
-          labelName: e.labelName,
-          initial: e.initial,
-          labelStatus: e.labelStatusCN,
-          createdby: e.createdby,
-          updatedby: e.updatedby,
-          labelParentIds: checkList,
-          labelDesc: e.labelDesc
-        }
-      }
+      let data = {
+        ...formModel,
+        labelType: this.labelType,
+        labelStatus: status
+      };
+      this.$api.basic.updateQuerypage(data).then(res => {
+        this.$Message.info("修改成功");
+        this.fetchData()
+      });
+      this.dialogObj.isShow = false;
     },
     changeTitle(tab, event) {
-      if (tab.name === '1') {
-        this.labelType = 1
-        this.categoryType = 1
-      } else if (tab.name === '2') {
-        this.labelType = 2
-        this.categoryType = 2
+      if (tab.name === "1") {
+        this.labelType = 1;
+        this.categoryType = 1;
+        this.value = "1";
+      } else if (tab.name === "2") {
+        this.labelType = 2;
+        this.categoryType = 2;
+        this.value = "2";
       }
-      this.searchObj = {}
-      this.fetchData()
+      this.searchObj = {};
+      this.fetchData();
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -289,7 +343,7 @@ export default {
     }
   }
 }
-.title{
+.title {
   width: 100%;
   display: flex;
   justify-content: space-between;
