@@ -1,6 +1,6 @@
 <template>
   <el-card :class="bem()">
-    <div slot="header" class="clearfix">
+    <div slot="header" v-if="name" class="clearfix">
       <span>{{name}}</span>
       <el-button v-if="btn.name" :class="bem('btn')" type="text" @click="clickEvent">{{btn.name}}</el-button>
     </div>

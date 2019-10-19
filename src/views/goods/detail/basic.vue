@@ -46,6 +46,7 @@
     <el-form-item label="商品名称:" prop="goodsName">
       <el-input
         v-if="!isView"
+        class="select-item"
         v-model.trim="formModel.goodsName"
         :size="size"
         placeholder="请输入商品名称"
@@ -56,6 +57,7 @@
     <el-form-item label="商品短名称:">
       <el-input
         v-if="!isView"
+        class="select-item"
         v-model.trim="formModel.goodsShortName"
         :size="size"
         placeholder="请输入商品短名称"
@@ -63,8 +65,7 @@
       />
       <span v-else>{{formModel.goodsShortName}}</span>
     </el-form-item>
-    <el-form-item label="商品编码:" v-if="!isView">{{formModel.goodsBn}}</el-form-item>
-    <el-form-item label="封面图片:" v-if="isView">
+    <el-form-item label="封面图片:" v-if="!isView">
       <c-image
         class="coverImg"
         :url="formModel.coverImg"
@@ -78,7 +79,7 @@
         class="select-item"
         v-model="formModel.brandId"
         filterable
-        placeholder="请输入品牌"
+        placeholder="请选择品牌"
       >
         <el-option
           v-for="item in brandList"
@@ -88,6 +89,23 @@
         ></el-option>
       </el-select>
       <span v-else>{{formModel.brandName}}</span>
+    </el-form-item>
+    <el-form-item label="商品来源:">
+      <el-select
+        v-if="!isView"
+        class="select-item"
+        v-model="formModel.origin"
+        filterable
+        placeholder="请选择商品来源"
+      >
+        <el-option
+          v-for="item in originList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <span v-else>{{originList[formModel.origin -1].label}}</span>
     </el-form-item>
     <el-form-item label="商品展示:">
       <c-upload
@@ -139,8 +157,31 @@ export default {
         label: '服装',
         value: 1
       }],
+      originList: [{
+        label: '门店挂板',
+        value: 1
+      }, {
+        label: '代销商品',
+        value: 2
+      }, {
+        label: '自营商品',
+        value: 3
+      }],
       categoryList: [],
       brandList: []
+      // formModel: {
+      //   goodsName: '',
+      //   categoryCode: '',
+      //   categoryName: '',
+      //   goodsBusinessId: '',
+      //   goodsShortName: '',
+      //   goodsBn: '',
+      //   coverImg: '',
+      //   brandId: '',
+      //   brandName: '',
+      //   fileListL: [],
+      //   goodsBrief: ''
+      // }
     }
   },
   props: {
@@ -160,17 +201,18 @@ export default {
   },
   computed: {
     formModel() {
-      const { goodsStaticFiles, ...other } = this.dataObj
+      const { categoryCode, goodsBusinessId, goodsTypeId, goodsName, goodsShortName, brandId, goodsStaticFiles, goodsBrief, origin, coverImg } = this.dataObj
       const fileList = goodsStaticFiles && goodsStaticFiles.map(res => ({
         name: res.imageId,
         url: res.imageUrl,
         videoUrl: res.videoUrl,
         fileType: res.fileType
       }))
-      return { fileList, ...other }
+      console.log(fileList, this.dataObj)
+      return { fileList, categoryCode, goodsBusinessId, goodsTypeId, goodsName, goodsShortName, brandId, goodsBrief, origin, coverImg }
     }
   },
-  created() {
+  mounted() {
     this.getCategoryList()
     this.getbrandList()
   },
@@ -214,10 +256,10 @@ export default {
 <style lang="less" scoped>
 .form-card {
   .el-form-item {
-    width: 97%;
+    width: 98%;
   }
   .select-item {
-    width: 400px;
+     width: 30%;
   }
   .pic {
     padding-bottom: 25px;

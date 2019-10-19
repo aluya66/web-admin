@@ -1,15 +1,51 @@
 <template>
-  <c-card :name="title" class="form-item">
+  <c-card :name="title" class="form-card">
     <el-form-item :label="item.label" v-for="(item, index) in curAttrs" :key="item.id">
-      <el-checkbox-group v-model="item.checkedAttr" @change="handleCheckedChange">
+      <el-checkbox-group
+        v-if="item.paramType === '' || item.paramType === 'checkbox'"
+        v-model="item.checkedAttr"
+        @change="handleCheckedChange"
+      >
         <el-checkbox
           v-for="attr in item.attrs"
-          :label="attr.label"
-          :key="attr.label"
+          :label="attr.value"
+          :key="attr.value"
           :disabled="isView"
           @change="curIndex = index"
-        >{{attr.value}}</el-checkbox>
+        >{{attr.label}}</el-checkbox>
       </el-checkbox-group>
+      <el-select
+        class="select-item"
+        v-if="item.paramType === 'select'"
+        v-model="item.checkedAttr"
+        :disabled="isView"
+        filterable
+        clearable
+        multiple
+        placeholder="请选择"
+        @change="handleCheckedChange"
+        @focus="curIndex = index"
+      >
+        <el-option
+          v-for="attr in item.attrs"
+          :key="attr.value"
+          :label="attr.label"
+          :value="attr.value"
+        ></el-option>
+      </el-select>
+      <el-radio-group
+        v-if="item.paramType === 'radio'"
+        v-model="item.checkedAttr"
+        @change="handleCheckedChange"
+      >
+        <el-radio
+          v-for="attr in item.attrs"
+          :key="attr.value"
+          :disabled="isView"
+          :label="attr.value"
+          @change="curIndex = index"
+        >{{attr.label}}</el-radio>
+      </el-radio-group>
     </el-form-item>
   </c-card>
 </template>
@@ -19,9 +55,11 @@ import CCard from 'components/card'
 export default {
   data() {
     return {
-      curAttrs: [],   // 全部商品属性
-      curIndex: 0,    // 一类商品属性下标
-      checkAttrs: []  // 选中商品属性值[{1010:[212,3133]}]
+      curAttrs: [], // 全部商品参数
+      curIndex: 0, // 一类商品参数下标
+      checkAttrs: [] // 选中商品参数值[{1010:[212,3133]}]
+      // formModel: {
+      // }
     }
   },
   props: {
@@ -29,6 +67,10 @@ export default {
     dataObj: {
       type: Object,
       required: true
+    },
+    type: {
+      type: Number,
+      default: 1
     },
     isView: {
       type: Boolean,
@@ -46,17 +88,16 @@ export default {
     getAttrs() {
       this.$api.basic.getGoodsattrval({
         pageNum: 1,
-        type: 1, //1:参数，2:属性
+        type: this.type, // 1:参数，2:属性
         numPerPage: 20
       }).then(res => {
         const { totalCount, data } = res
-        const { goodsAttrs } = this.dataObj
-        console.log(this.dataObj, 12121)
         if (totalCount) {
+          const { goodsAttrs } = this.dataObj
           data.forEach((val, index) => {
             const checkedAttr = []
             const attrs = val.bmsGoodsAttrVals.map(item => {
-              if (goodsAttrs) {
+              if (goodsAttrs.length) {
                 goodsAttrs.forEach(eidtAttr => {
                   if (eidtAttr.attrId === val.id && eidtAttr.attributeId === item.id) {
                     checkedAttr.push(eidtAttr.attributeId)
@@ -64,11 +105,11 @@ export default {
                 })
               }
               return {
-                label: item.id,
-                value: item.value
+                value: item.id,
+                label: item.value
               }
             })
-            this.curAttrs.push({ attrs, paramType: val.paramType, id: val.id, label: `${val.name}:`, checkedAttr })
+            this.curAttrs.push({ attrs, paramType: val.paramType || '', id: val.id, label: `${val.name}:`, checkedAttr })
           })
           console.log(this.curAttrs)
         }
@@ -85,9 +126,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.form-item {
+.form-card {
   .el-form-item {
-    width: 97%;
+    width: 98%;
+  }
+  .select-item {
+    width: 30%;
+  }
+  .el-radio {
+    width: 100px;
+    margin: 10px 0px;
   }
 }
 </style>
