@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "npm run lint --fix && vue-cli-service build",
+		"build": "npm run lint --fix && vue-cli-service build",
+		"build:dev": "npm run lint --fix && vue-cli-service build --mode dev",
     "build:pre": "npm run lint --fix && vue-cli-service build --mode pre",
     "build:test": "npm run lint --fix && vue-cli-service build --mode test",
     "lint": "vue-cli-service lint",
@@ -18,7 +19,6 @@
     "crypto-js": "^3.1.9-1",
     "element-ui": "^2.12.0",
     "fuse.js": "^3.4.5",
-    "iview": "^3.5.0",
     "nprogress": "^0.2.0",
     "path-to-regexp": "^3.0.0",
     "screenfull": "^4.2.0",

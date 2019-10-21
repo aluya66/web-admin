@@ -3,8 +3,6 @@ import Vue from 'vue'
 // import registerComponent from './utils/libs/registerComponent'
 
 // 临时过度
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -30,7 +28,6 @@ Vue.config.productionTip = false
 
 // 全局注册自定义组件
 // registerComponent(Vue)
-Vue.use(iView)
 
 Vue.mixin(mixin)
 Vue.use(ElementUI, {
