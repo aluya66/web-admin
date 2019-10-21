@@ -1,0 +1,117 @@
+<template>
+  <c-card :name="title" class="form-card">
+    <el-form-item label="上架:">
+    <el-switch v-model="formModel.marketable"></el-switch>
+  </el-form-item>
+    <el-form-item label="渠道名称:" prop="goodsChannelValue">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        v-model.trim="formModel.goodsChannelValue"
+        :size="size"
+        placeholder="请输入渠道名称"
+        clearable
+      />
+      <span v-else>{{formModel.goodsChannelValue}}</span>
+    </el-form-item>
+    <el-form-item label="发货地:" prop="place">
+      <el-input
+        v-if="!isView"
+        v-model.trim="formModel.place"
+        :size="size"
+        placeholder="请输入发货地"
+        clearable
+      />
+      <span v-else>{{formModel.place}}</span>
+    </el-form-item>
+    <el-form-item label="重量:" prop="weight">
+      <el-input
+        class="select-item"
+        v-if="!isView"
+        v-model.trim="formModel.weight"
+        :size="size"
+        placeholder="请输入重量"
+        clearable
+      ></el-input>
+      <span v-else>{{formModel.weight}}</span>
+    </el-form-item>
+    <el-form-item label="单位:" prop="weightUnit">
+      <el-input
+        class="select-item"
+        v-if="!isView"
+        v-model.trim="formModel.weightUnit"
+        :size="size"
+        placeholder="请输入单位"
+        clearable
+      ></el-input>
+      <span v-else>{{formModel.weightUnit}}</span>
+    </el-form-item>
+    <el-form-item label="商品详情:">
+      <c-wangEditor :is-view="isView" :content.sync="formModel.intro" ></c-wangEditor>
+    </el-form-item>
+  </c-card>
+</template>
+<script>
+import CCard from 'components/card'
+import CWangEditor from 'components/wangEditor'
+
+export default {
+  data() {
+    return {
+      editor: null,
+      formModel: {
+        place: '',
+        goodsChannelValue: '',
+        weight: '',
+        weightUnit: '',
+        intro: ''
+      }
+    }
+  },
+  props: {
+    title: String,
+    dataObj: Object,
+    size: {
+      type: String,
+      default: 'medium'
+    },
+    isView: {
+      type: Boolean,
+      default: false
+    }
+  },
+  created() {
+    const {
+      intro,
+      place,
+      goodsChannelValue,
+      weight,
+      weightUnit,
+      marketable
+    } = this.dataObj
+
+    this.formModel = {
+      intro,
+      place,
+      goodsChannelValue,
+      weight,
+      weightUnit,
+      marketable: marketable === 1
+    }
+  },
+  components: {
+    CCard,
+    CWangEditor
+  }
+}
+</script>
+<style lang="less" scoped>
+.form-card {
+  .el-form-item {
+    width: 98%;
+  }
+  .select-item {
+    width: 30%;
+  }
+}
+</style>

@@ -2,7 +2,7 @@
 	<el-upload
 		class="upload"
 		:drag="isDrag"
-		ref="upload"
+		:ref="uploadRef"
 		:list-type="uploadStyle"
 		:file-list="uploadList"
 		:headers="headers"
@@ -35,6 +35,10 @@
 export default {
   name: 'CUpload',
   props: {
+    uploadRef: {
+      type: String,
+      default: 'upload'
+    },
     actionPath: {
       type: String,
       default: '/auth/importRegion'
@@ -91,11 +95,9 @@ export default {
       return {
         Authorization: token
       }
-    }
-  },
-  data () {
-    return {
-      uploadList: []
+    },
+    uploadList() {
+      return this.fileList
     }
   },
   mounted () {
@@ -105,7 +107,6 @@ export default {
         curUplist[i].style.display = 'none'
       }
     }
-    this.uploadList = this.fileList
   },
   methods: {
     handleExceed (files, fileList) {

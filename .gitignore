@@ -22,3 +22,5 @@ yarn-error.log*
 .svn
 _bak*
 package-lock.json
+
+# git config core.ignorecase false  开启git区分大小写文件夹标识

@@ -57,68 +57,26 @@ export const confirmTip = (msg, confirmBack, cancelBack) => {
 }
 
 /**
- * 格式化tree 数据
+ * 格式化tree和Cascader数据
  * @param {*} res
  */
-export const formartTreeData = (res, options) => {
+export const formartLevelData = (res, options) => {
   const loopList = (res, options) => {
     const list = []
     res.forEach(val => {
       let children = []
       let curList = {}
-      if (val.child) {
-        if (val.child.length) {
-          if (options && options.hasAll) {
-            const name =
-              val.level + 1 === 2 ? '所有街道' : val.level + 1 === 3 ? '所有社区' : '所有区域'
-            val.child.unshift({
-              id: options.noId ? -val.id : val.id,
-              level: val.level + 1,
-              regionName: name,
-              subId: val.subId,
-              path: name,
-              child: []
-            })
-          }
-          if (options && options.noSelect) {
-            const name =
-              val.level + 1 === 2 ? '不选择街道' : val.level + 1 === 3 ? '不选择社区' : '不选择区域'
-            val.child.unshift({
-              id: val.id,
-              level: val.level,
-              regionName: name,
-              path: val.regionName,
-              subId: val.subId,
-              disabled: options.disabledId && options.disabledId.includes(val.id),
-              child: []
-            })
-          }
-          children = loopList(val.child, options)
+      if (val.childrenList) {
+        if (val.childrenList.length) {
+          children = loopList(val.childrenList, options)
         }
         curList = {
-          id: val.id,
-          value: val.id,
-          level: val.level,
-          label: val.regionName,
-          subId: val.subId,
-          path: val.path,
-          disabled: options &&
-            options.disabledId &&
-            options.disabledId.includes(val.id),
-          children
-        }
-      }
-      if (val.children) {
-        if (val.children.length) {
-          children = loopList(val.children, options)
-        }
-        curList = {
-          id: val.id,
-          parent: val.parent,
-          label: val.resName,
-          router: val.router,
-          mIcon: val.mIcon,
-          status: val.status,
+          id: val.categoryCode,
+          value: val.categoryCode,
+          level: val.categoryLevel,
+          label: val.categoryName,
+          isShow: val.showFlag,
+          pCode: val.parentCode,
           children
         }
       }
@@ -377,7 +335,7 @@ export default {
   removeRepeatByFilter,
   createUniqueString,
   getRandomNum,
-  formartTreeData,
+  formartLevelData,
   isExternal,
   getUrlParam,
   openNewWin,
