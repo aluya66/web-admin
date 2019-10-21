@@ -136,7 +136,20 @@ export default {
         },
         {
           label: 'url',
-          prop: 'url'
+          prop: 'url',
+          vHtml(row) {
+            console.log(row.url)
+            return `
+              <el-popover
+                placement="top-start"
+                title="${row.url}"
+                width="200"
+                trigger="hover"
+                content="${row.url}">
+                  <div>${row.url}</div>
+              </el-popover>
+            `
+          }
         },
         {
           label: '是否强制更新',
@@ -147,21 +160,20 @@ export default {
         },
         {
           label: '描述',
-          prop: 'description'
-          // vHtml(row){
-          //   console.log(row.description )
-          //   // return
-          //   // `<template>
-          //   //   <el-popover
-          //   //     placement="top-start"
-          //   //     title="标题"
-          //   //     width="200"
-          //   //     trigger="hover"
-          //   //     content="${ row.description }">
-          //   //     ${ row.description }
-          //   //   </el-popover>
-          //   // </template>`
-          // }
+          prop: 'description',
+          vHtml(row) {
+            console.log(row.description)
+            return `
+              <el-popover
+                placement="top-start"
+                title="${row.description}"
+                width="200"
+                trigger="hover"
+                content="${row.description}">
+                  <div>${row.description}</div>
+              </el-popover>
+            `
+          }
         },
         {
           label: '状态',

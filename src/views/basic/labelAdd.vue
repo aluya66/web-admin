@@ -10,7 +10,7 @@
    <el-form-item label="标签名称:" prop="labelName">
       <el-input
         v-model.trim="formModel.labelName"
-        placeholder='请输入标签名称'
+        class="form-item"
         clearable
       ></el-input>
     </el-form-item>
@@ -24,8 +24,7 @@
     <el-form-item label="标签状态:" prop="labelStatus">
       <el-select
         v-model.trim="formModel.labelStatus"
-        class="search-item"
-        placeholder="请选择状态"
+        class="form-item"
         clearable
       >
         <el-option
@@ -63,8 +62,8 @@
     <el-form-item label="描述:" prop="labelDesc">
       <el-input
       type="textarea"
+      class="form-item"
       v-model.trim="formModel.labelDesc"
-      placeholder='请填写描述'
       clearable
       ></el-input>
     </el-form-item>
@@ -81,8 +80,6 @@ export default {
           labelName: '',
           initial: '',
           labelStatus: '',
-          // createdby: '',
-          // updatedby: '',
           labelParentIds: [],
           labelDesc: ''
         }
@@ -118,12 +115,6 @@ export default {
         labelStatus: [
           { required: true, message: '请选择状态', trigger: 'change' }
         ],
-        // createdby: [
-        //   { required: true, message: '请输入创建人', trigger: 'blur' }
-        // ],
-        // updatedby: [
-        //   { required: true, message: '请输入更新人', trigger: 'blur' }
-        // ],
         labelParentIds: [
           { required: true, message: '请选择标签分类', trigger: 'change' }
         ],

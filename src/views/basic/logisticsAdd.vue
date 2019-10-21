@@ -10,13 +10,13 @@
     <el-form-item label="物流名称" prop="logiName">
       <el-input
         v-model.trim="formModel.logiName"
-        placeholder='请输入物流名称'
+        class="form-item"
         clearable
       /></el-form-item>
     <el-form-item label="物流编码" prop="logiCode">
       <el-input
         v-model.trim="formModel.logiCode"
-        placeholder='请输入物流编码'
+        class="form-item"
         clearable
       /></el-form-item>
   </el-form>

@@ -10,6 +10,7 @@
     <el-form-item label="类目名称:" prop="categoryName">
       <el-input
         v-model.trim="formModel.categoryName"
+        class="form-item"
         clearable
       ></el-input>
     </el-form-item>
@@ -22,13 +23,14 @@
     <el-form-item label="父级分类编码:" prop="parentCode">
       <el-input
         v-model.trim="formModel.parentCode"
+        class="form-item"
         clearable
       ></el-input>
     </el-form-item>
     <el-form-item label="安全级别：:" prop="safeLevel">
       <el-select
         v-model="formModel.safeLevel"
-        class="search-item"
+        class="form-item"
         clearable
       >
         <el-option
@@ -42,6 +44,7 @@
     <el-form-item label="排序" prop="sortNumber">
       <el-input-number
         v-model.trim="formModel.sortNumber"
+        class="form-item"
         controls-position="right"
         :min="1"
         :max="10000"
@@ -50,6 +53,7 @@
     <el-form-item label="执行标准：:" prop="standard">
       <el-input
       v-model.trim="formModel.standard"
+      class="form-item"
       clearable
       ></el-input>
     </el-form-item>

@@ -233,7 +233,6 @@ export default {
           pageSize: 10
         }
       ).then(res => {
-        console.log(res)
         this.isLoading = false
         if (res.totalCount) {
           const { data, totalCount } = res
@@ -273,7 +272,7 @@ export default {
       let data = {
         ...childFormModel
       }
-      this.$api.basic.addQuerypage(data).then(res => {
+      this.$api.basic.addBusiness(data).then(res => {
         this.$Message.info('添加成功')
         this.fetchData()
       })
@@ -291,65 +290,11 @@ export default {
         ...formModel,
         status
       }
-      this.$api.basic.updateQuerypage(data).then(res => {
+      this.$api.basic.updateBusiness(data).then(res => {
         this.$Message.info('修改成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false
-    },
-
-    addInsert() {
-      this.modalTitle = '新增'
-      this.contentModal = true
-      this.statusType = 1
-      this.formLeft = {}
-    },
-    addReleaseBtn() {
-      let that = this
-      if (!this.formLeft.appName) {
-        this.$Message.info('请填写app名称')
-        return
-      }
-      if (!this.formLeft.appCode) {
-        this.$Message.info('请填写app编码')
-        return
-      }
-      if (!this.formLeft.status) {
-        this.$Message.info('请选择状态')
-        return
-      }
-      if (!this.formLeft.description) {
-        this.$Message.info('请填写描述')
-        return
-      }
-      // if (this.formLeft.status === '启用') {
-      //   this.status = 1
-      // } else if (this.formLeft.status === '禁用') {
-      //   this.status = 2
-      // }
-      this.loading = !this.loading
-      if (this.statusType === 1) {
-        let data = {
-          ...this.formLeft
-        }
-        this.$api.basic.addBusiness(data).then(res => {
-          that.loading = !that.loading
-          that.$Message.info('添加成功')
-          that.contentModal = false
-          that.fetchData()
-        })
-      } else if (this.typeStatus === 2) {
-        let data = {
-          status: Number(this.status),
-          ...this.formLeft
-        }
-        this.$api.basic.updateBusiness(data).then(res => {
-          that.loading = !that.loading
-          that.$Message.info('修改成功')
-          that.contentModal = false
-          that.queryBussinessList()
-        })
-      }
     }
   }
 }

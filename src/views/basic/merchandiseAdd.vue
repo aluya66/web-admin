@@ -10,9 +10,9 @@
     <el-form-item label="参数分类:" prop="type">
       <el-select
         v-model="formModel.type"
-        class="search-item"
-        placeholder="请选择参数分类"
+        class="form-item"
         clearable
+        v-if="btnStatus===false"
       >
         <el-option
           v-for="item in parameterSelect"
@@ -21,52 +21,88 @@
           :value="item.value"
         ></el-option>
       </el-select>
+      <el-input
+        v-model.trim="formModel.type"
+        class="form-item"
+        disabled
+        v-else
+      ></el-input>
     </el-form-item>
-    <el-form-item label="显示方式:" prop="paramType">
+
+    <el-form-item label="显示方式:" prop="paramType" v-if="formModel.type !== '属性'">
       <el-select
         v-model="formModel.paramType"
-        class="search-item"
-        placeholder="请选择显示方式"
+        class="form-item"
+        :popper-append-to-body="false"
         clearable
+        v-if="formModel.type !== 2"
       >
         <el-option
           v-for="item in paramTypeSelect"
           :key="item.value"
           :label="item.label"
-          :value="item.value"
+          :value="item.label"
         ></el-option>
       </el-select>
+
+      <el-select
+        v-else
+        v-model="formModel.paramType"
+        class="form-item"
+        :popper-append-to-body="false"
+        clearable
+      >
+        <el-option
+          v-for="item in paramListSelect"
+          :key="item.value"
+          :label="item.label"
+          :value="item.label"
+        ></el-option>
+      </el-select>
+      <!-- <el-input
+        v-model.trim="formModel.paramType"
+        class="form-item"
+        v-else
+      ></el-input> -->
     </el-form-item>
+
+     <el-form-item label="显示方式:" prop="paramType" v-else>
+       <el-select
+        v-model="formModel.paramType"
+        class="form-item"
+        :popper-append-to-body="false"
+        clearable
+      >
+        <el-option
+          v-for="item in paramListSelect"
+          :key="item.value"
+          :label="item.label"
+          :value="item.label"
+        ></el-option>
+      </el-select>
+      <!-- <el-input
+        v-model.trim="formModel.paramType"
+        class="form-item"
+        disabled
+      ></el-input> -->
+    </el-form-item>
+
     <el-form-item label="名称:" prop="name">
       <el-input
         v-model.trim="formModel.name"
-        placeholder='请输入名称'
+        class="form-item"
         clearable
       ></el-input>
     </el-form-item>
     <el-form-item label="排序:" prop="sort">
       <el-input-number
         v-model.trim="formModel.sort"
+        class="form-item"
         controls-position="right"
         :min="1"
         :max="10000"
       ></el-input-number>
     </el-form-item>
-    <!-- <el-form-item label="创建人:" prop="createdby">
-      <el-input
-      v-model.trim="formModel.createdby"
-      placeholder='请输入创建人'
-      clearable
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="更新人:" prop="updatedby">
-      <el-input
-      v-model.trim="formModel.updatedby"
-      placeholder='请输入更新人'
-      clearable
-      ></el-input>
-    </el-form-item> -->
-
     <el-form-item
       v-for="(item, index) in formModel.items"
       :label="'属性值'"
@@ -115,11 +151,17 @@ export default {
           paramType: ''
         }
       }
+    },
+    isBtnStatus: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
+      btnStatus: '',
       type: '',
+      typeSelect: '',
       parameterSelect: [
         {
           value: 1,
@@ -133,15 +175,21 @@ export default {
       paramTypeSelect: [
         {
           value: 1,
-          label: 'text文本框'
+          label: 'text'
         },
         {
           value: 2,
-          label: 'radio单选'
+          label: 'radio'
         },
         {
           value: 3,
-          label: 'checkbox复选框'
+          label: 'checkbox'
+        }
+      ],
+      paramListSelect: [
+        {
+          value: 1,
+          label: 'checkbox'
         }
       ],
       addSoreList: [],
@@ -155,23 +203,19 @@ export default {
         sort: [
           { required: true, message: '请选择', trigger: 'change' }
         ],
-        // paramType: [
-        //   { required: true, message: '请选择', trigger: 'change' }
-        // ],
+        paramType: [
+          { required: true, message: '请选择', trigger: 'change' }
+        ],
         labelStatus: [
           { required: true, message: '请填写描述', trigger: 'blur' }
         ]
-        // createdby: [
-        //   { required: true, message: '请填写创建人', trigger: 'blur' }
-        // ],
-        // updatedby: [
-        //   { required: true, message: '请填写更新人', trigger: 'blur' }
-        // ]
       }
 
     }
   },
   created() {
+    this.btnStatus = this.isBtnStatus
+    console.log(this.btnStatus)
   },
   computed: {
     formModel() {
@@ -201,5 +245,8 @@ export default {
   .form-item {
     width: 100%;
   }
+}
+.body .el-select{
+  position: fixed !important;
 }
 </style>

@@ -10,19 +10,21 @@
     <el-form-item label="app版本:" prop="versionName">
       <el-input
         v-model.trim="formModel.versionName"
+        class="form-item"
         clearable
       ></el-input>
     </el-form-item>
     <el-form-item label="URL:" prop="url">
       <el-input
         v-model.trim="formModel.url"
+        class="form-item"
         clearable
       ></el-input>
     </el-form-item>
     <el-form-item label="平台:" prop="platform">
       <el-select
         v-model="formModel.platform"
-        class="search-item"
+        class="form-item"
         clearable
       >
         <el-option
@@ -36,7 +38,7 @@
     <el-form-item label="强制更新:" prop="force">
       <el-select
         v-model="formModel.force"
-        class="search-item"
+        class="form-item"
         clearable
       >
         <el-option
@@ -50,6 +52,7 @@
     <el-form-item label="描述:" prop="description">
       <el-input
       type="textarea"
+      class="form-item"
       v-model.trim="formModel.description"
       clearable
       ></el-input>

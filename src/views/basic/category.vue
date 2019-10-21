@@ -215,7 +215,7 @@ export default {
                 categoryName,
                 imageUrl,
                 parentCode,
-                safeLevel,
+                safeLevel: safeLevel === 1 ? '一级' : (safeLevel === 2 ? '二级' : '三级'),
                 standard,
                 sortNumber,
                 categoryId: categoryId

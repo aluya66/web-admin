@@ -72,7 +72,7 @@
                   v-for="item in paramTypeSelect"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value"
+                  :value="item.label"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -110,7 +110,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <merchandise-add ref="childRef" :init-data="dialogObj.initData"></merchandise-add>
+        <merchandise-add ref="childRef" :isBtnStatus="btnStatus" :init-data="dialogObj.initData"></merchandise-add>
       </c-dialog>
     </div>
   </c-view>
@@ -129,6 +129,7 @@ export default {
   },
   data(vm) {
     return {
+      btnStatus: '',
       dialogObj: {}, // 对话框数据
       searchObj: {
         name: '',
@@ -143,11 +144,11 @@ export default {
           label: '分类'
         },
         {
-          value: '1',
+          value: 1,
           label: '参数'
         },
         {
-          value: '2',
+          value: 2,
           label: '属性'
         }
       ],
@@ -173,16 +174,16 @@ export default {
       ],
       paramTypeSelect: [
         {
-          value: 1,
-          label: 'text文本框'
+          value: '1',
+          label: 'text'
         },
         {
-          value: 2,
-          label: 'radio单选'
+          value: '2',
+          label: 'radio'
         },
         {
-          value: 3,
-          label: 'checkbox复选框'
+          value: '3',
+          label: 'checkbox'
         }
       ],
       pickerOptions: utils.pickerOptions,
@@ -202,10 +203,6 @@ export default {
               paramType
 
             } = row
-
-            console.log(row.paramType)
-            console.log('??????????????????????????')
-
             vm.showDialog({
               title: '编辑商品类型',
               initData: {
@@ -213,7 +210,7 @@ export default {
                 name,
                 sort,
                 items: bmsGoodsAttrVals.map(({ value, id, description }) => ({ value, id, description })),
-                paramType: paramType === 1 ? 'text文本框' : (paramType === 2 ? 'radio单选' : 'checkbox多选'),
+                paramType,
                 id: id
               },
               isEdit: true
@@ -255,10 +252,10 @@ export default {
         },
         {
           label: '显示方式',
-          prop: 'paramType',
-          formatter(row) {
-            return row.paramType ? vm.paramTypeSelect[row.paramType].label : ''
-          }
+          prop: 'paramType'
+          // formatter(row) {
+          //   return row.paramType ? vm.paramTypeSelect[row.paramType].label : '无'
+          // }
         },
         {
           label: '排序',
@@ -325,6 +322,7 @@ export default {
       })
     },
     showDialog(opts) {
+      this.btnStatus = opts.isEdit
       this.dialogObj = {
         isShow: true,
         title: opts.title || '新增商品类型',

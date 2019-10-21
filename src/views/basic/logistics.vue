@@ -50,26 +50,6 @@
         </template>
       </c-table>
     </div>
-    <!-- <el-dialog
-      :title="modalTitle"
-      :visible.sync="contentModal"
-      width="30%"
-      >
-      <el-form ref="form" :model="formLeft" label-width="80px" class="modelStyle">
-        <el-form-item label="物流名称:">
-          <el-input v-model="formLeft.logiName" placeholder='物流名称'></el-input>
-          </el-form-item>
-        <el-form-item label="物流编码:" v-if="statusType===1">
-          <el-input v-model="formLeft.logiCode" placeholder='物流编码'></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="small" @click="contentModal = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="addReleaseBtn">确 定</el-button>
-      </span>
-
-    </el-dialog>-->
-
     <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
@@ -224,41 +204,6 @@ export default {
       })
       this.dialogObj.isShow = false
     }
-
-    // addReleaseBtn() {
-    //   if (!this.formLeft.logiName) {
-    //     this.$Message.info('物流名称不能为空')
-    //     return
-    //   }
-    //   if (!this.formLeft.logiCode) {
-    //     this.$Message.info('code不能为空')
-    //     return
-    //   }
-    //   let that = this
-    //   if (this.statusType === 1) {
-    //     let data = {
-    //       logiName: this.formLeft.logiName,
-    //       logiCode: this.formLeft.logiCode
-    //     }
-    //     this.$api.basic.addLogistics(data).then(res => {
-    //       that.$Message.info('添加成功')
-    //       that.contentModal = false
-    //       that.fetchData()
-    //     })
-    //   } else if (this.statusType === 2) {
-    //     let data = {
-    //       logiName: this.formLeft.logiName,
-    //       logiCode: this.formLeft.logiCode,
-    //       id: this.formLeft.id,
-    //       sort: this.formLeft.sort
-    //     }
-    //     this.$api.basic.updateLogistics(data).then(res => {
-    //       that.$Message.info('修改成功')
-    //       that.contentModal = false
-    //       that.getLogisticsList()
-    //     })
-    //   }
-    // }
   }
 }
 </script>

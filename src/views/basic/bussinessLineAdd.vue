@@ -10,20 +10,21 @@
     <el-form-item label="app名称:" prop="appName">
       <el-input
         v-model.trim="formModel.appName"
+        class="form-item"
         clearable
       ></el-input>
     </el-form-item>
     <el-form-item label="app编码:" prop="appCode">
       <el-input
         v-model.trim="formModel.appCode"
+        class="form-item"
         clearable
       ></el-input>
     </el-form-item>
     <el-form-item label="状态:" prop="status">
       <el-select
         v-model="formModel.status"
-        class="search-item"
-        placeholder="请选择状态"
+        class="form-item"
         clearable
       >
         <el-option
@@ -34,15 +35,10 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <!-- <el-form-item label="创建人:" prop="createdby">
-      <el-input
-        v-model.trim="formModel.createdby"
-        clearable
-      ></el-input>
-    </el-form-item> -->
     <el-form-item label="描述:" prop="description">
       <el-input
       type="textarea"
+      class="form-item"
       v-model.trim="formModel.description"
       clearable
       ></el-input>
@@ -61,7 +57,6 @@ export default {
           appCode: '',
           status: '',
           description: ''
-          // createdby: ''
         }
       }
     }
@@ -78,9 +73,6 @@ export default {
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
         ],
-        // createdby: [
-        //   { required: true, message: "请填写创建人", trigger: "blur" }
-        // ],
         description: [
           { required: true, message: '请填写描述', trigger: 'blur' }
         ]
