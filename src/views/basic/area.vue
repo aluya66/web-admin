@@ -6,7 +6,6 @@
         <!-- <el-button type="primary" :size="size" icon="el-icon-plus" @click="append(3)">新增</el-button> -->
       </div>
     </template>
-    <Card>
 
     <el-aside width="600px">
       <el-tree
@@ -29,34 +28,37 @@
           <el-button
             type="text"
             size="mini"
-            @click="() => remove(node, data)">
+            @click="() => editHandle(node, data)">
             编辑
           </el-button>
           </span>
         </span>
       </el-tree>
     </el-aside>
-    </Card>
 
-    <Modal
-        v-model="showModal"
-        :title="modelTitle"
-        width="400"
-        footer-hide
-        >
-        <Form :model='formModel' label-position="right" :label-width="75" class="formStyle">
-          <FormItem label="地区名称：">
-            <Input  placeholder='请填写地区名称' v-model="formModel.name"/>
-          </FormItem>
-          <FormItem label="code:" >
-            <Input  placeholder='请填写code' v-model="formModel.code"/>
-          </FormItem>
-          <FormItem>
-            <Button type="primary" class="addBtn" @click="addModal">确认</Button>
-            <Button class="cancelBtn" @click="showModal = false">取消</Button>
-          </FormItem>
-        </Form>
-      </Modal>
+    <el-dialog :title="modelTitle" :visible.sync="showModal">
+      <el-form :model="formModel" :rules="rules">
+        <el-form-item
+          label="地区名称"
+          :label-width="formLabelWidth"
+          prop="name"
+          >
+          <el-input v-model.trim="formModel.name" class="form-item"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="地区编码"
+          prop="code"
+          :label-width="formLabelWidth"
+          v-if="isEdit ===1"
+          >
+          <el-input v-model.trim="formModel.code" class="form-item"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showModal = false">取 消</el-button>
+        <el-button type="primary" @click="addModal">确 定</el-button>
+      </div>
+    </el-dialog>
   </c-view>
 </template>
 <script>
@@ -64,6 +66,16 @@
 export default {
   data() {
     return {
+      formLabelWidth: '120px',
+      rules: {
+        name: [
+          { required: true, message: '请填写地区名称', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请填写地区编码', trigger: 'blur' }
+        ]
+      },
+      isEdit: '',
       props: {
         label: 'name',
         children: []
@@ -115,16 +127,52 @@ export default {
       }
     },
     addModal() {
-      console.log('确认')
+      let that = this
+      if (this.isEdit === 1) {
+        // 新增
+        let data = {
+          name: this.formModel.name,
+          code: this.formModel.code,
+          parentCode: this.formModel.parentCode
+        }
+        this.$api.basic.addRegionInsert(data).then(res => {
+          that.$msgTip('添加成功')
+          that.fetchData()
+          that.showModal = false
+        })
+      } else {
+        //  编辑
+        let data = {
+          name: this.formModel.name,
+          code: this.formModel.code,
+          id: this.formModel.id
+        }
+        this.$api.basic.updataRegionInsert(data).then(res => {
+          that.$msgTip('修改成功')
+          that.fetchData()
+          that.showModal = false
+        })
+      }
     },
-    remove(node, data) {
+    editHandle(node, data) {
+      console.log(node)
+      console.log(data)
+      this.isEdit = 2
       this.showModal = true
       this.modelTitle = '编辑'
+      this.formModel.name = data.name
+      this.formModel.code = data.code
+      this.formModel.parentCode = data.parentCode
+      this.formModel.id = data.id
       console.log('编辑')
     },
-    append(type, data) {
+    append(node) {
+      this.isEdit = 1
       this.showModal = true
       this.modelTitle = '新增'
+      this.formModel.name = ''
+      this.formModel.code = ''
+      this.formModel.parentCode = node.code
       console.log('新增')
     }
   }
@@ -132,20 +180,20 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="less" scoped>
+.main__box {
+  .search {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+}
+  .form-item {
+    width: 90%;
+  }
 .title {
   display: flex;
   justify-content: space-between;
   width: 100%;
-}
-.addBtn {
-  margin-left: 50px;
-}
-.cancelBtn {
-  margin-left: 8px;
-}
-.formStyle {
-  margin-right: 16px;
 }
 .custom-tree-node {
   flex: 1;

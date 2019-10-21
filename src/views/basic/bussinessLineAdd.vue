@@ -6,6 +6,7 @@
     label-width="120px"
     class="form"
     label-position="right"
+    status-icon
   >
     <el-form-item label="app名称:" prop="appName">
       <el-input
@@ -14,7 +15,7 @@
         clearable
       ></el-input>
     </el-form-item>
-    <el-form-item label="app编码:" prop="appCode">
+    <el-form-item label="app编码:" prop="appCode" v-if="bussinessCodeStatus === false">
       <el-input
         v-model.trim="formModel.appCode"
         class="form-item"
@@ -24,7 +25,7 @@
     <el-form-item label="状态:" prop="status">
       <el-select
         v-model="formModel.status"
-        class="form-item"
+        class="select-item"
         clearable
       >
         <el-option
@@ -35,7 +36,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="描述:" prop="description">
+    <el-form-item label="描述:">
       <el-input
       type="textarea"
       class="form-item"
@@ -59,16 +60,34 @@ export default {
           description: ''
         }
       }
+    },
+    bussinessCode: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
+    let checkCode = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('app编码不能为空'))
+      }
+      setTimeout(() => {
+        if (/^[A-Za-z0-9-_]+$/.test(value)) {
+          callback()
+        } else {
+          // eslint-disable-next-line standard/no-callback-literal
+          callback('请输入字母、数字或下划线')
+        }
+      }, 1000)
+    }
     return {
+      bussinessCodeStatus: '',
       rules: {
         appName: [
           { required: true, message: '请填写app名称', trigger: 'blur' }
         ],
         appCode: [
-          { required: true, message: '请填写app编码', trigger: 'blur' }
+          { required: true, validator: checkCode, trigger: 'blur' }
         ],
         status: [
           { required: true, message: '请选择状态', trigger: 'change' }
@@ -89,6 +108,9 @@ export default {
       ]
     }
   },
+  created() {
+    this.bussinessCodeStatus = this.bussinessCode
+  },
   computed: {
     formModel() {
       return this.initData
@@ -102,6 +124,9 @@ export default {
   width: 90%;
   .form-item {
     width: 100%;
+  }
+  .select-item{
+    width: 50%
   }
 }
 </style>

@@ -338,7 +338,7 @@ export default {
         bmsGoodsAttrValAddReqs: bmsGoodsAttrValAddReqs.flat()
       }
       this.$api.basic.addGoodsattrval(data).then(res => {
-        this.$Message.info('新增成功')
+        this.$msgTip('新增成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false
@@ -358,7 +358,7 @@ export default {
         bmsGoodsAttrValAddReqs: bmsGoodsAttrValAddReqs.flat()
       }
       this.$api.basic.updateGoodsattrval(data).then(res => {
-        this.$Message.info('修改成功')
+        this.$msgTip('修改成功')
         this.dialogObj.isShow = false
         this.fetchData()
       })

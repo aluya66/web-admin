@@ -164,36 +164,30 @@ export default {
       ],
       tableHeader: [
         {
-          label: '品牌国家',
-          prop: 'country',
-          width: 120,
+          label: '品牌LOGO',
+          prop: 'logo',
           fixed: true
         },
         {
           label: '品牌名称',
-          prop: 'name',
-          width: 200
-        },
-        {
-          label: '品牌LOGO',
-          prop: 'logo'
-        },
-        {
-          label: '品牌介绍',
-          prop: 'intro'
-        },
-        {
-          label: '品牌描述',
-          prop: 'description'
+          prop: 'name'
         },
         {
           label: '品牌别名',
           prop: 'ename'
         },
         {
-          label: '消费人群',
-          prop: 'consumer',
-          width: 100
+          label: '品牌描述',
+          prop: 'description'
+        },
+        {
+          label: '品牌介绍',
+          prop: 'intro'
+        },
+        {
+          label: '品牌国家',
+          prop: 'country',
+          width: 120
         },
         {
           label: '封面图url',
@@ -210,6 +204,11 @@ export default {
         {
           label: '状态',
           prop: 'statusCN',
+          width: 100
+        },
+        {
+          label: '消费人群',
+          prop: 'consumer',
           width: 100
         },
         {
@@ -267,7 +266,6 @@ export default {
         })
     },
     deleteData(param, msgTip = '删除成功') {
-      console.log(param, msgTip)
       // 主要修改接口
       this.$api.basic.deleteBrand(param).then(() => {
         this.$msgTip(msgTip)
@@ -304,7 +302,7 @@ export default {
     },
     addHandle(childFormModel) {
       this.$api.basic.addBrand(childFormModel).then(res => {
-        this.$Message.info('添加成功')
+        this.$msgTip('添加成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false
@@ -322,7 +320,7 @@ export default {
         status
       }
       this.$api.basic.updateBrand(data).then(res => {
-        this.$Message.info('修改成功')
+        this.$msgTip('修改成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false

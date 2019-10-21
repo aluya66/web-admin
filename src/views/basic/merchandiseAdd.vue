@@ -6,13 +6,17 @@
     label-width="120px"
     class="form"
     label-position="right"
+    status-icon
   >
+    <el-row>
+      <el-col :span="12">
+
     <el-form-item label="参数分类:" prop="type">
       <el-select
         v-model="formModel.type"
-        class="form-item"
+        class="select-item select-type"
         clearable
-        v-if="btnStatus===false"
+        v-if="btnStatus === false"
       >
         <el-option
           v-for="item in parameterSelect"
@@ -23,16 +27,18 @@
       </el-select>
       <el-input
         v-model.trim="formModel.type"
-        class="form-item"
+        class="form-item select-type"
         disabled
         v-else
       ></el-input>
     </el-form-item>
+      </el-col>
+      <el-col :span="12">
 
     <el-form-item label="显示方式:" prop="paramType" v-if="formModel.type !== '属性'">
       <el-select
         v-model="formModel.paramType"
-        class="form-item"
+        class="select-item select-type"
         :popper-append-to-body="false"
         clearable
         v-if="formModel.type !== 2"
@@ -48,7 +54,7 @@
       <el-select
         v-else
         v-model="formModel.paramType"
-        class="form-item"
+        class="select-item select-type"
         :popper-append-to-body="false"
         clearable
       >
@@ -69,7 +75,7 @@
      <el-form-item label="显示方式:" prop="paramType" v-else>
        <el-select
         v-model="formModel.paramType"
-        class="form-item"
+        class="select-item select-type"
         :popper-append-to-body="false"
         clearable
       >
@@ -86,8 +92,10 @@
         disabled
       ></el-input> -->
     </el-form-item>
+      </el-col>
+    </el-row>
 
-    <el-form-item label="名称:" prop="name">
+    <el-form-item label="类型名称:" prop="name">
       <el-input
         v-model.trim="formModel.name"
         class="form-item"
@@ -97,7 +105,7 @@
     <el-form-item label="排序:" prop="sort">
       <el-input-number
         v-model.trim="formModel.sort"
-        class="form-item"
+        class="select-item"
         controls-position="right"
         :min="1"
         :max="10000"
@@ -244,6 +252,12 @@ export default {
   width: 90%;
   .form-item {
     width: 100%;
+  }
+  .select-item{
+    width: 50%
+  }
+  .select-type{
+    width: 100%
   }
 }
 .body .el-select{

@@ -184,7 +184,7 @@ export default {
      */
     addHandle(formModel) {
       this.$api.basic.addLogistics(formModel).then(res => {
-        this.$Message.info('新增成功')
+        this.$msgTip('新增成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false
@@ -199,7 +199,7 @@ export default {
         ...formModel
       }
       this.$api.basic.updateLogistics(data).then(res => {
-        this.$Message.info('修改成功')
+        this.$msgTip('修改成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false

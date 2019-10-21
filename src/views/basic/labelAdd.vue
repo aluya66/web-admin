@@ -6,6 +6,7 @@
     label-width="120px"
     class="form"
     label-position="right"
+    status-icon
   >
    <el-form-item label="标签名称:" prop="labelName">
       <el-input
@@ -24,7 +25,7 @@
     <el-form-item label="标签状态:" prop="labelStatus">
       <el-select
         v-model.trim="formModel.labelStatus"
-        class="form-item"
+        class="select-item"
         clearable
       >
         <el-option
@@ -59,7 +60,7 @@
         >{{ item.categoryName }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
-    <el-form-item label="描述:" prop="labelDesc">
+    <el-form-item label="描述:">
       <el-input
       type="textarea"
       class="form-item"
@@ -153,6 +154,9 @@ export default {
   width: 90%;
   .form-item {
     width: 100%;
+  }
+  .select-item{
+    width: 50%
   }
 }
 </style>

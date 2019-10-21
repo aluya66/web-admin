@@ -6,6 +6,7 @@
     label-width="120px"
     class="form"
     label-position="right"
+    status-icon
   >
     <el-form-item label="类目名称:" prop="categoryName">
       <el-input
@@ -20,36 +21,42 @@
         clearable
       ></el-input>
     </el-form-item> -->
-    <el-form-item label="父级分类编码:" prop="parentCode">
+    <el-form-item label="父级分类编码:" prop="parentCode" v-if="categoryEdit === false">
       <el-input
         v-model.trim="formModel.parentCode"
         class="form-item"
         clearable
       ></el-input>
     </el-form-item>
-    <el-form-item label="安全级别：:" prop="safeLevel">
-      <el-select
-        v-model="formModel.safeLevel"
-        class="form-item"
-        clearable
-      >
-        <el-option
-          v-for="item in safeLevelSelect"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="排序" prop="sortNumber">
-      <el-input-number
-        v-model.trim="formModel.sortNumber"
-        class="form-item"
-        controls-position="right"
-        :min="1"
-        :max="10000"
-      ></el-input-number>
-    </el-form-item>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="安全级别：:" prop="safeLevel">
+          <el-select
+            v-model="formModel.safeLevel"
+            class="select-item"
+            clearable
+          >
+            <el-option
+              v-for="item in safeLevelSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="排序" prop="sortNumber">
+          <el-input-number
+            v-model.trim="formModel.sortNumber"
+            class="select-item"
+            controls-position="right"
+            :min="1"
+            :max="10000"
+          ></el-input-number>
+        </el-form-item>
+      </el-col>
+    </el-row>
     <el-form-item label="执行标准：:" prop="standard">
       <el-input
       v-model.trim="formModel.standard"
@@ -76,10 +83,15 @@ export default {
           sortNumber: 100
         }
       }
+    },
+    isCategory: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
+      categoryEdit: '',
       rules: {
         categoryName: [
           { required: true, message: '请填写类目名称', trigger: 'blur' }
@@ -124,6 +136,9 @@ export default {
     formModel() {
       return this.initData
     }
+  },
+  created() {
+    this.categoryEdit = this.isCategory
   }
 }
 </script>
@@ -133,6 +148,9 @@ export default {
   width: 90%;
   .form-item {
     width: 100%;
+  }
+  .select-item{
+    width: 100%
   }
 }
 </style>

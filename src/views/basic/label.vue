@@ -315,7 +315,7 @@ export default {
         labelType: this.labelType
       }
       this.$api.basic.addQuerypage(data).then(res => {
-        this.$Message.info('添加成功')
+        this.$msgTip('添加成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false
@@ -336,7 +336,7 @@ export default {
         labelStatus: status
       }
       this.$api.basic.updateQuerypage(data).then(res => {
-        this.$Message.info('修改成功')
+        this.$msgTip('修改成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false

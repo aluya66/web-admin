@@ -6,6 +6,7 @@
     label-width="120px"
     class="form"
     label-position="right"
+    status-icon
   >
     <el-form-item label="app版本:" prop="versionName">
       <el-input
@@ -24,7 +25,7 @@
     <el-form-item label="平台:" prop="platform">
       <el-select
         v-model="formModel.platform"
-        class="form-item"
+        class="select-item"
         clearable
       >
         <el-option
@@ -38,7 +39,7 @@
     <el-form-item label="强制更新:" prop="force">
       <el-select
         v-model="formModel.force"
-        class="form-item"
+        class="select-item"
         clearable
       >
         <el-option
@@ -49,7 +50,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="描述:" prop="description">
+    <el-form-item label="描述:">
       <el-input
       type="textarea"
       class="form-item"
@@ -130,6 +131,9 @@ export default {
   width: 90%;
   .form-item {
     width: 100%;
+  }
+  .select-item{
+    width: 50%
   }
 }
 </style>

@@ -112,7 +112,6 @@ export default {
           name: '发布',
           icon: '',
           handle(row) {
-            console.log(row)
             const { versionName, id } = row
             vm.confirmTip(`确认发布${versionName}版本？`, () => {
               vm.publishDate({ id })
@@ -138,7 +137,6 @@ export default {
           label: 'url',
           prop: 'url',
           vHtml(row) {
-            console.log(row.url)
             return `
               <el-popover
                 placement="top-start"
@@ -162,7 +160,6 @@ export default {
           label: '描述',
           prop: 'description',
           vHtml(row) {
-            console.log(row.description)
             return `
               <el-popover
                 placement="top-start"
@@ -201,7 +198,6 @@ export default {
           ...page
         }
       ).then(res => {
-        console.log(res)
         this.isLoading = false
         if (res.totalCount) {
           const { data, totalCount } = res
@@ -237,12 +233,11 @@ export default {
       }
     },
     addHandle(childFormModel) {
-      console.log(childFormModel)
       let data = {
         ...childFormModel
       }
       this.$api.basic.addRelease(data).then(res => {
-        this.$Message.info('添加成功')
+        this.$msgTip('添加成功')
         this.fetchData()
         this.dialogObj.isShow = false
       })

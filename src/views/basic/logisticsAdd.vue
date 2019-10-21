@@ -6,6 +6,7 @@
     label-width="120px"
     class="form"
     label-position="right"
+    status-icon
   >
     <el-form-item label="物流名称" prop="logiName">
       <el-input
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     initData: {
@@ -36,13 +38,26 @@ export default {
     }
   },
   data() {
+    let checkCode = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('物流编码不能为空'))
+      }
+      setTimeout(() => {
+        if (/^[A-Za-z0-9-_]+$/.test(value)) {
+          callback()
+        } else {
+          // eslint-disable-next-line standard/no-callback-literal
+          callback('请输入字母、数字或下划线')
+        }
+      }, 1000)
+    }
     return {
       rules: {
         logiName: [
           { required: true, message: '请输入物流名称', trigger: 'blur' }
         ],
         logiCode: [
-          { required: true, message: '请输入物流编码', trigger: 'blur' }
+          { required: true, validator: checkCode, trigger: 'blur' }
         ]
       }
     }

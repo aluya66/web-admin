@@ -93,7 +93,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <bussinessLine-add ref="childRef" :init-data="dialogObj.initData"></bussinessLine-add>
+        <bussinessLine-add ref="childRef" :bussinessCode='isEditCode' :init-data="dialogObj.initData"></bussinessLine-add>
       </c-dialog>
     </div>
   </c-view>
@@ -113,6 +113,7 @@ export default {
   },
   data(vm) {
     return {
+      isEditCode: '',
       dialogObj: {}, // 对话框数据
       searchObj: {
         appName: '',
@@ -260,6 +261,7 @@ export default {
       })
     },
     showDialog(opts) {
+      this.isEditCode = opts.isEdit
       this.dialogObj = {
         isShow: true,
         title: opts.title || '新增业务线',
@@ -268,18 +270,16 @@ export default {
       }
     },
     addHandle(childFormModel) {
-      console.log(childFormModel)
       let data = {
         ...childFormModel
       }
       this.$api.basic.addBusiness(data).then(res => {
-        this.$Message.info('添加成功')
+        this.$msgTip('添加成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false
     },
     editHandle(formModel) {
-      console.log(formModel.status)
       let status
       if (formModel.status === '启用') {
         status = 1
@@ -291,7 +291,7 @@ export default {
         status
       }
       this.$api.basic.updateBusiness(data).then(res => {
-        this.$Message.info('修改成功')
+        this.$msgTip('修改成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false

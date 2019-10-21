@@ -94,7 +94,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <category-add ref="childRef" :init-data="dialogObj.initData"></category-add>
+        <category-add ref="childRef" :isCategory='categoryEdit' :init-data="dialogObj.initData"></category-add>
       </c-dialog>
     </div>
   </c-view>
@@ -113,6 +113,7 @@ export default {
   },
   data(vm) {
     return {
+      categoryEdit: '',
       dialogObj: {}, // 对话框数据
       searchObj: {
         categoryLevel: '',
@@ -229,7 +230,6 @@ export default {
           icon: 'el-icon-delete',
           handle(row) {
             const { categoryName, categoryId } = row
-            console.log(row.id)
             vm.confirmTip(`确认删除${categoryName}商品类目信息`, () => {
               vm.deleteData({ categoryId })
             })
@@ -254,7 +254,6 @@ export default {
           ...page
         })
         .then(res => {
-          console.log(res)
           this.isLoading = false
           if (res.totalCount) {
             const { data, totalCount } = res
@@ -282,6 +281,7 @@ export default {
       })
     },
     showDialog(opts) {
+      this.categoryEdit = opts.isEdit
       this.dialogObj = {
         isShow: true,
         title: opts.title || '新增类目',
@@ -290,12 +290,11 @@ export default {
       }
     },
     addHandle(childFormModel) {
-      console.log(childFormModel)
       let data = {
         ...childFormModel
       }
       this.$api.basic.addCategory(data).then(res => {
-        this.$Message.info('添加成功')
+        this.$msgTip('添加成功')
         this.fetchData()
         this.dialogObj.isShow = false
       })
@@ -307,7 +306,7 @@ export default {
         ...formModel
       }
       this.$api.basic.updateCategory(data).then(res => {
-        this.$Message.info('修改成功')
+        this.$msgTip('修改成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false
