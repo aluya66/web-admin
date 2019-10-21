@@ -15,12 +15,26 @@
         clearable
       ></el-input>
     </el-form-item>
-    <!-- <el-form-item label="图片地址:" prop="imageUrl">
-      <el-input
-        v-model.trim="formModel.imageUrl"
-        clearable
-      ></el-input>
+
+    <!-- <el-form-item label="图片:">
+      <c-upload
+        ref="curUpload"
+        class="pic"
+        :fileList="formModel.imageUrl"
+        is-auto
+        :size="20"
+        :limit="5"
+        action-path="/auth/uploadFile"
+        upload-style="picture-card"
+        @upload-success="uploadSuccess"
+        @upload-remove="uploadRemove"
+        @upload-review="uploadReview"
+      >
+        <i class="el-icon-plus"></i>
+        <div class="info">上传图片/视频应小于20M</div>
+      </c-upload>
     </el-form-item> -->
+
     <el-form-item label="父级分类编码:" prop="parentCode" v-if="categoryEdit === false">
       <el-input
         v-model.trim="formModel.parentCode"
@@ -69,6 +83,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     initData: {
@@ -134,11 +149,30 @@ export default {
   },
   computed: {
     formModel() {
+      // const { categoryName, imageUrl, parentCode, sortNumber, goodsStaticFiles, safeLevel, standard } = this.initData
+      // const fileList = goodsStaticFiles && goodsStaticFiles.map(res => ({
+      //   name: res.imageId,
+      //   url: res.imageUrl,
+      //   videoUrl: res.videoUrl,
+      //   fileType: res.fileType
+      // }))
+      // return { fileList, categoryName, imageUrl, parentCode, sortNumber, safeLevel, standard, sortNumber }
       return this.initData
     }
   },
   created() {
     this.categoryEdit = this.isCategory
+  },
+  methods: {
+    uploadSuccess(response, file, fileList) {
+      this.fileList = fileList
+    },
+    uploadRemove(file, fileList) {
+      this.fileList = fileList
+    },
+    uploadReview(file) {
+      this.$emit('show-image', file)
+    }
   }
 }
 </script>
@@ -151,6 +185,19 @@ export default {
   }
   .select-item{
     width: 100%
+  }
+  .pic {
+    padding-bottom: 25px;
+    span {
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .info {
+      line-height: 20px;
+      height: 20px;
+      margin-top: 5px;
+      font-size: @f12;
+    }
   }
 }
 </style>

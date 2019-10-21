@@ -138,8 +138,7 @@ export default {
         .getLogistics({
           ...searchDate,
           ...other,
-          ...page,
-          pageSize: 10
+          ...page
         })
         .then(res => {
           this.isLoading = false

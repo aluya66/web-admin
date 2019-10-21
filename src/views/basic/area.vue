@@ -6,7 +6,6 @@
         <!-- <el-button type="primary" :size="size" icon="el-icon-plus" @click="append(3)">新增</el-button> -->
       </div>
     </template>
-
     <el-aside width="600px">
       <el-tree
         v-if="data.length"
@@ -14,43 +13,24 @@
         :load="loadNode"
         lazy
         :expand-on-click-node="false"
-        >
+      >
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>
           <span>
             <!-- v-if="data.exitChildren==true" -->
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => append(data)">
-            新增
-          </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => editHandle(node, data)">
-            编辑
-          </el-button>
+
+            <el-button type="text" size="mini" @click="() => append(data)">新增</el-button>
+            <el-button type="text" size="mini" @click="() => editHandle(node, data)">编辑</el-button>
           </span>
         </span>
       </el-tree>
     </el-aside>
-
     <el-dialog :title="modelTitle" :visible.sync="showModal">
       <el-form :model="formModel" :rules="rules">
-        <el-form-item
-          label="地区名称"
-          :label-width="formLabelWidth"
-          prop="name"
-          >
+        <el-form-item label="地区名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model.trim="formModel.name" class="form-item"></el-input>
         </el-form-item>
-        <el-form-item
-          label="地区编码"
-          prop="code"
-          :label-width="formLabelWidth"
-          v-if="isEdit ===1"
-          >
+        <el-form-item label="地区编码" prop="code" :label-width="formLabelWidth" v-if="isEdit ===1">
           <el-input v-model.trim="formModel.code" class="form-item"></el-input>
         </el-form-item>
       </el-form>
@@ -62,30 +42,24 @@
   </c-view>
 </template>
 <script>
-
 export default {
   data() {
     return {
       formLabelWidth: '120px',
       rules: {
-        name: [
-          { required: true, message: '请填写地区名称', trigger: 'blur' }
-        ],
-        code: [
-          { required: true, message: '请填写地区编码', trigger: 'blur' }
-        ]
+        name: [{ required: true, message: '请填写地区名称', trigger: 'blur' }],
+        code: [{ required: true, message: '请填写地区编码', trigger: 'blur' }]
       },
       isEdit: '',
       props: {
         label: 'name',
-        children: []
+        children: '',
+        isLeaf: 'leaf'
       },
-
       formModel: {
         name: '',
         code: ''
       },
-
       showModal: false,
       modelTitle: '',
       parentCode: 0,
@@ -98,9 +72,10 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$api.basic.queryAllRegion({
-        parentCode: this.parentCode
-      })
+      this.$api.basic
+        .queryAllRegion({
+          parentCode: this.parentCode
+        })
         .then(res => {
           this.data = res.data
         })
@@ -113,19 +88,21 @@ export default {
       }
       if (node.level > 0) {
         this.parentCode = node.data && node.data.code
-        this.$api.basic.queryAllRegion({
-          parentCode: this.parentCode
-        })
-          .then(res => {
-            console.log(node)
-            console.log(node.data)
-            console.log(this.parentCode)
-            this.dataChild = res.data || ''
-            console.log(this.dataChild)
+        console.log('parentCode:' + this.parentCode)
+        console.log('----------------------------')
+        this.$api.basic
+          .queryAllRegion({
+            parentCode: this.parentCode
           })
-        return resolve(this.dataChild)
+          .then(res => {
+            this.dataChild = (res && res.data) || []
+          })
+        if (this.dataChild.length) {
+          return resolve(this.dataChild)
+        }
       }
     },
+
     addModal() {
       let that = this
       if (this.isEdit === 1) {
@@ -187,9 +164,9 @@ export default {
     width: 100%;
   }
 }
-  .form-item {
-    width: 90%;
-  }
+.form-item {
+  width: 90%;
+}
 .title {
   display: flex;
   justify-content: space-between;

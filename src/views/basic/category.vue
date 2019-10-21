@@ -157,10 +157,16 @@ export default {
       tableList: [],
       tableHeader: [
         {
+          label: '图片',
+          prop: 'imageUrl',
+          width: 120,
+          fixed: true,
+          isImage: true
+        },
+        {
           label: '类别编码',
           prop: 'categoryCode',
-          width: 120,
-          fixed: true
+          width: 120
         },
         {
           label: '级别',
@@ -180,19 +186,23 @@ export default {
         },
         {
           label: '标准',
-          prop: 'standard'
+          prop: 'standard',
+          width: 100
         },
         {
           label: '排序值',
-          prop: 'sortNumber'
+          prop: 'sortNumber',
+          width: 100
         },
         {
           label: '创建时间',
-          prop: 'created'
+          prop: 'created',
+          width: 100
         },
         {
           label: '更新时间',
-          prop: 'updated'
+          prop: 'updated',
+          width: 100
         }
       ],
       tableInnerBtns: [

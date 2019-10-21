@@ -184,6 +184,10 @@ export default {
         {
           value: '3',
           label: 'checkbox'
+        },
+        {
+          value: '4',
+          label: 'select'
         }
       ],
       pickerOptions: utils.pickerOptions,
@@ -232,7 +236,8 @@ export default {
         {
           label: '类型名称',
           prop: 'name',
-          fixed: true
+          fixed: true,
+          width: 150
         },
         {
           label: '属性值',
@@ -246,36 +251,43 @@ export default {
         {
           label: '参数分类',
           prop: 'type',
+          width: 150,
           formatter(row) {
             return row.type ? vm.parameterSelect[row.type].label : '分类'
           }
         },
         {
           label: '显示方式',
-          prop: 'paramType'
+          prop: 'paramType',
+          width: 100
           // formatter(row) {
           //   return row.paramType ? vm.paramTypeSelect[row.paramType].label : '无'
           // }
         },
         {
           label: '排序',
-          prop: 'sort'
+          prop: 'sort',
+          width: 100
         },
         {
           label: '创建人',
-          prop: 'createdby'
+          prop: 'createdby',
+          width: 100
         },
         {
           label: '更新人',
-          prop: 'updatedby'
+          prop: 'updatedby',
+          width: 100
         },
         {
           label: '创建时间',
-          prop: 'created'
+          prop: 'created',
+          width: 100
         },
         {
           label: '更新时间',
-          prop: 'updated'
+          prop: 'updated',
+          width: 100
         }
       ]
     }

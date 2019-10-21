@@ -105,7 +105,7 @@
     <el-form-item label="排序:" prop="sort">
       <el-input-number
         v-model.trim="formModel.sort"
-        class="select-item"
+        class="sort-item"
         controls-position="right"
         :min="1"
         :max="10000"
@@ -121,15 +121,15 @@
         required: true, message: '属性值不能为空', trigger: 'blur'
       }"
       >
-      <el-col :span="9">
+      <el-col :span="10">
         <el-input v-model="item.value" style="width: 100%;" placeholder="属性值"></el-input>
       </el-col>
       <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
-      <el-col :span="9">
+      <el-col :span="10">
         <el-input v-model="item.description" style="width: 100%;" placeholder="备注"></el-input>
       </el-col>
       <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
-      <el-col :span="4">
+      <el-col :span="2">
         <el-button @click.prevent="removeDomain(item, index)" v-if="index>0">删除</el-button>
       </el-col>
     </el-form-item>
@@ -156,7 +156,7 @@ export default {
               description: ''
             }
           ],
-          paramType: ''
+          paramType: 'checkbox'
         }
       }
     },
@@ -192,6 +192,10 @@ export default {
         {
           value: 3,
           label: 'checkbox'
+        },
+        {
+          value: 4,
+          label: 'select'
         }
       ],
       paramListSelect: [
@@ -258,6 +262,9 @@ export default {
   }
   .select-type{
     width: 100%
+  }
+  .sort-item{
+    width: 42%
   }
 }
 .body .el-select{

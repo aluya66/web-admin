@@ -175,7 +175,8 @@ export default {
         },
         {
           label: 'app编码',
-          prop: 'appCode'
+          prop: 'appCode',
+          width: 150
         },
         {
           label: 'appKey',
@@ -184,6 +185,7 @@ export default {
         {
           label: '状态',
           prop: 'status',
+          width: 120,
           formatter(row) {
             return row.status ? vm.bussinessLineSelect[row.status].label : ''
           }
@@ -198,7 +200,8 @@ export default {
         },
         {
           label: '创建时间',
-          prop: 'created'
+          prop: 'created',
+          width: 100
         }
       ],
 
@@ -230,8 +233,7 @@ export default {
         {
           ...searchDate,
           ...other,
-          ...page,
-          pageSize: 10
+          ...page
         }
       ).then(res => {
         this.isLoading = false

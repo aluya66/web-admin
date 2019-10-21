@@ -195,11 +195,13 @@ export default {
         },
         {
           label: '标签类型',
-          prop: 'labelTypeCN'
+          prop: 'labelTypeCN',
+          width: 120
         },
         {
           label: '标签状态',
-          prop: 'labelStatusCN'
+          prop: 'labelStatusCN',
+          width: 120
         },
         {
           label: '标签描述',

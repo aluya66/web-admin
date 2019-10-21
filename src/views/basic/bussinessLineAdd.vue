@@ -48,6 +48,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     initData: {
@@ -70,15 +71,12 @@ export default {
     let checkCode = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('app编码不能为空'))
+      } else if (/^[A-Za-z0-9-_]+$/.test(value)) {
+        callback()
+      } else {
+        // eslint-disable-next-line standard/no-callback-literal
+        callback('请输入字母、数字或下划线')
       }
-      setTimeout(() => {
-        if (/^[A-Za-z0-9-_]+$/.test(value)) {
-          callback()
-        } else {
-          // eslint-disable-next-line standard/no-callback-literal
-          callback('请输入字母、数字或下划线')
-        }
-      }, 1000)
     }
     return {
       bussinessCodeStatus: '',

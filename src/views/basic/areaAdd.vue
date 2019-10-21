@@ -8,14 +8,12 @@
     label-position="right"
     status-icon
   >
-
     <el-form-item label="地区名称" prop="name">
       <el-input v-model.trim="formModel.name" class="form-item"/>
     </el-form-item>
     <el-form-item label="地区编码" prop="code">
       <el-input type="textarea" v-model.trim="formModel.code" class="form-item"/>
     </el-form-item>
-
   </el-form>
 </template>
 
@@ -31,7 +29,6 @@ export default {
         }
       }
     }
-
   },
   data() {
     return {

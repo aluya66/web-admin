@@ -123,12 +123,13 @@ export default {
         {
           label: 'app版本',
           prop: 'versionName',
-          width: 120,
+          width: 150,
           fixed: true
         },
         {
           label: '平台',
           prop: 'platform',
+          width: 150,
           formatter(row) {
             return row.platform === 0 ? '安卓' : 'IOS'
           }
@@ -152,6 +153,7 @@ export default {
         {
           label: '是否强制更新',
           prop: 'force',
+          width: 150,
           formatter(row) {
             return row.force === 0 ? '是' : '否'
           }
@@ -175,6 +177,7 @@ export default {
         {
           label: '状态',
           prop: 'status',
+          width: 150,
           formatter(row) {
             return row.publish === 0 && row.enablePublish === true ? '未发布' : (row.publish === 0 ? '低版本' : '已发布')
           }
