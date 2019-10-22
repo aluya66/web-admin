@@ -26,7 +26,7 @@
 						:inline="true"
 						:model="searchObj"
 						label-width="100px"
-						class="search-box"
+						class="search-form"
 					>
 						<el-form-item label="角色名称">
 							<el-input
@@ -311,7 +311,7 @@ export default {
 	line-height: 24px;
 }
 .box {
-	.search {
+	.search-form {
 		width: 30%;
 	}
 }

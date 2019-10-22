@@ -9,7 +9,7 @@
           icon="el-icon-plus"
           @click="routerLink('/goods/add')"
         >新增</el-button>
-      </div> -->
+      </div>-->
     </template>
     <div class="main__box">
       <c-table
@@ -149,16 +149,16 @@ export default {
           vm.routerLink(`/goods/detail/${row.id}`)
         }
       }
-      // {
-      //   name: '删除',
-      //   icon: 'el-icon-delete',
-      //   handle(row) {
-      //     const { goodsName, id } = row
-      //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
-      //       vm.deleteData({ id })
-      //     })
-      //   }
-      // }
+        // {
+        //   name: '删除',
+        //   icon: 'el-icon-delete',
+        //   handle(row) {
+        //     const { goodsName, id } = row
+        //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
+        //       vm.deleteData({ id })
+        //     })
+        //   }
+        // }
       ],
       tableHeader: [
         {
@@ -208,6 +208,11 @@ export default {
         {
           label: '销售价',
           prop: 'mktPrice',
+          width: 100
+        },
+        {
+          label: '大批发价',
+          prop: 'largeBatchPrice',
           width: 100
         },
         {
@@ -284,15 +289,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.main__box {
-  .search-form {
-    margin-bottom: 10px;
-    width: 100%;
-    .search-item {
-      width: 250px;
-    }
-  }
-}
-</style>

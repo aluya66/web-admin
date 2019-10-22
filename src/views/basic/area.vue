@@ -7,7 +7,7 @@
       </div>
     </template>
     <div class="area__box">
-      <div class="arer__box__centen">
+      <div class="area__box__centen">
         <el-aside class="area__box__tree" width="400px">
           <el-tree
             v-if="data && data.length"
@@ -46,7 +46,7 @@
 <script>
 export default {
   data() {
-    let arerCode = (rule, value, callback) => {
+    let areaCode = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('地区编码不能为空'))
       } else if (/^[A-Za-z0-9-_]+$/.test(value)) {
@@ -58,31 +58,31 @@ export default {
     }
     return {
       rules: {
-        name: [{ required: true, message: '请输入地区名称', trigger: "blur" }],
-        code: [{ required: true, validator: arerCode, trigger: "blur" }]
+        name: [{ required: true, message: '请输入地区名称', trigger: 'blur' }],
+        code: [{ required: true, validator: areaCode, trigger: 'blur' }]
       },
       isEdit: false,
       props: {
-        label: "name",
-        children: "",
+        label: 'name',
+        children: '',
         isLeaf: false
       },
       formModel: {
-        name: "",
-        code: ""
+        name: '',
+        code: ''
       },
       showModal: false,
-      dialogTitle: "",
+      dialogTitle: '',
       parentCode: 0,
       data: [],
       ruleForm: {
         name: '',
         code: ''
       }
-    };
+    }
   },
   created() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     fetchData(callback) {
@@ -91,38 +91,38 @@ export default {
           parentCode: this.parentCode
         })
         .then(res => {
-          const { data } = res;
-          let curData = [];
+          const { data } = res
+          let curData = []
           if (data && data.length) {
             curData = data.map(res => ({
               leaf: !res.exitChildren,
               name: res.name,
               code: res.code,
               parentCode: res.parentCode
-            }));
+            }))
           }
           if (this.parentCode === 0) {
-            this.data = curData;
+            this.data = curData
           }
-          callback && callback(curData);
-        });
+          callback && callback(curData)
+        })
     },
 
     loadNode(node, resolve) {
       if (node.level === 0) {
-        return resolve(this.data);
+        return resolve(this.data)
       }
       if (node.level > 0 && !node.data.exitChildren) {
-        this.parentCode = node.data && node.data.code;
+        this.parentCode = node.data && node.data.code
         this.fetchData(res => {
-          resolve(res);
-        });
+          resolve(res)
+        })
       }
     },
 
     addModal(formModel) {
       this.$refs[formModel].validate((valid) => {
-        if(valid) {
+        if (valid) {
           alert('submit!')
         } else {
           return false
@@ -130,54 +130,50 @@ export default {
       })
       if (this.isEdit === true) {
         // 新增
-        const { name, code, parentCode } = this.formModel;
-        this.$api.basic
-          .addRegionInsert({
-            name,
-            code,
-            parentCode
-          })
-          .then(res => {
-            this.$msgTip("添加成功");
-            this.fetchData();
-            this.showModal = false;
-          });
+        const { name, code, parentCode } = this.formModel
+        this.$api.basic.addRegionInsert({
+          name,
+          code,
+          parentCode
+        }).then(res => {
+          this.$msgTip('添加成功')
+          this.fetchData()
+          this.showModal = false
+        })
       } else {
         //  编辑
-        const { name, code, id } = this.formModel;
-        this.$api.basic
-          .updataRegionInsert({
-            name,
-            code,
-            id
-          })
-          .then(res => {
-            this.$msgTip("修改成功");
-            this.fetchData();
-            this.showModal = false;
-          });
+        const { name, code, id } = this.formModel
+        this.$api.basic.updataRegionInsert({
+          name,
+          code,
+          id
+        }).then(res => {
+          this.$msgTip('修改成功')
+          this.fetchData()
+          this.showModal = false
+        })
       }
     },
     editHandle(node, data) {
-      this.isEdit = false;
-      this.showModal = true;
-      this.dialogTitle = "编辑";
+      this.isEdit = false
+      this.showModal = true
+      this.dialogTitle = '编辑'
       this.formModel = {
         ...this.formModel,
         name: data.name,
         code: data.code,
         parentCode: data.parentCode
-      };
+      }
     },
     append(node) {
-      this.isEdit = true;
-      this.showModal = true;
-      this.dialogTitle = "新增";
-      this.formModel = {};
-      this.formModel.parentCode = node.code;
+      this.isEdit = true
+      this.showModal = true
+      this.dialogTitle = '新增'
+      this.formModel = {}
+      this.formModel.parentCode = node.code
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -186,7 +182,7 @@ export default {
   background: #fff;
   width: 100%;
   height: 100%;
-  .arer__box__centen {
+  .area__box__centen {
     padding: 20px 0 40px 20px;
     .area__box__tree {
       height: 740px;

@@ -1,98 +1,99 @@
 <template>
-	<div class="c-table">
-		<slot name="header" />
-		<el-table
-			ref="multipleTable"
-			stripe
+  <div class="c-table">
+    <slot name="header"/>
+    <el-table
+      ref="multipleTable"
+      stripe
       :border="hasBorder"
-			:size="size"
-			:height="fixedHeight"
-			v-loading="loading"
-			:data="tableList"
-			:highlight-current-row="single"
-			:span-method="objectSpanMethod"
-			tooltip-effect="dark"
-			style="width: 100%"
-			@selection-change="handleSelectionChange"
-			@current-change="handleSingleChange"
-		>
-			<el-table-column v-if="selection" type="selection" width="55" />
-			<el-table-column
-				v-for="(item, index) in tableHeader"
-				:key="index"
-				:label="item.label"
-				:prop="item.prop"
-				:width="item.width"
+      :size="size"
+      :height="fixedHeight"
+      v-loading="loading"
+      :data="tableList"
+      :highlight-current-row="single"
+      :span-method="objectSpanMethod"
+      tooltip-effect="dark"
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+      @current-change="handleSingleChange"
+    >
+      <el-table-column v-if="selection" type="selection" width="55"/>
+      <el-table-column
+        v-for="(item, index) in tableHeader"
+        :key="index"
+        :label="item.label"
+        :prop="item.prop"
+        :width="item.width"
         :fixed="item.fixed"
-				:show-overflow-tooltip="item.inline"
-			>
-				<template slot-scope="scope">
-          <c-image v-if="item.isImage" :url="scope.row[item.prop]" fit="contain" :preview-src-list="[scope.row[item.prop]]"></c-image>
+        :show-overflow-tooltip="item.inline"
+      >
+        <template slot-scope="scope">
+          <c-image
+            v-if="item.isImage"
+            :url="scope.row[item.prop]"
+            fit="contain"
+            :preview-src-list="[scope.row[item.prop]]"
+          ></c-image>
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
-					<template v-else>
-						{{
-							item.formatter ? item.formatter(scope.row, scope.index) : scope.row[item.prop]
-						}}
-					</template>
-				</template>
-			</el-table-column>
-			<el-table-column
-				v-if="tableInnerBtns.length"
-				:width="tableInnerBtns.length && tableInnerBtns[0].width"
+          <template v-else>
+            {{
+            item.formatter ? item.formatter(scope.row, scope.index) : scope.row[item.prop]
+            }}
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tableInnerBtns.length"
+        :width="tableInnerBtns.length && tableInnerBtns[0].width"
         fixed="right"
-				label="操作"
-			>
-				<!-- <slot name="inline" /> -->
-				<template slot-scope="scope">
-					<el-button
-						v-for="(btn, index) in curBtns(scope.row)"
-						:key="index"
-						:type="btn.type || 'text'"
+        label="操作"
+      >
+        <!-- <slot name="inline" /> -->
+        <template slot-scope="scope">
+          <el-button
+            v-for="(btn, index) in curBtns(scope.row)"
+            :key="index"
+            :type="btn.type || 'text'"
             :icon="btn.icon"
-						:size="btn.size || 'mini'"
-						@click="
+            :size="btn.size || 'mini'"
+            @click="
 							btn.handle && handleClick(btn.handle, scope.row, scope.$index)
 						"
-					>
-						<span v-if="btn.name === 'more'">
-							<el-dropdown trigger="click">
-								<span class="el-dropdown-link">···</span>
-								<el-dropdown-menu slot="dropdown">
-									<el-dropdown-item
-										v-for="(item, curKey) in btn.moreBtns"
-										:key="curKey"
-										:disabled="item.disabled"
-										:divided="item.divided"
-									>
-										<div
-											@click="handleClick(item.handle, scope.row, scope.$index)"
-										>
-											{{ item.name }}
-										</div>
-									</el-dropdown-item>
-								</el-dropdown-menu>
-							</el-dropdown>
-						</span>
-						<span v-else>
-							{{
-								btn.formatter
-									? btn.formatter(scope.row, scope.$index)
-									: btn.name
-							}}
-						</span>
-					</el-button>
-				</template>
-			</el-table-column>
-		</el-table>
-		<slot name="footer" />
-		<c-pagination
-			v-show="!noPage && tableList.length > 0"
-			:total="pageInfo.totalNum"
-			:page.sync="pageInfo.pageNum"
-			:limit.sync="pageInfo.numPerPage"
-			@pagination="changePagination"
-		></c-pagination>
-	</div>
+          >
+            <template v-if="btn.name === 'more'">
+              <el-dropdown trigger="click">
+                <span class="el-dropdown-link">···</span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item
+                    v-for="(item, curKey) in btn.moreBtns"
+                    :key="curKey"
+                    :disabled="item.disabled"
+                    :divided="item.divided"
+                  >
+                    <div @click="handleClick(item.handle, scope.row, scope.$index)">{{ item.name }}</div>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </template>
+            <template v-else>
+              {{
+              btn.formatter
+              ? btn.formatter(scope.row, scope.$index)
+              : btn.name
+              }}
+            </template>
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <slot name="footer"/>
+    <c-pagination
+      v-show="!noPage && tableList.length > 0"
+      :total="pageInfo.totalNum"
+      :page.sync="pageInfo.pageNum"
+      :limit.sync="pageInfo.numPerPage"
+      @pagination="changePagination"
+    ></c-pagination>
+  </div>
 </template>
 
 <script>
@@ -108,13 +109,13 @@ export default {
   props: {
     tableHeader: {
       type: Array,
-      default () {
+      default() {
         return []
       }
     },
     tableList: {
       type: Array,
-      default () {
+      default() {
         return []
       }
     },
@@ -124,7 +125,7 @@ export default {
     },
     tableInnerBtns: {
       type: Array,
-      default () {
+      default() {
         return []
       }
     },
@@ -138,7 +139,7 @@ export default {
     },
     pageInfo: {
       type: Object,
-      default () {
+      default() {
         return {
           pageNum: 1,
           numPerPage: 10,
@@ -164,20 +165,20 @@ export default {
     },
     fixedHeight: Number
   },
-  data () {
+  data() {
     return {
       multipleSelection: []
     }
   },
   watch: {
-    clearSelect (val, old) {
+    clearSelect(val, old) {
       if (val && val !== old) {
         this.toggleSelection()
       }
     }
   },
   methods: {
-    curBtns (row) {
+    curBtns(row) {
       return this.tableInnerBtns.filter(res => {
         if (res.notBtn) {
           return !!row[res.notBtn]
@@ -187,7 +188,7 @@ export default {
       })
     },
     // 选中取消
-    toggleSelection (rows) {
+    toggleSelection(rows) {
       if (rows) {
         // 选中元素
         if (this.single) {
@@ -209,16 +210,16 @@ export default {
       }
     },
     // 设置合并表格单元格
-    objectSpanMethod ({ row, column, rowIndex, columnIndex }) {
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       this.$emit('set-column-row', { row, column, rowIndex, columnIndex })
     },
     // 多选
-    handleSelectionChange (val) {
+    handleSelectionChange(val) {
       this.multipleSelection = val
       this.$emit('selection-handle', val)
     },
     // 表格行操作函数
-    handleClick (handle, item, index) {
+    handleClick(handle, item, index) {
       if (typeof handle === 'string') {
         this.$emit('inner-handle', handle, item, index)
       } else {
@@ -226,11 +227,11 @@ export default {
       }
     },
     // 单选
-    handleSingleChange (val) {
+    handleSingleChange(val) {
       this.$emit('single-handle', val, this.$refs.multipleTable)
     },
     // 翻页和切换页码
-    changePagination (pageInfo) {
+    changePagination(pageInfo) {
       this.$emit('change-pagination', pageInfo)
     }
   }
@@ -244,6 +245,13 @@ export default {
   // min-height: calc(100vh - 150px);
   .el-form-item {
     margin-bottom: 10px;
+  }
+  .search-form {
+    margin-bottom: 10px;
+    width: 100%;
+    .search-item {
+      width: 250px;
+    }
   }
 }
 </style>

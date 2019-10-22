@@ -18,7 +18,7 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
+          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
             <el-form-item label="品牌国家">
               <el-input
                 v-model="searchObj.country"
@@ -329,15 +329,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.main__box {
-  .search {
-    margin-bottom: 10px;
-    width: 100%;
-    .search-item {
-      width: 250px;
-    }
-  }
-}
 .title {
   width: 100%;
   display: flex;

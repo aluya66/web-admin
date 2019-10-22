@@ -49,6 +49,15 @@ export default {
       }
     },
     {
+      path: 'form',
+      name: 'form',
+      component: () => import('@/demos/form'),
+      meta: {
+        title: 'form',
+        icon: 'form'
+      }
+    },
+    {
       path: 'list',
       name: 'list',
       component: () => import('@/demos/list'),

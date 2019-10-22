@@ -4,7 +4,7 @@ export default {
   path: '/basic',
   name: 'basic',
   component: Layout,
-  redirect: '/base/bussiness',
+  redirect: '/basic/bussiness',
   meta: {
     title: 'basic',
     icon: 'nested'

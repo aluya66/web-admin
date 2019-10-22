@@ -4,7 +4,7 @@ export default {
   path: '/goods',
   name: 'goods',
   component: Layout,
-  redirect: '/goods',
+  redirect: '/goods/list',
   meta: {
     title: 'goods',
     icon: 'nested'

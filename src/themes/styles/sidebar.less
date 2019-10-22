@@ -1,5 +1,4 @@
 #app {
-
 	// 主体区域 Main container
 	.main-container {
 		overflow: hidden;
@@ -69,7 +68,8 @@
 			width: 100% !important;
 		}
 
-		.submenu-title-noDropdown.is-active, .el-menu-item.is-active{
+		.submenu-title-noDropdown.is-active,
+		.el-menu-item.is-active {
 			color: @active;
 			border-right: 3px solid @active;
 			background-color: @menuHover;
@@ -79,6 +79,7 @@
 		.submenu-title-noDropdown,
 		.el-submenu__title {
 			font-size: @f16;
+
 			&:hover {
 				color: @active;
 			}
@@ -92,7 +93,7 @@
 
 		& .nest-menu .el-submenu>.el-submenu__title,
 		& .el-submenu .el-menu-item {
-			min-width: @sideBarWidth - 10px  !important;
+			min-width: @sideBarWidth - 10px !important;
 
 			&:hover {
 				// background-color: @subMenuBg;
@@ -157,6 +158,7 @@
 			}
 		}
 	}
+
 	.withoutAnimation {
 
 		.main-container,

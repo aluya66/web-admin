@@ -1,12 +1,28 @@
-@import './reset.less';
-@import './element-ui.less';
-@import './sidebar.less';
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+	margin: 0;
+	padding: 0;
+}
 
 html {
 	-ms-text-size-adjust: 100%;
 	/* 解决IOS默认滑动很卡的情况 */
 	-webkit-overflow-scrolling: touch;
 	// -webkit-user-select: none;
+	box-sizing: border-box;
+}
+
+body {
+	height: 100%;
+	min-width: 1200px;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+	background-color: @bg;
+	font-size: @f14;
 }
 
 h1,
@@ -34,6 +50,7 @@ li {
 
 a {
 	text-decoration: none;
+	background-color: transparent;
 }
 
 /* 移动端点击a链接出现蓝色背景问题解决 */
@@ -46,16 +63,17 @@ a:hover {
 	-webkit-tap-highlight-color: transparent;
 }
 
-.clearfix:after {
-	content: '';
-	display: block;
-	visibility: hidden;
-	height: 0;
-	clear: both;
-}
-
 .clearfix {
 	zoom: 1;
+
+	&:after {
+		visibility: hidden;
+		display: block;
+		font-size: 0;
+		content: " ";
+		clear: both;
+		height: 0;
+	}
 }
 
 /* 设置HTML5元素为块 */
@@ -69,6 +87,7 @@ header,
 hgroup,
 menu,
 nav,
+main,
 section {
 	display: block;
 }
@@ -91,4 +110,34 @@ video {
 	border: none;
 	outline: none;
 	background: transparent;
+}
+
+code {
+	background: #eef1f6;
+	padding: 15px 16px;
+	margin-bottom: 20px;
+	display: block;
+	line-height: 36px;
+	font-size: 15px;
+	font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+
+	a {
+		color: #337ab7;
+		cursor: pointer;
+
+		&:hover {
+			color: rgb(32, 160, 255);
+		}
+	}
+}
+
+
+.link-type,
+.link-type:focus {
+	color: #337ab7;
+	cursor: pointer;
+
+	&:hover {
+		color: rgb(32, 160, 255);
+	}
 }

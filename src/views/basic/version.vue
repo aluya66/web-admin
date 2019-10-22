@@ -20,7 +20,7 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
+          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
             <el-form-item label="版本名称">
               <el-input
                 v-model="searchObj.versionName"
@@ -258,15 +258,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.main__box {
-  .search {
-    margin-bottom: 10px;
-    width: 100%;
-    .search-item {
-      width: 250px;
-    }
-  }
-}
 .title{
   width: 100%;
   display: flex;

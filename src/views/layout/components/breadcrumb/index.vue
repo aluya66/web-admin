@@ -6,11 +6,10 @@
           v-if="item.redirect === 'noredirect' || index == levelList.length - 1"
           class="no-redirect"
         >{{ item.meta.name || setTitleLang(item.meta.title, 'route') }}</span>
-        <a v-else @click.prevent="handleLink(item)">
-          {{
-          item.meta.name || setTitleLang(item.meta.title, 'route')
-          }}
-        </a>
+        <a
+          v-else
+          @click.prevent="handleLink(item)"
+        >{{ item.meta.name || setTitleLang(item.meta.title, 'route') }}</a>
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
@@ -48,7 +47,6 @@ export default {
       this.levelList = matched.filter(
         item => item.meta && item.meta.title && item.meta.breadcrumb !== false
       )
-      console.log(this.levelList)
     },
     pathCompile(path) {
       const { params } = this.$route
