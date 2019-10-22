@@ -14,7 +14,7 @@
         class="form-item"
         clearable
       /></el-form-item>
-    <el-form-item label="物流编码" prop="logiCode">
+    <el-form-item label="物流编码" prop="logiCode" v-if="isDialogEdit === false">
       <el-input
         v-model.trim="formModel.logiCode"
         class="form-item"
@@ -35,6 +35,10 @@ export default {
           logiCode: ''
         }
       }
+    },
+    isLogisticsEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -49,6 +53,7 @@ export default {
       }
     }
     return {
+      isDialogEdit: '',
       rules: {
         logiName: [
           { required: true, message: '请输入物流名称', trigger: 'blur' }
@@ -63,6 +68,9 @@ export default {
     formModel() {
       return this.initData
     }
+  },
+  created () {
+    this.isDialogEdit = this.isLogisticsEdit
   }
 }
 </script>

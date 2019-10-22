@@ -96,11 +96,11 @@ export default {
       },
       bussinessLineSelect: [
         {
-          value: 1,
+          value: '1',
           label: '启用'
         },
         {
-          value: 2,
+          value: '2',
           label: '禁用'
         }
       ]

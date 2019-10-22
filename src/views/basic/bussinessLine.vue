@@ -127,11 +127,11 @@ export default {
           label: '全部'
         },
         {
-          value: 1,
+          value: '1',
           label: '启用'
         },
         {
-          value: 2,
+          value: '2',
           label: '禁用'
         }
       ],
@@ -156,7 +156,7 @@ export default {
               initData: {
                 appName,
                 appCode,
-                status: status === 1 ? '启用' : '禁用',
+                status: status === '1' ? '启用' : '禁用',
                 description,
                 createdby,
                 id: id
@@ -237,12 +237,12 @@ export default {
         }
       ).then(res => {
         this.isLoading = false
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
-          this.tableList = data
+          this.tableList = data || []
         } else {
-          this.tableList = res
+          this.tableList = res || []
         }
       })
     },
@@ -283,9 +283,9 @@ export default {
     },
     editHandle(formModel) {
       let status
-      if (formModel.status === '启用') {
+      if (formModel.status === '启用' || formModel.status === '1') {
         status = 1
-      } else {
+      } else if (formModel.status === '禁用' || formModel.status === '2') {
         status = 2
       }
       let data = {

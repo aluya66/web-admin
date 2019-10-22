@@ -58,7 +58,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <logistics-add ref="childRef" :init-data="dialogObj.initData"></logistics-add>
+        <logistics-add ref="childRef" :isLogisticsEdit="isEdit" :init-data="dialogObj.initData"></logistics-add>
       </c-dialog>
     </div>
   </c-view>
@@ -78,6 +78,7 @@ export default {
   },
   data(vm) {
     return {
+      isEdit: false,
       dialogObj: {}, // 对话框数据
       searchObj: {
         logiName: '',
@@ -142,12 +143,12 @@ export default {
         })
         .then(res => {
           this.isLoading = false
-          if (res.totalCount) {
+          if (res && res.totalCount) {
             const { data, totalCount } = res
             this.pageInfo.totalNum = totalCount
-            this.tableList = data
+            this.tableList = data || []
           } else {
-            this.tableList = res
+            this.tableList = res || []
           }
         })
     },
@@ -171,6 +172,7 @@ export default {
       })
     },
     showDialog(opts) {
+      this.isEdit = opts.isEdit
       this.dialogObj = {
         isShow: true,
         title: opts.title || '新增物流',

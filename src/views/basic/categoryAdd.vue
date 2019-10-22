@@ -44,7 +44,7 @@
     </el-form-item>
     <el-row>
       <el-col :span="12">
-        <el-form-item label="安全级别：:" prop="safeLevel">
+        <el-form-item label="安全级别:" prop="safeLevel">
           <el-select
             v-model="formModel.safeLevel"
             class="select-item"
@@ -71,7 +71,7 @@
         </el-form-item>
       </el-col>
     </el-row>
-    <el-form-item label="执行标准：:" prop="standard">
+    <el-form-item label="执行标准:" prop="standard">
       <el-input
       v-model.trim="formModel.standard"
       class="form-item"
