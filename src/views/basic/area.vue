@@ -8,7 +8,7 @@
     </template>
     <el-aside width="600px">
       <el-tree
-        v-if="data.length"
+        v-if="data && data.length"
         :props="props"
         :load="loadNode"
         lazy
@@ -17,8 +17,6 @@
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>
           <span>
-            <!-- v-if="data.exitChildren==true" -->
-
             <el-button type="text" size="mini" @click="() => append(data)">新增</el-button>
             <el-button type="text" size="mini" @click="() => editHandle(node, data)">编辑</el-button>
           </span>
@@ -54,7 +52,7 @@ export default {
       props: {
         label: 'name',
         children: '',
-        isLeaf: 'leaf'
+        isLeaf: false
       },
       formModel: {
         name: '',
@@ -63,71 +61,68 @@ export default {
       showModal: false,
       modelTitle: '',
       parentCode: 0,
-      data: [],
-      dataChild: []
+      data: []
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
-    fetchData() {
+    fetchData(callback) {
       this.$api.basic
         .queryAllRegion({
           parentCode: this.parentCode
         })
         .then(res => {
-          this.data = res.data
+          const { data } = res
+          let curData = []
+          if (data && data.length) {
+            curData = data.map(res => ({
+              leaf: !res.exitChildren,
+              name: res.name,
+              code: res.code,
+              parentCode: res.parentCode
+            }))
+          }
+          if (this.parentCode === 0) {
+            this.data = curData
+          }
+          callback && callback(curData)
         })
     },
 
     loadNode(node, resolve) {
       if (node.level === 0) {
-        this.parentCode = node.data && node.data.code
         return resolve(this.data)
       }
-      if (node.level > 0) {
+      if (node.level > 0 && !node.data.exitChildren) {
         this.parentCode = node.data && node.data.code
-        console.log('parentCode:' + this.parentCode)
-        console.log('----------------------------')
-        this.$api.basic
-          .queryAllRegion({
-            parentCode: this.parentCode
-          })
-          .then(res => {
-            this.dataChild = (res && res.data) || []
-          })
-        if (this.dataChild.length) {
-          return resolve(this.dataChild)
-        }
+        this.fetchData((res) => {
+          resolve(res)
+        })
       }
     },
 
     addModal() {
-      let that = this
       if (this.isEdit === 1) {
         // 新增
-        let data = {
-          name: this.formModel.name,
-          code: this.formModel.code,
-          parentCode: this.formModel.parentCode
-        }
-        this.$api.basic.addRegionInsert(data).then(res => {
-          that.$msgTip('添加成功')
-          that.fetchData()
-          that.showModal = false
+        const { name, code, parentCode } = this.formModel
+        this.$api.basic.addRegionInsert({
+          name, code, parentCode
+        }).then(res => {
+          this.$msgTip('添加成功')
+          this.fetchData()
+          this.showModal = false
         })
       } else {
         //  编辑
-        let data = {
-          name: this.formModel.name,
-          code: this.formModel.code,
-          id: this.formModel.id
-        }
-        this.$api.basic.updataRegionInsert(data).then(res => {
-          that.$msgTip('修改成功')
-          that.fetchData()
-          that.showModal = false
+        const { name, code, id } = this.formModel
+        this.$api.basic.updataRegionInsert({
+          name, code, id
+        }).then(res => {
+          this.$msgTip('修改成功')
+          this.fetchData()
+          this.showModal = false
         })
       }
     },
@@ -137,10 +132,12 @@ export default {
       this.isEdit = 2
       this.showModal = true
       this.modelTitle = '编辑'
-      this.formModel.name = data.name
-      this.formModel.code = data.code
-      this.formModel.parentCode = data.parentCode
-      this.formModel.id = data.id
+      this.formModel = {
+        ...this.formModel,
+        name: data.name,
+        code: data.code,
+        parentCode: data.parentCode
+      }
       console.log('编辑')
     },
     append(node) {

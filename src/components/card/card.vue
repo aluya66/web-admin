@@ -43,6 +43,8 @@ export default create({
   margin-bottom: 10px;
   .el-card__header {
     padding: 15px 15px 10px 15px;
+    font-weight: bold;
+    font-size: @f16;
   }
   &__btn{
 

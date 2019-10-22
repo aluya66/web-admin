@@ -190,16 +190,15 @@ export default {
           width: 120
         },
         {
-          label: '封面图url',
+          label: '封面图',
           prop: 'previewUrl',
           width: 100,
           isImage: true
         },
         {
-          label: '封面视频url',
+          label: '封面视频',
           prop: 'videoUrl',
-          width: 100,
-          isImage: true
+          width: 100
         },
         {
           label: '状态',

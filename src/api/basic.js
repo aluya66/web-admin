@@ -139,7 +139,7 @@ export const queryAllVersion = params =>
 
 // 区域列表
 export const queryAllRegion = params =>
-  Http.fetch(`${context}/v1/region/list/parentcode`, params, {
+  Http.fetch(`${context}/v1/region/list/parentcodes`, params, {
     method: 'get'
   })
 

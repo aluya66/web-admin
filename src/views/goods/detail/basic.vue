@@ -4,6 +4,7 @@
       <el-cascader
         v-if="!isView"
         class="select-item"
+        :disabled="isDisabled"
         placeholder="搜索商品类目名称"
         v-model="formModel.categoryCode"
         :options="categoryList"
@@ -15,6 +16,7 @@
       <el-select
         v-if="!isView"
         class="select-item"
+        :disabled="isDisabled"
         v-model="formModel.goodsBusinessId"
         placeholder="请选择经营类型"
       >
@@ -25,12 +27,15 @@
           :value="item.value"
         ></el-option>
       </el-select>
-      <span v-else>{{businessArr[formModel.goodsBusinessId - 1].label}}</span>
+      <span
+        v-else
+      >{{formModel.goodsBusinessId ? businessArr[formModel.goodsBusinessId - 1].label : ''}}</span>
     </el-form-item>
     <el-form-item label="商品类型:" prop="goodsTypeId">
       <el-select
         v-if="!isView"
         class="select-item"
+        :disabled="isDisabled"
         v-model="formModel.goodsTypeId"
         placeholder="请选择商品类型"
       >
@@ -41,7 +46,7 @@
           :value="item.value"
         ></el-option>
       </el-select>
-      <span v-else>{{goodsTypeArr[formModel.goodsTypeId - 1].label}}</span>
+      <span v-else>{{formModel.goodsTypeId ? goodsTypeArr[formModel.goodsTypeId - 1].label : ''}}</span>
     </el-form-item>
     <el-form-item label="商品名称:" prop="goodsName">
       <el-input
@@ -49,6 +54,7 @@
         class="select-item"
         v-model.trim="formModel.goodsName"
         :size="size"
+        :disabled="isDisabled"
         placeholder="请输入商品名称"
         clearable
       />
@@ -60,12 +66,13 @@
         class="select-item"
         v-model.trim="formModel.goodsShortName"
         :size="size"
+        :disabled="isDisabled"
         placeholder="请输入商品短名称"
         clearable
       />
       <span v-else>{{formModel.goodsShortName}}</span>
     </el-form-item>
-    <el-form-item label="封面图片:" v-if="!isView">
+    <el-form-item label="封面图片:">
       <c-image
         class="coverImg"
         :url="formModel.coverImg"
@@ -77,6 +84,7 @@
       <el-select
         v-if="!isView"
         class="select-item"
+        :disabled="isDisabled"
         v-model="formModel.brandId"
         filterable
         placeholder="请选择品牌"
@@ -93,6 +101,7 @@
     <el-form-item label="商品来源:">
       <el-select
         v-if="!isView"
+        :disabled="isDisabled"
         class="select-item"
         v-model="formModel.origin"
         filterable
@@ -105,7 +114,7 @@
           :value="item.value"
         ></el-option>
       </el-select>
-      <span v-else>{{originList[formModel.origin -1].label}}</span>
+      <span v-else>{{formModel.origin ? originList[formModel.origin -1].label : ''}}</span>
     </el-form-item>
     <el-form-item label="商品展示:">
       <c-upload
@@ -115,7 +124,7 @@
         is-auto
         :size="20"
         :limit="5"
-        :disabled="isView"
+        :disabled="isView || isDisabled"
         action-path="/auth/uploadFile"
         upload-style="picture-card"
         @upload-success="uploadSuccess"
@@ -126,10 +135,11 @@
         <div class="info">上传图片/视频应小于20M</div>
       </c-upload>
     </el-form-item>
-    <el-form-item label="商品简介">
+    <el-form-item label="商品简介:">
       <el-input
         v-if="!isView"
         type="textarea"
+        :disabled="isDisabled"
         :rows="4"
         v-model.trim="formModel.goodsBrief"
         :size="size"
@@ -197,19 +207,36 @@ export default {
     size: {
       type: String,
       default: 'medium'
+    },
+    isDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     formModel() {
-      const { categoryCode, goodsBusinessId, goodsTypeId, goodsName, goodsShortName, brandId, goodsStaticFiles, goodsBrief, origin, coverImg } = this.dataObj
-      const fileList = goodsStaticFiles && goodsStaticFiles.map(res => ({
+      const { categoryCode, goodsBusinessId, goodsTypeId, brandName, brandId, goodsName, goodsShortName, goodsStaticFiles, goodsBrief, origin, coverImg, categoryName } = this.dataObj
+      const fileList = goodsStaticFiles && goodsStaticFiles.length ? goodsStaticFiles.map(res => ({
         name: res.imageId,
         url: res.imageUrl,
         videoUrl: res.videoUrl,
         fileType: res.fileType
-      }))
+      })) : []
+
       console.log(fileList, this.dataObj)
-      return { fileList, categoryCode, goodsBusinessId, goodsTypeId, goodsName, goodsShortName, brandId, goodsBrief, origin, coverImg }
+
+      const curCategoryCode = []
+      if (categoryCode) {
+        const codeLen = categoryCode.split('')
+        codeLen.forEach((res, index) => {
+          if (index % 2 === 0 && index + 2 <= codeLen.length) {
+            curCategoryCode.push(categoryCode.substr(0, index + 2))
+          }
+        })
+      }
+      console.log(curCategoryCode)
+      // const categoryCode = [categoryCode.substr(0, 2), categoryCode.substr(2, 4)]
+      return { fileList, categoryName, categoryCode: curCategoryCode, goodsBusinessId, brandName, brandId, goodsTypeId, goodsName, goodsShortName, goodsBrief, origin, coverImg }
     }
   },
   mounted() {
@@ -257,9 +284,10 @@ export default {
 .form-card {
   .el-form-item {
     width: 98%;
+    margin-bottom: 15px;
   }
   .select-item {
-     width: 30%;
+    width: 30%;
   }
   .pic {
     padding-bottom: 25px;

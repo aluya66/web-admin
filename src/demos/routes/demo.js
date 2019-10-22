@@ -11,8 +11,8 @@ export default {
   redirect: '/demo/table',
   children: [
     {
-      path: 'goods/list',
-      name: 'goodsList',
+      path: '/demo/goods/list',
+      name: 'demoGoodsList',
       component: () => import('@/demos/list-dialog'),
       meta: {
         name: 'dialog-table',

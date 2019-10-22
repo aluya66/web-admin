@@ -1,12 +1,13 @@
 <template>
   <c-card :name="title" class="form-card">
     <el-form-item label="上架:">
-    <el-switch v-model="formModel.marketable"></el-switch>
-  </el-form-item>
+      <el-switch v-model="formModel.marketable" :disabled="isView || isDisabled"></el-switch>
+    </el-form-item>
     <el-form-item label="渠道名称:" prop="goodsChannelValue">
       <el-input
         v-if="!isView"
         class="select-item"
+        :disabled="isDisabled"
         v-model.trim="formModel.goodsChannelValue"
         :size="size"
         placeholder="请输入渠道名称"
@@ -17,6 +18,9 @@
     <el-form-item label="发货地:" prop="place">
       <el-input
         v-if="!isView"
+        :disabled="isDisabled"
+        class="select-item"
+        :title="formModel.place"
         v-model.trim="formModel.place"
         :size="size"
         placeholder="请输入发货地"
@@ -28,6 +32,7 @@
       <el-input
         class="select-item"
         v-if="!isView"
+        :disabled="isDisabled"
         v-model.trim="formModel.weight"
         :size="size"
         placeholder="请输入重量"
@@ -39,6 +44,7 @@
       <el-input
         class="select-item"
         v-if="!isView"
+        :disabled="isDisabled"
         v-model.trim="formModel.weightUnit"
         :size="size"
         placeholder="请输入单位"
@@ -47,7 +53,7 @@
       <span v-else>{{formModel.weightUnit}}</span>
     </el-form-item>
     <el-form-item label="商品详情:">
-      <c-wangEditor :is-view="isView" :content.sync="formModel.intro" ></c-wangEditor>
+      <c-wangEditor :is-view="isView || isDisabled" :content.sync="formModel.intro"></c-wangEditor>
     </el-form-item>
   </c-card>
 </template>
@@ -59,13 +65,7 @@ export default {
   data() {
     return {
       editor: null,
-      formModel: {
-        place: '',
-        goodsChannelValue: '',
-        weight: '',
-        weightUnit: '',
-        intro: ''
-      }
+      formModel: {}
     }
   },
   props: {
@@ -76,6 +76,10 @@ export default {
       default: 'medium'
     },
     isView: {
+      type: Boolean,
+      default: false
+    },
+    isDisabled: {
       type: Boolean,
       default: false
     }
@@ -109,6 +113,7 @@ export default {
 .form-card {
   .el-form-item {
     width: 98%;
+    margin-bottom: 15px;
   }
   .select-item {
     width: 30%;

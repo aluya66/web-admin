@@ -10,18 +10,17 @@
           v-for="attr in item.attrs"
           :label="attr.value"
           :key="attr.value"
-          :disabled="isView"
+          :disabled="isView || isDisabled"
           @change="curIndex = index"
         >{{attr.label}}</el-checkbox>
       </el-checkbox-group>
       <el-select
         class="select-item"
-        v-if="item.paramType === 'select'"
+        v-if="item.paramType === 'text'"
         v-model="item.checkedAttr"
-        :disabled="isView"
+        :disabled="isView || isDisabled"
         filterable
         clearable
-        multiple
         placeholder="请选择"
         @change="handleCheckedChange"
         @focus="curIndex = index"
@@ -41,7 +40,7 @@
         <el-radio
           v-for="attr in item.attrs"
           :key="attr.value"
-          :disabled="isView"
+          :disabled="isView || isDisabled"
           :label="attr.value"
           @change="curIndex = index"
         >{{attr.label}}</el-radio>
@@ -79,6 +78,10 @@ export default {
     size: {
       type: String,
       default: 'medium'
+    },
+    isDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   created() {
@@ -129,6 +132,7 @@ export default {
 .form-card {
   .el-form-item {
     width: 98%;
+    margin-bottom: 15px;
   }
   .select-item {
     width: 30%;

@@ -16,6 +16,7 @@
     >
       <g-basic
         :is-view="isView"
+        :is-disabled="isDisabled"
         :data-obj="formModel"
         ref="basicRef"
         title="基础信息"
@@ -23,6 +24,7 @@
       ></g-basic>
       <g-params
         :is-view="isView"
+        :is-disabled="isDisabled"
         v-if="formModel.id"
         :data-obj="formModel"
         ref="paramsRef"
@@ -30,6 +32,7 @@
       ></g-params>
       <g-sales
         :is-view="isView"
+        :is-disabled="isDisabled"
         v-if="formModel.id"
         :data-obj="formModel"
         ref="salesRef"
@@ -37,12 +40,13 @@
       ></g-sales>
       <g-other
         :is-view="isView"
+        :is-disabled="isDisabled"
         v-if="formModel.id"
         :data-obj="formModel"
         ref="otherRef"
         title="其他信息"
       ></g-other>
-      <el-form-item class="form-btn">
+      <el-form-item class="form-btn" v-if="!isView">
         <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
       </el-form-item>
     </el-form>
@@ -82,6 +86,7 @@ export default {
         type: 1,
         curData: {}
       },
+      isDisabled: true,
       btnLoading: false,
       rules: {
         goodsName: [
@@ -97,14 +102,25 @@ export default {
 
   methods: {
     fetchData() {
-      const { id } = this.$route.params
-      this.$api.goods.getDetail({ id }).then(res => {
-        this.formModel = res
+      console.log(this.$route)
+      const { params, name } = this.$route
+      if (name === 'goodsSnapshootDetail') {
+        this.$api.goods.getSnapshotDetail({ id: params.id }).then(res => {
+          this.isView = true
+          console.log(res)
+        })
+      }
+      this.$api.goods.getDetail({ id: params.id }).then(res => {
+        this.isDisabled = true
+        if (res) {
+          this.formModel = res
+        } else {
+          this.$msgTip('接口数据异常，请稍后重新尝试')
+        }
       })
     },
     submitHandle() {
       // const { categoryCode, goodsBusinessId, goodsTypeId, goodsName, goodsShortName, goodsBn, brandId, fileList, goodsBrief } = this.$refs.basicRef.formModel
-      console.log(this.$refs.basicRef.formModel, 21212)
       this.$refs.formRef.validate(valid => {
         if (valid) {
           console.log(this.$refs.formModel)

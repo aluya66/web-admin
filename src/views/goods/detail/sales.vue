@@ -4,6 +4,7 @@
       <el-input
         v-if="!isView"
         class="select-item"
+        :disabled="isDisabled"
         v-model.trim="formModel.goodsBn"
         :size="size"
         placeholder="请输入商品款号"
@@ -12,7 +13,7 @@
       <span v-else>{{formModel.goodsBn}}</span>
     </el-form-item>
     <el-form-item label="商品规格:">
-      <sku-wrap v-if="curAttrs.length" :sku-attrs="curAttrs" :sku-list="formModel.skus" :spu-bn="formModel.goodsBn"></sku-wrap>
+      <sku-wrap :is-view="isView || isDisabled" v-if="curAttrs.length" :sku-attrs="curAttrs" :sku-list="formModel.skus" :spu-bn="formModel.goodsBn"></sku-wrap>
     </el-form-item>
   </c-card>
 </template>
@@ -44,6 +45,10 @@ export default {
     size: {
       type: String,
       default: 'medium'
+    },
+    isDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
@@ -67,15 +72,23 @@ export default {
         if (totalCount) {
           const { skus } = this.dataObj
           data.forEach((val, index) => {
+            let colorPosters = '' // sku列表 颜色对应图片
+            let curVal = false // 是否为同一属性规格key标识
             const checkedAttr = []
             const attrs = val.bmsGoodsAttrVals.map(item => {
               if (skus.length) {
-                skus.forEach(sku => {
+                skus.some(sku => {
                   if (sku.attrColorId === val.id && sku.attributeColorId === item.id) {
                     checkedAttr.push(sku.attributeColorValue)
+                    if (curVal === false) {
+                      curVal = true
+                      colorPosters = sku.imageUrl
+                    }
+                    return true
                   }
                   if (sku.attrSpecId === val.id && sku.attributeSpecId === item.id) {
                     checkedAttr.push(sku.attributeSpecValue)
+                    return true
                   }
                 })
               }
@@ -84,7 +97,7 @@ export default {
                 label: item.value
               }
             })
-            this.curAttrs.push({ attrs, name: val.name, label: `${val.name}:`, id: val.id, checkedAttr: utils.uniqueArr(checkedAttr), posterUrl: val.imageUrl })
+            this.curAttrs.push({ attrs, name: val.name, label: `${val.name}:`, id: val.id, checkedAttr: utils.uniqueArr(checkedAttr), posterUrl: colorPosters })
           })
           console.log(this.curAttrs)
         }
@@ -101,6 +114,7 @@ export default {
 .form-card {
   .el-form-item {
     width: 98%;
+    margin-bottom: 15px;
   }
   .select-item {
     width: 30%;

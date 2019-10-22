@@ -67,17 +67,25 @@ or
 > nginx 部署
 
 - 1、在工程根目录中,将`dist`目录下文件部署在`nginx`服务器`html`目录下.
-
 - 2、配置`nginx`代理
 ```
-	location /dm-admin {
-		try_files $uri $uri/ /dm-admin/index.html;
+	// 在VUE_APP_BASEURLPATH为/,VUE_APP_ROUTEMODEL为hash时，目前中台默认hash部署
+	location ~ ^/(yosar-bms|yosar-pms) {
+		proxy_pass  http://gateway.yosar.develop  (中台网关地址)
+	}
+
+	location /api-ipx {
+		proxy_pass  http://upms.yosar.develop/   （获取ipx菜单服务地址）
+	}
+
+	// 在VUE_APP_BASEURLPATH为/console-admin,VUE_APP_ROUTEMODEL为history时，
+	location /console-admin {
+		try_files $uri $uri/ /console-admin/index.html;
 	}
 
 	location /api {
 		proxy_pass  http://ip:port  /*线上框架后台服务域名及端口*/
 	}
-
 ```
 
 - 3、重启`nginx`

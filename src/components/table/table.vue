@@ -27,7 +27,7 @@
 				:show-overflow-tooltip="item.inline"
 			>
 				<template slot-scope="scope">
-          <c-image v-if="item.isImage" :url="scope.row[item.prop]" fit="contain" :preview-src-list="[scope.row[item.prop]]" lazy></c-image>
+          <c-image v-if="item.isImage" :url="scope.row[item.prop]" fit="contain" :preview-src-list="[scope.row[item.prop]]"></c-image>
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
 					<template v-else>
 						{{

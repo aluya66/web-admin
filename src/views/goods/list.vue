@@ -2,20 +2,20 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
-      <div class="header-btn">
+      <!-- <div class="header-btn">
         <el-button
           :size="size"
           type="primary"
           icon="el-icon-plus"
           @click="routerLink('/goods/add')"
         >新增</el-button>
-      </div>
+      </div> -->
     </template>
     <div class="main__box">
       <c-table
         selection
         hasBorder
-        :fixed-height="450"
+        :fixed-height="685"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -143,7 +143,7 @@ export default {
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [{
         width: 100,
-        name: '编辑',
+        name: '详情',
         icon: 'el-icon-edit',
         handle(row) {
           vm.routerLink(`/goods/detail/${row.id}`)

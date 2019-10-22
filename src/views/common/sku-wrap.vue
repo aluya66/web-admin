@@ -18,14 +18,15 @@
     </div>
     <!-- 实战DEMO -->
     <div class="sku-box">
-      <div class="label">规格表格：</div>
+      <div class="label">规格属性：</div>
       <div class="content-box">
-        <template v-if="!isView">
+        <template>
           <el-input
             v-for="(item, index) in batchList"
             :key="index"
             size="mini"
             class="batch-set"
+            :disabled="isView"
             v-model.number="item.value"
             @focus="batchIndex = index"
             @change="setBatch"
@@ -65,14 +66,14 @@
                 :rowspan="countSum(n)"
               >
                 <c-upload
-                  v-if="specification[specIndex].posterUrl"
+                  v-if="!specification[specIndex].posterUrl"
                   :ref="'spec_'+specIndex"
                   class="pic"
                   :fileList="specification[specIndex].fileList"
                   is-auto
+                  :disabled="isView"
                   :size="10"
                   :limit="1"
-                  :disabled="isView"
                   action-path="/auth/uploadFile"
                   @upload-success="uploadSuccess"
                   @upload-remove="uploadRemove"
@@ -97,24 +98,26 @@
               >{{getSpecAttr(specIndex, index)}}</td>
             </template>
             <td>{{childProductArray[index].goodsSkuSn}}</td>
-            <td v-for="(tdItem, tdIndex) in batchList" :key="'td_'+tdIndex">
+            <td v-for="(tdItem, tdIndex) in batchList" :key="'td_' + tdIndex">
               <el-input
                 size="small"
                 type="text"
                 v-model.number="childProductArray[index][tdItem.name]"
                 :placeholder="'请输入' + tdItem.label"
-                :disabled="!childProductArray[index].isUse"
+                :disabled="isView || !childProductArray[index].isUse"
               ></el-input>
             </td>
             <td>
               <el-switch
                 v-model="childProductArray[index].isUse"
+                :disabled="isView"
                 @change="(val) => {handleUserChange(index, val)}"
               ></el-switch>
             </td>
             <td>
               <el-switch
                 v-model="childProductArray[index].isDefalut"
+                :disabled="isView"
                 @change="(val) => {handleDefaultChange(index, val)}"
               ></el-switch>
             </td>
@@ -122,8 +125,8 @@
         </tbody>
       </table>
     </div>
-    <!-- 数据格式 -->
-    <div class="sku-box">
+    <!-- 数据格式 调试用 -->
+    <!-- <div class="sku-box">
       <div class="label">数据格式:</div>
       <section class="content-box">
         <div v-for="(item, index) in childProductArray" :key="index">
@@ -131,7 +134,8 @@
           <el-divider></el-divider>
         </div>
       </section>
-    </div>
+    </div>-->
+    <!-- 数据格式 调试用 -->
   </div>
 </template>
 
@@ -259,7 +263,7 @@ export default {
         // 缓存按钮键值
         this.cacheSpecification[i].status = false
         this.cacheSpecification[i].name = res.name
-        if (!this.isView) {
+        if (res.checkedAttr && res.checkedAttr.length) {
           this.curSkuIndex = i
           this.handleCheckedChange(res.checkedAttr)
         }
@@ -382,8 +386,9 @@ export default {
         isUse: true, // 是否有用sku
         isDefalut: false // 是否默认SKU
       }
+      console.log(this.skuList[index].goodsSkuSn, childProduct.goodsSkuSn)
       // 判断是否从详情读取sku列表数据
-      if (!this.isView && this.skuList[index] && this.skuList[index].goodsSkuSn === childProduct.goodsSkuSn) {
+      if (this.skuList[index] && this.skuList[index].goodsSkuSn === childProduct.goodsSkuSn) {
         childProduct = {
           ...childProduct,
           sampleCostPrice: this.skuList[index].sampleCostPrice, // 样衣成本价
@@ -392,7 +397,8 @@ export default {
           wholesalePrice: this.skuList[index].wholesalePrice, // 批发价
           retailPrice: this.skuList[index].retailPrice, // 零售价
           memberPrice: this.skuList[index].memberPrice, // 会员价
-          sampleStock: this.skuList[index].sampleStock // 样衣库存
+          sampleStock: this.skuList[index].sampleStock, // 样衣库存
+          isDefalut: this.skuList[index].isDefalut === 1
         }
       }
       const spec = childProduct.childProductSpec
@@ -483,6 +489,8 @@ export default {
     .label {
       text-align: center;
       flex: 1;
+      font-weight: bold;
+      color: @form-label-font-color;
     }
     .content-box {
       flex: 18;
