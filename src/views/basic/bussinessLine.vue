@@ -3,7 +3,6 @@
     <template v-slot:header>
       <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -38,15 +37,6 @@
                 clearable
               />
             </el-form-item>
-            <!-- <el-form-item label="appKey">
-              <el-input
-                v-model="searchObj.appKey"
-                class="search-item"
-                :size="size"
-                placeholder="请输入appKey"
-                clearable
-              />
-            </el-form-item> -->
             <el-form-item label="状态">
               <el-select
                 v-model="searchObj.status"
@@ -63,15 +53,6 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="创建人">
-              <el-input
-                v-model="searchObj.createdby"
-                class="search-item"
-                :size="size"
-                placeholder="请输入创建人"
-                clearable
-              />
-            </el-form-item>-->
             <el-form-item>
               <el-button
                 type="primary"
@@ -85,37 +66,16 @@
         </template>
       </c-table>
     </div>
-    <div v-if="dialogObj.isShow">
-      <c-dialog
-        :is-show="dialogObj.isShow"
-        :title="dialogObj.title"
-        close-btn
-        @before-close="dialogObj.isShow = false"
-        @on-submit="dialogConfirm"
-      >
-        <bussinessLine-add
-          ref="childRef"
-          :bussinessCode="isEditCode"
-          :init-data="dialogObj.initData"
-        ></bussinessLine-add>
-      </c-dialog>
-    </div>
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
-import CDialog from 'components/dialog'
-import BussinessLineAdd from './bussinessLineAdd'
 
 export default {
   name: 'bussiness',
   mixins: [mixinTable],
-  components: {
-    CDialog,
-    BussinessLineAdd
-  },
   data(vm) {
     return {
       isEditCode: '',
@@ -138,33 +98,7 @@ export default {
       ],
       pickerOptions: utils.pickerOptions,
       tableList: [],
-      tableInnerBtns: [
-        {
-          width: 130,
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            const {
-              appName,
-              appCode,
-              status,
-              description,
-              id
-            } = row
-            vm.showDialog({
-              title: '编辑业务线',
-              initData: {
-                appName,
-                appCode,
-                status,
-                description,
-                id: id
-              },
-              isEdit: true
-            })
-          }
-        }
-      ],
+      tableInnerBtns: [],
       tableHeader: [
         {
           label: 'app名称',
@@ -238,47 +172,6 @@ export default {
           this.tableList = res || []
         }
       })
-    },
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const childFormModel = childRef.formModel
-          if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel)
-          } else {
-            this.editHandle(childFormModel)
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    showDialog(opts) {
-      this.isEditCode = opts.isEdit
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '新增业务线',
-        isEdit: opts.isEdit || false,
-        initData: opts.initData
-      }
-    },
-    addHandle(childFormModel) {
-      this.$api.basic.addBusiness({ ...childFormModel }).then(res => {
-        this.$msgTip('添加成功')
-        this.fetchData()
-      })
-      this.dialogObj.isShow = false
-    },
-    editHandle(formModel) {
-      this.$api.basic.updateBusiness({
-        ...formModel
-      }).then(res => {
-        this.$msgTip('修改成功')
-        this.fetchData()
-      })
-      this.dialogObj.isShow = false
     }
   }
 }

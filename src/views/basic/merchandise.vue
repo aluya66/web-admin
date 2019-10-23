@@ -3,7 +3,6 @@
     <template v-slot:header>
       <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -45,22 +44,6 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="是否删除">
-              <el-select
-                v-model="searchObj.isDelete"
-                :size="size"
-                class="search-item"
-                placeholder="请选择"
-                clearable
-              >
-                <el-option
-                  v-for="item in isDeleteSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item> -->
             <el-form-item label="显示方式">
               <el-select
                 v-model="searchObj.paramType"
@@ -102,36 +85,18 @@
         </template>
       </c-table>
     </div>
-    <div v-if="dialogObj.isShow">
-      <c-dialog
-        :is-show="dialogObj.isShow"
-        :title="dialogObj.title"
-        close-btn
-        @before-close="dialogObj.isShow = false"
-        @on-submit="dialogConfirm"
-      >
-        <merchandise-add ref="childRef" :is-edit="dialogObj.isEdit" :init-data="dialogObj.initData"></merchandise-add>
-      </c-dialog>
-    </div>
   </c-view>
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
-import MerchandiseAdd from './merchandiseAdd'
 import utils from 'utils'
 
 export default {
   name: 'merchandise',
   mixins: [mixinTable],
-  components: {
-    CDialog,
-    MerchandiseAdd
-  },
   data(vm) {
     return {
       btnStatus: '',
-      dialogObj: {}, // 对话框数据
       searchObj: {
         name: '',
         type: '',
@@ -179,45 +144,7 @@ export default {
       ],
       pickerOptions: utils.pickerOptions,
       tableList: [],
-      tableInnerBtns: [
-        {
-          width: 130,
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            const {
-              type,
-              name,
-              sort,
-              bmsGoodsAttrVals,
-              id,
-              paramType
-            } = row
-            vm.showDialog({
-              title: '编辑商品类型',
-              initData: {
-                type,
-                name,
-                sort,
-                items: bmsGoodsAttrVals.map(({ value, id, description }) => ({ value, id, description })),
-                paramType,
-                id
-              },
-              isEdit: true
-            })
-          }
-        },
-        {
-          name: '删除',
-          icon: 'el-icon-delete',
-          handle(row) {
-            const { name, id } = row
-            vm.confirmTip(`确认删除${name}商品类型`, () => {
-              vm.deleteData({ id })
-            })
-          }
-        }
-      ],
+      tableInnerBtns: [],
       tableHeader: [
         {
           label: '类型名称',
@@ -290,67 +217,6 @@ export default {
             this.tableList = res || []
           }
         })
-    },
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const childFormModel = childRef.formModel
-          if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel)
-          } else {
-            this.editHandle(childRef)
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '新增商品类型',
-        isEdit: opts.isEdit || false,
-        initData: opts.initData
-      }
-    },
-    addHandle(formModel) {
-      let bmsGoodsAttrValAddReqs = []
-      bmsGoodsAttrValAddReqs.push(formModel.items)
-      let data = {
-        ...formModel,
-        bmsGoodsAttrValAddReqs: bmsGoodsAttrValAddReqs.flat()
-      }
-      this.$api.basic.addGoodsattrval(data).then(res => {
-        this.$msgTip('新增成功')
-        this.fetchData()
-      })
-      this.dialogObj.isShow = false
-    },
-    editHandle(childData) {
-      const { delArr, formModel } = childData
-      const { items, ...other } = formModel
-      this.$api.basic.updateGoodsattrval({
-        ...other,
-        addAndUpdate: items,
-        del: delArr
-      }).then(res => {
-        this.$msgTip('修改成功')
-        this.dialogObj.isShow = false
-        this.fetchData()
-      })
-      this.dialogObj.isShow = true
-    },
-    deleteData(param, msgTip = '删除成功') {
-      this.$api.basic.deleteGoodsattrval(param).then(() => {
-        this.$msgTip(msgTip)
-        if (this.tableList.length === 1) {
-          const { pageNum } = this.pageInfo
-          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
-        }
-        this.fetchData()
-      })
     }
   }
 }

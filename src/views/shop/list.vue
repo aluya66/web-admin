@@ -45,7 +45,25 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="店铺状态">
+            <!-- <el-form-item label="联系人">
+              <el-input
+                v-model="searchObj.contact"
+                class="search-item"
+                size="medium"
+                placeholder="联系人"
+                clearable
+              />
+            </el-form-item>
+            <el-form-item label="联系电话">
+              <el-input
+                v-model="searchObj.contactTel"
+                class="search-item"
+                size="medium"
+                placeholder="联系电话"
+                clearable
+              />
+            </el-form-item> -->
+            <el-form-item label="状态">
               <el-select
                 v-model="searchObj.status"
                 size="medium"
@@ -88,7 +106,9 @@ export default {
       searchObj: {
         shopName: '',
         shopType: '',
-        status: ''
+        status: '',
+        contact: '', // 联系人
+        contactTel: '' // 联系电话
       },
       dialogObj: {}, // 对话框数据
       shopStatusSelect: [
@@ -110,16 +130,7 @@ export default {
       }],
       tableList: [],
       isLoading: false,
-      tableInnerBtns: [
-        {
-          width: 130,
-          name: '详情',
-          icon: 'el-icon-view',
-          handle (row) {
-            vm.routerLink(`/shop/detail/${row.shopId}`)
-          }
-        }
-      ],
+      tableInnerBtns: [],
       tableHeader: [
         {
           label: '店铺ID',

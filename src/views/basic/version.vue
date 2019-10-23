@@ -3,8 +3,6 @@
     <template v-slot:header>
       <div class="title">
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-          <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">
-            新增</el-button>
       </div>
     </template>
 
@@ -76,35 +74,17 @@
         </template>
       </c-table>
     </div>
-    <div v-if="dialogObj.isShow">
-      <c-dialog
-        :is-show="dialogObj.isShow"
-        :title="dialogObj.title"
-        close-btn
-        @before-close="dialogObj.isShow = false"
-        @on-submit="dialogConfirm"
-      >
-        <Version-add ref="childRef" :init-data="dialogObj.initData"></Version-add>
-      </c-dialog>
-    </div>
   </c-view>
 </template>
 <script>
 import mixinTable from 'mixins/table'
 // import utils from 'utils'
-import CDialog from 'components/dialog'
-import VersionAdd from './versionAdd'
 
 export default {
   name: 'version',
   mixins: [mixinTable],
-  components: {
-    CDialog,
-    VersionAdd
-  },
   data(vm) {
     return {
-      dialogObj: {}, // 对话框数据
       searchObj: {
         versionName: '',
         platform: '',
@@ -128,19 +108,7 @@ export default {
         label: '是'
       }],
       tableList: [],
-      tableInnerBtns: [
-        {
-          width: 130,
-          name: '发布',
-          icon: '',
-          handle(row) {
-            const { versionName, id } = row
-            vm.confirmTip(`确认发布${versionName}版本？`, () => {
-              vm.publishDate({ versionId: id })
-            })
-          }
-        }
-      ],
+      tableInnerBtns: [],
       tableHeader: [
         {
           label: 'app版本',
@@ -231,47 +199,6 @@ export default {
         } else {
           this.tableList = res || []
         }
-      })
-    },
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const childFormModel = childRef.formModel
-          if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel)
-          } else {
-            this.editHandle(childFormModel)
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '新增版本',
-        isEdit: opts.isEdit || false,
-        initData: opts.initData
-      }
-    },
-    addHandle(childFormModel) {
-      let data = {
-        ...childFormModel
-      }
-      this.$api.basic.addRelease(data).then(res => {
-        this.$msgTip('添加成功')
-        this.fetchData()
-        this.dialogObj.isShow = false
-      })
-      this.dialogObj.isShow = true
-    },
-    publishDate(param, msgTip = '发布成功') {
-      this.$api.basic.releaseRelease(param).then(() => {
-        this.$msgTip(msgTip)
-        this.fetchData()
       })
     }
   }

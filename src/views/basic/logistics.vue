@@ -3,7 +3,6 @@
     <template v-slot:header>
       <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -51,37 +50,19 @@
         </template>
       </c-table>
     </div>
-    <div v-if="dialogObj.isShow">
-      <c-dialog
-        :is-show="dialogObj.isShow"
-        :title="dialogObj.title"
-        close-btn
-        @before-close="dialogObj.isShow = false"
-        @on-submit="dialogConfirm"
-      >
-        <logistics-add ref="childRef" :isLogisticsEdit="isEdit" :init-data="dialogObj.initData"></logistics-add>
-      </c-dialog>
-    </div>
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
-import CDialog from 'components/dialog'
-import LogisticsAdd from './logisticsAdd'
 
 export default {
   name: 'logistics',
   mixins: [mixinTable],
-  components: {
-    CDialog,
-    LogisticsAdd
-  },
   data(vm) {
     return {
       isEdit: false,
-      dialogObj: {}, // 对话框数据
       searchObj: {
         logiName: '',
         logiCode: ''
@@ -89,29 +70,7 @@ export default {
       marketableSelect: [],
       pickerOptions: utils.pickerOptions,
       tableList: [],
-      tableInnerBtns: [
-        {
-          width: 130,
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            const {
-              logiName,
-              logiCode,
-              id
-            } = row
-            vm.showDialog({
-              title: '编辑物流',
-              initData: {
-                logiName,
-                logiCode,
-                id: id
-              },
-              isEdit: true
-            })
-          }
-        }
-      ],
+      tableInnerBtns: [],
       tableHeader: [
         {
           label: '物流名称',
@@ -153,59 +112,6 @@ export default {
             this.tableList = res || []
           }
         })
-    },
-    /**
-     * 对话框确认按钮，集成了表单提交功能
-     */
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const childFormModel = childRef.formModel
-          if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel)
-          } else {
-            this.editHandle(childFormModel)
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    showDialog(opts) {
-      this.isEdit = opts.isEdit
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '新增物流',
-        isEdit: opts.isEdit || false,
-        initData: opts.initData
-      }
-    },
-    /**
-     * 确认新增操作
-     */
-    addHandle(formModel) {
-      this.$api.basic.addLogistics(formModel).then(res => {
-        this.$msgTip('新增成功')
-        this.fetchData()
-      })
-      this.dialogObj.isShow = false
-    },
-    /**
-     * 确认修改操作
-     */
-    editHandle(formModel) {
-      // codeing ajax
-      // ajax成功方法里面加入 关闭对话框标识
-      let data = {
-        ...formModel
-      }
-      this.$api.basic.updateLogistics(data).then(res => {
-        this.$msgTip('修改成功')
-        this.fetchData()
-      })
-      this.dialogObj.isShow = false
     }
   }
 }
