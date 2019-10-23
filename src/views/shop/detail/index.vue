@@ -37,10 +37,11 @@
 </template>
 
 <script>
-import SShop from './detail/shop'
-import SPeople from './detail/people'
+import SShop from './shop'
+import SPeople from './people'
 
 export default {
+  name: 'shopDetail',
   components: {
     SShop,
     SPeople

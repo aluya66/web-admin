@@ -21,7 +21,7 @@ export default {
   {
     path: '/shop/detail/:shopId',
     name: 'shopDetail',
-    component: () => import('@/views/shop/detail'),
+    component: () => import('@/views/shop/detail/index'),
     meta: {
       title: 'shopDetail',
       icon: 'table'
