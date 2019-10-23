@@ -44,7 +44,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="是否删除">
+            <!-- <el-form-item label="是否删除">
               <el-select
                 v-model="searchObj.isDelete"
                 :size="size"
@@ -59,7 +59,7 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="显示方式">
               <el-select
                 v-model="searchObj.paramType"
