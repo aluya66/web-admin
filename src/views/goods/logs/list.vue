@@ -90,16 +90,20 @@ export default {
       tableInnerBtns: [],
       tableHeader: [
         {
-          label: '商品ID',
-          prop: 'id'
-        },
-        {
           label: '商品名称',
           prop: 'goodsName'
         },
         {
           label: '商品编码',
           prop: 'goodsBn'
+        },
+        {
+          label: '商品sku编码',
+          prop: 'goodsSkuSn'
+        },
+        {
+          label: '操作日志',
+          prop: 'operatorLog'
         },
         {
           label: '操作人',
