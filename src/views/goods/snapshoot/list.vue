@@ -86,6 +86,7 @@ import mixinTable from 'mixins/table'
 import utils from 'utils'
 
 export default {
+  name: 'goodsSnapshoot',
   mixins: [mixinTable],
   data(vm) {
     return {

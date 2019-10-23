@@ -81,6 +81,7 @@
 import mixinTable from 'mixins/table'
 
 export default {
+  name: 'shopList',
   mixins: [mixinTable],
   data (vm) {
     return {

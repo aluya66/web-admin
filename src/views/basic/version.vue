@@ -80,6 +80,7 @@ import CDialog from 'components/dialog'
 import VersionAdd from './versionAdd'
 
 export default {
+  name: 'version',
   mixins: [mixinTable],
   components: {
     CDialog,

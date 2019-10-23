@@ -93,6 +93,7 @@
 <script>
 
 export default {
+  name: 'category',
   data() {
     return {
       popoverShow: false,

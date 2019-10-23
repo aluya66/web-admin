@@ -77,6 +77,7 @@ import GParams from './params'
 import GOther from './other'
 
 export default {
+  name: 'goodsDetail',
   data() {
     return {
       formModel: {},

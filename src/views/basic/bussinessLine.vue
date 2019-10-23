@@ -110,6 +110,7 @@ import CDialog from 'components/dialog'
 import BussinessLineAdd from './bussinessLineAdd'
 
 export default {
+  name: 'bussiness',
   mixins: [mixinTable],
   components: {
     CDialog,
