@@ -15,11 +15,71 @@
     <el-form-item label="商品规格:">
       <sku-wrap :is-view="isView || isDisabled" v-if="curAttrs.length" :sku-attrs="curAttrs" :sku-list="formModel.skus" :spu-bn="formModel.goodsBn"></sku-wrap>
     </el-form-item>
+    <el-form-item label="成衣成本价:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.costprice"
+        :size="size"
+        placeholder="请输入成衣成本价"
+        clearable
+      />
+      <span v-else>{{formModel.costprice}}</span>
+    </el-form-item>
+    <el-form-item label="成衣会员价:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.price"
+        :size="size"
+        placeholder="请输入成衣会员价"
+        clearable
+      />
+      <span v-else>{{formModel.price}}</span>
+    </el-form-item>
+    <el-form-item label="成衣供货价:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.supplyprice"
+        :size="size"
+        placeholder="请输入成衣供货价"
+        clearable
+      />
+      <span v-else>{{formModel.supplyprice}}</span>
+    </el-form-item>
+    <el-form-item label="成衣批发价:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.wholesaleprice"
+        :size="size"
+        placeholder="请输入成本批发价"
+        clearable
+      />
+      <span v-else>{{formModel.wholesaleprice}}</span>
+    </el-form-item>
+    <el-form-item label="零售价:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.tagprice"
+        :size="size"
+        placeholder="请输入零售价"
+        clearable
+      />
+      <span v-else>{{formModel.tagprice}}</span>
+    </el-form-item>
   </c-card>
 </template>
 <script>
 import CCard from 'components/card'
-import SkuWrap from '../../common/sku-wrap.vue'
+import SkuWrap from './sku-wrap.vue'
 import utils from 'utils'
 
 export default {

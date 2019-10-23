@@ -10,99 +10,46 @@
   >
     <el-row>
       <el-col :span="12">
-
-    <el-form-item label="参数分类:" prop="type">
-      <el-select
-        v-model="formModel.type"
-        class="select-item select-type"
-        clearable
-        v-if="btnStatus === false"
-      >
-        <el-option
-          v-for="item in parameterSelect"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-      <el-input
-        v-model.trim="formModel.type"
-        class="form-item select-type"
-        disabled
-        v-else
-      ></el-input>
-    </el-form-item>
+        <el-form-item label="参数分类:" prop="type">
+          <el-select
+            v-model="formModel.type"
+            class="select-item select-type"
+            :disabled="isEdit"
+            @change="changeType"
+            clearable
+          >
+            <el-option
+              v-for="item in parameterSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </el-col>
       <el-col :span="12">
-
-    <el-form-item label="显示方式:" prop="paramType" v-if="formModel.type !== '属性'">
-      <el-select
-        v-model="formModel.paramType"
-        class="select-item select-type"
-        :popper-append-to-body="false"
-        clearable
-        v-if="formModel.type !== 2"
-      >
-        <el-option
-          v-for="item in paramTypeSelect"
-          :key="item.value"
-          :label="item.label"
-          :value="item.label"
-        ></el-option>
-      </el-select>
-
-      <el-select
-        v-else
-        v-model="formModel.paramType"
-        class="select-item select-type"
-        :popper-append-to-body="false"
-        clearable
-      >
-        <el-option
-          v-for="item in paramListSelect"
-          :key="item.value"
-          :label="item.label"
-          :value="item.label"
-        ></el-option>
-      </el-select>
-      <!-- <el-input
-        v-model.trim="formModel.paramType"
-        class="form-item"
-        v-else
-      ></el-input> -->
-    </el-form-item>
-
-     <el-form-item label="显示方式:" prop="paramType" v-else>
-       <el-select
-        v-model="formModel.paramType"
-        class="select-item select-type"
-        :popper-append-to-body="false"
-        clearable
-      >
-        <el-option
-          v-for="item in paramListSelect"
-          :key="item.value"
-          :label="item.label"
-          :value="item.label"
-        ></el-option>
-      </el-select>
-      <!-- <el-input
-        v-model.trim="formModel.paramType"
-        class="form-item"
-        disabled
-      ></el-input> -->
-    </el-form-item>
+        <el-form-item label="显示方式:" prop="paramType">
+          <el-select
+            v-model="formModel.paramType"
+            class="select-item select-type"
+            :popper-append-to-body="false"
+            :disabled="formModel.type === 2"
+            clearable
+          >
+            <el-option
+              v-for="item in paramTypeSelect"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </el-col>
     </el-row>
-
     <el-form-item label="类型名称:" prop="name">
-      <el-input
-        v-model.trim="formModel.name"
-        class="form-item"
-        clearable
-      ></el-input>
+      <el-input v-model.trim="formModel.name" class="form-item" clearable></el-input>
     </el-form-item>
-    <el-form-item label="排序:" prop="sort">
+    <el-form-item label="排序:">
       <el-input-number
         v-model.trim="formModel.sort"
         class="sort-item"
@@ -116,17 +63,24 @@
       :label="'属性值'"
       :key="item.key"
       :prop="'items.' + index + '.value'"
-
       :rules="{
         required: true, message: '属性值不能为空', trigger: 'blur'
       }"
-      >
+    >
       <el-col :span="10">
-        <el-input v-model="item.value" style="width: 100%;" placeholder="属性值"></el-input>
+        <el-input
+          v-model="item.value"
+          style="width: 100%;"
+          placeholder="属性值"
+        ></el-input>
       </el-col>
       <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
       <el-col :span="10">
-        <el-input v-model="item.description" style="width: 100%;" placeholder="备注"></el-input>
+        <el-input
+          v-model="item.description"
+          style="width: 100%;"
+          placeholder="备注"
+        ></el-input>
       </el-col>
       <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
       <el-col :span="2">
@@ -136,7 +90,6 @@
     <el-form-item>
       <el-button @click="addDomain">新增</el-button>
     </el-form-item>
-
   </el-form>
 </template>
 
@@ -160,17 +113,19 @@ export default {
         }
       }
     },
-    isBtnStatus: {
+    isEdit: {
       type: Boolean,
       default: false
     }
   },
   data() {
     return {
-      btnStatus: '',
-      type: '',
-      typeSelect: '',
+      delArr: [], // 删除id集合
       parameterSelect: [
+        {
+          value: 0,
+          label: '分类'
+        },
         {
           value: 1,
           label: '参数'
@@ -182,26 +137,16 @@ export default {
       ],
       paramTypeSelect: [
         {
-          value: 1,
-          label: 'text'
+          value: 'checkbox',
+          label: '复选框'
         },
         {
-          value: 2,
-          label: 'radio'
+          value: 'radio',
+          label: '单选框'
         },
         {
-          value: 3,
-          label: 'checkbox'
-        },
-        {
-          value: 4,
-          label: 'select'
-        }
-      ],
-      paramListSelect: [
-        {
-          value: 1,
-          label: 'checkbox'
+          value: 'select',
+          label: '下拉选择'
         }
       ],
       addSoreList: [],
@@ -212,9 +157,9 @@ export default {
         name: [
           { required: true, message: '请输入名称', trigger: 'change' }
         ],
-        sort: [
-          { required: true, message: '请选择', trigger: 'change' }
-        ],
+        // sort: [
+        //   { required: true, message: '请选择', trigger: 'change' }
+        // ],
         paramType: [
           { required: true, message: '请选择', trigger: 'change' }
         ],
@@ -225,26 +170,29 @@ export default {
 
     }
   },
-  created() {
-    this.btnStatus = this.isBtnStatus
-    console.log(this.btnStatus)
-  },
   computed: {
     formModel() {
       return this.initData
     }
   },
   methods: {
-    addDomain () {
+    changeType(val) {
+      if (val === 2) {
+        this.formModel.paramType = 'checkbox'
+      } else if (val === 0) {
+        this.formModel.paramType = 'select'
+      }
+    },
+    addDomain() {
       this.formModel.items.push({
         value: '',
         description: ''
       })
     },
     removeDomain(item, index) {
-      var indexItem = this.formModel.items.indexOf(item)
-      if (indexItem !== -1) {
-        this.formModel.items.splice(indexItem, 1)
+      this.formModel.items.splice(index, 1)
+      if (item.id) {
+        this.delArr.push({ id: item.id })
       }
     }
   }
@@ -257,17 +205,17 @@ export default {
   .form-item {
     width: 100%;
   }
-  .select-item{
-    width: 50%
+  .select-item {
+    width: 50%;
   }
-  .select-type{
-    width: 100%
+  .select-type {
+    width: 100%;
   }
-  .sort-item{
-    width: 42%
+  .sort-item {
+    width: 42%;
   }
 }
-.body .el-select{
+.body .el-select {
   position: fixed !important;
 }
 </style>

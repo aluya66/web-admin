@@ -12,6 +12,7 @@
       <c-table
         hasBorder
         :size="size"
+        :max-height="730"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -93,15 +94,11 @@ export default {
       },
       versionSelect: [
         {
-          value: '',
-          label: '全部'
-        },
-        {
-          value: '0',
+          value: 0,
           label: '安卓'
         },
         {
-          value: '1',
+          value: 1,
           label: 'IOS'
         }
       ],

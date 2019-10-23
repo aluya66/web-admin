@@ -71,10 +71,10 @@
 </template>
 
 <script>
-import GBasic from './detail/basic'
-import GSales from './detail/sales'
-import GParams from './detail/params'
-import GOther from './detail/other'
+import GBasic from './basic'
+import GSales from './sales'
+import GParams from './params'
+import GOther from './other'
 
 export default {
   data() {
@@ -104,23 +104,32 @@ export default {
     fetchData() {
       console.log(this.$route)
       const { params, name } = this.$route
-      if (name === 'goodsSnapshootDetail') {
+      if (name === 'goodsSnapshootDetail') { // 快照详情数据
+        this.isView = true
         this.$api.goods.getSnapshotDetail({ id: params.id }).then(res => {
-          this.isView = true
-          console.log(res)
+          if (res) {
+            const { goodsSnapshot, goodsSkuSn, ...other } = res
+            const curoGodsSnapshot = goodsSnapshot ? JSON.parse(goodsSnapshot) : {}
+            this.formModel = {
+              ...other,
+              ...curoGodsSnapshot
+            }
+          } else {
+            this.$msgTip('接口数据异常，请稍后重新尝试')
+          }
+        })
+      } else {
+        this.isDisabled = true
+        this.$api.goods.getDetail({ id: params.id }).then(res => {
+          if (res) {
+            this.formModel = res
+          } else {
+            this.$msgTip('接口数据异常，请稍后重新尝试')
+          }
         })
       }
-      this.$api.goods.getDetail({ id: params.id }).then(res => {
-        this.isDisabled = true
-        if (res) {
-          this.formModel = res
-        } else {
-          this.$msgTip('接口数据异常，请稍后重新尝试')
-        }
-      })
     },
     submitHandle() {
-      // const { categoryCode, goodsBusinessId, goodsTypeId, goodsName, goodsShortName, goodsBn, brandId, fileList, goodsBrief } = this.$refs.basicRef.formModel
       this.$refs.formRef.validate(valid => {
         if (valid) {
           console.log(this.$refs.formModel)

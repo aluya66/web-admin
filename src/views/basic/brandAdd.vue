@@ -126,7 +126,7 @@ export default {
           videoUrl: '',
           // createdby: '',
           // updatedby: '',
-          status: '',
+          status: 1,
           sort: 100
         }
       }

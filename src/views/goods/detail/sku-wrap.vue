@@ -18,7 +18,7 @@
     </div>
     <!-- 实战DEMO -->
     <div class="sku-box">
-      <div class="label">规格属性：</div>
+      <div class="label">规格:</div>
       <div class="content-box">
         <template>
           <el-input
@@ -31,7 +31,7 @@
             @focus="batchIndex = index"
             @change="setBatch"
             clearable
-            :placeholder="'批量'+item.label"
+            placeholder="批量设置"
           >
             <template slot="prepend">{{item.label}}</template>
           </el-input>
@@ -52,7 +52,7 @@
             <th
               v-for="(item, index) in batchList"
               :key="'th_'+index"
-            >{{item.label !== '库存' ? item.label + '（元）': item.label}}</th>
+            >{{item.name !== 'sampleStock' ? item.label + '（元）': item.label}}</th>
             <th>是否启用</th>
             <th>是否主sku</th>
           </tr>
@@ -386,9 +386,9 @@ export default {
         isUse: true, // 是否有用sku
         isDefalut: false // 是否默认SKU
       }
-      console.log(this.skuList[index].goodsSkuSn, childProduct.goodsSkuSn)
+      // console.log(this.skuList[index], childProduct.childProductSpec)
       // 判断是否从详情读取sku列表数据
-      if (this.skuList[index] && this.skuList[index].goodsSkuSn === childProduct.goodsSkuSn) {
+      if (this.skuList[index] && this.skuList[index].attributeColorValue === childProduct.childProductSpec[this.skuList[index].attrColorName] && this.skuList[index].attributeSpecValue === childProduct.childProductSpec[this.skuList[index].attrSpecName]) {
         childProduct = {
           ...childProduct,
           sampleCostPrice: this.skuList[index].sampleCostPrice, // 样衣成本价

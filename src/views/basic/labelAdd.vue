@@ -80,7 +80,7 @@ export default {
         return {
           labelName: '',
           initial: '',
-          labelStatus: '',
+          labelStatus: 1,
           labelParentIds: [],
           labelDesc: ''
         }
@@ -94,7 +94,6 @@ export default {
   data() {
     return {
       changeTab: '',
-      type: '',
       marketableSelect: [
         {
           value: 1,

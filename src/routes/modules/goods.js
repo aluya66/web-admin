@@ -21,7 +21,7 @@ export default {
   {
     path: '/goods/detail/:id',
     name: 'goodsDetail',
-    component: () => import('@/views/goods/detail'),
+    component: () => import('@/views/goods/detail/index'),
     hidden: true,
     meta: {
       title: 'goodsDetail',
@@ -50,7 +50,7 @@ export default {
     path: '/goods/snapshootDetail/:id',
     name: 'goodsSnapshootDetail',
     hidden: true,
-    component: () => import('@/views/goods/detail'),
+    component: () => import('@/views/goods/detail/index'),
     meta: {
       title: 'goodsSnapshootDetail',
       icon: 'table'

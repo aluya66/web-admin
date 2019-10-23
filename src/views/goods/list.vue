@@ -15,7 +15,7 @@
       <c-table
         selection
         hasBorder
-        :fixed-height="685"
+        :max-height="685"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -144,7 +144,7 @@ export default {
       tableInnerBtns: [{
         width: 100,
         name: '详情',
-        icon: 'el-icon-edit',
+        icon: 'el-icon-view',
         handle(row) {
           vm.routerLink(`/goods/detail/${row.id}`)
         }

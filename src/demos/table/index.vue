@@ -7,7 +7,7 @@
       <c-table
         selection
         hasBorder
-        :fixed-height="450"
+        :max-height="450"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"

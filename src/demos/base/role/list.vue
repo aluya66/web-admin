@@ -18,7 +18,7 @@
 				:table-list="tableList"
 				:page-info="pageInfo"
 				:table-inner-btns="tableInnerBtns"
-				:fixed-height="546"
+				:max-height="546"
 				@change-pagination="changePagination"
 			>
 				<template v-slot:header>

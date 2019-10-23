@@ -16,7 +16,7 @@
       </el-checkbox-group>
       <el-select
         class="select-item"
-        v-if="item.paramType === 'text'"
+        v-if="item.paramType === 'select'"
         v-model="item.checkedAttr"
         :disabled="isView || isDisabled"
         filterable

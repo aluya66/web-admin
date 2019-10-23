@@ -6,7 +6,7 @@
       stripe
       :border="hasBorder"
       :size="size"
-      :height="fixedHeight"
+      :max-height="maxHeight"
       v-loading="loading"
       :data="tableList"
       :highlight-current-row="single"
@@ -36,7 +36,7 @@
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
           <template v-else>
             {{
-            item.formatter ? item.formatter(scope.row, scope.index) : scope.row[item.prop]
+            item.formatter ? item.formatter(scope.row, index) : scope.row[item.prop]
             }}
           </template>
         </template>
@@ -163,7 +163,7 @@ export default {
       type: Boolean,
       default: false
     },
-    fixedHeight: Number
+    maxHeight: Number
   },
   data() {
     return {

@@ -1,8 +1,5 @@
 <template>
   <c-card :name="title" class="form-card">
-    <el-form-item label="上架:">
-      <el-switch v-model="formModel.marketable" :disabled="isView || isDisabled"></el-switch>
-    </el-form-item>
     <el-form-item label="渠道名称:" prop="goodsChannelValue">
       <el-input
         v-if="!isView"
@@ -51,6 +48,21 @@
         clearable
       ></el-input>
       <span v-else>{{formModel.weightUnit}}</span>
+    </el-form-item>
+    <el-form-item label="上架:">
+      <el-switch v-model="formModel.marketable" :disabled="isView || isDisabled"></el-switch>
+    </el-form-item>
+    <el-form-item label="上架时间:" v-if="isView || isDisabled">
+      {{formModel.updated}}
+    </el-form-item>
+    <el-form-item label="下架时间:" v-if="isView || isDisabled">
+      {{formModel.downtime}}
+    </el-form-item>
+    <el-form-item label="创建时间:" v-if="isView || isDisabled">
+      {{formModel.created}}
+    </el-form-item>
+    <el-form-item label="更新时间:" v-if="isView || isDisabled">
+      {{formModel.updated}}
     </el-form-item>
     <el-form-item label="商品详情:">
       <c-wangEditor :is-view="isView || isDisabled" :content.sync="formModel.intro"></c-wangEditor>

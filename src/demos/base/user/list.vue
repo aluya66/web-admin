@@ -7,7 +7,7 @@
       <c-table
         class="c-table"
         selection
-        :fixed-height="546"
+        :max-height="546"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"

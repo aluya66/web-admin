@@ -25,6 +25,7 @@
       <c-table
         hasBorder
         :size="size"
+        :max-height="730"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -155,7 +156,7 @@ export default {
               initData: {
                 labelName,
                 initial,
-                labelStatus: labelStatus === 1 ? '有效' : '无效',
+                labelStatus,
                 createdby,
                 updatedby,
                 labelParentIds: labelCategoryModels.map(val => val.id),
@@ -207,16 +208,16 @@ export default {
           label: '标签描述',
           prop: 'labelDesc'
         },
-        {
-          label: '创建人',
-          prop: 'createdby',
-          width: 100
-        },
-        {
-          label: '更新人',
-          prop: 'updatedby',
-          width: 100
-        },
+        // {
+        //   label: '创建人',
+        //   prop: 'createdby',
+        //   width: 100
+        // },
+        // {
+        //   label: '更新人',
+        //   prop: 'updatedby',
+        //   width: 100
+        // },
         {
           label: '创建时间',
           prop: 'created',
