@@ -95,7 +95,6 @@ export default {
   mixins: [mixinTable],
   data(vm) {
     return {
-      value: '',
       searchObj: {
         labelName: '',
         labelCode: '',
@@ -112,6 +111,7 @@ export default {
           label: '无效'
         }
       ],
+      activeName: '1', // tab切换默认项
       labelTitle: [
         {
           value: '1',
@@ -179,7 +179,6 @@ export default {
           width: 100
         }
       ],
-      activeName: '1',
       name: 1,
       addSoreList: [],
       labelType: 1,
@@ -201,8 +200,8 @@ export default {
           ...searchDate,
           ...other,
           ...page,
-          labelType: this.labelType,
-          categoryType: this.categoryType
+          labelType: this.labelType, // 标签类型 1:商品  2:用户
+          categoryType: this.categoryType // 标签类别类型 1: 商品 , 2: 用户
         })
         .then(res => {
           this.isLoading = false
@@ -219,11 +218,9 @@ export default {
       if (tab.name === '1') {
         this.labelType = 1
         this.categoryType = 1
-        this.value = '1'
       } else if (tab.name === '2') {
         this.labelType = 2
         this.categoryType = 2
-        this.value = '2'
       }
       this.fetchData()
     }
