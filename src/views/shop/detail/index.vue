@@ -9,7 +9,7 @@
     <el-form
       ref="formRef"
       :model="formModel"
-      label-width="100px"
+      label-width="110px"
       class="form"
       label-position="right"
     >
@@ -49,7 +49,7 @@ export default {
   data () {
     return {
       formModel: {},
-      isView: false,
+      isView: true,
       isDisabled: true,
       btnLoading: false
     }
@@ -59,7 +59,15 @@ export default {
   },
   methods: {
     fetchData() {
-
+      const { params } = this.$route
+      this.isDisabled = true
+      this.$api.shop.getShopDetail({ id: params.shopId }).then(res => {
+        if (res) {
+          this.formModel = res
+        } else {
+          this.$msgTip('接口数据异常，请稍后重新尝试')
+        }
+      })
     },
     submitHandle() {
       this.$refs.formRef.validate(valid => {
@@ -74,7 +82,6 @@ export default {
     reviewImage(file) {
       this.dialogObj = {
         isShow: true,
-        type: 1,
         imageUrl: file.url,
         videoUrl: file.videoUrl,
         fileType: file.fileType

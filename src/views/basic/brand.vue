@@ -227,7 +227,7 @@ export default {
           width: 100
         },
         {
-          label: '状态',
+          label: '品牌状态',
           prop: 'statusCN',
           width: 100
         },

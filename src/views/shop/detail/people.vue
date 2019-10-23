@@ -5,7 +5,6 @@
       <el-input
         v-if="!isView"
         class="select-item"
-        :disabled="isDisabled"
         v-model.trim="formModel.contact"
         :size="size"
         placeholder="请输入联系人"
@@ -16,9 +15,7 @@
     <el-form-item label="联系人手机号:" prop="contactTel">
       <el-input
         v-if="!isView"
-        :disabled="isDisabled"
         class="select-item"
-        :title="formModel.contactTel"
         v-model.trim="formModel.contactTel"
         :size="size"
         placeholder="请输入手机号"
@@ -35,7 +32,6 @@
       <el-input
         class="select-item"
         v-if="!isView"
-        :disabled="isDisabled"
         v-model.trim="formModel.address"
         :size="size"
         placeholder="请输入详情地址"
@@ -47,7 +43,6 @@
       <el-input
         class="select-item"
         v-if="!isView"
-        :disabled="isDisabled"
         v-model.trim="formModel.shopName"
         :size="size"
         placeholder="请输入门店名称"
@@ -59,7 +54,6 @@
       <el-input
         class="select-item"
         v-if="!isView"
-        :disabled="isDisabled"
         v-model.trim="formModel.businessHours"
         :size="size"
         placeholder="请输入营业时间"
@@ -71,7 +65,6 @@
       <el-input
         class="select-item"
         v-if="!isView"
-        :disabled="isDisabled"
         v-model.trim="formModel.printer"
         :size="size"
         placeholder="请输入打印机号"
@@ -83,7 +76,6 @@
       <el-input
         class="select-item"
         v-if="!isView"
-        :disabled="isDisabled"
         v-model.trim="formModel.status"
         :size="size"
         placeholder="请输入描述"
@@ -128,24 +120,19 @@ export default {
       contact,
       areaName,
       contactTel,
-      goodsChannelValue,
       address,
       businessHours,
-      shopDescription,
       status,
       printer,
       shopName,
       marketable
     } = this.dataObj
-
     this.formModel = {
       contact,
       contactTel,
       areaName,
-      goodsChannelValue,
       status,
       businessHours,
-      shopDescription,
       printer,
       address,
       shopName,

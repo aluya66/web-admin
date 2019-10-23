@@ -1,6 +1,6 @@
 <template>
   <c-card :name="title" class="form-card">
-    <el-form-item label="店铺类型:">
+    <!-- <el-form-item label="店铺类型:">
       <el-select
         v-if="!isView"
         class="select-item"
@@ -103,12 +103,19 @@
         <i class="el-icon-plus"></i>
         <div class="info">上传图片/视频应小于20M</div>
       </c-upload>
-    </el-form-item>
+    </el-form-item> -->
   </c-card>
 </template>
 
 <script>
+import CCard from 'components/card'
+// import CImage from 'components/image'
+// import CUpload from 'components/upload'
+
 export default {
+  components: {
+    CCard
+  },
   props: {
     title: String,
     dataObj: {

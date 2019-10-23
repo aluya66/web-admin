@@ -47,7 +47,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="更新状态">
+            <el-form-item label="状态">
               <el-select
                 v-model="searchObj.isForce"
                 :size="size"
