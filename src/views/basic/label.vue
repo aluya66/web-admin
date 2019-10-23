@@ -225,7 +225,6 @@ export default {
         this.categoryType = 2
         this.value = '2'
       }
-      this.searchObj = {}
       this.fetchData()
     }
   }
