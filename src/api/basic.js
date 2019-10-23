@@ -67,7 +67,7 @@ export const getParentcode = params =>
  * @param {*} params
  */
 export const queryCategory = params =>
-  Http.fetch(`${context}/v1/category/querypage`, params, {
+  Http.fetch(`${context}/v1/category/recursions`, params, {
     method: 'get'
   })
 

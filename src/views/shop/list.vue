@@ -5,10 +5,11 @@
 				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
 			</div>
 		</template>
-    <div class="box">
+    <div class="main__box">
       <c-table
-        class="c-table"
         selection
+        hasBorder
+        :size="size"
         :fixed-height="546"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -18,38 +19,38 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-box">
+          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
             <el-form-item label="用户名">
               <el-input
-                v-model="searchObj.userName"
+                v-model="searchObj.shopName"
                 class="search-item"
                 size="medium"
-                placeholder="搜索用户名"
+                placeholder="门店名称"
                 clearable
               />
             </el-form-item>
-            <el-form-item label="用户状态">
+            <el-form-item label="门店类型">
+              <el-select
+                v-model="searchObj.shopType"
+                size="medium"
+                class="search-item"
+                clearable
+                placeholder="门店类型"
+              >
+                <el-option label="自营" :value="0"></el-option>
+                <el-option label="加盟" :value="1"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="店铺状态">
               <el-select
                 v-model="searchObj.status"
                 size="medium"
                 class="search-item"
                 clearable
-                placeholder="用户状态"
-              >
-                <el-option label="启用" :value="0"></el-option>
-                <el-option label="禁用" :value="1"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="运营商">
-              <el-select
-                v-model="searchObj.operator"
-                size="medium"
-                class="search-item"
-                clearable
-                placeholder="运营商"
+                placeholder="店铺状态"
               >
                 <el-option
-                  v-for="(item, index) in supplyList"
+                  v-for="(item, index) in shopStatusSelect"
                   :key="index"
                   :label="item.label"
                   :value="item.value"
@@ -57,318 +58,136 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" class="search-btn" size="medium" @click="searchSubmit">查询</el-button>
+              <el-button
+                type="primary"
+                class="search-btn"
+                :size="size"
+                icon="el-icon-search"
+                @click="searchSubmit"
+              >查询</el-button>
             </el-form-item>
           </el-form>
         </template>
       </c-table>
     </div>
-    <div v-if="dialogVisible">
-      <c-dialog
-        :title="curTitle"
-        :is-show="dialogVisible"
-        close-btn
-        :btns="dialogBtns"
-        @before-close="dialogVisible = false"
-      >
-        <user-info ref="formAdd" :user-msg="curUser" v-if="dialogType === 1"></user-info>
-        <user-pass ref="formPass" :user-info="curUser" v-if="dialogType === 2"></user-pass>
-      </c-dialog>
-    </div>
   </c-view>
 </template>
 
 <script>
-import CTable from 'components/table'
-import CDialog from 'components/dialog'
-
-import utils from 'utils'
-import { mapGetters } from 'vuex'
+import mixinTable from 'mixins/table'
 
 export default {
+  mixins: [mixinTable],
   data (vm) {
     return {
       searchObj: {
-        userName: '',
-        status: '',
-        operator: ''
+        shopName: '',
+        shopType: '',
+        status: ''
       },
-      supplyList: [],
-      curUser: {},
-      clearTimeDelay: null,
-      dialogVisible: false,
-      dialogType: null,
-      pageInfo: {
-        currentPage: 1,
-        pageSize: 10,
-        totalSize: 0
-      },
+      dialogObj: {}, // 对话框数据
+      shopStatusSelect: [
+        {
+          value: '0',
+          label: '关闭'
+        },
+        {
+          value: '1',
+          label: '开启'
+        }
+      ],
       tableList: [],
       isLoading: false,
       tableInnerBtns: [
         {
-          name: '修改密码',
+          width: 130,
+          name: '查看详情',
+          icon: 'el-icon-edit',
           handle (row) {
-            const { salt, userName, id } = row
-            vm.curUser = {
-              id,
-              userName,
-              salt
-            }
-            vm.dialogType = 2
-            vm.dialogVisible = true
-          }
-        },
-        {
-          name: '编辑',
-          handle (row) {
-            const { userName, id, status, roles, operator } = row
-            vm.curUser = {
-              userName,
-              id,
-              status,
-              roles,
-              operator
-            }
-            vm.dialogType = 1
-            vm.dialogVisible = true
-          }
-        },
-        {
-          name: '删除',
-          handle (row) {
-            const { id, userName } = row
-            vm.$confirm(`是否确定删除 ${userName} 用户 ?`, '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning',
-              center: true
-            })
-              .then(() => {
-                vm.$api.user.delAdmin({
-                  updateBy: vm.userInfo.userName,
-                  id
-                }).then(() => {
-                  vm.$msgTip('删除成功')
-                  if (vm.tableList.length === 1) {
-                    vm.pageInfo.currentPage = vm.pageInfo.currentPage > 1 ? vm.pageInfo.currentPage - 1 : 1
-                  }
-                  vm.fetchData()
-                })
-              })
-              .catch(() => {
-                console.log('取消')
-              })
-          }
-        }
-      ],
-      dialogBtns: [
-        {
-          label: '取 消',
-          name: 'cancel'
-        },
-        {
-          label: '确 认',
-          type: 'primary',
-          name: 'submit',
-          handle () {
-            if (vm.dialogType === 1) {
-              const childRef = vm.$refs.formAdd
-              childRef.$refs.formRef.validate(valid => {
-                if (valid) {
-                  if (vm.curUser.id) {
-                    vm.updateUser()
-                  } else {
-                    vm.submitUser()
-                  }
-                } else {
-                  console.log('error submit!!')
-                  return false
-                }
-              })
-            } else {
-              const childRef = vm.$refs.formPass
-              childRef.$refs.formRef.validate(valid => {
-                if (valid) {
-                  vm.changePassword(childRef.formModel.password)
-                } else {
-                  console.log('error submit!!')
-                  return false
-                }
-              })
-            }
+            vm.routerLink(`/shop/shopDetail/${row.id}`)
           }
         }
       ],
       tableHeader: [
         {
-          label: '用户名',
-          width: 150,
-          prop: 'userName'
+          label: '店铺ID',
+          prop: 'shopId',
+          fixed: true
         },
         {
-          label: '用户状态',
-          prop: 'status',
-          width: 150,
-          formatter (row) {
-            return row && row.status === 0 ? '启用' : '禁用'
-          }
+          label: '店铺类型',
+          prop: 'shopType'
         },
         {
-          label: '用户角色',
-          prop: 'roles',
-          formatter (row) {
-            return row && row.roles.map(val => val.roleName).join(',')
-          }
+          label: '店铺名称',
+          prop: 'styleName'
         },
         {
-          label: '可查看运营商',
-          prop: 'operator',
-          width: 150,
-          formatter (row) {
-            if (row && row.operator && row.operator.indexOf(',') !== -1) {
-              return row.operator
-                .split(',')
-                .map(res => vm.operatorObj[res])
-                .join(',')
-            }
-            return vm.operatorObj[row.operator]
-          }
+          label: 'LOGO',
+          prop: 'shopLogo'
         },
         {
-          label: '创建时间',
-          prop: 'createTime',
-          formatter (row) {
-            return row && utils.fomartDate(row.createTime)
-          }
+          label: '店招',
+          prop: 'shopImage',
+          isImage: true
         },
         {
-          label: '更新时间',
-          prop: 'updateTime',
-          formatter (row) {
-            return row && utils.fomartDate(row.updateTime)
-          }
+          label: '店铺地址',
+          prop: 'address'
+        },
+        {
+          label: '联系人',
+          prop: 'contact'
+        },
+        {
+          label: '联系电话',
+          prop: 'contactTel'
+        },
+        {
+          label: '状态',
+          prop: 'status'
+        },
+        {
+          label: '添加人',
+          prop: 'operaterName'
+        },
+        {
+          label: '添加时间',
+          prop: 'created'
         }
       ]
     }
   },
-  computed: {
-    curTitle () {
-      return this.dialogType === 2
-        ? '修改密码'
-        : this.curUser.id
-          ? '编辑用户'
-          : '新增用户'
-    },
-    ...mapGetters(['userInfo'])
-  },
   created () {
-    this.supplyList = Object.keys(this.operatorObj).map(res => ({
-      label: this.operatorObj[res],
-      value: res
-    }))
-    this.fetchData()
+    // this.fetchData()
   },
   methods: {
-    getFormData () {
-      const {
-        userName,
-        password,
-        roles,
-        operator,
-        status
-      } = this.$refs.formAdd.formModel
-      const formData = { userName, password, status }
-      if (roles.length) {
-        formData.roles = roles.map(res => ({ id: res }))
-      }
-      if (operator.length) {
-        formData.operator = operator.join(',')
-      }
-      return formData
-    },
-    changePassword (password) {
-      const id = this.curUser.id
-      this.$api.user.changePwd({
-        id,
-        password
-      }).then(() => {
-        this.dialogVisible = false
-        this.$msgTip('保存成功')
-      })
-    },
-    submitUser () {
-      const addForm = this.getFormData()
-      const { userName } = this.userInfo
-      this.$api.user.addAdmin({
-        ...addForm,
-        createBy: userName
-      }).then(() => {
-        this.dialogVisible = false
-        this.$msgTip('保存成功')
-        this.fetchData()
-      })
-    },
-    updateUser () {
-      const updateForm = this.getFormData()
-      const { userName } = this.userInfo
-      updateForm.id = this.curUser.id
-      delete updateForm.password
-      this.$api.user.updAdmin({
-        ...updateForm,
-        updateBy: userName
-      }).then(() => {
-        this.dialogVisible = false
-        this.$msgTip('更新成功')
-        this.fetchData()
-      })
-    },
-    showAdd () {
-      this.dialogVisible = true
-      this.dialogType = 1
-      this.curUser = {}
-    },
-    searchSubmit () {
-      this.pageInfo.currentPage = 1
-      this.fetchData()
-    },
     fetchData () {
+      const { dataTime, ...other } = this.searchObj
+      const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.user.getAdminList(
-        {
-          ...this.searchObj
-        },
-        this.pageInfo.currentPage,
-        this.pageInfo.pageSize
-      ).then(res => {
-        this.isLoading = false
-        if (res.page) {
-          const { data, page } = res
-          const { currentPage, totalRow } = page
-          this.pageInfo.currentPage = currentPage
-          this.pageInfo.totalSize = totalRow
-          this.tableList = data
-        } else {
-          this.tableList = res
-          this.pageInfo.totalSize = res.length
-        }
+      this.$api.shop.getShopList({
+        ...this.searchObj,
+        ...other,
+        ...page
       })
-    },
-    changePagination (pageInfo) {
-      this.pageInfo.currentPage = pageInfo.page
-      this.pageInfo.pageSize = pageInfo.limit
-      this.fetchData()
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data || []
+          } else {
+            this.tableList = res || []
+          }
+        })
     }
-  },
-  components: {
-    CTable,
-    CDialog
   }
 }
 </script>
 
 <style lang="less" scoped>
-.box {
+.main__box {
   .search {
     margin-bottom: 10px;
     width: 100%;

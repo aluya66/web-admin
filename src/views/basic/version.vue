@@ -114,7 +114,7 @@ export default {
           handle(row) {
             const { versionName, id } = row
             vm.confirmTip(`确认发布${versionName}版本？`, () => {
-              vm.publishDate({ id })
+              vm.publishDate({ versionId: id })
             })
           }
         }

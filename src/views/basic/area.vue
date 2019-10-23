@@ -123,36 +123,35 @@ export default {
     addModal(formModel) {
       this.$refs[formModel].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          if (this.isEdit === true) {
+            // 新增
+            const { name, code, parentCode } = this.formModel
+            this.$api.basic.addRegionInsert({
+              name,
+              code,
+              parentCode
+            }).then(res => {
+              this.$msgTip('添加成功')
+              this.fetchData()
+              this.showModal = false
+            })
+          } else {
+            //  编辑
+            const { name, code, id } = this.formModel
+            this.$api.basic.updataRegionInsert({
+              name,
+              code,
+              id
+            }).then(res => {
+              this.$msgTip('修改成功')
+              this.fetchData()
+              this.showModal = false
+            })
+          }
         } else {
           return false
         }
       })
-      if (this.isEdit === true) {
-        // 新增
-        const { name, code, parentCode } = this.formModel
-        this.$api.basic.addRegionInsert({
-          name,
-          code,
-          parentCode
-        }).then(res => {
-          this.$msgTip('添加成功')
-          this.fetchData()
-          this.showModal = false
-        })
-      } else {
-        //  编辑
-        const { name, code, id } = this.formModel
-        this.$api.basic.updataRegionInsert({
-          name,
-          code,
-          id
-        }).then(res => {
-          this.$msgTip('修改成功')
-          this.fetchData()
-          this.showModal = false
-        })
-      }
     },
     editHandle(node, data) {
       this.isEdit = false

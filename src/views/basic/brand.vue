@@ -19,7 +19,7 @@
       >
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="品牌国家">
+            <!-- <el-form-item label="品牌国家">
               <el-input
                 v-model="searchObj.country"
                 class="search-item"
@@ -27,7 +27,7 @@
                 placeholder="请输入品牌国家"
                 clearable
               />
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="品牌名称">
               <el-input
                 v-model="searchObj.name"

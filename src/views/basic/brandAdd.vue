@@ -23,7 +23,7 @@
 
     <el-row>
       <el-col :span="12">
-        <el-form-item label="品牌国家" prop="country">
+        <el-form-item label="品牌国家">
           <el-input v-model.trim="formModel.country" class="form-item"/>
         </el-form-item>
       </el-col>
@@ -38,7 +38,7 @@
         <el-form-item label="状态" prop="status">
           <el-select
             v-model.trim="formModel.status"
-            class="select-item"
+            class="select-item select-type"
             placeholder="请选择状态"
             clearable
           >
@@ -56,7 +56,7 @@
           <el-input-number
             v-model.trim="formModel.sort"
             controls-position="right"
-            class="select-item"
+            class="select-item select-type"
             :min="1"
             :max="10000"
           ></el-input-number>
@@ -152,7 +152,7 @@ export default {
           { required: true, message: '请填写消费人群', trigger: 'blur' }
         ],
         logo: [
-          { required: true, message: '请填写品牌LOGO', trigger: 'blur' }
+          { required: true, message: '请填写品牌LOGO的URL地址', trigger: 'blur' }
         ],
         intro: [
           { required: true, message: '请填写品牌介绍', trigger: 'blur' }
