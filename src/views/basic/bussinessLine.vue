@@ -169,7 +169,6 @@ export default {
         {
           label: 'app名称',
           prop: 'appName',
-          width: 120,
           fixed: true
         },
         {
@@ -184,7 +183,6 @@ export default {
         {
           label: '状态',
           prop: 'status',
-          width: 120,
           formatter(row) {
             return row.status ? vm.bussinessLineSelect[row.status - 1].label : ''
           }
@@ -277,7 +275,7 @@ export default {
       this.$api.basic.updateBusiness({
         ...formModel
       }).then(res => {
-        this.$msgTip('修改成功', 'success')
+        this.$msgTip('修改成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false

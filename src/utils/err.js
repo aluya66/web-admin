@@ -9,7 +9,7 @@
  */
 import utils from 'utils'
 
-export default (err, callBackFun, time) => {
+export default (err, callBackFun, duration) => {
   const errCode = err.code
   let errMsg = ''
   console.log('err', err)
@@ -31,6 +31,6 @@ export default (err, callBackFun, time) => {
       break
   }
   console.log(`${errCode}【${errMsg}】`)
-  window.globalVue.$msgTip(`${errCode}【${errMsg}】`, time)
+  window.globalVue.$msgTip(`${errCode}【${errMsg}】`, 'warning', duration)
   callBackFun && callBackFun(err)
 }

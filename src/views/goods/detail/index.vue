@@ -116,7 +116,7 @@ export default {
               ...curoGodsSnapshot
             }
           } else {
-            this.$msgTip('接口数据异常，请稍后重新尝试')
+            this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
           }
         })
       } else {
@@ -125,7 +125,7 @@ export default {
           if (res) {
             this.formModel = res
           } else {
-            this.$msgTip('接口数据异常，请稍后重新尝试')
+            this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
           }
         })
       }
