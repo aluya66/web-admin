@@ -130,21 +130,21 @@ export default {
       },
       marketableSelect: [
         {
-          value: '1',
+          value: 1,
           label: '有效'
         },
         {
-          value: '2',
+          value: 2,
           label: '无效'
         }
       ],
       labelTitle: [
         {
-          value: '1',
+          value: 1,
           label: '商品标签'
         },
         {
-          value: '2',
+          value: 2,
           label: '用户标签'
         }
       ],
