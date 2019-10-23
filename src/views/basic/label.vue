@@ -53,6 +53,20 @@
                 clearable
               />
             </el-form-item>
+            <el-form-item label="标签状态">
+              <el-select
+                v-model="searchObj.labelStatus"
+                class="select-item"
+                clearable
+              >
+                <el-option
+                  v-for="item in marketableSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              </el-form-item>
             <el-form-item label="操作时间">
               <el-date-picker
                 :size="size"
@@ -110,25 +124,26 @@ export default {
       searchObj: {
         labelName: '',
         labelCode: '',
-        dataTime: ''
+        dataTime: '',
+        labelStatus: ''
       },
       marketableSelect: [
         {
-          value: '1',
+          value: 1,
           label: '有效'
         },
         {
-          value: '2',
+          value: 2,
           label: '无效'
         }
       ],
       labelTitle: [
         {
-          value: '1',
+          value: 1,
           label: '商品标签'
         },
         {
-          value: '2',
+          value: 2,
           label: '用户标签'
         }
       ],
@@ -152,7 +167,6 @@ export default {
             } = row
             vm.showDialog({
               title: '编辑标签',
-              // title: labelType==1?'编辑商品标签':'编辑用户标签',
               initData: {
                 labelName,
                 initial,
@@ -192,12 +206,15 @@ export default {
         },
         {
           label: '标签编码',
-          prop: 'labelCode'
+          prop: 'labelCode',
+          width: 120
         },
         {
-          label: '标签类型',
-          prop: 'labelTypeCN',
-          width: 120
+          label: '标签风格',
+          prop: 'categoryName',
+          formatter(row) {
+            return row.labelCategoryModels.map(item => item.categoryName).filter(d => d).join('/')
+          }
         },
         {
           label: '标签状态',
@@ -327,16 +344,16 @@ export default {
      * 确认修改操作
      */
     editHandle(formModel) {
-      let status
-      if (formModel.labelStatus === '有效') {
-        status = 1
-      } else {
-        status = 2
-      }
+      // let status
+      // if (formModel.labelStatus === '有效') {
+      //   status = 1
+      // } else {
+      //   status = 2
+      // }
       let data = {
         ...formModel,
-        labelType: this.labelType,
-        labelStatus: status
+        labelType: this.labelType
+        // labelStatus: status
       }
       this.$api.basic.updateQuerypage(data).then(res => {
         this.$msgTip('修改成功')

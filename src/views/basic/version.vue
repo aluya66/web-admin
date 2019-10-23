@@ -47,6 +47,22 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="更新状态">
+              <el-select
+                v-model="searchObj.isForce"
+                :size="size"
+                class="search-item"
+                placeholder="请选择平台"
+                clearable
+              >
+                <el-option
+                  v-for="item in updateSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item>
               <el-button
                 type="primary"
@@ -90,7 +106,8 @@ export default {
       dialogObj: {}, // 对话框数据
       searchObj: {
         versionName: '',
-        platform: ''
+        platform: '',
+        isForce: '' // 是否强制更新
       },
       versionSelect: [
         {
@@ -102,6 +119,13 @@ export default {
           label: 'IOS'
         }
       ],
+      updateSelect: [{
+        value: 1,
+        label: '否'
+      }, {
+        value: 0,
+        label: '是'
+      }],
       tableList: [],
       tableInnerBtns: [
         {

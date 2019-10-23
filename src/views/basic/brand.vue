@@ -38,6 +38,22 @@
                 clearable
               />
             </el-form-item>
+            <el-form-item label="品牌状态">
+              <el-select
+                v-model="searchObj.status"
+                :size="size"
+                class="search-item"
+                placeholder="请选择状态"
+                clearable
+              >
+                <el-option
+                  v-for="item in statusSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="品牌别名">
               <el-input
                 v-model="searchObj.ename"
@@ -104,8 +120,16 @@ export default {
         country: '',
         name: '',
         ename: '',
-        dataTime: ''
+        dataTime: '',
+        status: ''
       },
+      statusSelect: [{
+        value: 1,
+        label: '启用'
+      }, {
+        value: 2,
+        label: '禁用'
+      }],
       pickerOptions: utils.pickerOptions,
       tableList: [],
       tableInnerBtns: [
@@ -216,16 +240,16 @@ export default {
           prop: 'sort',
           width: 100
         },
-        {
-          label: '创建人',
-          prop: 'createdby',
-          width: 100
-        },
-        {
-          label: '更新人',
-          prop: 'updatedby',
-          width: 100
-        },
+        // {
+        //   label: '创建人',
+        //   prop: 'createdby',
+        //   width: 100
+        // },
+        // {
+        //   label: '更新人',
+        //   prop: 'updatedby',
+        //   width: 100
+        // },
         {
           label: '创建时间',
           prop: 'created',
@@ -309,15 +333,14 @@ export default {
     },
 
     editHandle(formModel) {
-      let status
-      if (formModel.status === '启用') {
-        status = 1
-      } else {
-        status = 2
-      }
+      // let status
+      // if (formModel.status === '启用') {
+      //   status = 1
+      // } else {
+      //   status = 2
+      // }
       let data = {
-        ...formModel,
-        status
+        ...formModel
       }
       this.$api.basic.updateBrand(data).then(res => {
         this.$msgTip('修改成功')

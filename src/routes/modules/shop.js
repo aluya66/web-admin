@@ -17,5 +17,14 @@ export default {
       title: 'shopList',
       icon: 'table'
     }
+  },
+  {
+    path: '/shop/detail/:shopId',
+    name: 'shopDetail',
+    component: () => import('@/views/shop/detail'),
+    meta: {
+      title: 'shopDetail',
+      icon: 'table'
+    }
   }]
 }
