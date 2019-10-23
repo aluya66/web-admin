@@ -57,6 +57,7 @@
               <el-select
                 v-model="searchObj.labelStatus"
                 class="select-item"
+                :size="size"
                 clearable
               >
                 <el-option
@@ -384,5 +385,6 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  height: 36px;
 }
 </style>

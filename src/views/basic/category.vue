@@ -270,13 +270,13 @@ export default {
   justify-content: space-between;
 }
 .category__box{
-  height: 700px;
+  height: 750px;
   .category__box__input{
     width: 40%;
   }
   .category__box__tree{
     width: 40%;
-    height: 690px;
+    height: 720px;
     overflow : auto;
     padding-top: 10px;
   }
