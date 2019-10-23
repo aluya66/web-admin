@@ -10,7 +10,7 @@
         selection
         hasBorder
         :size="size"
-        :fixed-height="546"
+        :max-height="730"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -20,25 +20,29 @@
       >
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
-            <el-form-item label="用户名">
+            <el-form-item label="店铺名称">
               <el-input
                 v-model="searchObj.shopName"
                 class="search-item"
                 size="medium"
-                placeholder="门店名称"
+                placeholder="店铺名称"
                 clearable
               />
             </el-form-item>
-            <el-form-item label="门店类型">
+            <el-form-item label="店铺类型">
               <el-select
                 v-model="searchObj.shopType"
                 size="medium"
                 class="search-item"
                 clearable
-                placeholder="门店类型"
+                placeholder="店铺类型"
               >
-                <el-option label="自营" :value="0"></el-option>
-                <el-option label="加盟" :value="1"></el-option>
+                <el-option
+                  v-for="(item, index) in shopTypeSelect"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="店铺状态">
@@ -96,15 +100,22 @@ export default {
           label: '开启'
         }
       ],
+      shopTypeSelect: [{
+        label: '自营',
+        value: '1'
+      }, {
+        label: '加盟',
+        value: '2'
+      }],
       tableList: [],
       isLoading: false,
       tableInnerBtns: [
         {
           width: 130,
-          name: '查看详情',
-          icon: 'el-icon-edit',
+          name: '详情',
+          icon: 'el-icon-view',
           handle (row) {
-            vm.routerLink(`/shop/shopDetail/${row.id}`)
+            vm.routerLink(`/shop/detail/${row.shopId}`)
           }
         }
       ],
@@ -115,12 +126,19 @@ export default {
           fixed: true
         },
         {
-          label: '店铺类型',
-          prop: 'shopType'
+          label: '店铺名称',
+          prop: 'shopName'
         },
         {
-          label: '店铺名称',
+          label: '店铺风格',
           prop: 'styleName'
+        },
+        {
+          label: '店铺类型',
+          prop: 'shopType',
+          formatter(row) {
+            return row.shopType ? vm.shopTypeSelect[row.shopType - 1].label : ''
+          }
         },
         {
           label: 'LOGO',
@@ -145,7 +163,10 @@ export default {
         },
         {
           label: '状态',
-          prop: 'status'
+          prop: 'status',
+          formatter(row) {
+            return row.status ? vm.shopStatusSelect[row.status].label : ''
+          }
         },
         {
           label: '添加人',
@@ -159,7 +180,7 @@ export default {
     }
   },
   created () {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     fetchData () {

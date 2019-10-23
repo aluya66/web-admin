@@ -6,7 +6,7 @@
         <!-- <el-button type="primary" :size="size" icon="el-icon-plus" @click="append(3)">新增</el-button> -->
       </div>
     </template>
-    <div class="area__box">
+    <div class="main__box">
       <div class="area__box__centen">
         <el-aside class="area__box__tree" width="400px">
           <el-tree
@@ -19,7 +19,7 @@
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span>{{ node.label }}</span>
               <span>
-                <el-button type="text" size="mini" @click="() => append(data)">新增</el-button>
+                <el-button type="text" v-if="!node.data.leaf" size="mini" @click="() => append(data)">新增</el-button>
                 <el-button type="text" size="mini" @click="() => editHandle(node, data)">编辑</el-button>
               </span>
             </span>
@@ -65,7 +65,7 @@ export default {
       props: {
         label: 'name',
         children: '',
-        isLeaf: false
+        isLeaf: 'leaf'
       },
       formModel: {
         name: '',
@@ -95,7 +95,7 @@ export default {
           let curData = []
           if (data && data.length) {
             curData = data.map(res => ({
-              leaf: !res.exitChildren,
+              leaf: !res.hasChildBoolean,
               name: res.name,
               code: res.code,
               parentCode: res.parentCode
@@ -112,7 +112,7 @@ export default {
       if (node.level === 0) {
         return resolve(this.data)
       }
-      if (node.level > 0 && !node.data.exitChildren) {
+      if (node.level > 0 && !node.data.leaf) {
         this.parentCode = node.data && node.data.code
         this.fetchData(res => {
           resolve(res)
@@ -177,14 +177,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.area__box {
-  background: #fff;
-  width: 100%;
-  height: 100%;
+.main__box {
   .area__box__centen {
-    padding: 20px 0 40px 20px;
+    padding: 10px 0;
     .area__box__tree {
       height: 740px;
+      .custom-tree-node {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        padding-right: 8px;
+      }
     }
   }
 }
@@ -195,13 +200,5 @@ export default {
   display: flex;
   justify-content: space-between;
   width: 100%;
-}
-.custom-tree-node {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 14px;
-  padding-right: 8px;
 }
 </style>

@@ -25,7 +25,7 @@
                 <span class="custom-tree-node" slot-scope="{ node, data }">
                   <span>{{ node.label }}</span>
                   <span>
-                    <el-button type="text" @click="() => addHandle(2, data)">新增</el-button>
+                    <el-button type="text" v-if="node.data.childrenList.length>0" @click="() => addHandle(2, data)">新增</el-button>
                     <el-button type="text" @click="() => editHandle(node, data)">编辑</el-button>
                     <el-button type="text" style="margin-left: 6px;" @click="deteleCategory(node, data)">删除</el-button>
                   </span>

@@ -38,7 +38,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="appKey">
+            <!-- <el-form-item label="appKey">
               <el-input
                 v-model="searchObj.appKey"
                 class="search-item"
@@ -46,7 +46,7 @@
                 placeholder="请输入appKey"
                 clearable
               />
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="状态">
               <el-select
                 v-model="searchObj.status"

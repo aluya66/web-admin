@@ -67,6 +67,12 @@
     <el-form-item label="品牌LOGO" prop="logo">
       <el-input v-model.trim="formModel.logo" class="form-item"/>
     </el-form-item>
+    <el-form-item label="封面图地址" prop="previewUrl">
+      <el-input v-model.trim="formModel.previewUrl" class="form-item"/>
+    </el-form-item>
+    <el-form-item label="封面视频" prop="videoUrl">
+      <el-input v-model.trim="formModel.videoUrl" class="form-item"/>
+    </el-form-item>
     <el-form-item label="品牌介绍" prop="intro">
       <el-input type="textarea" v-model.trim="formModel.intro" class="form-item"/>
     </el-form-item>
@@ -160,12 +166,12 @@ export default {
         description: [
           { required: true, message: '请填写品牌描述', trigger: 'blur' }
         ],
-        // previewUrl: [
-        //   { required: true, message: '请填写封面图URL', trigger: 'blur' }
-        // ],
-        // videoUrl: [
-        //   { required: true, message: '请填写封面视频URL', trigger: 'blur' }
-        // ],
+        previewUrl: [
+          { required: true, message: '请填写封面图URL', trigger: 'blur' }
+        ],
+        videoUrl: [
+          { required: true, message: '请填写封面视频URL', trigger: 'blur' }
+        ],
         status: [
           { required: true, message: '请选择状态', trigger: 'blur' }
         ],
