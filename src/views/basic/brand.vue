@@ -108,6 +108,7 @@ import BrandAdd from './brandAdd'
 import utils from 'utils'
 
 export default {
+  name: 'brand',
   mixins: [mixinTable],
   components: {
     CDialog,

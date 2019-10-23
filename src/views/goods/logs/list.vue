@@ -75,6 +75,7 @@ import mixinTable from 'mixins/table'
 import utils from 'utils'
 
 export default {
+  name: 'goodsLogs',
   mixins: [mixinTable],
   data (vm) {
     return {

@@ -72,6 +72,7 @@ import CDialog from 'components/dialog'
 import LogisticsAdd from './logisticsAdd'
 
 export default {
+  name: 'logistics',
   mixins: [mixinTable],
   components: {
     CDialog,

@@ -112,6 +112,7 @@ import LabelAdd from './labelAdd'
 import utils from 'utils'
 
 export default {
+  name: 'label',
   mixins: [mixinTable],
   components: {
     CDialog,

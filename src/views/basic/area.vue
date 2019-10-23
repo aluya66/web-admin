@@ -45,6 +45,7 @@
 </template>
 <script>
 export default {
+  name: 'area',
   data() {
     let areaCode = (rule, value, callback) => {
       if (!value) {

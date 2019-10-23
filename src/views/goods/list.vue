@@ -120,6 +120,7 @@ import mixinTable from 'mixins/table'
 import utils from 'utils'
 
 export default {
+  name: 'goodsList',
   mixins: [mixinTable],
   data(vm) {
     return {

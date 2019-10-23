@@ -87,8 +87,8 @@ const createRouter = () =>
       if (savedPosition) {
         return savedPosition
       } else {
-        if (from.meta.keepAlive) {
-          from.meta.savedPosition = document.body.scrollTop
+        if (to.meta.keepAlive) {
+          to.meta.savedPosition = document.body.scrollTop
         }
         return {
           x: 0,

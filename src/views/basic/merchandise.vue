@@ -122,6 +122,7 @@ import MerchandiseAdd from './merchandiseAdd'
 import utils from 'utils'
 
 export default {
+  name: 'merchandise',
   mixins: [mixinTable],
   components: {
     CDialog,
