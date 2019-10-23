@@ -21,8 +21,10 @@ Vue.use(VueRouter)
     roles: ['admin','editor']    will control the page roles (you can set multiple roles)
     title: 'title'               the name show in submenu and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
+    affix: true                  if set true, the tag will affix in the tags-view
     noCache: true                if true, the page will no be cached(default is false)
     breadcrumb: false            if false, the item will hidden in breadcrumb(default is true)
+    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
 **/
 

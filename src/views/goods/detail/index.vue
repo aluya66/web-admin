@@ -102,12 +102,19 @@ export default {
   },
 
   methods: {
+    setTagsViewTitle() {
+      const copyRoute = Object.assign({}, this.$route)
+      const { meta, params } = this.$route
+      const curTitle = this.$t(`route.${meta.title}`)
+      const curRoute = Object.assign({}, copyRoute, { title: `${curTitle}-${params.id}` })
+      this.$store.dispatch('tagsView/updateVisitedView', curRoute)
+    },
     fetchData() {
-      console.log(this.$route)
       const { params, name } = this.$route
       if (name === 'goodsSnapshootDetail') { // 快照详情数据
         this.isView = true
         this.$api.goods.getSnapshotDetail({ id: params.id }).then(res => {
+          this.setTagsViewTitle()
           if (res) {
             const { goodsSnapshot, goodsSkuSn, ...other } = res
             const curoGodsSnapshot = goodsSnapshot ? JSON.parse(goodsSnapshot) : {}
@@ -122,6 +129,7 @@ export default {
       } else {
         this.isDisabled = true
         this.$api.goods.getDetail({ id: params.id }).then(res => {
+          this.setTagsViewTitle()
           if (res) {
             this.formModel = res
           } else {

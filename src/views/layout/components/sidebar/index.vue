@@ -2,13 +2,11 @@
 	<div :class="{ 'has-logo': showLogo }">
 		<logo v-if="showLogo" :collapse="isCollapse" />
 		<el-scrollbar wrap-class="scrollbar-wrapper">
-      <!-- background-color="#304156"
-				text-color="#bfcbd9"
-				active-text-color="#409EFF" -->
 			<el-menu
-				:default-active="$route.path"
+        :default-active="activeMenu"
 				:collapse="isCollapse"
 				:collapse-transition="false"
+        :unique-opened="false"
 				mode="vertical"
 			>
 				<sidebar-item
@@ -26,7 +24,6 @@
 import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
-// import variables from "styles/variables.less";
 
 export default {
   components: { SidebarItem, Logo },
@@ -35,9 +32,15 @@ export default {
     showLogo () {
       return this.$store.state.settings.sidebarLogo
     },
-    // variables() {
-    //   return variables;
-    // },
+    activeMenu() {
+      const route = this.$route
+      const { meta, path } = route
+      // if set path, the sidebar will highlight the path you set
+      if (meta.activeMenu) {
+        return meta.activeMenu
+      }
+      return path
+    },
     isCollapse () {
       return !this.sidebar.opened
     }

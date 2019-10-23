@@ -25,8 +25,8 @@ export default {
     hidden: true,
     meta: {
       title: 'goodsDetail',
-      icon: 'table',
-      noCache: true
+      noCache: true,
+      activeMenu: '/goods/list'
     }
   },
   {
@@ -54,8 +54,8 @@ export default {
     component: () => import('@/views/goods/detail/index'),
     meta: {
       title: 'goodsSnapshootDetail',
-      icon: 'table',
-      noCache: true
+      noCache: true,
+      activeMenu: '/goods/snapshoot'
     }
   }]
 }
