@@ -222,6 +222,11 @@ export default {
         this.labelType = 2
         this.categoryType = 2
       }
+      this.searchObj.labelName = ''
+      this.searchObj.labelCode = ''
+      this.searchObj.dataTime = ''
+      this.searchObj.labelStatus = ''
+      this.pageInfo.pageNum = 1
       this.fetchData()
     }
   }
