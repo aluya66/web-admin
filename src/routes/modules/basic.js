@@ -65,7 +65,7 @@ export default {
   },
   {
     path: '/basic/label',
-    name: 'label',
+    name: 'labelManage',
     component: () => import('@/views/basic/label'),
     meta: {
       title: 'label',

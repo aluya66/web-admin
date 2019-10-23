@@ -112,7 +112,7 @@ import LabelAdd from './labelAdd'
 import utils from 'utils'
 
 export default {
-  name: 'label',
+  name: 'labelManage',
   mixins: [mixinTable],
   components: {
     CDialog,
@@ -140,11 +140,11 @@ export default {
       ],
       labelTitle: [
         {
-          value: 1,
+          value: '1',
           label: '商品标签'
         },
         {
-          value: 2,
+          value: '2',
           label: '用户标签'
         }
       ],
