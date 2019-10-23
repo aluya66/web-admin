@@ -13,7 +13,6 @@
         <div class="header-btn">
           <el-button
             type="primary"
-            style="height: 40px"
             :size="size"
             icon="el-icon-plus"
             @click="showDialog"

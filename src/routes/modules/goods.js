@@ -25,7 +25,8 @@ export default {
     hidden: true,
     meta: {
       title: 'goodsDetail',
-      icon: 'table'
+      icon: 'table',
+      noCache: true
     }
   },
   {
@@ -53,7 +54,8 @@ export default {
     component: () => import('@/views/goods/detail/index'),
     meta: {
       title: 'goodsSnapshootDetail',
-      icon: 'table'
+      icon: 'table',
+      noCache: true
     }
   }]
 }

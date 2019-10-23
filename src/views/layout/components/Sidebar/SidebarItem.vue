@@ -98,9 +98,8 @@ export default {
           return true
         }
       })
-
       // When there is only one child router, the child router is displayed by default
-      if (showingChildren.length === 1) {
+      if (showingChildren.length === 1 && showingChildren[0].name === 'home') {
         return true
       }
 

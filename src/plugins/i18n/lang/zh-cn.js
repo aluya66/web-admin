@@ -15,7 +15,9 @@ export default {
     goodsLogs: '商品日志',
     goodsDetail: '商品详情',
     goodsSnapshoot: '商品快照',
-    goodsSnapshootDetail: '快照详情'
+    goodsSnapshootDetail: '快照详情',
+    shop: '分销中心',
+    shopList: '店铺列表'
   },
   navbar: {
     logout: '退出',

@@ -21,6 +21,7 @@ export default {
   {
     path: '/shop/detail/:shopId',
     name: 'shopDetail',
+    hidden: true,
     component: () => import('@/views/shop/detail/index'),
     meta: {
       title: 'shopDetail',
