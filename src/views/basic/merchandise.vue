@@ -1,15 +1,16 @@
 <template>
   <c-view>
-      <template v-slot:header>
-        <div class="title">
-          {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-          <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
-        </div>
-      </template>
-      <div class="main__box">
+    <template v-slot:header>
+      <div class="title">
+        {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
+      </div>
+    </template>
+    <div class="main__box">
       <c-table
         hasBorder
         :size="size"
+        :max-height="730"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -37,7 +38,7 @@
                 clearable
               >
                 <el-option
-                  v-for="item in typeSelect"
+                  v-for="item in parameterSelect"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -72,7 +73,7 @@
                   v-for="item in paramTypeSelect"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.label"
+                  :value="item.value"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -101,8 +102,7 @@
         </template>
       </c-table>
     </div>
-
-     <div v-if="dialogObj.isShow">
+    <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
@@ -110,7 +110,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <merchandise-add ref="childRef" :isBtnStatus="btnStatus" :init-data="dialogObj.initData"></merchandise-add>
+        <merchandise-add ref="childRef" :is-edit="dialogObj.isEdit" :init-data="dialogObj.initData"></merchandise-add>
       </c-dialog>
     </div>
   </c-view>
@@ -140,7 +140,7 @@ export default {
       },
       parameterSelect: [
         {
-          value: '',
+          value: '0',
           label: '分类'
         },
         {
@@ -149,16 +149,6 @@ export default {
         },
         {
           value: 2,
-          label: '属性'
-        }
-      ],
-      typeSelect: [
-        {
-          value: '1',
-          label: '参数'
-        },
-        {
-          value: '2',
           label: '属性'
         }
       ],
@@ -174,20 +164,16 @@ export default {
       ],
       paramTypeSelect: [
         {
-          value: '1',
-          label: 'text'
+          value: 'checkbox',
+          label: '复选框'
         },
         {
-          value: '2',
-          label: 'radio'
+          value: 'radio',
+          label: '单选框'
         },
         {
-          value: '3',
-          label: 'checkbox'
-        },
-        {
-          value: '4',
-          label: 'select'
+          value: 'select',
+          label: '下拉选择'
         }
       ],
       pickerOptions: utils.pickerOptions,
@@ -205,17 +191,16 @@ export default {
               bmsGoodsAttrVals,
               id,
               paramType
-
             } = row
             vm.showDialog({
               title: '编辑商品类型',
               initData: {
-                type: type === 1 ? '参数' : (type === 2 ? '属性' : '分类'),
+                type,
                 name,
                 sort,
                 items: bmsGoodsAttrVals.map(({ value, id, description }) => ({ value, id, description })),
                 paramType,
-                id: id
+                id
               },
               isEdit: true
             })
@@ -243,9 +228,7 @@ export default {
           label: '属性值',
           prop: 'value',
           formatter(row) {
-            return row.bmsGoodsAttrVals.map(item => {
-              return item.value
-            }).filter(d => d).join('/')
+            return row.bmsGoodsAttrVals.map(item => item.value).filter(d => d).join('/')
           }
         },
         {
@@ -259,24 +242,14 @@ export default {
         {
           label: '显示方式',
           prop: 'paramType',
-          width: 100
-          // formatter(row) {
-          //   return row.paramType ? vm.paramTypeSelect[row.paramType].label : '无'
-          // }
+          width: 100,
+          formatter(row, index) {
+            return row.paramType === 'checkbox' ? '复选框' : row.paramType === 'radio' ? '单选框' : row.paramType === 'radio' ? '下拉框' : '无'
+          }
         },
         {
           label: '排序',
           prop: 'sort',
-          width: 100
-        },
-        {
-          label: '创建人',
-          prop: 'createdby',
-          width: 100
-        },
-        {
-          label: '更新人',
-          prop: 'updatedby',
           width: 100
         },
         {
@@ -325,7 +298,7 @@ export default {
           if (!this.dialogObj.isEdit) {
             this.addHandle(childFormModel)
           } else {
-            this.editHandle(childFormModel)
+            this.editHandle(childRef)
           }
         } else {
           console.log('error submit!!')
@@ -334,7 +307,6 @@ export default {
       })
     },
     showDialog(opts) {
-      this.btnStatus = opts.isEdit
       this.dialogObj = {
         isShow: true,
         title: opts.title || '新增商品类型',
@@ -355,21 +327,14 @@ export default {
       })
       this.dialogObj.isShow = false
     },
-    editHandle(formModel) {
-      let typeStatus
-      if (formModel.type === '参数') {
-        typeStatus = 1
-      } else {
-        typeStatus = 2
-      }
-      let bmsGoodsAttrValAddReqs = []
-      bmsGoodsAttrValAddReqs.push(formModel.items)
-      let data = {
-        ...formModel,
-        type: typeStatus,
-        bmsGoodsAttrValAddReqs: bmsGoodsAttrValAddReqs.flat()
-      }
-      this.$api.basic.updateGoodsattrval(data).then(res => {
+    editHandle(childData) {
+      const { delArr, formModel } = childData
+      const { items, ...other } = formModel
+      this.$api.basic.updateGoodsattrval({
+        ...other,
+        addAndUpdate: items,
+        del: delArr
+      }).then(res => {
         this.$msgTip('修改成功')
         this.dialogObj.isShow = false
         this.fetchData()
@@ -390,9 +355,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.title{
+.title {
   width: 100%;
   display: flex;
-  justify-content: space-between
+  justify-content: space-between;
 }
 </style>

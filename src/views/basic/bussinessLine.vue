@@ -1,7 +1,7 @@
 <template>
   <c-view>
     <template v-slot:header>
-     <div class="title">
+      <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
         <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
@@ -10,6 +10,7 @@
       <c-table
         hasBorder
         :size="size"
+        :max-height="730"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -70,7 +71,7 @@
                 placeholder="请输入创建人"
                 clearable
               />
-            </el-form-item> -->
+            </el-form-item>-->
             <el-form-item>
               <el-button
                 type="primary"
@@ -84,7 +85,6 @@
         </template>
       </c-table>
     </div>
-
     <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
@@ -93,7 +93,11 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <bussinessLine-add ref="childRef" :bussinessCode='isEditCode' :init-data="dialogObj.initData"></bussinessLine-add>
+        <bussinessLine-add
+          ref="childRef"
+          :bussinessCode="isEditCode"
+          :init-data="dialogObj.initData"
+        ></bussinessLine-add>
       </c-dialog>
     </div>
   </c-view>
@@ -123,15 +127,11 @@ export default {
       },
       bussinessLineSelect: [
         {
-          value: '',
-          label: '全部'
-        },
-        {
-          value: '1',
+          value: 1,
           label: '启用'
         },
         {
-          value: '2',
+          value: 2,
           label: '禁用'
         }
       ],
@@ -148,7 +148,6 @@ export default {
               appCode,
               status,
               description,
-              createdby,
               id
             } = row
             vm.showDialog({
@@ -156,9 +155,8 @@ export default {
               initData: {
                 appName,
                 appCode,
-                status: status === '1' ? '启用' : '禁用',
+                status,
                 description,
-                createdby,
                 id: id
               },
               isEdit: true
@@ -187,13 +185,9 @@ export default {
           prop: 'status',
           width: 120,
           formatter(row) {
-            return row.status ? vm.bussinessLineSelect[row.status].label : ''
+            return row.status ? vm.bussinessLineSelect[row.status - 1].label : ''
           }
         },
-        // {
-        //   label: '创建人',
-        //   prop: 'createdby'
-        // },
         {
           label: '描述',
           prop: 'description'
@@ -272,28 +266,17 @@ export default {
       }
     },
     addHandle(childFormModel) {
-      let data = {
-        ...childFormModel
-      }
-      this.$api.basic.addBusiness(data).then(res => {
+      this.$api.basic.addBusiness({ ...childFormModel }).then(res => {
         this.$msgTip('添加成功')
         this.fetchData()
       })
       this.dialogObj.isShow = false
     },
     editHandle(formModel) {
-      let status
-      if (formModel.status === '启用' || formModel.status === '1') {
-        status = 1
-      } else if (formModel.status === '禁用' || formModel.status === '2') {
-        status = 2
-      }
-      let data = {
-        ...formModel,
-        status
-      }
-      this.$api.basic.updateBusiness(data).then(res => {
-        this.$msgTip('修改成功')
+      this.$api.basic.updateBusiness({
+        ...formModel
+      }).then(res => {
+        this.$msgTip('修改成功', 'success')
         this.fetchData()
       })
       this.dialogObj.isShow = false
@@ -303,7 +286,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.title{
+.title {
   width: 100%;
   display: flex;
   justify-content: space-between;

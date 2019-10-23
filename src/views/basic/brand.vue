@@ -11,6 +11,7 @@
         hasBorder
         :size="size"
         :loading="isLoading"
+        :max-height="730"
         :table-header="tableHeader"
         :table-list="tableList"
         :page-info="pageInfo"
@@ -143,7 +144,7 @@ export default {
                 videoUrl,
                 createdby,
                 updatedby,
-                status: status === 1 ? '启用' : '禁用',
+                status,
                 sort,
                 id: id
               },
