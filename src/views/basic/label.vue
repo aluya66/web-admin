@@ -129,21 +129,21 @@ export default {
       },
       marketableSelect: [
         {
-          value: 1,
+          value: '1',
           label: '有效'
         },
         {
-          value: 2,
+          value: '2',
           label: '无效'
         }
       ],
       labelTitle: [
         {
-          value: 1,
+          value: '1',
           label: '商品标签'
         },
         {
-          value: 2,
+          value: '2',
           label: '用户标签'
         }
       ],
@@ -296,8 +296,8 @@ export default {
           const { pageNum } = this.pageInfo
           this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
         }
-        this.fetchData()
       })
+      this.fetchData()
     },
     /**
      * 对话框确认按钮，集成了表单提交功能
