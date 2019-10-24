@@ -114,7 +114,6 @@ export default {
             })
             this.curAttrs.push({ attrs, paramType: val.paramType || '', id: val.id, label: `${val.name}:`, checkedAttr })
           })
-          console.log(this.curAttrs)
         }
       })
     },
