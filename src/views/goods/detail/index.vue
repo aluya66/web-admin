@@ -46,9 +46,9 @@
         ref="otherRef"
         title="其他信息"
       ></g-other>
-      <el-form-item class="form-btn" v-if="!isView">
+      <!-- <el-form-item class="form-btn">
         <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <div v-if="dialogObj.isShow">
       <el-dialog :visible.sync="dialogObj.isShow" v-if="dialogObj.imageUrl || dialogObj.videoUrl">
