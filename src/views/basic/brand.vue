@@ -7,6 +7,7 @@
     </template>
     <div class="main__box">
       <c-table
+        selection
         hasBorder
         :size="size"
         :loading="isLoading"

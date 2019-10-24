@@ -159,7 +159,6 @@ export default {
             })
             this.curAttrs.push({ attrs, name: val.name, label: `${val.name}:`, id: val.id, checkedAttr: utils.uniqueArr(checkedAttr), posterUrl: colorPosters })
           })
-          console.log(this.curAttrs)
         }
       })
     }
