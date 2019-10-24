@@ -17,11 +17,10 @@ export default (err, callBackFun, duration) => {
     case 9:
       errMsg = 'token失效'
       const token = utils.getUrlParam('token')
-      if (token) {
-        window.globalVue.goToLogin('404')
-      } else {
-        window.globalVue.goToLogin()
+      if (!token) {
+        errMsg = 'token不能为空'
       }
+      utils.goToLogin('401')
       break
     case 102:
       errMsg = ''
