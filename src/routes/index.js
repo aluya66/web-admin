@@ -117,7 +117,9 @@ router.beforeEach(async (to, from, next) => {
       } else {
         try {
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { roles } = await store.dispatch('user/getInfo')
+          const {
+            roles
+          } = await store.dispatch('user/getInfo')
           const accessRoutes = await store.dispatch(
             'permission/generateRoutes',
             roles
@@ -136,10 +138,15 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
-      next()
+    if (!token) {
+      if (whiteList.indexOf(to.path) !== -1) {
+        next()
+      } else {
+        next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
+        NProgress.done()
+      }
     } else {
-      next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
+      next(`/401?redirect=${to.path}`) // 无权限页面
       NProgress.done()
     }
   }

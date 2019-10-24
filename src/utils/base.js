@@ -28,8 +28,8 @@ export const openNewWin = (routerOpts) => {
  */
 export const goToLogin = (page = 'login', type = 'push', time = 1.5) => {
   setTimeout(() => {
-    this.$router[type]({
-      path: `/${page}?redirect=${this.$route.fullPath}`
+    window.globalVue.$router[type]({
+      path: `/${page}?redirect=${window.globalVue.$route.fullPath}`
     })
   }, time * 1000)
 }
