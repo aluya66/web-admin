@@ -3,8 +3,8 @@ import Http from '../utils/request'
 const context = process.env.VUE_APP_CONSOLE_COUPON
 
 // 券规则列表
-export const getCoupon = params =>
-  Http.fetch(`${context}/v1/mks/coupon/user/list`, params, {
+export const getCouponRule = params =>
+  Http.fetch(`${context}/v1/mks/coupon/rule/list`, params, {
     method: 'get',
     mockFile: 'couponRule-list'
   })
@@ -14,4 +14,11 @@ export const unableCoupon = params =>
   Http.fetch(`${context}/v1/mks/coupon/rule/unable`, params, {
     method: 'get',
     mockFile: 'couponRule-unable'
+  })
+
+// 劵列表
+export const getCoupon = params =>
+  Http.fetch(`${context}/v1/mks/coupon/list`, params, {
+    method: 'get',
+    mockFile: 'coupon-list'
   })

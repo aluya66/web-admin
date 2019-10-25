@@ -48,7 +48,7 @@
                 clearable
               />
             </el-form-item>
-            <!-- <el-form-item label="经营类型">
+            <el-form-item label="经营类型">
               <el-input
                 v-model="searchObj.businessValue"
                 class="search-item"
@@ -56,7 +56,7 @@
                 placeholder="请输入操作人"
                 clearable
               />
-            </el-form-item>-->
+            </el-form-item>
             <el-form-item label="品牌">
               <el-input
                 v-model="searchObj.brandName"
@@ -115,7 +115,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <add-goods ref="childRef" :init-data="dialogObj.initData"></add-goods>
+        <add-coupon ref="childRef" :init-data="dialogObj.initData"></add-coupon>
       </c-dialog>
     </div>
   </c-view>
@@ -125,13 +125,14 @@
 import mixinTable from 'mixins/table'
 import utils from 'utils'
 import CDialog from 'components/dialog'
-import AddGoods from './addGoods'
+import AddCoupon from './addCoupon'
 
 export default {
+  name: 'couponList',
   mixins: [mixinTable],
   components: {
     CDialog,
-    AddGoods
+    AddCoupon
   },
   data(vm) {
     return {
@@ -177,76 +178,104 @@ export default {
       }],
       tableHeader: [
         {
-          label: '商品ID',
-          prop: 'id',
+          label: '申请审核时间 ',
+          prop: 'applyCheckTime',
           width: 120,
           fixed: true
         },
         {
-          label: '商品名称',
-          prop: 'goodsName',
+          label: '审核时间',
+          prop: 'checkTime',
           width: 200
         },
         {
-          label: '商品图片',
-          prop: 'coverImg',
-          width: 100,
-          isImage: true
-        },
-        {
-          label: '商品编码',
-          prop: 'goodsBn'
-        },
-        {
-          label: '商品类目',
-          prop: 'categoryName'
-        },
-        {
-          label: '品牌',
-          prop: 'brandName'
-        },
-        {
-          label: '库存',
-          prop: 'retailPrice',
+          label: '券名称 ',
+          prop: 'couponName',
           width: 100
         },
         {
-          label: '成本价',
-          prop: 'marketable',
+          label: '生成数量',
+          prop: 'couponNumber'
+        },
+        {
+          label: '备注--通用劵',
+          prop: 'couponRemark'
+        },
+        {
+          label: '卡劵类型id',
+          prop: 'couponRuleId'
+        },
+        {
+          label: '卡劵类型名称',
+          prop: 'couponRuleName',
           width: 100
         },
         {
-          label: '市场价',
-          prop: 'memberPrice',
-          width: 100
-        },
-        {
-          label: '销售价',
-          prop: 'mktPrice',
-          width: 100
-        },
-        {
-          label: '上架状态',
-          prop: 'marketable',
+          label: '申请人',
+          prop: 'applicants',
           width: 100,
           formatter(row) {
-            return row.marketable ? vm.marketableSelect[row.marketable - 1].label : ''
+            return row.couponRuleResp.map(item => item.applicants)
           }
         },
         {
-          label: '上货人',
-          prop: 'tagPrice',
+          label: '申请部门 ',
+          prop: 'applyingDepartment',
+          formatter(row) {
+            return row.couponRuleResp.map(item => item.applyingDepartment)
+          }
+        },
+        {
+          label: '品类规则',
+          prop: 'categoryType',
+          formatter(row) {
+            console.log(row)
+          }
+        },
+        {
+          label: '卡劵类型名称',
+          prop: 'couponRuleName'
+        },
+        {
+          label: '卡劵类型',
+          prop: 'couponRuleType',
           width: 100
         },
         {
-          label: '创建时间',
-          prop: 'created',
+          label: '卡劵类型状态 ',
+          prop: 'couponStatus',
           width: 100
         },
         {
-          label: '更新时间',
-          prop: 'updated',
+          label: '是否需要密码',
+          prop: 'hasCode',
           width: 100
+        },
+        {
+          label: '积分门槛',
+          prop: 'integeregralLevel',
+          formatter(row) {
+            return row.couponRuleResp.map(item => item.integeregralLevel) === 0 ? '无门槛' : '有门槛'
+          }
+        },
+        {
+          label: '人均限领',
+          prop: 'limitReceive',
+          formatter(row) {
+            return row.couponRuleResp.map(item => item.limitReceive)
+          }
+        },
+        {
+          label: '是否优惠门槛',
+          prop: 'preferentialLevel',
+          width: 100
+        },
+        {
+          label: '优惠类型',
+          prop: 'preferentialType',
+          formatter(row) {
+            return row.couponRuleResp.map(item => item.preferentialType) === 0 ? '代金' : '折扣'
+          }
         }
       ]
     }
@@ -263,7 +292,7 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
       this.isLoading = true
-      this.$api.goods.getList(
+      this.$api.coupon.getCoupon(
         {
           ...searchDate,
           ...other,
@@ -320,7 +349,7 @@ export default {
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        title: opts.title || '新增商品',
+        title: opts.title || '生成劵',
         isEdit: opts.isEdit || false,
         initData: opts.initData
       }

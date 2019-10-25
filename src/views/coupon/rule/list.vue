@@ -4,6 +4,9 @@
 			<div class="title">
 				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
 			</div>
+      <div class="header-btn">
+        <el-button :size="size" type="primary" icon="el-icon-plus" @click="showDialog">新增</el-button>
+      </div>
 		</template>
     <div class="main__box">
       <c-table
@@ -30,13 +33,20 @@
               />
             </el-form-item>
             <el-form-item label="劵状态">
-              <el-input
+              <el-select
                 v-model="searchObj.couponStatus"
-                class="search-item"
                 :size="size"
-                placeholder="劵状态"
+                class="search-item"
+                placeholder="请选择"
                 clearable
-              />
+              >
+                <el-option
+                  v-for="item in couponTypeSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="劵规则状态">
               <el-input
@@ -121,7 +131,7 @@ export default {
       },
       pickerOptions: utils.pickerOptions,
       dialogObj: {}, // 对话框数据
-      couponSelect: [
+      couponTypeSelect: [
         {
           value: 0,
           label: '启用'
@@ -174,6 +184,13 @@ export default {
           prop: 'couponRuleName'
         },
         {
+          label: '劵状态',
+          prop: 'couponStatus',
+          formatter(row) {
+            return row.couponStatus === 0 ? '启用' : '作废'
+          }
+        },
+        {
           label: '品类规则',
           prop: 'categoryType',
           formatter(row) {
@@ -223,7 +240,10 @@ export default {
         },
         {
           label: '是否需要密码',
-          prop: 'hasCode'
+          prop: 'hasCode',
+          formatter(row) {
+            return row.hasCode === 0 ? '否' : '是'
+          }
         },
         {
           label: '积分门槛',
@@ -284,7 +304,7 @@ export default {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.coupon.getCoupon({
+      this.$api.coupon.getCouponRule({
         ...this.searchObj,
         ...other,
         ...page
