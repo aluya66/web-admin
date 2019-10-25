@@ -1,13 +1,13 @@
 <template>
-  <c-view>生成券规则</c-view>
+  <c-view>券审核列表</c-view>
 </template>
 
 <script>
 
 export default {
-  name: 'couponRuleInfo',
+  name: '',
   data() {
-    return {};
+    return {}
   },
 
   methods: {
@@ -16,7 +16,7 @@ export default {
 
   components: {
   }
-};
+}
 </script>
 
 <style lang='less' scope>

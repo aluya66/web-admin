@@ -1,13 +1,13 @@
 <template>
-  <c-view>券审核列表</c-view>
+  <c-view>券列表</c-view>
 </template>
 
 <script>
 
 export default {
-  name: '',
+  name: 'couponList',
   data() {
-    return {};
+    return {}
   },
 
   methods: {
@@ -16,7 +16,7 @@ export default {
 
   components: {
   }
-};
+}
 </script>
 
 <style lang='less' scope>
