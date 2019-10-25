@@ -107,9 +107,8 @@ const setParams = (url, params = {}, opt = {}) => {
     loading: true,
     ...opt
   }
-
   // 开发阶段本地mock数据时，以get请求本地文件
-  if (opt.mockFile && utils.isDebug) {
+  if (opt.mockFile && utils.isDebug && process.env.VUE_APP_MOCKFLAG === 'true') {
     opt.method = 'get'
     url = setProxy(opt.mockFile)
   }
