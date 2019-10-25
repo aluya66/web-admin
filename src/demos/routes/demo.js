@@ -70,6 +70,7 @@ export default {
       path: 'nested',
       redirect: '/demo/nested/menu1',
       name: 'Nested',
+      component: () => import('@/demos/nested/index'), // Parent router-view
       meta: {
         title: 'Nested',
         icon: 'nested'

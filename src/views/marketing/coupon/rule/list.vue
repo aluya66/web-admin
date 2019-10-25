@@ -304,7 +304,7 @@ export default {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.coupon.getCouponRule({
+      this.$api.marketing.getCoupon({
         ...this.searchObj,
         ...other,
         ...page
