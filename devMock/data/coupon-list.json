@@ -1,81 +1,45 @@
 {
-	"code": 0,
+  "code": 0,
   "message": "操作成功",
-	"data": [{
-		"applicants": "申请人",
-		"applyingDepartment": "申请部门",
-		"categoryType": 1,
-		"couponPreferentialRules": [
-			{
-				"createBy": 1,   
-				"created": "121231233",
-				"delFlag": 1,
-				"id": 1,
-				"preferentialLevel": 123,
-				"preferentialType": 1,
-				"preferentialValue": 1,
-				"updateBy": 1,
-				"updated": "2019-10-14"
-			}
-		],
-		"couponRuleName": "卡劵类型名称",
-		"couponRuleType": 1,  
-		"couponStatus": 1, 
-		"couponUseProductRules": [
-			{
-				"categoryRuleType": 1,   
-				"createBy": 1,
-				"created": "2019-10-24",
-				"delFlag": 1,
-				"id": 1,
-				"rltCode": "关联code",
-				"ruleType": 1,      
-				"updateBy": 1,
-				"updated": "2019-20-25"
-			}
-		], 
-		"couponUseStoreRuleLists": [
-			{
-				"couponUseStoreRules": [
-					{
-						"createBy": 1,
-						"created": "2019-10-13",
-						"delFlag": 1,
-						"id": 1,
-						"platform": 1, 
-						"ruleType": 1, 
-						"storeCode": "门店code",
-						"updateBy": 1,
-						"updated": "2019-10-01"
-					}
-				],   
-				"createBy": 1,
-				"created": "2019-10-25",
-				"delFlag": 1,
-				"id": 1,
-				"platform": 1,
-				"updateBy":1,
-				"updated": "2019-10-26"
-			}
-		],    
-		"createBy": 1,
-		"created": "123",
-		"delFlag": 1,
-		"hasCode": 1,
-		"id": 1,
-		"integeregralLevel": 1,  
-		"limitReceive": 1,   
-		"platforms": 1,    
-		"preferentialLevel": 1,  
-		"preferentialType": 1,    
-		"preferentialValue": 1, 
-		"remark": "备注",
-		"repeatUse": 1,        
-		"returnRules": 1,      
-		"updateBy": 1,       
-		"updated": "2019-10-14",
-		"userLevel": 1
+  "data": [{
+    "applyCheckTime": "申请审核时间",
+    "checkTime": "审核时间",
+    "couponName": "券名称",
+    "couponNumber": 1,
+    "couponRemark": "备注--通用劵",
+    "couponRuleId": 1,
+    "couponRuleName": "卡劵类型名称",
+    "couponRuleResp": [{
+      "applicants": "申请人",
+      "applyingDepartment": "申请部门",
+      "categoryType": 1,
+      "couponPreferentialRules": [],
+      "couponRuleName": "卡劵类型名称",
+      "couponRuleType": 1,
+      "couponStatus": 1,
+      "couponUseProductRules": [],
+      
+    }],
+    "couponRuleType": 1,
+    "createBy": 1,
+    "created": "2019-10",
+    "delFlag": 1,
+    "id": 123,
+    "limitActivateDay": 1,
+    "limitActivateDayType": 1,
+    "limitActivateMonth": 1,
+    "limitActivateTimeEnd": "2019",
+    "limitActivateTimeStart": "2019",
+    "limitExpireDay": 1,
+    "limitExpireDayType": 1,
+    "limitExpireTimeEnd": "有效期结束时间",
+    "limitExpireTimeStart": "limitExpireTimeStart",
+    "receiveNumber": 1,
+    "remainNumber": 1,
+    "status": 1,
+    "updateBy": 1,
+    "updated": "updated"
   }],
-	"totalCount": 20,
+  "totalCount": 20,
 	"success": true
 }

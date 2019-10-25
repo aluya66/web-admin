@@ -83,16 +83,33 @@
         </template>
       </c-table>
     </div>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <add-rule ref="childRef" :init-data="dialogObj.initData"></add-rule>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
+import CDialog from 'components/dialog'
+import AddRule from './addRule'
 
 export default {
   name: 'couponRuleList',
   mixins: [mixinTable],
+  components: {
+    CDialog,
+    AddRule
+  },
   data (vm) {
     return {
       searchObj: {
@@ -114,7 +131,7 @@ export default {
           label: '作废'
         }
       ],
-      tableList: [{}],
+      tableList: [],
       isLoading: false,
       tableInnerBtns: [{
         width: 100,
@@ -127,7 +144,18 @@ export default {
             isEdit: true
           })
         }
-      }],
+      }, {
+        name: '作废',
+        icon: 'el-icon-delete',
+        handle(row) {
+          console.log(row)
+          const { couponTypeId, userId, applicants } = row
+          vm.confirmTip(`确认删除${applicants}此规则列表`, () => {
+            vm.deleteData({ couponTypeId, userId })
+          })
+        }
+      }
+      ],
       tableHeader: [
         {
           label: '申请人',
@@ -271,6 +299,47 @@ export default {
             this.tableList = res || []
           }
         })
+    },
+    dialogConfirm() {
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const childFormModel = childRef.formModel
+          if (!this.dialogObj.isEdit) {
+            this.addHandle(childFormModel)
+          } else {
+            this.editHandle(childFormModel)
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    deleteData(parms, msgTip = '删除成功') {
+      // 主要修改接口
+      this.$api.coupon.unableCoupon(parms).then(() => {
+        this.$msgTip(msgTip)
+        // if (this.tableList.length === 1) {
+        //   const { pageNum } = this.pageInfo
+        //   this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
+        // }
+        this.fetchData()
+      })
+    },
+    addHandle() {
+      this.dialogObj.isShow = false
+    },
+    editHandle() {
+      this.dialogObj.isShow = false
+    },
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || '新增商品',
+        isEdit: opts.isEdit || false,
+        initData: opts.initData
+      }
     }
   }
 }
