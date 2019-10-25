@@ -17,7 +17,7 @@
       "couponRuleName": "卡劵类型名称",
       "couponRuleType": 1,
       "couponStatus": 1,
-      "couponUseProductRules": [],
+      "couponUseProductRules": []
       
     }],
     "couponRuleType": 1,

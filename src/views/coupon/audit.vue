@@ -7,7 +7,7 @@
 export default {
   name: '',
   data() {
-    return {};
+    return {}
   },
 
   methods: {
@@ -16,7 +16,7 @@ export default {
 
   components: {
   }
-};
+}
 </script>
 
 <style lang='less' scope>
