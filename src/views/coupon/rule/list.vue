@@ -91,7 +91,7 @@ import mixinTable from 'mixins/table'
 import utils from 'utils'
 
 export default {
-  name: 'ruleList',
+  name: 'couponRuleList',
   mixins: [mixinTable],
   data (vm) {
     return {

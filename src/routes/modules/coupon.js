@@ -11,10 +11,35 @@ export default {
   },
   children: [{
     path: '/coupon/ruleList',
-    name: 'ruleList',
-    component: () => import('@/views/coupon/ruleList'),
+    name: 'couponRuleList',
+    component: () => import('@/views/coupon/rule/list'),
     meta: {
-      title: 'list',
+      title: 'couponRuleList',
+      icon: 'table'
+    }
+  }, {
+    path: '/coupon/rule/:id',
+    name: 'couponRuleInfo',
+    component: () => import('@/views/coupon/rule/info'),
+    hidden: true,
+    meta: {
+      icon: 'table',
+      noCache: true
+    }
+  }, {
+    path: '/coupon/list',
+    name: 'couponList',
+    component: () => import('@/views/coupon/list'),
+    meta: {
+      title: 'couponList',
+      icon: 'table'
+    }
+  }, {
+    path: '/coupon/audit',
+    name: 'couponAudit',
+    component: () => import('@/views/coupon/audit'),
+    meta: {
+      title: 'couponAudit',
       icon: 'table'
     }
   }]
