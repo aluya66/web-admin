@@ -5,7 +5,12 @@
 				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
 			</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" icon="el-icon-plus" @click="showDialog">新增</el-button>
+        <el-button
+          :size="size"
+          type="primary"
+          icon="el-icon-plus"
+          @click="routerLink('/rule/info')"
+        >新增</el-button>
       </div>
 		</template>
     <div class="main__box">
@@ -159,14 +164,26 @@ export default {
         icon: 'el-icon-delete',
         handle(row) {
           console.log(row)
-          const { couponTypeId, userId, applicants } = row
-          vm.confirmTip(`确认删除${applicants}此规则列表`, () => {
-            vm.deleteData({ couponTypeId, userId })
+          const { couponRuleName, id } = row
+          vm.confirmTip(`确认删除${couponRuleName}此规则列表`, () => {
+            vm.deleteData({ id })
           })
         }
       }
       ],
       tableHeader: [
+        {
+          label: '卡劵类型名称',
+          prop: 'couponRuleName'
+        },
+        {
+          label: '卡劵类型',
+          prop: 'couponRuleType'
+        },
+        {
+          label: '卡劵类型状态',
+          prop: 'couponStatus'
+        },
         {
           label: '申请人',
           prop: 'applicants',
@@ -178,65 +195,6 @@ export default {
           prop: 'applyingDepartment',
           width: 100,
           fixed: true
-        },
-        {
-          label: '类型名称',
-          prop: 'couponRuleName'
-        },
-        {
-          label: '劵状态',
-          prop: 'couponStatus',
-          formatter(row) {
-            return row.couponStatus === 0 ? '启用' : '作废'
-          }
-        },
-        {
-          label: '品类规则',
-          prop: 'categoryType',
-          formatter(row) {
-            return row.categoryType === 0 ? '全部类' : '限品类'
-          }
-        },
-        {
-          label: '优惠门槛',
-          prop: 'preferentialLevel',
-          formatter(row) {
-            return row.couponPreferentialRules.map(item => item.preferentialLevel).filter(d => d).join('')
-          }
-        },
-        {
-          label: '优惠类型',
-          prop: 'preferentialType',
-          formatter(row) {
-            return row.couponPreferentialRules.map(item => item.preferentialType).join('') === 0 ? '代金' : '折扣'
-          }
-        },
-        {
-          label: '优惠值',
-          prop: 'preferentialValue',
-          formatter(row) {
-            return row.couponPreferentialRules.map(item => item.preferentialType).join('') === 0 ? '分' : '百分比'
-          }
-        },
-        {
-          label: '卡劵类型名称',
-          prop: 'couponRuleName'
-        },
-        {
-          label: '商品限制分类',
-          prop: 'categoryRuleType',
-          formatter(row) {
-            let categoryRuleType = row.couponUseProductRules.map(item => item.categoryRuleType).join('')
-            return categoryRuleType === 0 ? '商品' : (categoryRuleType === 1 ? '品牌' : '分类')
-          }
-        },
-        {
-          label: '商品限制规则',
-          prop: 'ruleType',
-          formatter(row) {
-            let ruleType = row.couponUseProductRules.map(item => item.ruleType).join('')
-            return ruleType === 1 ? '不能使用' : '可以使用'
-          }
         },
         {
           label: '是否需要密码',
@@ -253,12 +211,23 @@ export default {
           }
         },
         {
+          label: '等级门槛',
+          prop: 'userLevel'
+        },
+        {
           label: '人均限领',
           prop: 'limitReceive'
         },
         {
           label: '是否优惠门槛',
           prop: 'preferentialLevel'
+        },
+        {
+          label: '优惠类型',
+          prop: 'preferentialType',
+          formatter(row) {
+            return row.preferentialType === 0 ? '代金' : '折扣'
+          }
         },
         {
           label: '优惠值',
@@ -269,28 +238,8 @@ export default {
           prop: 'repeatUse'
         },
         {
-          label: '返还规则',
-          prop: 'returnRules'
-        },
-        {
           label: '备注',
           prop: 'remark'
-        },
-        {
-          label: '创建人',
-          prop: 'createBy'
-        },
-        {
-          label: '更新人',
-          prop: 'updateBy'
-        },
-        {
-          label: '创建时间',
-          prop: 'created'
-        },
-        {
-          label: '更新时间',
-          prop: 'updated'
         }
       ]
     }
@@ -360,6 +309,12 @@ export default {
         isEdit: opts.isEdit || false,
         initData: opts.initData
       }
+      //  width: 100,
+      //   name: '详情',
+      //   icon: 'el-icon-view',
+      //   handle(row) {
+      // opts.routerLink(`/goods/detail/${row.id}`)
+      // }
     }
   }
 }
