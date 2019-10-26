@@ -113,20 +113,20 @@ export default {
       dialogObj: {}, // 对话框数据
       shopStatusSelect: [
         {
-          value: '0',
+          value: 0,
           label: '关闭'
         },
         {
-          value: '1',
+          value: 1,
           label: '开启'
         }
       ],
       shopTypeSelect: [{
         label: '自营',
-        value: '1'
+        value: 1
       }, {
         label: '加盟',
-        value: '2'
+        value: 2
       }],
       tableList: [],
       isLoading: false,
@@ -154,7 +154,8 @@ export default {
         },
         {
           label: 'LOGO',
-          prop: 'shopLogo'
+          prop: 'shopLogo',
+          isImage: true
         },
         {
           label: '店招',
@@ -177,7 +178,7 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? vm.shopStatusSelect[row.status].label : ''
+            return row.status ? vm.shopStatusSelect[row.status].label : '关闭'
           }
         },
         {
