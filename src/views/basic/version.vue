@@ -46,7 +46,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="状态">
+            <el-form-item label="强制更新">
               <el-select
                 v-model="searchObj.isForce"
                 :size="size"
@@ -102,10 +102,10 @@ export default {
         }
       ],
       updateSelect: [{
-        value: 1,
+        value: 0,
         label: '否'
       }, {
-        value: 0,
+        value: 1,
         label: '是'
       }],
       tableList: [],
@@ -146,7 +146,7 @@ export default {
           prop: 'force',
           width: 150,
           formatter(row) {
-            return row.force === 0 ? '是' : '否'
+            return row.force === 0 ? '否' : '是'
           }
         },
         {
