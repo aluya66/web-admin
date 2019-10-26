@@ -148,37 +148,43 @@ export default {
       ],
       tableList: [],
       isLoading: false,
-      tableInnerBtns: [{
-        width: 100,
-        name: '编辑',
-        icon: 'el-icon-edit',
-        handle(row) {
-          vm.showDialog({
-            title: '编辑劵',
-            initData: row,
-            isEdit: true
-          })
+      tableInnerBtns: [
+      // {
+      //   width: 100,
+      //   name: '编辑',
+      //   icon: 'el-icon-edit',
+      //   handle(row) {
+      //     vm.showDialog({
+      //       title: '编辑劵',
+      //       initData: row,
+      //       isEdit: true
+      //     })
+      //   }
+      // },
+        {
+          name: '作废',
+          icon: 'el-icon-delete',
+          handle(row) {
+            console.log(row)
+            const { couponRuleName, id } = row
+            vm.confirmTip(`确认删除${couponRuleName}此规则列表`, () => {
+              vm.deleteData({ id })
+            })
+          }
         }
-      }, {
-        name: '作废',
-        icon: 'el-icon-delete',
-        handle(row) {
-          console.log(row)
-          const { couponRuleName, id } = row
-          vm.confirmTip(`确认删除${couponRuleName}此规则列表`, () => {
-            vm.deleteData({ id })
-          })
-        }
-      }
       ],
       tableHeader: [
         {
           label: '卡劵类型名称',
-          prop: 'couponRuleName'
+          prop: 'couponRuleName',
+          width: 100,
+          fixed: true
         },
         {
           label: '卡劵类型',
-          prop: 'couponRuleType'
+          prop: 'couponRuleType',
+          width: 100,
+          fixed: true
         },
         {
           label: '卡劵类型状态',
@@ -186,15 +192,11 @@ export default {
         },
         {
           label: '申请人',
-          prop: 'applicants',
-          width: 100,
-          fixed: true
+          prop: 'applicants'
         },
         {
           label: '申请部门',
-          prop: 'applyingDepartment',
-          width: 100,
-          fixed: true
+          prop: 'applyingDepartment'
         },
         {
           label: '是否需要密码',
