@@ -34,7 +34,7 @@ export default {
       },
       formModel: {
         name: '',
-        code: ''
+        code: '' 
       },
       showModal: false,
       dialogTitle: '',
