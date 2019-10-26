@@ -178,7 +178,7 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? vm.shopStatusSelect[row.status].label :'关闭'
+            return row.status ? vm.shopStatusSelect[row.status].label : '关闭'
           }
         },
         {
