@@ -9,8 +9,7 @@ export const add = params =>
 // 商品中心
 export const getList = params =>
   Http.fetch(`${context}/v1/goods/list`, params, {
-    method: 'get',
-    mockFile: 'goods-list'
+    method: 'get'
   })
 
 // 【详情】 商品中心详情

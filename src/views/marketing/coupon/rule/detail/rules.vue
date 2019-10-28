@@ -1,11 +1,10 @@
 <template>
-  <c-view>生成券规则</c-view>
+  <div>1111</div>
 </template>
 
 <script>
 
 export default {
-  name: 'couponRuleInfo',
   data() {
     return {}
   },

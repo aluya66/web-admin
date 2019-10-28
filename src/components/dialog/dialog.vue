@@ -15,6 +15,7 @@
 				v-for="(btn, index) in btns"
 				:key="index"
 				:type="btn.type"
+        :plain="btn.plain"
 				:disabled="btn.disabled"
 				:size="btn.size"
 				:loading="btn.loading"

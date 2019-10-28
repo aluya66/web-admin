@@ -4,14 +4,14 @@
 			<div class="title">
 				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
 			</div>
-      <!-- <div class="header-btn">
+      <div class="header-btn">
         <el-button
           :size="size"
           type="primary"
           icon="el-icon-plus"
-          @click="routerLink('/coupon/rule/info')"
+          @click="routerLink('/marketing/coupon/ruleInfo')"
         >新增</el-button>
-      </div> -->
+      </div>
 		</template>
     <div class="main__box">
       <c-table
@@ -116,7 +116,7 @@
 import mixinTable from 'mixins/table'
 import utils from 'utils'
 import CDialog from 'components/dialog'
-import AddRule from './addRule'
+import AddRule from './detail/index'
 
 export default {
   name: 'couponRuleList',

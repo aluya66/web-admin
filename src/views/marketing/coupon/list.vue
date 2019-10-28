@@ -88,7 +88,7 @@
         :title="dialogObj.title"
         close-btn
         @before-close="dialogObj.isShow = false"
-        @on-submit="dialogConfirm"
+        :btns="dialogObj.btns"
       >
         <add-coupon ref="childRef" :init-data="dialogObj.initData"></add-coupon>
       </c-dialog>
@@ -124,38 +124,45 @@ export default {
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [
         {
-          width: 100,
-          name: '详情',
-          icon: 'el-icon-view',
-          handle(row) {
-            vm.routerLink(`/marketing/coupon/detail/${row.id}`)
-          }
-        },
-        {
-          width: 100,
+          width: 180,
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
             vm.showDialog({
               title: '编辑劵',
               initData: row,
-              isEdit: true
+              isEdit: true,
+              btns: [{
+                label: '取 消',
+                name: 'cancel'
+              },
+              {
+                label: '提交审核',
+                name: 'submit',
+                type: 'primary',
+                handle() {
+                  vm.dialogConfirm()
+                }
+              }]
             })
           }
         },
         {
-          width: 100,
           name: '审核',
           icon: 'el-icon-check',
           handle(row) {
             const { couponName, id } = row
             vm.confirmTip(`确认时候审核${couponName}劵信息`, () => {
               vm.verifyData({ id })
+            }, () => {
+              console.log(2121)
+            }, {
+              confirmButtonText: '审核通过',
+              cancelButtonText: '审核不通过'
             })
           }
         },
         {
-          width: 100,
           name: '删除',
           icon: 'el-icon-delete',
           handle(row) {
@@ -330,12 +337,32 @@ export default {
         }
       })
     },
+    dialogDraft() {
+      console.log('dialogDraft')
+    },
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
         title: opts.title || '新增劵',
         isEdit: opts.isEdit || false,
-        initData: opts.initData
+        initData: opts.initData,
+        btns: opts.btns || [{
+          label: '取 消',
+          name: 'cancel'
+        },
+        {
+          label: '保存草稿',
+          name: 'draft',
+          type: 'primary',
+          plain: true,
+          handle: this.dialogDraft
+        },
+        {
+          label: '提交审核',
+          name: 'submit',
+          type: 'primary',
+          handle: this.dialogConfirm
+        }]
       }
     },
     /**

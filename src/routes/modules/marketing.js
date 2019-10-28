@@ -28,9 +28,9 @@ export default {
         title: 'couponRuleList'
       }
     }, {
-      path: '/marketing/coupon/ruleInfo/:id',
+      path: '/marketing/coupon/ruleInfo/:id?',
       name: 'couponRuleInfo',
-      component: () => import('@/views/marketing/coupon/rule/info'),
+      component: () => import('@/views/marketing/coupon/rule/detail/index'),
       hidden: true,
       meta: {
         icon: 'table',
