@@ -121,61 +121,62 @@ export default {
         brandName: '',
         dataTime: ''
       },
-      marketableSelect: [{
-        value: 1,
-        label: '上架'
-      },
-      {
-        value: 2,
-        label: '下架'
-      }],
       pickerOptions: utils.pickerOptions,
-      tableInnerBtns: [{
-        width: 130,
-        name: '详情',
-        icon: 'el-icon-edit'
-        // handle(row) {
-        //   vm.showDialog({
-        //     title: '编辑劵',
-        //     initData: row,
-        //     isEdit: true
-        //   })
-        // }
-        // width: 100,
-        // name: '详情',
-        // icon: 'el-icon-view',
-        // handle(row) {
-        //   vm.routerLink(`/goods/detail/${row.id}`)
-        // }
-      }, {
-        width: 130,
-        name: '审核',
-        icon: 'el-icon-edit',
-        handle(row) {
-          const { couponName, id } = row
-          vm.confirmTip(`确认时候审核${couponName}劵信息`, () => {
-            vm.verifyData({ id })
-          })
+      tableInnerBtns: [
+        {
+          width: 100,
+          name: '详情',
+          icon: 'el-icon-view',
+          handle(row) {
+            vm.routerLink(`/marketing/coupon/detail/${row.id}`)
+          }
+        },
+        {
+          width: 100,
+          name: '编辑',
+          icon: 'el-icon-edit',
+          handle(row) {
+            vm.showDialog({
+              title: '编辑劵',
+              initData: row,
+              isEdit: true
+            })
+          }
+        },
+        {
+          width: 100,
+          name: '审核',
+          icon: 'el-icon-check',
+          handle(row) {
+            const { couponName, id } = row
+            vm.confirmTip(`确认时候审核${couponName}劵信息`, () => {
+              vm.verifyData({ id })
+            })
+          }
+        },
+        {
+          width: 100,
+          name: '删除',
+          icon: 'el-icon-delete',
+          handle(row) {
+            const { couponName, id } = row
+            vm.confirmTip(`确认删除${couponName}劵信息`, () => {
+              vm.deleteData({ id })
+            })
+          }
         }
-      }, {
-        name: '删除',
-        icon: 'el-icon-delete',
-        handle(row) {
-          const { couponName, id } = row
-          vm.confirmTip(`确认删除${couponName}劵信息`, () => {
-            vm.deleteData({ id })
-          })
-        }
-      }],
+      ],
       tableHeader: [
         {
           label: '券名称 ',
           prop: 'couponName',
-          width: 100
+          width: 100,
+          fixed: true
         },
         {
           label: '卡劵类型id',
-          prop: 'couponRuleId'
+          prop: 'couponRuleId',
+          fixed: true
         },
         {
           label: '卡劵类型',
@@ -188,7 +189,10 @@ export default {
         },
         {
           label: '生成数量',
-          prop: 'couponNumber'
+          prop: 'couponNumber',
+          formatter(row) {
+            return `${row.couponNumber}张`
+          }
         },
         {
           label: '有效期结束时间',
@@ -222,9 +226,21 @@ export default {
           label: '激活时间_月份',
           prop: 'limitActivateMonth'
         },
+        // {
+        //   label: '激活时间_天数',
+        //   prop: 'limitActivateDay'
+        // },
+        {
+          label: '激活时间类型_天数',
+          prop: 'limitActivateDayType'
+        },
+        {
+          label: '激活时间_月份',
+          prop: 'limitActivateMonths'
+        },
         {
           label: '激活时间_天数',
-          prop: 'limitActivateDay'
+          prop: 'limitActivateDays'
         },
         {
           label: '激活开始时间',
@@ -326,24 +342,22 @@ export default {
      * 确认新增操作
     */
     addHandle(childFormModel) {
-      // codeing ajax
-      // ajax成功方法里面加入 关闭对话框标识
-      // addCoupon
       this.$api.marketing.addCoupon(childFormModel).then(res => {
         this.$msgTip('添加成功')
         this.fetchData()
-        this.dialogObj.isShow = false
       })
       this.dialogObj.isShow = false
-    }
+    },
     /**
      * 确认修改操作
     */
-    // editHandle(formModel) {
-    //   // codeing ajax
-    //   // ajax成功方法里面加入 关闭对话框标识
-    //   this.dialogObj.isShow = false
-    // }
+    editHandle(formModel) {
+      this.$api.marketing.addCoupon(formModel).then(res => {
+        this.$msgTip('修改成功')
+        this.fetchData()
+      })
+      this.dialogObj.isShow = false
+    }
   }
 }
 </script>
