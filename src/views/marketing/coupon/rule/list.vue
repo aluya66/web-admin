@@ -4,14 +4,14 @@
 			<div class="title">
 				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
 			</div>
-      <div class="header-btn">
+      <!-- <div class="header-btn">
         <el-button
           :size="size"
           type="primary"
           icon="el-icon-plus"
-          @click="routerLink('/rule/info')"
+          @click="routerLink('/coupon/rule/info')"
         >新增</el-button>
-      </div>
+      </div> -->
 		</template>
     <div class="main__box">
       <c-table

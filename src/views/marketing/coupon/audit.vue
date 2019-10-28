@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" icon="el-icon-plus" @click="showDialog">新增</el-button>
+        <!-- <el-button :size="size" type="primary" icon="el-icon-plus" @click="showDialog">新增</el-button> -->
       </div>
     </template>
     <div class="main__box">
@@ -113,52 +113,54 @@ export default {
         brandName: '',
         dataTime: ''
       },
-      marketableSelect: [{
-        value: '1',
-        label: '上架'
-      },
-      {
-        value: '2',
-        label: '下架'
-      }],
+      // marketableSelect: [{
+      //   value: 1,
+      //   label: '上架'
+      // },
+      // {
+      //   value: 2,
+      //   label: '下架'
+      // }],
       pickerOptions: utils.pickerOptions,
-      tableInnerBtns: [{
-        width: 130,
-        name: '详情',
-        icon: 'el-icon-edit'
-        // handle(row) {
-        //   vm.showDialog({
-        //     title: '编辑劵',
-        //     initData: row,
-        //     isEdit: true
-        //   })
-        // }
-        // width: 100,
-        // name: '详情',
-        // icon: 'el-icon-view',
-        // handle(row) {
-        //   vm.routerLink(`/goods/detail/${row.id}`)
-        // }
-      }, {
-        width: 130,
-        name: '审核',
-        icon: 'el-icon-edit',
-        handle(row) {
-          const { couponName, id } = row
-          vm.confirmTip(`确认时候审核${couponName}劵信息`, () => {
-            vm.verifyData({ id })
-          })
-        }
-      }, {
-        name: '删除',
-        icon: 'el-icon-delete',
-        handle(row) {
-          const { couponName, id } = row
-          vm.confirmTip(`确认删除${couponName}劵信息`, () => {
-            vm.deleteData({ id })
-          })
-        }
-      }],
+      tableInnerBtns: [
+      //   {
+      //   width: 130,
+      //   name: '详情',
+      //   icon: 'el-icon-edit'
+      //   // handle(row) {
+      //   //   vm.showDialog({
+      //   //     title: '编辑劵',
+      //   //     initData: row,
+      //   //     isEdit: true
+      //   //   })
+      //   // }
+      //   // width: 100,
+      //   // name: '详情',
+      //   // icon: 'el-icon-view',
+      //   // handle(row) {
+      //   //   vm.routerLink(`/goods/detail/${row.id}`)
+      //   // }
+      // }, {
+      //   width: 130,
+      //   name: '审核',
+      //   icon: 'el-icon-edit',
+      //   handle(row) {
+      //     const { couponName, id } = row
+      //     vm.confirmTip(`确认时候审核${couponName}劵信息`, () => {
+      //       vm.verifyData({ id })
+      //     })
+      //   }
+      // }, {
+      //   name: '删除',
+      //   icon: 'el-icon-delete',
+      //   handle(row) {
+      //     const { couponName, id } = row
+      //     vm.confirmTip(`确认删除${couponName}劵信息`, () => {
+      //       vm.deleteData({ id })
+      //     })
+      //   }
+      // }
+      ],
       tableHeader: [
         {
           label: '卡劵类型id',

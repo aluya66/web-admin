@@ -103,6 +103,7 @@
 
 <script>
 import mixinTable from 'mixins/table'
+import utils from 'utils'
 
 export default {
   name: 'shopList',
@@ -116,6 +117,7 @@ export default {
         preferentialAmount: '', // 门槛金额
         dataTime: '' // 时间
       },
+      pickerOptions: utils.pickerOptions,
       dialogObj: {}, // 对话框数据
       shopStatusSelect: [
         {

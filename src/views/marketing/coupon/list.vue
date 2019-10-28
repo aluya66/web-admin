@@ -122,11 +122,11 @@ export default {
         dataTime: ''
       },
       marketableSelect: [{
-        value: '1',
+        value: 1,
         label: '上架'
       },
       {
-        value: '2',
+        value: 2,
         label: '下架'
       }],
       pickerOptions: utils.pickerOptions,
