@@ -9,7 +9,7 @@ export default {
       tableList: [], // 列表数据
       pageInfo: { // 页码信息
         pageNum: 1,
-        numPerPage: 10,
+        pageNo: 10,
         totalNum: 0
       }
     }
@@ -24,7 +24,7 @@ export default {
      */
     changePagination(pageInfo, fetchData) {
       this.pageInfo.pageNum = pageInfo.page
-      this.pageInfo.numPerPage = pageInfo.limit
+      this.pageInfo.pageNo = pageInfo.limit
       fetchData ? fetchData() : this.fetchData()
     },
     /**
