@@ -12,8 +12,8 @@
       ></el-cascader>
       <span v-else>{{formModel.categoryName}}</span>
     </el-form-item>
-    <el-form-item label="经营类型:" prop="goodsBusinessId">
-      <el-select
+    <el-form-item label="经营类型:" prop="businessValue">
+      <!-- <el-select
         v-if="!isView"
         class="select-item"
         :disabled="isDisabled"
@@ -26,12 +26,13 @@
           :label="item.label"
           :value="item.value"
         ></el-option>
-      </el-select>
-      <span
+      </el-select> -->
+      <!-- <span
         v-else
-      >{{formModel.goodsBusinessId ? businessArr[formModel.goodsBusinessId - 1].label : ''}}</span>
+      >{{formModel.goodsBusinessId ? businessArr[formModel.goodsBusinessId - 1].label : ''}}</span> -->
+      {{formModel.businessValue}}
     </el-form-item>
-    <el-form-item label="商品类型:" prop="goodsTypeId">
+    <!-- <el-form-item label="商品类型:" prop="goodsTypeId">
       <el-select
         v-if="!isView"
         class="select-item"
@@ -47,7 +48,7 @@
         ></el-option>
       </el-select>
       <span v-else>{{formModel.goodsTypeId ? goodsTypeArr[formModel.goodsTypeId - 1].label : ''}}</span>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="商品名称:" prop="goodsName">
       <el-input
         v-if="!isView"
@@ -215,7 +216,7 @@ export default {
   },
   computed: {
     formModel() {
-      const { categoryCode, goodsBusinessId, goodsTypeId, brandName, brandId, goodsName, goodsShortName, goodsStaticFiles, goodsBrief, origin, coverImg, categoryName } = this.dataObj
+      const { categoryCode, businessValue, goodsTypeId, brandName, brandId, goodsName, goodsShortName, goodsStaticFiles, goodsBrief, origin, coverImg, categoryName } = this.dataObj
       const fileList = goodsStaticFiles && goodsStaticFiles.length ? goodsStaticFiles.map(res => ({
         name: res.imageId,
         url: res.imageUrl,
@@ -234,9 +235,9 @@ export default {
           }
         })
       }
-      console.log(curCategoryCode)
+      // console.log(curCategoryCode)
       // const categoryCode = [categoryCode.substr(0, 2), categoryCode.substr(2, 4)]
-      return { fileList, categoryName, categoryCode: curCategoryCode, goodsBusinessId, brandName, brandId, goodsTypeId, goodsName, goodsShortName, goodsBrief, origin, coverImg }
+      return { fileList, categoryName, categoryCode: curCategoryCode, businessValue, brandName, brandId, goodsTypeId, goodsName, goodsShortName, goodsBrief, origin, coverImg }
     }
   },
   mounted() {

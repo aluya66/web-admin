@@ -52,12 +52,12 @@
     <el-form-item label="上架:">
       <el-switch v-model="formModel.marketable" :disabled="isView || isDisabled"></el-switch>
     </el-form-item>
-    <el-form-item label="上架时间:" v-if="isView || isDisabled">
-      {{formModel.updated}}
+    <!-- <el-form-item label="上架时间:" v-if="isView || isDisabled">
+      {{formModel.uptime}}
     </el-form-item>
     <el-form-item label="下架时间:" v-if="isView || isDisabled">
       {{formModel.downtime}}
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="创建时间:" v-if="isView || isDisabled">
       {{formModel.created}}
     </el-form-item>
@@ -103,7 +103,9 @@ export default {
       goodsChannelValue,
       weight,
       weightUnit,
-      marketable
+      marketable,
+      created,
+      updated
     } = this.dataObj
 
     this.formModel = {
@@ -112,7 +114,9 @@ export default {
       goodsChannelValue,
       weight,
       weightUnit,
-      marketable: marketable === 1
+      marketable: marketable === 1,
+      created,
+      updated
     }
   },
   components: {

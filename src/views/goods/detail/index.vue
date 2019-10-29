@@ -10,7 +10,7 @@
       ref="formRef"
       :model="formModel"
       :rules="rules"
-      label-width="100px"
+      label-width="120px"
       class="form"
       label-position="right"
     >

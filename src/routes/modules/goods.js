@@ -53,9 +53,9 @@ export default {
     hidden: true,
     component: () => import('@/views/goods/detail/index'),
     meta: {
-      title: 'goodsSnapshootDetail',
       noCache: true,
-      activeMenu: '/goods/snapshoot'
+      activeMenu: '/goods/snapshoot',
+      title: 'goodsSnapshootDetail'
     }
   }]
 }
