@@ -141,6 +141,16 @@ export default {
         value: '2',
         label: '下架'
       }],
+      originList: [{
+        label: '门店挂板',
+        value: 1
+      }, {
+        label: '代销商品',
+        value: 2
+      }, {
+        label: '自营商品',
+        value: 3
+      }],
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [{
         width: 100,
@@ -169,6 +179,10 @@ export default {
           fixed: true
         },
         {
+          label: '商品编码',
+          prop: 'goodsBn'
+        },
+        {
           label: '商品名称',
           prop: 'goodsName',
           width: 200
@@ -180,41 +194,54 @@ export default {
           isImage: true
         },
         {
-          label: '商品编码',
-          prop: 'goodsBn'
+          label: '品牌',
+          prop: 'brandName'
         },
         {
           label: '商品类目',
           prop: 'categoryName'
         },
         {
-          label: '品牌',
-          prop: 'brandName'
+          label: '商品来源',
+          prop: 'origin',
+          formatter(row) {
+            return row.origin ? vm.originList[row.origin - 1].label : ''
+          }
         },
         {
-          label: '库存',
-          prop: 'retailPrice',
-          width: 100
+          label: '样衣成本价(元)',
+          prop: 'sampleCostPrice',
+          width: 115
         },
         {
-          label: '成本价',
-          prop: 'marketable',
-          width: 100
+          label: '成本成本价(元)',
+          prop: 'costPrice',
+          width: 115
         },
         {
-          label: '市场价',
-          prop: 'memberPrice',
-          width: 100
+          label: '成衣供货价(元)',
+          prop: 'supplyPrice',
+          width: 115
         },
         {
-          label: '销售价',
-          prop: 'mktPrice',
-          width: 100
+          label: '成衣散批价(元)',
+          prop: 'wholesalePrice',
+          width: 115
         },
         {
-          label: '大批发价',
+          label: '成衣大批价(元)',
           prop: 'largeBatchPrice',
-          width: 100
+          width: 115
+        },
+        {
+          label: '成衣会员价(元)',
+          prop: 'memberPrice',
+          width: 115
+        },
+        {
+          label: '零售价(元)',
+          prop: 'retailPrice',
+          width: 90
         },
         {
           label: '上架状态',
@@ -223,11 +250,6 @@ export default {
           formatter(row) {
             return row.marketable ? vm.marketableSelect[row.marketable - 1].label : ''
           }
-        },
-        {
-          label: '上货人',
-          prop: 'tagPrice',
-          width: 100
         },
         {
           label: '创建时间',

@@ -111,8 +111,8 @@ export default {
         {
           label: '品牌LOGO',
           prop: 'logo',
-          isImage: true,
-          fixed: true
+          fixed: true,
+          isImage: true
         },
         {
           label: '品牌名称',

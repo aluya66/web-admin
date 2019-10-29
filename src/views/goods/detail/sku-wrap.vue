@@ -52,7 +52,8 @@
             <th
               v-for="(item, index) in batchList"
               :key="'th_'+index"
-            >{{item.name !== 'sampleStock' ? item.label + '（元）': item.label}}</th>
+              :title="item.name"
+            >{{item.name !== 'sampleStock' ? item.label + '(元)': item.label}}</th>
             <th>是否启用</th>
             <th>是否主sku</th>
           </tr>
@@ -215,25 +216,29 @@ export default {
         value: '',
         name: 'sampleCostPrice'
       }, {
-        label: '供货价',
+        label: '成衣成本价',
+        value: '',
+        name: 'costPrice'
+      }, {
+        label: '成衣供货价',
         value: '',
         name: 'supplyPrice'
       }, {
-        label: '市场价',
-        value: '',
-        name: 'mktPrice'
-      }, {
-        label: '批发价',
+        label: '成衣散批价',
         value: '',
         name: 'wholesalePrice'
+      }, {
+        label: '成衣大批价',
+        value: '',
+        name: 'largeBatchPrice'
+      }, {
+        label: '成衣会员价',
+        value: '',
+        name: 'memberPrice'
       }, {
         label: '零售价',
         value: '',
         name: 'retailPrice'
-      }, {
-        label: '会员价',
-        value: '',
-        name: 'memberPrice'
       }, {
         label: '样衣库存',
         value: '',
@@ -376,29 +381,35 @@ export default {
       let childProduct = {
         childProductSpec: this.getChildProductSpec(index),
         goodsSkuSn: `${this.spuBn}-${index + 1}`, // sku款号
+        costPrice: '', // 成衣成本价
         sampleCostPrice: '', // 样衣成本价
-        supplyPrice: '', // 供货价
-        mktPrice: '', // 市场价
-        wholesalePrice: '', // 批发价
+        supplyPrice: '', // 成衣供货价
+        largeBatchPrice: '', // 成衣大批价
+        wholesalePrice: '', // 成衣散批价
         retailPrice: '', // 零售价
-        memberPrice: '', // 会员价
-        sampleStock: '', // 样衣库存
+        memberPrice: '', // 成衣会员价
+        sampleStock: 0, // 样衣库存
         isUse: true, // 是否有用sku
         isDefalut: false // 是否默认SKU
       }
       // console.log(this.skuList[index], childProduct.childProductSpec)
       // 判断是否从详情读取sku列表数据
-      if (this.skuList[index] && this.skuList[index].attributeColorValue === childProduct.childProductSpec[this.skuList[index].attrColorName] && this.skuList[index].attributeSpecValue === childProduct.childProductSpec[this.skuList[index].attrSpecName]) {
+      const curSkuInfo = this.skuList.find(item => {
+        return item.attributeColorValue === childProduct.childProductSpec[item.attrColorName] && item.attributeSpecValue === childProduct.childProductSpec[item.attrSpecName]
+      })
+      if (curSkuInfo) {
         childProduct = {
           ...childProduct,
-          sampleCostPrice: this.skuList[index].sampleCostPrice, // 样衣成本价
-          supplyPrice: this.skuList[index].supplyPrice, // 供货价
-          mktPrice: this.skuList[index].mktPrice, // 市场价
-          wholesalePrice: this.skuList[index].wholesalePrice, // 批发价
-          retailPrice: this.skuList[index].retailPrice, // 零售价
-          memberPrice: this.skuList[index].memberPrice, // 会员价
-          sampleStock: this.skuList[index].sampleStock, // 样衣库存
-          isDefalut: this.skuList[index].isDefalut === 1
+          goodsSkuSn: curSkuInfo.goodsSkuSn, // 商品sku款号
+          costPrice: curSkuInfo.costPrice, // 成衣成本价
+          sampleCostPrice: curSkuInfo.sampleCostPrice, // 样衣成本价
+          supplyPrice: curSkuInfo.supplyPrice, // 成衣供货价
+          wholesalePrice: curSkuInfo.wholesalePrice, // 成衣散批价
+          largeBatchPrice: curSkuInfo.largeBatchPrice, // 成衣大批价
+          retailPrice: curSkuInfo.retailPrice, // 零售价
+          memberPrice: curSkuInfo.memberPrice, // 成衣会员价
+          sampleStock: curSkuInfo.sampleStock, // 样衣库存
+          isDefalut: curSkuInfo.isDefalut === 1
         }
       }
       const spec = childProduct.childProductSpec

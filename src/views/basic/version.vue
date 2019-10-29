@@ -51,7 +51,7 @@
                 v-model="searchObj.isForce"
                 :size="size"
                 class="search-item"
-                placeholder="请选择平台"
+                placeholder="请选择更新"
                 clearable
               >
                 <el-option

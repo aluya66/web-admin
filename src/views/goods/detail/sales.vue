@@ -15,7 +15,19 @@
     <el-form-item label="商品规格:">
       <sku-wrap :is-view="isView || isDisabled" v-if="curAttrs.length" :sku-attrs="curAttrs" :sku-list="formModel.skus" :spu-bn="formModel.goodsBn"></sku-wrap>
     </el-form-item>
-    <el-form-item label="成衣成本价:">
+    <el-form-item label="样衣成本价(元):">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.sampleCostPrice"
+        :size="size"
+        placeholder="请输入样衣成本价"
+        clearable
+      />
+      <span v-else>{{formModel.sampleCostPrice}}</span>
+    </el-form-item>
+    <el-form-item label="成衣成本价(元):">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -27,19 +39,7 @@
       />
       <span v-else>{{formModel.costprice}}</span>
     </el-form-item>
-    <el-form-item label="成衣会员价:">
-      <el-input
-        v-if="!isView"
-        class="select-item"
-        :disabled="isDisabled"
-        v-model.trim="formModel.price"
-        :size="size"
-        placeholder="请输入成衣会员价"
-        clearable
-      />
-      <span v-else>{{formModel.price}}</span>
-    </el-form-item>
-    <el-form-item label="成衣供货价:">
+    <el-form-item label="成衣供货价(元):">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -51,29 +51,53 @@
       />
       <span v-else>{{formModel.supplyprice}}</span>
     </el-form-item>
-    <el-form-item label="成衣批发价:">
+    <el-form-item label="成衣散批价(元):">
       <el-input
         v-if="!isView"
         class="select-item"
         :disabled="isDisabled"
         v-model.trim="formModel.wholesaleprice"
         :size="size"
-        placeholder="请输入成本批发价"
+        placeholder="请输入成衣散批价"
         clearable
       />
       <span v-else>{{formModel.wholesaleprice}}</span>
     </el-form-item>
-    <el-form-item label="零售价:">
+    <el-form-item label="成衣大批价(元):">
       <el-input
         v-if="!isView"
         class="select-item"
         :disabled="isDisabled"
-        v-model.trim="formModel.tagprice"
+        v-model.trim="formModel.largeBatchPrice"
+        :size="size"
+        placeholder="请输入成衣大批价"
+        clearable
+      />
+      <span v-else>{{formModel.largeBatchPrice}}</span>
+    </el-form-item>
+    <el-form-item label="成衣会员价(元):">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.memberPrice"
+        :size="size"
+        placeholder="请输入成衣会员价"
+        clearable
+      />
+      <span v-else>{{formModel.memberPrice}}</span>
+    </el-form-item>
+    <el-form-item label="零售价(元):">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.retailPrice"
         :size="size"
         placeholder="请输入零售价"
         clearable
       />
-      <span v-else>{{formModel.tagprice}}</span>
+      <span v-else>{{formModel.retailPrice}}</span>
     </el-form-item>
   </c-card>
 </template>

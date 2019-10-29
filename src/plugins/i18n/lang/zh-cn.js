@@ -16,8 +16,14 @@ export default {
     goodsDetail: '商品详情',
     goodsSnapshoot: '商品快照',
     goodsSnapshootDetail: '快照详情',
-    shop: '分销中心',
-    shopList: '店铺列表'
+    shop: '渠道中心',
+    shopList: '店铺列表',
+    marketing: '营销中心',
+    coupon: '券管理',
+    couponRuleList: '券规则列表',
+    couponRuleInfo: '券规则信息',
+    couponList: '券列表',
+    couponAudit: '券审核'
   },
   navbar: {
     logout: '退出',
