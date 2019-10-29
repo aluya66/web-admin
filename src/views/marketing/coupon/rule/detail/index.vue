@@ -14,8 +14,8 @@
       class="form"
       label-position="right"
     >
-      <v-basic title="基础信息"></v-basic>
-      <v-rules title="规则设置"></v-rules>
+      <v-basic title="基础信息" :data-obj="formModel"></v-basic>
+      <v-rules title="规则设置" :data-obj="formModel"></v-rules>
     </el-form>
   </c-view>
 </template>
@@ -38,7 +38,18 @@ export default {
         type: 1,
         curData: {}
       },
-      btnLoading: false
+      btnLoading: false,
+      rules: {
+        couponRuleName: [
+          { required: true, message: '请输入券名称', trigger: 'blur' }
+        ],
+        limitReceive: [
+          { required: true, message: '每人限选1张券', trigger: 'blur' }
+        ],
+        categoryType: [
+          { required: true, message: '请选择品类', trigger: 'change' }
+        ]
+      }
     }
   },
 
@@ -60,7 +71,7 @@ export default {
 <style lang='less' scope>
 .form {
   background-color: @white;
-  padding: 20px 20px 50px 0;
+  padding: 15px 15px;
   .form-item {
     width: 100%;
   }

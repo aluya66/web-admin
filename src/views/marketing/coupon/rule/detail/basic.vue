@@ -12,7 +12,7 @@
       />
       <span v-else>{{formModel.couponRuleName}}</span>
     </el-form-item>
-    <el-form-item label="城市渠道:" prop="">
+    <el-form-item label="城市渠道:" prop>
       <el-cascader
         v-if="!isView"
         class="select-item"
@@ -41,6 +41,9 @@
       </el-select>
       <span v-else>{{formModel.goodsTypeId ? channelList[formModel.goodsTypeId - 1].label : ''}}</span>
     </el-form-item>
+    <el-form-item label="生成密码:">
+      <el-switch v-model="formModel.hasCode" :disabled="isView || isDisabled"></el-switch>
+    </el-form-item>
     <el-form-item label="限制类型:">
       <el-radio-group v-model="formModel.limit">
         <el-radio
@@ -50,6 +53,8 @@
           :label="item.value"
         >{{item.label}}</el-radio>
       </el-radio-group>
+    </el-form-item>
+    <el-form-item>
       <el-input
         v-if="!isView"
         class="select-item"
@@ -58,22 +63,21 @@
         :disabled="isDisabled"
         placeholder="请输入时间"
         clearable
-      />
+      >
+        <el-select v-model="formModel.unit" slot="append" placeholder="请选择" class="input-select">
+          <el-option label="天" :value="1"></el-option>
+          <el-option label="小时" :value="2"></el-option>
+          <el-option label="分" :value="3"></el-option>
+        </el-select>
+      </el-input>
     </el-form-item>
   </c-card>
 </template>
 <script>
 import CCard from 'components/card'
-import utils from 'utils'
+// import utils from 'utils'
 
 export default {
-  data() {
-    return {
-      areaList: [],
-      channelList: [],
-      limitList: []
-    }
-  },
   props: {
     title: String,
     dataObj: {
@@ -93,65 +97,28 @@ export default {
       default: false
     }
   },
-  computed: {
-    formModel() {
-      const { categoryCode, goodsBusinessId, goodsTypeId, brandName, brandId, goodsName, goodsShortName, goodsStaticFiles, goodsBrief, origin, coverImg, categoryName } = this.dataObj
-      const fileList = goodsStaticFiles && goodsStaticFiles.length ? goodsStaticFiles.map(res => ({
-        name: res.imageId,
-        url: res.imageUrl,
-        videoUrl: res.videoUrl,
-        fileType: res.fileType
-      })) : []
-
-      console.log(fileList, this.dataObj)
-
-      const curCategoryCode = []
-      if (categoryCode) {
-        const codeLen = categoryCode.split('')
-        codeLen.forEach((res, index) => {
-          if (index % 2 === 0 && index + 2 <= codeLen.length) {
-            curCategoryCode.push(categoryCode.substr(0, index + 2))
-          }
-        })
+  data() {
+    return {
+      areaList: [],
+      channelList: [],
+      limitList: [{
+        label: '限日期',
+        value: 0
+      }, {
+        label: '限时长',
+        value: 1
+      }],
+      formModel: {
+        unit: 1
       }
-      console.log(curCategoryCode)
-      // const categoryCode = [categoryCode.substr(0, 2), categoryCode.substr(2, 4)]
-      return { fileList, categoryName, categoryCode: curCategoryCode, goodsBusinessId, brandName, brandId, goodsTypeId, goodsName, goodsShortName, goodsBrief, origin, coverImg }
     }
   },
-  mounted() {
-    this.getCategoryList()
-    this.getbrandList()
+  created() {
+    const curData = this.dataObj
+    this.formModel = Object.assign({}, this.formModel, curData)
   },
   methods: {
-    getCategoryList() {
-      this.$api.basic.queryCategoryAll().then(res => {
-        this.categoryList = utils.formartLevelData(res)
-      })
-    },
-    getbrandList() {
-      this.$api.basic.brandList({
-        pageNum: 1,
-        numPerPage: 100
-      }).then(res => {
-        const { data, totalCount } = res
-        if (totalCount) {
-          this.brandList = data.map(val => ({
-            label: val.name,
-            value: val.id
-          }))
-        }
-      })
-    },
-    uploadSuccess(response, file, fileList) {
-      this.fileList = fileList
-    },
-    uploadRemove(file, fileList) {
-      this.fileList = fileList
-    },
-    uploadReview(file) {
-      this.$emit('show-image', file)
-    }
+
   },
   components: {
     CCard
@@ -160,29 +127,11 @@ export default {
 </script>
 <style lang="less" scoped>
 .form-card {
-  .el-form-item {
-    width: 98%;
-    margin-bottom: 15px;
-  }
   .select-item {
     width: 30%;
   }
-  .pic {
-    padding-bottom: 25px;
-    span {
-      display: inline-block;
-      margin-bottom: 10px;
-    }
-    .info {
-      line-height: 20px;
-      height: 20px;
-      margin-top: 5px;
-      font-size: @f12;
-    }
-  }
-  .coverImg {
-    width: 200px;
-    height: 200px;
+  .input-select {
+    width: 80px;
   }
 }
 </style>
