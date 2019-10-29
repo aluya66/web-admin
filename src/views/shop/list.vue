@@ -111,14 +111,14 @@ export default {
       tableList: [],
       isLoading: false,
       tableInnerBtns: [
-        {
-          width: 130,
-          name: '详情',
-          icon: 'el-icon-view',
-          handle (row) {
-            vm.routerLink(`/shop/detail/${row.shopId}`)
-          }
-        }
+        // {
+        //   width: 130,
+        //   name: '详情',
+        //   icon: 'el-icon-view',
+        //   handle (row) {
+        //     vm.routerLink(`/shop/detail/${row.shopId}`)
+        //   }
+        // }
       ],
       tableHeader: [
         {
