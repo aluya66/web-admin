@@ -214,7 +214,7 @@ export default {
           width: 115
         },
         {
-          label: '成本成本价(元)',
+          label: '成衣成本价(元)',
           prop: 'costPrice',
           width: 115
         },

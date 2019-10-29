@@ -2,11 +2,23 @@ import Http from '../utils/request'
 
 const context = process.env.VUE_APP_CONSOLE_MARKETING
 
+// 新增券规则
+export const addCouponRule = params =>
+  Http.fetch(`${context}/api/mks/coupon/rule`, params, {
+    method: 'post'
+  })
+
 // 券规则列表
 export const getCouponRule = params =>
   Http.fetch(`${context}/api/mks/coupon/rule`, params, {
     method: 'get',
     mockFile: 'couponRule-list'
+  })
+
+// 查看券规则详情
+export const getCouponRuleDetail = params =>
+  Http.fetch(`${context}/api/mks/coupon/rule/detail`, params, {
+    method: 'get'
   })
 
 // 所有券规则
