@@ -220,8 +220,8 @@ export default {
     deleteData(categoryId) {
       this.$api.basic.deleteCategory({ categoryId }).then(() => {
         if (this.dataItems.length === 1) {
-          const { pageNum } = this.pageInfo
-          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
+          const { pageNo } = this.pageInfo
+          this.pageInfo.pageNo = pageNo > 1 ? pageNo - 1 : 1
         }
         this.fetchData()
       })

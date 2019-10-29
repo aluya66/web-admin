@@ -8,8 +8,8 @@ export default {
       size: 'medium', // 表格、按钮大小
       tableList: [], // 列表数据
       pageInfo: { // 页码信息
-        pageNum: 1,
-        pageNo: 10,
+        pageNo: 1,
+        pageSize: 10,
         totalNum: 0
       }
     }
@@ -23,8 +23,8 @@ export default {
      * @param {*} fetchData 数据请求方法
      */
     changePagination(pageInfo, fetchData) {
-      this.pageInfo.pageNum = pageInfo.page
-      this.pageInfo.pageNo = pageInfo.limit
+      this.pageInfo.pageNo = pageInfo.page
+      this.pageInfo.pageSize = pageInfo.limit
       fetchData ? fetchData() : this.fetchData()
     },
     /**
@@ -46,7 +46,17 @@ export default {
      *  搜索按钮
      */
     searchSubmit() {
-      this.pageInfo.pageNum = 1
+      this.pageInfo.pageNo = 1
+      this.fetchData()
+    },
+    /**
+     * 删除列表数据
+     */
+    delResetData(data) {
+      if (this.tableList.length === 1) {
+        const { pageNo } = this.pageInfo
+        this.pageInfo.pageNo = pageNo > 1 ? pageNo - 1 : 1
+      }
       this.fetchData()
     }
   },

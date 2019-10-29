@@ -89,8 +89,8 @@
     <c-pagination
       v-show="!noPage && tableList.length > 0"
       :total="pageInfo.totalNum"
-      :page.sync="pageInfo.pageNum"
-      :limit.sync="pageInfo.pageNo"
+      :page.sync="pageInfo.pageNo"
+      :limit.sync="pageInfo.pageSize"
       @pagination="changePagination"
     ></c-pagination>
   </div>
@@ -141,8 +141,8 @@ export default {
       type: Object,
       default() {
         return {
-          pageNum: 1,
-          pageNo: 10,
+          pageNo: 1,
+          pageSize: 10,
           totalNum: 0
         }
       }

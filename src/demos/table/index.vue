@@ -255,11 +255,7 @@ export default {
     deleteData(param, msgTip = '删除成功') {
       this.$api.basic.deleteBrand(param).then(() => {
         this.$msgTip(msgTip)
-        if (this.tableList.length === 1) {
-          const { pageNum } = this.pageInfo
-          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
-        }
-        this.fetchData()
+        this.delResetData()
       })
     }
   }

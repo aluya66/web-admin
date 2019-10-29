@@ -296,11 +296,7 @@ export default {
       // 主要修改接口
       this.$api.basic.deleteBrand(param).then(() => {
         this.$msgTip(msgTip)
-        if (this.tableList.length === 1) {
-          const { pageNum } = this.pageInfo
-          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
-        }
-        this.fetchData()
+        this.delResetData()
       })
     },
     dialogConfirm() {

@@ -12,18 +12,6 @@
       />
       <span v-else>{{formModel.couponRuleName}}</span>
     </el-form-item>
-    <el-form-item label="城市渠道:" prop>
-      <el-cascader
-        v-if="!isView"
-        class="select-item"
-        :disabled="isDisabled"
-        placeholder="检索城市渠道"
-        v-model="formModel.categoryCode"
-        :options="areaList"
-        filterable
-      ></el-cascader>
-      <span v-else>{{formModel.categoryName}}</span>
-    </el-form-item>
     <el-form-item label="应用渠道:" prop>
       <el-select
         v-if="!isView"

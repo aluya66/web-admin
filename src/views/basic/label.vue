@@ -294,12 +294,8 @@ export default {
       // 主要修改接口
       this.$api.basic.deleteQuerypage(param).then(() => {
         this.$msgTip(msgTip)
-        if (this.tableList.length === 1) {
-          const { pageNum } = this.pageInfo
-          this.pageInfo.pageNum = pageNum > 1 ? pageNum - 1 : 1
-        }
+        this.delResetData()
       })
-      this.fetchData()
     },
     /**
      * 对话框确认按钮，集成了表单提交功能

@@ -148,9 +148,9 @@ export default {
   methods: {
     getAttrs() {
       this.$api.basic.getGoodsattrval({
-        pageNum: 1,
+        pageNo: 1,
         type: 2, // 1:参数，2:属性
-        pageNo: 20
+        pageSize: 20
       }).then(res => {
         const { totalCount, data } = res
         if (totalCount) {
