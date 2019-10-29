@@ -72,7 +72,7 @@
               />
             </el-form-item>
 
-             <el-form-item label="操作时间">
+             <el-form-item label="规则生成时间">
               <el-date-picker
                 :size="size"
                 v-model="searchObj.dataTime"
@@ -104,7 +104,6 @@
         :title="dialogObj.title"
         close-btn
         @before-close="dialogObj.isShow = false"
-        @on-submit="dialogConfirm"
       >
         <add-rule ref="childRef" :init-data="dialogObj.initData"></add-rule>
       </c-dialog>
@@ -166,9 +165,9 @@ export default {
           icon: 'el-icon-delete',
           handle(row) {
             console.log(row)
-            const { couponRuleName, id } = row
-            vm.confirmTip(`确认删除${couponRuleName}此规则列表`, () => {
-              vm.deleteData({ id })
+            const { couponRuleName, couponRuleId } = row
+            vm.confirmTip(`确认作废${couponRuleName}此规则劵`, () => {
+              vm.deleteData({ couponRuleId })
             })
           }
         }
@@ -188,7 +187,14 @@ export default {
         },
         {
           label: '卡劵类型状态',
-          prop: 'couponStatus'
+          prop: 'couponStatus',
+          formatter(row) {
+            return row.couponStatus === 0 ? '已作废' : '启用中'
+          }
+        },
+        {
+          label: '品类规则',
+          prop: 'categoryType'
         },
         {
           label: '申请人',
@@ -199,10 +205,10 @@ export default {
           prop: 'applyingDepartment'
         },
         {
-          label: '是否需要密码',
-          prop: 'hasCode',
+          label: '需要密码',
+          prop: 'useCode',
           formatter(row) {
-            return row.hasCode === 0 ? '否' : '是'
+            return row.useCode === 0 ? '否' : '是'
           }
         },
         {
@@ -217,12 +223,29 @@ export default {
           prop: 'userLevel'
         },
         {
+          label: '平台ID',
+          prop: 'platforms',
+          formatter(row) {
+            return row.platforms.join('/')
+          }
+        },
+        {
           label: '人均限领',
           prop: 'limitReceive'
         },
         {
+          label: '积分门槛',
+          prop: 'pointLimit',
+          formatter(row) {
+            return row.pointLimit === 0 ? '无' : '有'
+          }
+        },
+        {
           label: '是否优惠门槛',
-          prop: 'preferentialLevel'
+          prop: 'preferentialLevel',
+          formatter(row) {
+            return row.preferentialLevel === 0 ? '无' : '有'
+          }
         },
         {
           label: '优惠类型',
@@ -236,8 +259,18 @@ export default {
           prop: 'preferentialValue'
         },
         {
-          label: '是否可重复使用',
-          prop: 'repeatUse'
+          label: '返回规则',
+          prop: 'returnRules',
+          formatter(row) {
+            return row.returnRules.join('/')
+          }
+        },
+        {
+          label: '重复使用',
+          prop: 'repeatUse',
+          formatter (row) {
+            return row.repeatUse === 0 ? '不可以' : '可以'
+          }
         },
         {
           label: '备注',
@@ -254,9 +287,10 @@ export default {
     fetchData () {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
+      const searchDate = this.getSearchDate(dataTime)
       this.isLoading = true
-      this.$api.marketing.getCoupon({
-        ...this.searchObj,
+      this.$api.marketing.getCouponRule({
+        ...searchDate,
         ...other,
         ...page
       })
@@ -271,49 +305,35 @@ export default {
           }
         })
     },
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const childFormModel = childRef.formModel
-          if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel)
-          } else {
-            this.editHandle(childFormModel)
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    deleteData(parms, msgTip = '删除成功') {
+    // dialogConfirm() {
+    //   const childRef = this.$refs.childRef
+    //   childRef.$refs.formRef.validate(valid => {
+    //     if (valid) {
+    //       const childFormModel = childRef.formModel
+    //       if (!this.dialogObj.isEdit) {
+    //         this.addHandle(childFormModel)
+    //       } else {
+    //         this.editHandle(childFormModel)
+    //       }
+    //     } else {
+    //       console.log('error submit!!')
+    //       return false
+    //     }
+    //   })
+    // },
+    deleteData(parms, msgTip = '作废成功') {
       // 主要修改接口
-      this.$api.coupon.unableCoupon(parms).then(() => {
+      this.$api.marketing.unableCoupon(parms).then(() => {
         this.$msgTip(msgTip)
         this.delResetData()
       })
-    },
-    addHandle() {
-      this.dialogObj.isShow = false
-    },
-    editHandle() {
-      this.dialogObj.isShow = false
-    },
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '新增商品',
-        isEdit: opts.isEdit || false,
-        initData: opts.initData
-      }
-      //  width: 100,
-      //   name: '详情',
-      //   icon: 'el-icon-view',
-      //   handle(row) {
-      // opts.routerLink(`/goods/detail/${row.id}`)
-      // }
     }
+    // addHandle() {
+    //   this.dialogObj.isShow = false
+    // },
+    // editHandle() {
+    //   this.dialogObj.isShow = false
+    // }
   }
 }
 </script>

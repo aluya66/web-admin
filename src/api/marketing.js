@@ -9,10 +9,16 @@ export const getCouponRule = params =>
     mockFile: 'couponRule-list'
   })
 
+// 所有券规则
+export const allCouponRule = params =>
+  Http.fetch(`${context}/api/mks/coupon/rule/all`, params, {
+    method: 'get'
+  })
+
 // 券规则作废
 export const unableCoupon = params =>
   Http.fetch(`${context}/api/mks/coupon/rule/unable`, params, {
-    method: 'get',
+    method: 'put',
     mockFile: 'couponRule-unable'
   })
 
@@ -23,13 +29,12 @@ export const getCoupon = params =>
     mockFile: 'coupon-list'
   })
 
-// 劵列表详情
-export const couponDetail = params =>
-  Http.fetch(`${context}/api/mks/coupon/detail`, params, {
-    method: 'get',
-    joinUrl: '/',
-    mockFile: 'coupon-list'
-  })
+// // 劵列表详情
+// export const couponDetail = params =>
+//   Http.fetch(`${context}/api/mks/coupon/detail`, params, {
+//     method: 'get',
+//     mockFile: 'coupon-list'
+//   })
 
 // 劵新增
 export const addCoupon = params =>

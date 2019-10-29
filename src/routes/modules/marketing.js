@@ -48,16 +48,16 @@ export default {
         icon: 'table'
       }
     },
-    {
-      path: '/marketing/coupon/detail/:id',
-      name: 'couponListDetail',
-      component: () => import('@/views/marketing/coupon/detail'),
-      hidden: true,
-      meta: {
-        title: 'couponListDetail',
-        icon: 'table'
-      }
-    },
+    // {
+    //   path: '/marketing/coupon/detail/:id',
+    //   name: 'couponListDetail',
+    //   component: () => import('@/views/marketing/coupon/detail'),
+    //   hidden: true,
+    //   meta: {
+    //     title: 'couponListDetail',
+    //     icon: 'table'
+    //   }
+    // },
     {
       path: '/marketing/coupon/audit',
       name: 'couponAudit',
