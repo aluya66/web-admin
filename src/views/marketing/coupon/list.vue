@@ -154,9 +154,10 @@ export default {
             const { couponName, id } = row
             vm.confirmTip(`确认时候审核${couponName}劵信息`, () => {
               vm.verifyData({ id })
-            }, () => {
-              console.log(2121)
             }, {
+              cancalHandle() {
+                console.log(2121)
+              },
               confirmButtonText: '审核通过',
               cancelButtonText: '审核不通过'
             })

@@ -4,6 +4,18 @@
 export const isDebug = process.env.NODE_ENV === 'development'
 
 /**
+ * 判断是否为对象
+ * @param {Object}} obj
+ */
+export const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
+
+/**
+ * 判断是否为数组
+ * @param {Array} arr
+ */
+export const isArray = arr => Array.isArray(arr)
+
+/**
  * 路由打开新窗口
  * 还可以通过<router-link target="_blank" 和 <a target="_blank"这两种方式开新窗口
  */
@@ -38,12 +50,39 @@ export const goToLogin = (page = 'login', type = 'push', time = 1.5) => {
  * 二次确认提醒消息提示
  *
  * @param {string} [msg=''] 消息
- * @param {function} confirmBack 确认执行函数
- * @param {function} cancelBack 取消执行函数
+ * @param {function} confirmHandle 确认执行函数
+ * @param {function} cancalHandle 取消执行函数
  * @param {Object} opt 属性设置
  */
-export const confirmTip = (msg, confirmBack, cancelBack, opt) => {
-  const { title, ...other } = opt
+export const confirmTip = function () {
+  let params = {}
+  const msg = arguments[0]
+  if (typeof arguments[1] === 'function' || typeof arguments[1] === 'string') {
+    if (typeof arguments[1] === 'function') {
+      params = {
+        confirmHandle: arguments[1]
+      }
+    } else {
+      params = {
+        title: arguments[1]
+      }
+    }
+    if (isObject(arguments[2])) {
+      params = {
+        ...params,
+        ...arguments[2]
+      }
+    }
+  } else if (isObject(arguments[1])) {
+    params = arguments[1]
+  }
+  const {
+    title,
+    confirmHandle,
+    cancalHandle,
+    ...other
+  } = params
+
   window.globalVue.$confirm(msg, title || '温馨提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -52,9 +91,9 @@ export const confirmTip = (msg, confirmBack, cancelBack, opt) => {
     center: true,
     ...other
   }).then(() => {
-    confirmBack && confirmBack()
+    params.confirmHandle && params.confirmHandle()
   }).catch(() => {
-    cancelBack && cancelBack()
+    params.cancalHandle && params.cancalHandle()
     console.log('取消')
   })
 }
@@ -132,7 +171,7 @@ export const camelize = str => str.replace(/-(\w)/g, (_, c) => c.toUpperCase())
  */
 export const objectMerge = (target, source) => {
   /* Merges two  objects,
-  giving the last one precedence */
+      giving the last one precedence */
 
   if (typeof target !== 'object') {
     target = {}
@@ -325,6 +364,8 @@ export const isExternal = path => {
 
 export default {
   isDebug,
+  isObject,
+  isArray,
   confirmTip,
   getCurrentUserLanguage,
   donwFile,
