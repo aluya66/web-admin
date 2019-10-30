@@ -23,7 +23,7 @@
 </template>
 <script>
 export default {
-  name: 'area',
+  name: 'areaInfo',
   data() {
     return {
       isEdit: false,
