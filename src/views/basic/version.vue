@@ -48,12 +48,12 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="状态">
+            <el-form-item label="强制更新">
               <el-select
                 v-model="searchObj.isForce"
                 :size="size"
                 class="search-item"
-                placeholder="请选择平台"
+                placeholder="请选择更新"
                 clearable
               >
                 <el-option

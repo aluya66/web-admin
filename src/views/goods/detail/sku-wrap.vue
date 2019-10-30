@@ -66,9 +66,10 @@
                 :key="'img_'+ index +'_'+ n"
                 :rowspan="countSum(n)"
               >
+                <!-- {{index}} {{countSum(specIndex + 1)}} {{specIndex}} {{countSum(0)}} {{index/countSum(specIndex + 1)}} -->
                 <c-upload
-                  v-if="!specification[specIndex].posterUrl"
-                  :ref="'spec_'+specIndex"
+                  v-if="!specification[specIndex].posterUrl[index/countSum(specIndex + 1)]"
+                  :ref="'spec_'+index/countSum(specIndex + 1)"
                   class="pic"
                   :fileList="specification[specIndex].fileList"
                   is-auto
@@ -86,9 +87,9 @@
                 </c-upload>
                 <c-image
                   v-else
-                  :url="specification[specIndex].posterUrl"
+                  :url="specification[specIndex].posterUrl[index/countSum(specIndex + 1)]"
                   fit="contain"
-                  :preview-src-list="[specification[specIndex].posterUrl]"
+                  :preview-src-list="[specification[specIndex].posterUrl[index/countSum(specIndex + 1)]]"
                   lazy
                 ></c-image>
               </td>
@@ -263,8 +264,9 @@ export default {
         this.addSpec()
         // 规格名称
         this.specification[i].name = res.name
-        this.specification[i].posterUrl = res.posterUrl
-        console.log(res.posterUrl)
+        if (i === 0) {
+          this.specification[i].posterUrl = this.skuAttrs[i].posterUrl // 从颜色那个规格取图片
+        }
         // 缓存按钮键值
         this.cacheSpecification[i].status = false
         this.cacheSpecification[i].name = res.name
@@ -273,6 +275,7 @@ export default {
           this.handleCheckedChange(res.checkedAttr)
         }
       })
+      // console.log(this.specification)
     },
     // 上传图片成功
     uploadSuccess(response, file, fileList) {
@@ -298,15 +301,11 @@ export default {
       if (this.specification.length < 5) {
         this.cacheSpecification.push({
           status: true,
-          name: '',
-          posterUrl: '',
-          fileList: []
+          name: ''
         })
         this.specification.push({
           name: '',
-          value: [],
-          posterUrl: '',
-          fileList: []
+          value: []
         })
       }
     },
