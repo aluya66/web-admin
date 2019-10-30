@@ -175,12 +175,12 @@ export default {
         {
           label: '商品ID',
           prop: 'id',
-          width: 120,
           fixed: true
         },
         {
           label: '商品编码',
-          prop: 'goodsBn'
+          prop: 'goodsBn',
+          width: 180
         },
         {
           label: '商品名称',
@@ -195,15 +195,18 @@ export default {
         },
         {
           label: '品牌',
-          prop: 'brandName'
+          prop: 'brandName',
+          width: 150
         },
         {
           label: '商品类目',
-          prop: 'categoryName'
+          prop: 'categoryName',
+          width: 150
         },
         {
           label: '商品来源',
           prop: 'origin',
+          width: 120,
           formatter(row) {
             return row.origin ? vm.originList[row.origin - 1].label : ''
           }
