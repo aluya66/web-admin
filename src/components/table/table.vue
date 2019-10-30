@@ -16,11 +16,11 @@
       @selection-change="handleSelectionChange"
       @current-change="handleSingleChange"
     >
-      <el-table-column v-if="selection" type="selection" width="55"/>
+      <el-table-column v-if="selection" :align="align" type="selection" width="55"/>
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
-        align="center"
+        :align="align"
         :label="item.label"
         :prop="item.prop"
         :width="item.width"
@@ -45,6 +45,7 @@
       <el-table-column
         v-if="tableInnerBtns.length"
         :width="tableInnerBtns.length && tableInnerBtns[0].width"
+        :align="align"
         fixed="right"
         label="操作"
       >
@@ -119,6 +120,10 @@ export default {
       default() {
         return []
       }
+    },
+    align: {
+      type: String,
+      default: 'center'
     },
     noPage: {
       type: Boolean,
