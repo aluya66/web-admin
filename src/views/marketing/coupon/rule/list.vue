@@ -64,7 +64,7 @@
             </el-form-item>
             <el-form-item label="劵类型名称">
               <el-input
-                v-model="searchObj.key"
+                v-model="searchObj.couponRuleName"
                 class="search-item"
                 :size="size"
                 placeholder="劵规则状态"
@@ -127,11 +127,11 @@ export default {
   data (vm) {
     return {
       searchObj: {
-        couponRuleType: '', // 劵类型
-        couponStatus: '', // 劵状态
-        couponRuleStatus: '', // 劵规则状态
-        key: '', // 关键词
-        dataTime: '' // 时间
+        couponRuleType: '',    // 劵类型
+        couponStatus: '',        // 劵状态
+        couponRuleStatus: '',    // 劵规则状态
+        couponRuleName: '',       // 劵类型名称
+        dataTime: ''              // 时间
       },
       pickerOptions: utils.pickerOptions,
       dialogObj: {}, // 对话框数据
@@ -180,17 +180,21 @@ export default {
           fixed: true
         },
         {
-          label: '卡劵类型',
+          label: '劵类型',
           prop: 'couponRuleType',
           width: 100,
           fixed: true
         },
         {
-          label: '卡劵类型状态',
+          label: '劵状态',
           prop: 'couponStatus',
           formatter(row) {
             return row.couponStatus === 0 ? '已作废' : '启用中'
           }
+        },
+        {
+          label: '劵规则状态',
+          prop: 'couponRuleStatus'
         },
         {
           label: '品类规则',
@@ -280,7 +284,7 @@ export default {
     }
   },
   created () {
-    this.pageInfo.totalNum = 1
+    this.pageInfo.pageNo = 1
     this.fetchData()
   },
   methods: {
@@ -305,22 +309,6 @@ export default {
           }
         })
     },
-    // dialogConfirm() {
-    //   const childRef = this.$refs.childRef
-    //   childRef.$refs.formRef.validate(valid => {
-    //     if (valid) {
-    //       const childFormModel = childRef.formModel
-    //       if (!this.dialogObj.isEdit) {
-    //         this.addHandle(childFormModel)
-    //       } else {
-    //         this.editHandle(childFormModel)
-    //       }
-    //     } else {
-    //       console.log('error submit!!')
-    //       return false
-    //     }
-    //   })
-    // },
     deleteData(parms, msgTip = '作废成功') {
       // 主要修改接口
       this.$api.marketing.unableCoupon(parms).then(() => {
@@ -328,12 +316,6 @@ export default {
         this.delResetData()
       })
     }
-    // addHandle() {
-    //   this.dialogObj.isShow = false
-    // },
-    // editHandle() {
-    //   this.dialogObj.isShow = false
-    // }
   }
 }
 </script>

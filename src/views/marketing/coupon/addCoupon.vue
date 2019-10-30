@@ -53,6 +53,7 @@
         class="select-item"
         clearable
         :disabled="isActivateType"
+        @change="changeActivate"
         >
         <el-option
           v-for="item in limitSelect"
@@ -66,10 +67,11 @@
       <el-col :span="11">
         <el-form-item>
           <el-date-picker
-            type="date"
+            type="datetime"
             placeholder="选择激活开始时间"
             v-model="formModel.limitActivateTimeStart"
             class="form-item"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :disabled="formModel.limitActivateDayType === 1"
           ></el-date-picker>
         </el-form-item>
@@ -78,59 +80,44 @@
       <el-col :span="11">
         <el-form-item>
           <el-date-picker
-            type="date"
+            type="datetime"
             placeholder="选择激活结束时间"
             v-model="formModel.limitActivateTimeEnd"
             class="form-item"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :disabled="formModel.limitActivateDayType === 1"
           ></el-date-picker>
         </el-form-item>
       </el-col>
     </el-form-item>
-    <!-- <el-form-item label="激活时间(月份)">
-      <el-select
-        v-model="formModel.limitActivateMonths"
-        class="select-item"
-        clearable
-        :disabled="formModel.limitActivateDayType === 1"
-        >
-        <el-option
-          v-for="item in limitMonthsSelect"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-    </el-form-item> -->
 
     <el-form-item label="激活时间(月份)">
       <el-checkbox-group v-model="formModel.limitActivateMonths" class="form-item" :disabled="formModel.limitActivateDayType === 1">
         <el-checkbox
           v-for="(item, index) in limitMonthsSelect"
           :key="index"
-          :label="item.value"
-          >{{ item.label }}</el-checkbox>
+          :label="index + 1"
+          >{{ item }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
 
     <el-form-item label="激活时间(天数)">
-      <el-checkbox-group v-model="formModel.limitActivateDays" class="form-item">
+      <el-checkbox-group v-model="formModel.limitActivateDays" class="form-item" :disabled="formModel.limitActivateDayType === 1">
         <el-checkbox
           v-for="(item, index) in limitDaysSelect"
           :key="index"
-          :label="index"
+          :label="item"
           >{{ item }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
 
     <!-- <el-form-item label="激活时间(天数)">
-      <el-input-number
-        v-model.trim="formModel.limitActivateDays"
-        class="select-item"
-        controls-position="right"
-        :min="1"
-        :max="100"
-      ></el-input-number>
+      <el-date-picker
+        type="dates"
+        v-model="formModel.limitActivateDays"
+        value-format="yyyy-MM-dd"
+        placeholder="选择一个或多个日期">
+      </el-date-picker>
     </el-form-item> -->
 
     <el-form-item label="过期时间类型:" prop="limitExpireDayType">
@@ -139,6 +126,7 @@
         class="select-item"
         clearable
         :disabled="isPastType"
+        @change="changeExpire"
         >
         <el-option
           v-for="item in endLimitSelect"
@@ -162,10 +150,11 @@
       <el-col :span="11">
         <el-form-item>
           <el-date-picker
-            type="date"
+            type="datetime"
             placeholder="选择有效期开始时间"
             v-model="formModel.limitExpireTimeStart"
             class="form-item"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :disabled="formModel.limitExpireDayType === 0 || formModel.limitExpireDayType === 2"
           ></el-date-picker>
         </el-form-item>
@@ -174,10 +163,11 @@
       <el-col :span="11">
         <el-form-item>
           <el-date-picker
-            type="date"
+            type="datetime"
             placeholder="选择有效期结束时间"
             v-model="formModel.limitExpireTimeEnd"
             class="form-item"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :disabled="formModel.limitExpireDayType === 0 || formModel.limitExpireDayType === 2"
           ></el-date-picker>
         </el-form-item>
@@ -270,56 +260,57 @@ export default {
         }
       ],
       couponRuleSelect: [],
-      limitMonthsSelect: [
-        {
-          label: '一月',
-          value: 0
-        },
-        {
-          label: '二月',
-          value: 1
-        },
-        {
-          label: '三月',
-          value: 2
-        },
-        {
-          label: '四月',
-          value: 3
-        },
-        {
-          label: '五月',
-          value: 4
-        },
-        {
-          label: '六月',
-          value: 5
-        },
-        {
-          label: '七月',
-          value: 6
-        },
-        {
-          label: '八月',
-          value: 7
-        },
-        {
-          label: '九月',
-          value: 8
-        },
-        {
-          label: '十月',
-          value: 9
-        },
-        {
-          label: '十一月',
-          value: 10
-        },
-        {
-          label: '十二月',
-          value: 11
-        }
-      ],
+      limitMonthsSelect: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+      // limitMonthsSelect: [
+      //   {
+      //     label: '一月',
+      //     value: 0
+      //   },
+      //   {
+      //     label: '二月',
+      //     value: 1
+      //   },
+      //   {
+      //     label: '三月',
+      //     value: 2
+      //   },
+      //   {
+      //     label: '四月',
+      //     value: 3
+      //   },
+      //   {
+      //     label: '五月',
+      //     value: 4
+      //   },
+      //   {
+      //     label: '六月',
+      //     value: 5
+      //   },
+      //   {
+      //     label: '七月',
+      //     value: 6
+      //   },
+      //   {
+      //     label: '八月',
+      //     value: 7
+      //   },
+      //   {
+      //     label: '九月',
+      //     value: 8
+      //   },
+      //   {
+      //     label: '十月',
+      //     value: 9
+      //   },
+      //   {
+      //     label: '十一月',
+      //     value: 10
+      //   },
+      //   {
+      //     label: '十二月',
+      //     value: 11
+      //   }
+      // ],
       limitDaysSelect: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       rules: {
         couponRuleId: [
@@ -350,9 +341,26 @@ export default {
   methods: {
     allCouponRule() {
       this.$api.marketing.allCouponRule().then(res => {
-        console.log(res)
         this.couponRuleSelect = res
       })
+    },
+    changeActivate(e){
+      // if(e === 1){
+      //   this.initData.limitActivateTimeStart = ''
+      //   this.initData.limitActivateTimeEnd = ''
+      //   this.initData.limitActivateDays = ''
+      //   this.initData.limitActivateMonths = ''
+      // }
+      // console.log(this.initData)
+      // console.log(e)
+    },
+    changeExpire(e){
+      // if(e === 1) {
+      //   this.initData.limitExpireTimeStart = ''
+      //   this.initData.limitExpireTimeEnd = ''
+      // } else if(e === 2) {
+      //   this.initData.limitExpireDay = ''
+      // }
     }
   },
   computed: {

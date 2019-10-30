@@ -30,7 +30,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="卡劵类型">
+            <el-form-item label="卡劵规则类型">
               <el-input
                 v-model="searchObj.couponRuleType"
                 class="search-item"
@@ -39,7 +39,7 @@
                 clearable
               />
             </el-form-item>
-            <!-- <el-form-item label="卡劵类型名称">
+            <el-form-item label="卡劵类型名称">
               <el-input
                 v-model="searchObj.couponRuleName"
                 class="search-item"
@@ -47,7 +47,7 @@
                 placeholder="请输入卡劵类型名称"
                 clearable
               />
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item label="状态">
               <el-select
                 v-model="searchObj.couponStatus"
@@ -71,6 +71,7 @@
                 :picker-options="pickerOptions"
                 range-separator="至"
                 start-placeholder="开始时间"
+                format="yyyy-MM-dd HH:mm:ss"
                 end-placeholder="结束时间"
                 :default-time="['00:00:00', '23:59:59']"
               >align="right"></el-date-picker>
@@ -136,10 +137,10 @@ export default {
         label: '审核中',
         value: 1
       }, {
-        label: '审核不通过',
+        label: '不通过',
         value: 2
       }, {
-        label: '审核通过',
+        label: '通过',
         value: 3
       }],
       tableInnerBtns: [
@@ -222,12 +223,7 @@ export default {
           fixed: true
         },
         {
-          label: '卡劵类型id',
-          prop: 'couponRuleId',
-          fixed: true
-        },
-        {
-          label: '卡劵类型',
+          label: '卡劵规则类型',
           prop: 'couponRuleType',
           width: 100
         },
@@ -258,34 +254,38 @@ export default {
         },
         {
           label: '申请审核时间',
-          prop: 'applyCheckTime'
+          prop: 'applyCheckTime',
+          width: 100
         },
         {
           label: '审核时间',
-          prop: 'checkTime'
+          prop: 'checkTime',
+          width: 100
         },
         {
-          label: '状态',
+          label: '审核状态',
           prop: 'status',
           formatter(row) {
             return row.status ? vm.statusSelect[row.status].label : ''
           }
         },
-        {
-          label: '激活时间_月份',
-          prop: 'limitActivateMonth'
-        },
-        {
-          label: '激活时间_天数',
-          prop: 'limitActivateDay'
-        },
+        // {
+        //   label: '激活时间_月份',
+        //   prop: 'limitActivateMonth'
+        // },
+        // {
+        //   label: '激活时间_天数',
+        //   prop: 'limitActivateDay'
+        // },
         {
           label: '有效期结束时间',
-          prop: 'limitExpireTimeEnd'
+          prop: 'limitExpireTimeEnd',
+          width: 100
         },
         {
           label: '有效期开始时间',
-          prop: 'limitExpireTimeStart'
+          prop: 'limitExpireTimeStart',
+          width: 100
         },
         {
           label: '激活时间类型_天数',
@@ -295,23 +295,25 @@ export default {
           label: '激活时间_月份',
           prop: 'limitActivateMonths',
           formatter(row) {
-            return row.limitActivateMonths.join(' / ')
+            return row.limitActivateMonths.join('/')
           }
         },
         {
           label: '激活时间_天数',
           prop: 'limitActivateDays',
           formatter(row) {
-            return row.limitActivateDays.join(' / ')
+            return row.limitActivateDays.join('/')
           }
         },
         {
           label: '激活开始时间',
-          prop: 'limitActivateTimeStart'
+          prop: 'limitActivateTimeStart',
+          width: 100
         },
         {
           label: '激活结束时间',
-          prop: 'limitActivateTimeEnd'
+          prop: 'limitActivateTimeEnd',
+          width: 100
         },
         {
           label: '备注',
@@ -356,7 +358,6 @@ export default {
      * @param {string} [msgTip='删除成功']
      */
     deleteData(param, msgTip = '删除成功') {
-      console.log(param, msgTip)
       // 主要修改接口
       this.$api.marketing.deleteCoupon(param).then(() => {
         this.$msgTip(msgTip)
@@ -365,13 +366,11 @@ export default {
     },
     // 审核劵
     verifyData(params) {
-      console.log(params)
       const { couponId, msgTip, applyType } = params
       let data = {
         couponId,
         applyType
       }
-      console.log(data)
       this.$api.marketing.applyCoupon(data).then(() => {
         this.$msgTip(msgTip)
         this.fetchData()
@@ -395,9 +394,6 @@ export default {
           return false
         }
       })
-    },
-    dialogDraft() {
-      console.log('dialogDraft')
     },
     showDialog(opts) {
       this.couponVerify = opts.isEdit
@@ -426,8 +422,9 @@ export default {
       this.$api.marketing.addCoupon(formModel).then(res => {
         this.$msgTip('修改成功')
         this.fetchData()
+        this.dialogObj.isShow = false
       })
-      this.dialogObj.isShow = false
+      this.dialogObj.isShow = true
     }
   }
 }
