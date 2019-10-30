@@ -20,7 +20,7 @@ export default {
   },
   {
     path: '/basic/area',
-    name: 'area',
+    name: 'areaInfo',
     component: () => import('@/views/basic/area'),
     meta: {
       title: 'area',
