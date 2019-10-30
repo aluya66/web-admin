@@ -31,10 +31,11 @@ export default {
      * 获取搜索时间
      * @param {*} dataTime
      */
-    getSearchDate(dataTime) {
+    getSearchDate(dataTime, formatFlag) {
+      let type = formatFlag === 'dateTime' ? '{y}-{m}-{d} {h}:{i}:{s}' : '{y}-{m}-{d}'
       if (dataTime) {
-        const beginDate = utils.fomartDate(dataTime[0], '{y}-{m}-{d}')
-        const endDate = utils.fomartDate(dataTime[1], '{y}-{m}-{d}')
+        const beginDate = utils.fomartDate(dataTime[0], type)
+        const endDate = utils.fomartDate(dataTime[1], type)
         return {
           beginDate,
           endDate
