@@ -103,28 +103,29 @@ export default {
       tableHeader: [
         {
           label: 'app名称',
-          prop: 'appName',
-          fixed: true
+          prop: 'appName'
         },
         {
           label: 'app编码',
-          prop: 'appCode',
-          width: 150
+          prop: 'appCode'
         },
         {
           label: 'appKey',
-          prop: 'appKey'
+          prop: 'appKey',
+          width: 580
         },
         {
           label: '状态',
           prop: 'status',
+          width: 120,
           formatter(row) {
             return row.status ? vm.bussinessLineSelect[row.status - 1].label : ''
           }
         },
         {
           label: '描述',
-          prop: 'description'
+          prop: 'description',
+          width: 300
         },
         {
           label: '创建时间',

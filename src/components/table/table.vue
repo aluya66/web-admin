@@ -20,6 +20,7 @@
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
+        align="center"
         :label="item.label"
         :prop="item.prop"
         :width="item.width"
