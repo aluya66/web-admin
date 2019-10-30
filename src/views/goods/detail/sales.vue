@@ -156,18 +156,14 @@ export default {
         if (totalCount) {
           const { skus } = this.dataObj
           data.forEach((val, index) => {
-            let colorPosters = '' // sku列表 颜色对应图片
-            let curVal = false // 是否为同一属性规格key标识
+            let colorPosters = [] // sku列表 颜色对应图片, 存在curAttrs第一个值中
             const checkedAttr = []
             const attrs = val.bmsGoodsAttrVals.map(item => {
               if (skus.length) {
                 skus.some(sku => {
                   if (sku.attrColorId === val.id && sku.attributeColorId === item.id) {
                     checkedAttr.push(sku.attributeColorValue)
-                    if (curVal === false) {
-                      curVal = true
-                      colorPosters = sku.imageUrl
-                    }
+                    colorPosters.push(sku.imageUrl)
                     return true
                   }
                   if (sku.attrSpecId === val.id && sku.attributeSpecId === item.id) {
@@ -181,6 +177,7 @@ export default {
                 label: item.value
               }
             })
+            // console.log(colorPosters)
             this.curAttrs.push({ attrs, name: val.name, label: `${val.name}:`, id: val.id, checkedAttr: utils.uniqueArr(checkedAttr), posterUrl: colorPosters })
           })
         }
