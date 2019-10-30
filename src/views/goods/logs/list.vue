@@ -98,10 +98,6 @@ export default {
           prop: 'goodsBn'
         },
         {
-          label: '商品sku编码',
-          prop: 'goodsSkuSn'
-        },
-        {
           label: '操作日志',
           prop: 'operatorLog'
         },
