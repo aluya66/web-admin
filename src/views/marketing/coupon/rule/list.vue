@@ -1,9 +1,7 @@
 <template>
   <c-view>
     <template v-slot:header>
-			<div class="title">
-				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-			</div>
+      <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
         <el-button
           :size="size"
@@ -12,13 +10,13 @@
           @click="routerLink('/marketing/coupon/ruleInfo')"
         >新增</el-button>
       </div>
-		</template>
+    </template>
     <div class="main__box">
       <c-table
         selection
         hasBorder
         :size="size"
-        :max-height="730"
+        :max-height="600"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -28,55 +26,51 @@
       >
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
-            <el-form-item label="劵类型">
+            <el-form-item label="类型名称">
               <el-input
-                v-model="searchObj.couponRuleType"
+                v-model="searchObj.couponRuleName"
                 class="search-item"
                 :size="size"
-                placeholder="劵类型"
+                placeholder="类型名称"
                 clearable
               />
             </el-form-item>
-            <el-form-item label="劵状态">
+            <el-form-item label="类型">
               <el-select
-                v-model="searchObj.couponStatus"
-                :size="size"
+                v-model="searchObj.couponRuleType"
                 class="search-item"
-                placeholder="请选择"
+                :size="size"
                 clearable
               >
                 <el-option
-                  v-for="item in couponTypeSelect"
+                  v-for="item in couponRuleSelect"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="劵规则状态">
-              <el-input
+            <el-form-item label="状态">
+              <el-select
                 v-model="searchObj.couponRuleStatus"
-                class="search-item"
                 :size="size"
-                placeholder="劵规则状态"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="劵类型名称">
-              <el-input
-                v-model="searchObj.couponRuleName"
                 class="search-item"
-                :size="size"
-                placeholder="劵规则状态"
+                placeholder="请选择"
                 clearable
-              />
+              >
+                <el-option
+                  v-for="item in couponRuleTypeSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
             </el-form-item>
-
-             <el-form-item label="规则生成时间">
+            <el-form-item label="创建时间">
               <el-date-picker
                 :size="size"
                 v-model="searchObj.dataTime"
-                type="daterange"
+                type="datetimerange"
                 :picker-options="pickerOptions"
                 range-separator="至"
                 start-placeholder="开始时间"
@@ -84,7 +78,6 @@
                 :default-time="['00:00:00', '23:59:59']"
               >align="right"></el-date-picker>
             </el-form-item>
-
             <el-form-item>
               <el-button
                 type="primary"
@@ -124,18 +117,17 @@ export default {
     CDialog,
     AddRule
   },
-  data (vm) {
+  data(vm) {
     return {
       searchObj: {
-        couponRuleType: '',    // 劵类型
-        couponStatus: '',        // 劵状态
-        couponRuleStatus: '',    // 劵规则状态
-        couponRuleName: '',       // 劵类型名称
-        dataTime: ''              // 时间
+        couponRuleType: '', // 劵类型
+        couponRuleStatus: '', // 劵规则状态
+        couponRuleName: '', // 劵类型名称
+        dataTime: '' // 时间
       },
       pickerOptions: utils.pickerOptions,
       dialogObj: {}, // 对话框数据
-      couponTypeSelect: [
+      couponRuleTypeSelect: [
         {
           value: 0,
           label: '启用'
@@ -145,28 +137,50 @@ export default {
           label: '作废'
         }
       ],
+      couponRuleSelect: [
+        {
+          label: '劵',
+          value: 0
+        },
+        {
+          label: '卡',
+          value: 1
+        },
+        {
+          label: '通用劵',
+          value: 2
+        }
+      ],
+      returnRulesSelect: [{
+        label: '订单取消返还',
+        value: 0
+      }, {
+        label: '订单取消不返还',
+        value: 1
+      }, {
+        label: '订单退款返还',
+        value: 2
+      }, {
+        label: '订单退款不返还',
+        value: 4
+      }],
       tableList: [],
       isLoading: false,
       tableInnerBtns: [
-      // {
-      //   width: 100,
-      //   name: '编辑',
-      //   icon: 'el-icon-edit',
-      //   handle(row) {
-      //     vm.showDialog({
-      //       title: '编辑劵',
-      //       initData: row,
-      //       isEdit: true
-      //     })
-      //   }
-      // },
+        {
+          width: 180,
+          name: '编辑',
+          icon: 'el-icon-edit',
+          handle(row) {
+            vm.routerLink(`/marketing/coupon/ruleInfo/${row.couponRuleId}`)
+          }
+        },
         {
           name: '作废',
-          icon: 'el-icon-delete',
+          icon: 'el-icon-close',
           handle(row) {
-            console.log(row)
             const { couponRuleName, couponRuleId } = row
-            vm.confirmTip(`确认作废${couponRuleName}此规则劵`, () => {
+            vm.confirmTip(`确认作废  ${couponRuleName}  此规则劵`, () => {
               vm.deleteData({ couponRuleId })
             })
           }
@@ -174,7 +188,7 @@ export default {
       ],
       tableHeader: [
         {
-          label: '卡劵类型名称',
+          label: '类型名称',
           prop: 'couponRuleName',
           width: 100,
           fixed: true
@@ -183,22 +197,31 @@ export default {
           label: '劵类型',
           prop: 'couponRuleType',
           width: 100,
-          fixed: true
-        },
-        {
-          label: '劵状态',
-          prop: 'couponStatus',
+          fixed: true,
           formatter(row) {
-            return row.couponStatus === 0 ? '已作废' : '启用中'
+            return row.couponRuleType === 0
+              ? '劵'
+              : row.couponRuleType === 1
+                ? '卡'
+                : row.couponRuleType === 2
+                  ? '通用劵'
+                  : '无'
           }
         },
         {
-          label: '劵规则状态',
-          prop: 'couponRuleStatus'
+          label: '状态',
+          prop: 'couponRuleStatus',
+          formatter(row) {
+            console.log(row.couponRuleStatus)
+            return row.couponRuleStatus === 0 ? '已作废' : '启用中'
+          }
         },
         {
           label: '品类规则',
-          prop: 'categoryType'
+          prop: 'categoryType',
+          formatter(row) {
+            return row.categoryType === 0 ? '全部类' : '限品类'
+          }
         },
         {
           label: '申请人',
@@ -213,13 +236,6 @@ export default {
           prop: 'useCode',
           formatter(row) {
             return row.useCode === 0 ? '否' : '是'
-          }
-        },
-        {
-          label: '积分门槛',
-          prop: 'integeregralLevel',
-          formatter(row) {
-            return row.integeregralLevel === 0 ? '无门槛' : '有门槛'
           }
         },
         {
@@ -245,7 +261,7 @@ export default {
           }
         },
         {
-          label: '是否优惠门槛',
+          label: '优惠门槛',
           prop: 'preferentialLevel',
           formatter(row) {
             return row.preferentialLevel === 0 ? '无' : '有'
@@ -259,7 +275,7 @@ export default {
           }
         },
         {
-          label: '优惠值',
+          label: '优惠值(元)',
           prop: 'preferentialValue'
         },
         {
@@ -272,32 +288,33 @@ export default {
         {
           label: '重复使用',
           prop: 'repeatUse',
-          formatter (row) {
+          formatter(row) {
             return row.repeatUse === 0 ? '不可以' : '可以'
           }
         },
         {
-          label: '备注',
-          prop: 'remark'
+          label: '创建时间',
+          prop: 'created',
+          width: 100
         }
       ]
     }
   },
-  created () {
-    this.pageInfo.pageNo = 1
+  created() {
     this.fetchData()
   },
   methods: {
-    fetchData () {
+    fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dataTime, 'dateTime')
       this.isLoading = true
-      this.$api.marketing.getCouponRule({
-        ...searchDate,
-        ...other,
-        ...page
-      })
+      this.$api.marketing
+        .getCouponRule({
+          ...searchDate,
+          ...other,
+          ...page
+        })
         .then(res => {
           this.isLoading = false
           if (res && res.totalCount) {

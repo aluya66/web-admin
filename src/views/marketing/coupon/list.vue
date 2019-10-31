@@ -10,7 +10,7 @@
       <c-table
         selection
         hasBorder
-        :max-height="550"
+        :max-height="600"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -21,40 +21,46 @@
       >
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="劵名称">
+            <el-form-item label="名称">
               <el-input
                 v-model="searchObj.couponName"
                 class="search-item"
                 :size="size"
-                placeholder="请输入劵名称"
+                placeholder="劵名称"
                 clearable
               />
             </el-form-item>
-            <el-form-item label="卡劵规则类型">
-              <el-input
-                v-model="searchObj.couponRuleType"
-                class="search-item"
-                :size="size"
-                placeholder="请输入卡劵类型"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="卡劵类型名称">
+            <el-form-item label="类型名称">
               <el-input
                 v-model="searchObj.couponRuleName"
                 class="search-item"
                 :size="size"
-                placeholder="请输入卡劵类型名称"
+                placeholder="类型名称"
                 clearable
               />
             </el-form-item>
-            <el-form-item label="状态">
+            <el-form-item label="类型">
+              <el-select
+                v-model="searchObj.couponRuleType"
+                class="search-item"
+                :size="size"
+                clearable
+              >
+                <el-option
+                  v-for="item in couponRuleSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="审核状态">
               <el-select
                 v-model="searchObj.couponStatus"
                 class="search-item"
                 :size="size"
                 clearable
-                >
+              >
                 <el-option
                   v-for="item in statusSelect"
                   :key="item.value"
@@ -63,11 +69,11 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="操作时间">
+            <el-form-item label="创建时间">
               <el-date-picker
                 :size="size"
                 v-model="searchObj.dataTime"
-                type="daterange"
+                type="datetimerange"
                 :picker-options="pickerOptions"
                 range-separator="至"
                 start-placeholder="开始时间"
@@ -97,7 +103,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <add-coupon ref="childRef" :isVerify='couponVerify' :init-data="dialogObj.initData"></add-coupon>
+        <add-coupon ref="childRef" :isVerify="couponVerify" :init-data="dialogObj.initData"></add-coupon>
       </c-dialog>
     </div>
   </c-view>
@@ -122,27 +128,44 @@ export default {
       dialogObj: {}, // 对话框数据
       searchObj: {
         couponName: '', // 劵名称
-        couponRuleType: '', // 卡劵类型
-        couponRuleName: '', // 卡劵类型名称
-        couponStatus: '', // 卡劵状态
-        marketable: '',
-        brandName: '',
+        couponRuleType: '', // 劵规则类型
+        couponRuleName: '', // 劵规则类型名称
+        couponStatus: '', // 劵审核状态
         dataTime: ''
       },
       pickerOptions: utils.pickerOptions,
-      statusSelect: [{
-        label: '草稿',
-        value: 0
-      }, {
-        label: '审核中',
-        value: 1
-      }, {
-        label: '不通过',
-        value: 2
-      }, {
-        label: '通过',
-        value: 3
-      }],
+      statusSelect: [
+        {
+          label: '草稿',
+          value: 0
+        },
+        {
+          label: '审核中',
+          value: 1
+        },
+        {
+          label: '不通过',
+          value: 2
+        },
+        {
+          label: '通过',
+          value: 3
+        }
+      ],
+      couponRuleSelect: [
+        {
+          label: '劵',
+          value: 0
+        },
+        {
+          label: '卡',
+          value: 1
+        },
+        {
+          label: '通用劵',
+          value: 2
+        }
+      ],
       tableInnerBtns: [
         {
           width: 180,
@@ -150,6 +173,7 @@ export default {
           icon: 'el-icon-edit',
           handle(row) {
             const {
+              couponId,
               couponName, // 劵名称
               couponNumber, // 生成数量
               limitActivateDayType, // 激活时间类型
@@ -168,13 +192,15 @@ export default {
             vm.showDialog({
               title: '编辑劵',
               initData: {
+                couponId,
                 couponName, // 劵名称
                 couponNumber, // 生成数量
                 limitActivateDayType, // 激活时间类型
                 limitActivateTimeStart, // 激活开始时间
                 limitActivateTimeEnd, // 激活结束时间
                 limitActivateDays, // 激活时间_天数
-                limitActivateMonths, // 激活时间_月份
+                limitActivateMonths,
+                // 激活时间_月份
                 limitExpireDayType, // 过期时间类型
                 limitExpireDay, // 有效期截止类型_天数
                 limitExpireTimeStart, // 有效期开始时间
@@ -192,16 +218,23 @@ export default {
           icon: 'el-icon-check',
           handle(row) {
             const { couponId } = row
-            vm.confirmTip(`需注意,审核通过后将生成劵并建立库存,确认审核通过？`, {
-              confirmHandle() {
-                vm.verifyData({ couponId, applyType: 2, msgTip: '审核通过' })
-              },
-              cancalHandle() {
-                vm.verifyData({ couponId, applyType: 3, msgTip: '审核不通过' })
-              },
-              confirmButtonText: '审核通过',
-              cancelButtonText: '审核不通过'
-            })
+            vm.confirmTip(
+              `需注意,审核通过后将生成劵并建立库存,确认审核通过？`,
+              {
+                confirmHandle() {
+                  vm.verifyData({ couponId, applyType: 2, msgTip: '审核通过' })
+                },
+                cancalHandle() {
+                  vm.verifyData({
+                    couponId,
+                    applyType: 3,
+                    msgTip: '审核不通过'
+                  })
+                },
+                confirmButtonText: '审核通过',
+                cancelButtonText: '审核不通过'
+              }
+            )
           }
         },
         {
@@ -209,7 +242,7 @@ export default {
           icon: 'el-icon-delete',
           handle(row) {
             const { couponName, couponId } = row
-            vm.confirmTip(`确认删除${couponName}劵信息`, () => {
+            vm.confirmTip(`确认删除  ${couponName}  劵信息`, () => {
               vm.deleteData({ couponId })
             })
           }
@@ -217,40 +250,46 @@ export default {
       ],
       tableHeader: [
         {
-          label: '券名称 ',
+          label: '名称 ',
           prop: 'couponName',
           width: 130,
           fixed: true
         },
         {
-          label: '卡劵规则类型',
+          label: '类型名称',
+          prop: 'couponRuleName',
+          width: 100,
+          fixed: true
+        },
+        {
+          label: '类型',
           prop: 'couponRuleType',
-          width: 100
-        },
-        {
-          label: '卡劵类型名称',
-          prop: 'couponRuleName'
-        },
-        {
-          label: '生成数量',
-          prop: 'couponNumber',
+          width: 100,
           formatter(row) {
-            return `${row.couponNumber}张`
+            return row.couponRuleType === 0
+              ? '劵'
+              : row.couponRuleType === 1
+                ? '卡'
+                : row.couponRuleType === 2
+                  ? '通用劵'
+                  : '无'
           }
         },
         {
-          label: ' 领取数量',
-          prop: 'receiveNumber',
-          formatter(row) {
-            return `${row.receiveNumber}张`
-          }
+          label: '生成数量(张)',
+          prop: 'couponNumber'
         },
         {
-          label: '剩余数量',
-          prop: 'remainNumber',
-          formatter(row) {
-            return `${row.remainNumber}张`
-          }
+          label: ' 领取数量(张)',
+          prop: 'receiveNumber'
+        },
+        {
+          label: '剩余数量(张)',
+          prop: 'remainNumber'
+        },
+        {
+          label: '审核状态',
+          prop: 'statusName'
         },
         {
           label: '申请审核时间',
@@ -262,44 +301,32 @@ export default {
           prop: 'checkTime',
           width: 100
         },
-        {
-          label: '审核状态',
-          prop: 'status',
-          formatter(row) {
-            return row.status ? vm.statusSelect[row.status].label : ''
-          }
-        },
         // {
-        //   label: '激活时间_月份',
+        //   label: '激活时间(月)',
         //   prop: 'limitActivateMonth'
         // },
         // {
-        //   label: '激活时间_天数',
+        //   label: '激活时间(天)',
         //   prop: 'limitActivateDay'
         // },
         {
-          label: '有效期结束时间',
-          prop: 'limitExpireTimeEnd',
-          width: 100
+          label: '激活时间类型(天)',
+          prop: 'limitActivateDayType',
+          formatter(row) {
+            return row.limitActivateDayType === 0
+              ? '固定时间可领取'
+              : '所有时间可领取'
+          }
         },
         {
-          label: '有效期开始时间',
-          prop: 'limitExpireTimeStart',
-          width: 100
-        },
-        {
-          label: '激活时间类型_天数',
-          prop: 'limitActivateDayType'
-        },
-        {
-          label: '激活时间_月份',
+          label: '激活时间(月)',
           prop: 'limitActivateMonths',
           formatter(row) {
             return row.limitActivateMonths.join('/')
           }
         },
         {
-          label: '激活时间_天数',
+          label: '激活时间(天)',
           prop: 'limitActivateDays',
           formatter(row) {
             return row.limitActivateDays.join('/')
@@ -316,8 +343,19 @@ export default {
           width: 100
         },
         {
-          label: '备注',
-          prop: 'couponRemark'
+          label: '有效期结束时间',
+          prop: 'limitExpireTimeEnd',
+          width: 100
+        },
+        {
+          label: '有效期开始时间',
+          prop: 'limitExpireTimeStart',
+          width: 100
+        },
+        {
+          label: '创建时间',
+          prop: 'created',
+          width: 100
         }
       ]
     }
@@ -328,28 +366,28 @@ export default {
   methods: {
     /**
      * 获取表格数据
-    */
+     */
     fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dataTime, 'dateTime')
       this.isLoading = true
-      this.$api.marketing.getCoupon(
-        {
+      this.$api.marketing
+        .getCoupon({
           ...searchDate,
           ...other,
           ...page
-        }
-      ).then(res => {
-        this.isLoading = false
-        if (res && res.totalCount) {
-          const { data, totalCount } = res
-          this.pageInfo.totalNum = totalCount
-          this.tableList = data || []
-        } else {
-          this.tableList = res || []
-        }
-      })
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data || []
+          } else {
+            this.tableList = res || []
+          }
+        })
     },
     /**
      * 删除表格单条数据
@@ -406,7 +444,7 @@ export default {
     },
     /**
      * 确认新增操作
-    */
+     */
     addHandle(childFormModel) {
       this.$api.marketing.addCoupon(childFormModel).then(res => {
         this.$msgTip('添加成功')
@@ -417,7 +455,7 @@ export default {
     },
     /**
      * 确认修改操作
-    */
+     */
     editHandle(formModel) {
       this.$api.marketing.addCoupon(formModel).then(res => {
         this.$msgTip('修改成功')

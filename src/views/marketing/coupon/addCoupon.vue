@@ -7,17 +7,13 @@
     class="form"
     label-position="right"
   >
-    <el-form-item label="劵名称" prop="couponName">
-      <el-input v-model.trim="formModel.couponName" class="form-item"/>
+    <el-form-item label="劵名称:" prop="couponName">
+      <el-input v-model.trim="formModel.couponName" class="form-item" placeholder='请输入劵名称'/>
     </el-form-item>
     <el-row>
       <el-col :span="13">
-        <el-form-item label="劵规则" prop="couponRuleId">
-          <el-select
-            v-model="formModel.couponRuleId"
-            class="form-item"
-            clearable
-            >
+        <el-form-item label="劵规则名称:" prop="couponRuleId">
+          <el-select v-model="formModel.couponRuleId" class="form-item" clearable>
             <el-option
               v-for="item in couponRuleSelect"
               :key="item.couponRuleId"
@@ -33,7 +29,7 @@
     </el-row>
     <el-row>
       <el-col :span="13">
-        <el-form-item label="生成数量" prop="couponNumber">
+        <el-form-item label="生成数量:" prop="couponNumber">
           <el-input-number
             v-model.trim="formModel.couponNumber"
             class="form-item"
@@ -53,8 +49,7 @@
         class="select-item"
         clearable
         :disabled="isActivateType"
-        @change="changeActivate"
-        >
+      >
         <el-option
           v-for="item in limitSelect"
           :key="item.value"
@@ -63,7 +58,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="激活时间">
+    <el-form-item label="激活时间:">
       <el-col :span="11">
         <el-form-item>
           <el-date-picker
@@ -90,44 +85,42 @@
         </el-form-item>
       </el-col>
     </el-form-item>
-
-    <el-form-item label="激活时间(月份)">
-      <el-checkbox-group v-model="formModel.limitActivateMonths" class="form-item" :disabled="formModel.limitActivateDayType === 1">
+    <el-form-item label="激活时间(月份):">
+      <el-checkbox-group
+        v-model="formModel.limitActivateMonths"
+        class="form-item"
+        :disabled="formModel.limitActivateDayType === 1"
+      >
         <el-checkbox
           v-for="(item, index) in limitMonthsSelect"
           :key="index"
           :label="index + 1"
-          >{{ item }}</el-checkbox>
+        >{{ item }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
-
-    <el-form-item label="激活时间(天数)">
-      <el-checkbox-group v-model="formModel.limitActivateDays" class="form-item" :disabled="formModel.limitActivateDayType === 1">
-        <el-checkbox
-          v-for="(item, index) in limitDaysSelect"
-          :key="index"
-          :label="item"
-          >{{ item }}</el-checkbox>
+    <el-form-item label="激活时间(天数):">
+      <el-checkbox-group
+        v-model="formModel.limitActivateDays"
+        class="form-item"
+        :disabled="formModel.limitActivateDayType === 1"
+      >
+        <el-checkbox v-for="(item, index) in limitDaysSelect" :key="index" :label="item">{{ item }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
-
     <!-- <el-form-item label="激活时间(天数)">
       <el-date-picker
         type="dates"
         v-model="formModel.limitActivateDays"
-        value-format="yyyy-MM-dd"
         placeholder="选择一个或多个日期">
       </el-date-picker>
-    </el-form-item> -->
-
+    </el-form-item>-->
     <el-form-item label="过期时间类型:" prop="limitExpireDayType">
       <el-select
         v-model="formModel.limitExpireDayType"
         class="select-item"
         clearable
         :disabled="isPastType"
-        @change="changeExpire"
-        >
+      >
         <el-option
           v-for="item in endLimitSelect"
           :key="item.value"
@@ -136,7 +129,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="激活时间(天数)">
+    <el-form-item label="激活时间(天数):">
       <el-input-number
         v-model.trim="formModel.limitExpireDay"
         class="select-item"
@@ -146,7 +139,7 @@
         :disabled="formModel.limitExpireDayType === 0 || formModel.limitExpireDayType === 1"
       ></el-input-number>
     </el-form-item>
-    <el-form-item label="过期时间">
+    <el-form-item label="过期时间:">
       <el-col :span="11">
         <el-form-item>
           <el-date-picker
@@ -173,8 +166,7 @@
         </el-form-item>
       </el-col>
     </el-form-item>
-
-    <el-form-item label="提交状态" prop="submitStatus" required v-if="!isShow">
+    <el-form-item label="提交状态:" prop="submitStatus" required v-if="!isShow">
       <el-select v-model="formModel.submitStatus" class="select-item" clearable>
         <el-option
           v-for="item in submitSelect"
@@ -184,9 +176,8 @@
         ></el-option>
       </el-select>
     </el-form-item>
-
     <el-form-item label="描述:">
-      <el-input type="textarea" class="form-item" v-model.trim="formModel.couponRemark" clearable></el-input>
+      <el-input type="textarea" placeholder="请输入描述" maxlength="100" show-word-limit class="form-item" v-model.trim="formModel.couponRemark" clearable></el-input>
     </el-form-item>
   </el-form>
 </template>
@@ -259,59 +250,54 @@ export default {
           value: 1
         }
       ],
-      couponRuleSelect: [],
-      limitMonthsSelect: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-      // limitMonthsSelect: [
-      //   {
-      //     label: '一月',
-      //     value: 0
-      //   },
-      //   {
-      //     label: '二月',
-      //     value: 1
-      //   },
-      //   {
-      //     label: '三月',
-      //     value: 2
-      //   },
-      //   {
-      //     label: '四月',
-      //     value: 3
-      //   },
-      //   {
-      //     label: '五月',
-      //     value: 4
-      //   },
-      //   {
-      //     label: '六月',
-      //     value: 5
-      //   },
-      //   {
-      //     label: '七月',
-      //     value: 6
-      //   },
-      //   {
-      //     label: '八月',
-      //     value: 7
-      //   },
-      //   {
-      //     label: '九月',
-      //     value: 8
-      //   },
-      //   {
-      //     label: '十月',
-      //     value: 9
-      //   },
-      //   {
-      //     label: '十一月',
-      //     value: 10
-      //   },
-      //   {
-      //     label: '十二月',
-      //     value: 11
-      //   }
-      // ],
-      limitDaysSelect: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      couponRuleSelect: [], // 劵规则名称
+      limitMonthsSelect: [
+        '一月',
+        '二月',
+        '三月',
+        '四月',
+        '五月',
+        '六月',
+        '七月',
+        '八月',
+        '九月',
+        '十月',
+        '十一月',
+        '十二月'
+      ],
+      limitDaysSelect: [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
       rules: {
         couponRuleId: [
           { required: true, message: '请输入卡劵类型ID', trigger: 'blur' }
@@ -343,24 +329,6 @@ export default {
       this.$api.marketing.allCouponRule().then(res => {
         this.couponRuleSelect = res
       })
-    },
-    changeActivate(e){
-      // if(e === 1){
-      //   this.initData.limitActivateTimeStart = ''
-      //   this.initData.limitActivateTimeEnd = ''
-      //   this.initData.limitActivateDays = ''
-      //   this.initData.limitActivateMonths = ''
-      // }
-      // console.log(this.initData)
-      // console.log(e)
-    },
-    changeExpire(e){
-      // if(e === 1) {
-      //   this.initData.limitExpireTimeStart = ''
-      //   this.initData.limitExpireTimeEnd = ''
-      // } else if(e === 2) {
-      //   this.initData.limitExpireDay = ''
-      // }
     }
   },
   computed: {
