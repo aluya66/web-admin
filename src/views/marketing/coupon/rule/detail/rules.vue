@@ -5,12 +5,12 @@
         v-model="formModel.limitReceive"
         controls-position="right"
         :size="size"
-        :min="1"
+        :min="0"
         :max="100"
         :disabled="isDisabled"
         placeholder="请输入限量数值"
       ></el-input-number>
-      <span class="input-info">* 单位张，目前数量填写范围1～100</span>
+      <span class="input-info">* 单位张，目前数量填写范围0～100</span>
     </el-form-item>
     <el-form-item label="品类规则:" prop="categoryType" v-if="false">
       <el-radio-group v-model="formModel.categoryType" :disabled="isDisabled">
@@ -48,7 +48,7 @@
         >添加互斥商品(包含该商品则不可用券)</el-button>
       </div>
     </el-form-item>
-    <el-form-item label="重复规则:" prop="repeatUse">
+    <el-form-item label="重复规则:">
       <el-checkbox v-model="formModel.repeatUse" :disabled="isDisabled">本券可重复使用</el-checkbox>
       <span class="input-info">* 可重复使用代表券金额抵扣后若仍大于0，则可在下次订单结算时继续选中抵扣;
         <br>&nbsp;&nbsp;若不能重复使用，则即时抵扣金额小于券金额，使用一次券后券状态也会变更为“已使用”;
@@ -56,14 +56,13 @@
     </el-form-item>
     <el-form-item label="用户门槛:">
       <el-checkbox v-model="formModel.pointLimit" :disabled="isDisabled">积分门槛</el-checkbox>
-      <span class="input-info">* 全不勾选则默认对除黑名单外所以用户可用</span>
+      <span class="input-info">* 全不勾选则默认对除黑名单外所有用户可用</span>
       <div class="user-limit">
         <span class="text">超过</span>
         <el-input
-          v-if="!isView"
-          v-model.number="formModel.couponRuleName"
+          v-model.number="formModel.pointLimitValue"
           :size="size"
-          :disabled="isDisabled"
+          :disabled="isDisabled || !formModel.pointLimit"
           clearable
         />
         <span class="lang-text">积分可以使用</span>
@@ -72,10 +71,9 @@
       <div class="user-limit">
         <span class="text">超过</span>
         <el-input
-          v-if="!isView"
-          v-model.number="formModel.couponRuleName"
+          v-model.number="formModel.userLevelValue"
           :size="size"
-          :disabled="isDisabled"
+          :disabled="isDisabled || !formModel.userLevel"
           clearable
         />
         <span class="lang-text">级可以使用</span>
@@ -84,9 +82,11 @@
     <el-form-item label="优惠类型:" prop="preferentialType">
       <el-select
         v-if="!isView"
+        class="select-item"
         :disabled="isDisabled"
         v-model="formModel.preferentialType"
         placeholder="请选择优惠类型"
+        clearable
       >
         <el-option
           v-for="item in preferentialTypeArr"
@@ -95,10 +95,45 @@
           :value="item.value"
         ></el-option>
       </el-select>
-      <el-checkbox :disabled="isDisabled">无门槛</el-checkbox>
+    </el-form-item>
+    <!-- <el-checkbox :disabled="isDisabled">无门槛</el-checkbox> -->
+    <el-form-item prop="couponPreferentialRules">
+      <div
+        class="user-limit mag-top"
+        v-for="(item, index) in formModel.couponPreferentialRules"
+        :key="item.key"
+      >
+        <template v-if="formModel.preferentialType === 0">
+          <span class="text">满</span>
+          <el-input v-model="item.preferentialLevel" :size="size" :disabled="isDisabled" clearable/>
+          <span class="text">元 减</span>
+          <el-input v-model="item.preferentialValue" :size="size" :disabled="isDisabled" clearable/>
+          <span class="text">元</span>
+          <el-button type="text" v-if="!isView" @click.prevent="detelePreferential(item, index)">删除</el-button>
+        </template>
+        <template v-if="formModel.preferentialType === 1">
+          <span class="text">满</span>
+          <el-input v-model="item.preferentialLevel" :size="size" :disabled="isDisabled" clearable/>
+          <span class="text">元 打</span>
+          <el-input v-model="item.preferentialValue" :size="size" :disabled="isDisabled" clearable/>
+          <span class="text">折</span>
+          <el-button type="text" v-if="!isView" @click.prevent="detelePreferential(item, index)">删除</el-button>
+        </template>
+      </div>
+      <div class="user-limit mag-top">
+        <el-button type="text" v-if="!isView" :disabled="isDisabled" @click="addPreferential">添加门槛限制</el-button>
+      </div>
     </el-form-item>
     <el-form-item label="返还规则:" prop="returnRule">
-      <el-radio-group v-model="formModel.returnRule">
+      <el-radio-group v-model="formModel.returnRule[0]">
+        <el-radio
+          v-for="item in returnRuleCancelArr"
+          :key="item.value"
+          :disabled="isView || isDisabled"
+          :label="item.value"
+        >{{item.label}}</el-radio>
+      </el-radio-group>
+      <el-radio-group class="mag-left" v-model="formModel.returnRule[1]">
         <el-radio
           v-for="item in returnRuleArr"
           :key="item.value"
@@ -111,37 +146,15 @@
 </template>
 
 <script>
-import CCard from 'components/card'
-import CTable from 'components/table'
-// import utils from 'utils'
-
 // 选取商品、品牌、分类暂时不做。
+import MixinFormCard from 'mixins/formCard'
+import CTable from 'components/table'
+
 export default {
-  props: {
-    title: String,
-    dataObj: {
-      type: Object,
-      required: true
-    },
-    isView: {
-      type: Boolean,
-      default: false
-    },
-    size: {
-      type: String,
-      default: 'medium'
-    },
-    isDisabled: {
-      type: Boolean,
-      default: false
-    }
-  },
+  mixins: [MixinFormCard],
   data(vm) {
     return {
       addGoodsType: null,
-      formModel: {
-        categoryType: 0
-      },
       preferentialTypeArr: [{
         label: '代金',
         value: 0
@@ -149,18 +162,19 @@ export default {
         label: '折扣',
         value: 1
       }],
-      returnRuleArr: [{
+      returnRuleCancelArr: [{
         label: '订单取消返还',
         value: 0
       }, {
         label: '订单取消不返还',
         value: 1
-      }, {
+      }],
+      returnRuleArr: [{
         label: '订单退款返还',
         value: 2
       }, {
         label: '订单退款不返还',
-        value: 3
+        value: 4
       }],
       tableInnerBtns: [{
         name: '删除',
@@ -179,25 +193,31 @@ export default {
       }]
     }
   },
-  created() {
-    const curData = this.dataObj
-    this.formModel = Object.assign({}, this.formModel, curData)
-    console.log(this.formModel)
-  },
   methods: {
     addGoods() {
       this.$emit('add-goods', this.addGoodsType, this.addGoodsType === 1 ? this.tableList : this.mutexTableList)
+    },
+    detelePreferential(item, index) {
+      this.formModel.couponPreferentialRules.splice(index, 1)
+      // if (item.id) {
+      //   this.delArr.push({ id: item.id })
+      // }
+    },
+    addPreferential() {
+      this.formModel.couponPreferentialRules.push({
+        preferentialLevel: '',
+        preferentialValue: ''
+      })
     }
   },
 
   components: {
-    CCard,
     CTable
   }
 }
 </script>
 
-<style lang='less' scope>
+<style lang='less' scoped>
 .form-card {
   .select-item {
     width: 30%;
@@ -223,17 +243,25 @@ export default {
     color: @text-sub-color;
     display: flex;
     .el-input {
-      width: 100px;
+      width: 120px;
     }
     .text,
     .lang-text {
       display: inline-block;
-      margin-right: 10px;
+      margin: 0 10px;
     }
     .lang-text {
-      margin-left: 10px;
       width: 150px;
     }
+    .el-button {
+      text-decoration: underline;
+    }
+  }
+  .mag-top {
+    margin-top: 10px;
+  }
+  .mag-left {
+    margin-left: 20px;
   }
 }
 </style>

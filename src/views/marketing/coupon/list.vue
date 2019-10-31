@@ -10,7 +10,7 @@
       <c-table
         selection
         hasBorder
-        :max-height="600"
+        :max-height="685"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -21,7 +21,7 @@
       >
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="名称">
+            <el-form-item label="券名称">
               <el-input
                 v-model="searchObj.couponName"
                 class="search-item"
@@ -113,7 +113,7 @@
 import mixinTable from 'mixins/table'
 import utils from 'utils'
 import CDialog from 'components/dialog'
-import AddCoupon from './addCoupon'
+import AddCoupon from './add'
 
 export default {
   name: 'couponList',
@@ -250,7 +250,7 @@ export default {
       ],
       tableHeader: [
         {
-          label: '名称 ',
+          label: '券名称 ',
           prop: 'couponName',
           width: 130,
           fixed: true
@@ -287,20 +287,6 @@ export default {
           label: '剩余数量(张)',
           prop: 'remainNumber'
         },
-        {
-          label: '审核状态',
-          prop: 'statusName'
-        },
-        {
-          label: '申请审核时间',
-          prop: 'applyCheckTime',
-          width: 100
-        },
-        {
-          label: '审核时间',
-          prop: 'checkTime',
-          width: 100
-        },
         // {
         //   label: '激活时间(月)',
         //   prop: 'limitActivateMonth'
@@ -312,6 +298,7 @@ export default {
         {
           label: '激活时间类型(天)',
           prop: 'limitActivateDayType',
+          width: 120,
           formatter(row) {
             return row.limitActivateDayType === 0
               ? '固定时间可领取'
@@ -321,6 +308,7 @@ export default {
         {
           label: '激活时间(月)',
           prop: 'limitActivateMonths',
+          width: 120,
           formatter(row) {
             return row.limitActivateMonths.join('/')
           }
@@ -328,6 +316,7 @@ export default {
         {
           label: '激活时间(天)',
           prop: 'limitActivateDays',
+          width: 120,
           formatter(row) {
             return row.limitActivateDays.join('/')
           }
@@ -350,6 +339,21 @@ export default {
         {
           label: '有效期开始时间',
           prop: 'limitExpireTimeStart',
+          width: 100
+        },
+        {
+          label: '审核状态',
+          prop: 'statusName',
+          width: 100
+        },
+        {
+          label: '申请审核时间',
+          prop: 'applyCheckTime',
+          width: 100
+        },
+        {
+          label: '审核时间',
+          prop: 'checkTime',
           width: 100
         },
         {

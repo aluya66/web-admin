@@ -19,11 +19,10 @@ export default {
     shop: '渠道中心',
     shopList: '店铺列表',
     marketing: '营销中心',
-    coupon: '券管理',
+    coupon: '券中心',
     couponRuleList: '券规则列表',
     couponRuleInfo: '券规则信息',
-    couponList: '券列表',
-    couponAudit: '券审核'
+    couponList: '券列表'
   },
   navbar: {
     logout: '退出',

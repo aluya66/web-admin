@@ -8,44 +8,42 @@
     label-position="right"
     status-icon
   >
-    <el-row>
-      <el-col :span="12">
-        <el-form-item label="参数分类:" prop="type">
-          <el-select
-            v-model="formModel.type"
-            class="select-item select-type"
-            :disabled="isEdit"
-            @change="changeType"
-            clearable
-          >
-            <el-option
-              v-for="item in parameterSelect"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="显示方式:" prop="paramType">
-          <el-select
-            v-model="formModel.paramType"
-            class="select-item select-type"
-            :popper-append-to-body="false"
-            :disabled="formModel.type === 2"
-            clearable
-          >
-            <el-option
-              v-for="item in paramTypeSelect"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
-    </el-row>
+    <el-col :span="12">
+      <el-form-item label="参数分类:" prop="type">
+        <el-select
+          v-model="formModel.type"
+          class="select-type"
+          :disabled="isEdit"
+          @change="changeType"
+          clearable
+        >
+          <el-option
+            v-for="item in parameterSelect"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-col>
+    <el-col :span="12">
+      <el-form-item label="显示方式:" prop="paramType">
+        <el-select
+          v-model="formModel.paramType"
+          class="select-type"
+          :popper-append-to-body="false"
+          :disabled="formModel.type === 2"
+          clearable
+        >
+          <el-option
+            v-for="item in paramTypeSelect"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-col>
     <el-form-item label="类型名称:" prop="name">
       <el-input v-model.trim="formModel.name" class="form-item" clearable></el-input>
     </el-form-item>
@@ -68,19 +66,11 @@
       }"
     >
       <el-col :span="10">
-        <el-input
-          v-model="item.value"
-          style="width: 100%;"
-          placeholder="属性值"
-        ></el-input>
+        <el-input v-model="item.value" style="width: 100%;" placeholder="属性值"></el-input>
       </el-col>
       <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
       <el-col :span="10">
-        <el-input
-          v-model="item.description"
-          style="width: 100%;"
-          placeholder="备注"
-        ></el-input>
+        <el-input v-model="item.description" style="width: 100%;" placeholder="备注"></el-input>
       </el-col>
       <el-col class="line" :span="1">&nbsp;&nbsp;</el-col>
       <el-col :span="2">
@@ -199,23 +189,23 @@ export default {
 }
 </script>
 
-<style lang="less" scope>
+<style lang="less" scoped>
 .form {
   width: 90%;
   .form-item {
     width: 100%;
   }
-  .select-item {
-    width: 50%;
-  }
   .select-type {
     width: 100%;
   }
   .sort-item {
-    width: 42%;
+    width: 41.8%;
   }
 }
 .body .el-select {
   position: fixed !important;
+}
+.select-item {
+  width: 50%;
 }
 </style>

@@ -16,7 +16,7 @@
         selection
         hasBorder
         :size="size"
-        :max-height="600"
+        :max-height="685"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -50,7 +50,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="状态">
+            <el-form-item label="类型状态">
               <el-select
                 v-model="searchObj.couponRuleStatus"
                 :size="size"
@@ -168,7 +168,7 @@ export default {
       isLoading: false,
       tableInnerBtns: [
         {
-          width: 180,
+          width: 150,
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
@@ -194,7 +194,7 @@ export default {
           fixed: true
         },
         {
-          label: '劵类型',
+          label: '类型',
           prop: 'couponRuleType',
           width: 100,
           fixed: true,
@@ -209,40 +209,6 @@ export default {
           }
         },
         {
-          label: '状态',
-          prop: 'couponRuleStatus',
-          formatter(row) {
-            console.log(row.couponRuleStatus)
-            return row.couponRuleStatus === 0 ? '已作废' : '启用中'
-          }
-        },
-        {
-          label: '品类规则',
-          prop: 'categoryType',
-          formatter(row) {
-            return row.categoryType === 0 ? '全部类' : '限品类'
-          }
-        },
-        {
-          label: '申请人',
-          prop: 'applicants'
-        },
-        {
-          label: '申请部门',
-          prop: 'applyingDepartment'
-        },
-        {
-          label: '需要密码',
-          prop: 'useCode',
-          formatter(row) {
-            return row.useCode === 0 ? '否' : '是'
-          }
-        },
-        {
-          label: '等级门槛',
-          prop: 'userLevel'
-        },
-        {
           label: '平台ID',
           prop: 'platforms',
           formatter(row) {
@@ -250,14 +216,10 @@ export default {
           }
         },
         {
-          label: '人均限领',
-          prop: 'limitReceive'
-        },
-        {
-          label: '积分门槛',
-          prop: 'pointLimit',
+          label: '品类规则',
+          prop: 'categoryType',
           formatter(row) {
-            return row.pointLimit === 0 ? '无' : '有'
+            return row.categoryType === 0 ? '全部类' : '限品类'
           }
         },
         {
@@ -279,6 +241,28 @@ export default {
           prop: 'preferentialValue'
         },
         {
+          label: '重复使用',
+          prop: 'repeatUse',
+          formatter(row) {
+            return row.repeatUse === 0 ? '不可以' : '可以'
+          }
+        },
+        {
+          label: '等级门槛',
+          prop: 'userLevel'
+        },
+        {
+          label: '人均限领',
+          prop: 'limitReceive'
+        },
+        {
+          label: '积分门槛',
+          prop: 'pointLimit',
+          formatter(row) {
+            return row.pointLimit === 0 ? '无' : '有'
+          }
+        },
+        {
           label: '返回规则',
           prop: 'returnRules',
           formatter(row) {
@@ -286,11 +270,27 @@ export default {
           }
         },
         {
-          label: '重复使用',
-          prop: 'repeatUse',
+          label: '需要密码',
+          prop: 'useCode',
           formatter(row) {
-            return row.repeatUse === 0 ? '不可以' : '可以'
+            return row.useCode === 0 ? '否' : '是'
           }
+        },
+        {
+          label: '类型状态',
+          prop: 'couponRuleStatus',
+          formatter(row) {
+            console.log(row.couponRuleStatus)
+            return row.couponRuleStatus === 0 ? '已作废' : '启用中'
+          }
+        },
+        {
+          label: '申请人',
+          prop: 'applicants'
+        },
+        {
+          label: '申请部门',
+          prop: 'applyingDepartment'
         },
         {
           label: '创建时间',

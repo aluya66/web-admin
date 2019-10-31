@@ -1,18 +1,18 @@
 <template>
   <c-card :name="title" class="form-card">
-    <el-form-item label="申请人:" prop="applicants">
+    <el-form-item label="申请人:">
       <el-input
         v-if="!isView"
         class="select-item"
         v-model.trim="formModel.applicants"
         :size="size"
         :disabled="isDisabled"
-        placeholder="请输申请人"
+        placeholder="请输入申请人"
         clearable
       />
       <span v-else>{{formModel.applicants}}</span>
     </el-form-item>
-    <el-form-item label="申请部门:" prop="applyingDepartment">
+    <el-form-item label="申请部门:">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -42,39 +42,10 @@
   </c-card>
 </template>
 <script>
-import CCard from 'components/card'
+import MixinFormCard from 'mixins/formCard'
 
 export default {
-  props: {
-    title: String,
-    dataObj: {
-      type: Object,
-      required: true
-    },
-    isView: {
-      type: Boolean,
-      default: false
-    },
-    size: {
-      type: String,
-      default: 'medium'
-    },
-    isDisabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      formModel: {}
-    }
-  },
-  created() {
-    this.formModel = Object.assign({}, this.dataObj)
-  },
-  components: {
-    CCard
-  }
+  mixins: [MixinFormCard]
 }
 </script>
 <style lang="less" scoped>

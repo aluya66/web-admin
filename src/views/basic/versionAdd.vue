@@ -126,7 +126,7 @@ export default {
 }
 </script>
 
-<style lang="less" scope>
+<style lang="less" scoped>
 .form {
   width: 90%;
   .form-item {

@@ -14,9 +14,9 @@
       class="form"
       label-position="right"
     >
-      <v-basic title="基础信息" :data-obj="formModel"></v-basic>
-      <v-rules title="规则设置" :data-obj="formModel" @add-goods="showDialog"></v-rules>
-      <v-apply title="申请信息" :data-obj="formModel"></v-apply>
+      <v-basic title="基础信息" :data-obj.sync="formModel"></v-basic>
+      <v-rules title="规则设置" :data-obj.sync="formModel" @add-goods="showDialog"></v-rules>
+      <v-apply title="申请信息" :data-obj.sync="formModel"></v-apply>
       <el-form-item class="form-btn" v-if="!isView">
         <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
       </el-form-item>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import mixinForm from 'mixins/form'
+import MixinForm from 'mixins/form'
 import VBasic from './basic.vue'
 import VRules from './rules.vue'
 import VApply from './apply.vue'
@@ -46,10 +46,18 @@ import CDialog from 'components/dialog'
 
 export default {
   name: 'couponRuleInfo',
-  mixins: [mixinForm],
+  mixins: [MixinForm],
   data() {
     return {
-      formModel: {},
+      formModel: {
+        couponRuleName: '',
+        categoryType: 0,
+        limitReceive: 0,
+        couponRuleType: 0,
+        preferentialType: 0,
+        couponPreferentialRules: [], // 优惠规则
+        returnRule: [0, 2]
+      },
       isView: false,
       isEdit: false,
       isDisabled: false,
@@ -79,6 +87,15 @@ export default {
         ],
         categoryType: [
           { required: true, message: '请选择品类', trigger: 'change' }
+        ],
+        returnRule: [
+          { required: true, message: '请选择返还规则', trigger: 'change' }
+        ],
+        preferentialType: [
+          { required: true, message: '请选择优惠规则', trigger: 'change' }
+        ],
+        couponPreferentialRules: [
+          { required: true, message: '请选择优惠规则', trigger: 'blur' }
         ]
       }
     }
@@ -87,7 +104,6 @@ export default {
   created() {
     const { id } = this.$route.params
     if (id) {
-      this.isEdit = true
       this.fetchData(id)
     }
   },
@@ -103,31 +119,42 @@ export default {
     },
     fetchData(couponRuleId) {
       this.$api.marketing.getCouponRuleDetail({ couponRuleId }).then(res => {
-        console.log(res)
+        this.setTagsViewTitle()
+        const { pointLimit, repeatUse, useCode, userLevel, ...other } = res
+        this.formModel = {
+          pointLimit: Boolean(pointLimit),
+          repeatUse: Boolean(repeatUse),
+          useCode: Boolean(useCode),
+          userLevel: Boolean(userLevel),
+          ...other
+        }
       })
     },
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          if (this.isEdit) {
-            this.addHandle()
-          } else {
-            this.editHandle()
-          }
+          this.addUpdateHandle()
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    addHandle() {
-      const params = this.formModel
-      this.$api.marketing.addCouponRule(params).then(res => {
-        console.log(res)
+    addUpdateHandle() {
+      const { pointLimit, repeatUse, useCode, userLevel, ...other } = this.formModel
+      this.$api.marketing.addCouponRule({
+        pointLimit: Number(pointLimit),
+        repeatUse: Number(repeatUse),
+        useCode: Number(useCode),
+        userLevel: Number(userLevel),
+        ...other
+      }).then(res => {
+        if (this.formModel.couponRuleId) {
+          this.$msgTip('更新成功')
+        } else {
+          this.$msgTip('新增成功')
+        }
       })
-    },
-    editHandle() {
-
     }
   },
 
@@ -141,7 +168,7 @@ export default {
 }
 </script>
 
-<style lang='less' scope>
+<style lang='less' scoped>
 .form {
   background-color: @white;
   padding: 15px 15px;
