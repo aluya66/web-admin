@@ -153,9 +153,9 @@ export default {
         {
           label: '运费劵',
           value: 3
-        },{
-           label: '售后代金劵',
-           value: 4
+        }, {
+          label: '售后代金劵',
+          value: 4
         }
       ],
       returnRulesSelect: [{

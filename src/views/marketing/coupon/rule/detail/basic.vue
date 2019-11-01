@@ -22,12 +22,14 @@
         >{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <!-- <el-form-item label="渠道:" prop="">
+    <el-form-item label="渠道:" prop="platform">
       <el-select
         v-if="!isView"
+        multiple
+        filterable
         class="select-item"
         :disabled="isDisabled"
-        v-model="formModel.goodsTypeId"
+        v-model="formModel.platform"
         placeholder="请选择渠道"
         clearable
       >
@@ -39,8 +41,7 @@
         ></el-option>
       </el-select>
       <span v-else>{{formModel.goodsTypeId ? channelList[formModel.goodsTypeId - 1].label : ''}}</span>
-    </el-form-item>-->
-
+    </el-form-item>
     <el-form-item label="生成密码:">
       <el-switch v-model="formModel.useCode" :disabled="isView || isDisabled"></el-switch>
     </el-form-item>
@@ -81,11 +82,21 @@ export default {
   data() {
     return {
       channelList: [{
-        label: 111,
+        label: 'IPX',
+        code: 'YSDP',
         value: 1
       }, {
-        label: 2222,
+        label: '星购',
+        code: 'YSGO',
         value: 2
+      }, {
+        label: 'YOSHOP',
+        code: 'YOSHOP',
+        value: 4
+      }, {
+        label: 'YSIA',
+        code: 'YSIA',
+        value: 8
       }],
       couponRuleTypeArr: [{
         label: '劵',

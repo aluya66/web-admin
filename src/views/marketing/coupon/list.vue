@@ -168,7 +168,7 @@ export default {
         {
           label: '运费劵',
           value: 3
-        },{
+        }, {
           label: '售后代金劵',
           value: 4
         }
@@ -252,6 +252,13 @@ export default {
             vm.confirmTip(`确认删除  ${couponName}  劵信息`, () => {
               vm.deleteData({ couponId })
             })
+          }
+        },
+        {
+          name: '查看券规则',
+          icon: 'el-icon-view',
+          handle(row) {
+            vm.routerLink(`/marketing/coupon/ruleView/${row.couponRuleId}`)
           }
         }
       ],

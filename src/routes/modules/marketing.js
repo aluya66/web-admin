@@ -40,6 +40,18 @@ export default {
       }
     },
     {
+      path: '/marketing/coupon/ruleView/:id?',
+      name: 'couponRuleView',
+      component: () => import('@/views/marketing/coupon/rule/detail/index'),
+      hidden: true,
+      meta: {
+        icon: 'table',
+        noCache: true,
+        title: 'couponRuleView',
+        activeMenu: '/marketing/coupon/list'
+      }
+    },
+    {
       path: '/marketing/coupon/list',
       name: 'couponList',
       component: () => import('@/views/marketing/coupon/list'),

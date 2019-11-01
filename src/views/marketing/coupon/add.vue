@@ -19,7 +19,7 @@
           :value="item.couponRuleId"
         ></el-option>
       </el-select>
-    <el-link type="primary" class="input-info" :underline="false">劵规则查询</el-link>
+    <!-- <el-link type="primary" class="input-info" :underline="false">劵规则查询</!--> -->
     </el-form-item>
     <el-form-item label="生成数量:" prop="couponNumber">
       <el-input-number

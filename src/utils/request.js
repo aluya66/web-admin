@@ -172,9 +172,9 @@ export default {
               reject(res.msg || res.retmsg)
             }
           } else {
-            if (res.totalCount) {
+            if (res.totalCount || res.totalCount === 0) {
               res.data = {
-                data: res.data,
+                data: res.data || [],
                 totalCount: res.totalCount
               }
             }

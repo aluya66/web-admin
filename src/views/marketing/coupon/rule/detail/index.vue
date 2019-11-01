@@ -14,9 +14,9 @@
       class="form"
       label-position="right"
     >
-      <v-basic title="基础信息" :data-obj.sync="formModel"></v-basic>
-      <v-rules title="规则设置" :data-obj.sync="formModel" @add-goods="showDialog"></v-rules>
-      <v-apply title="申请信息" :data-obj.sync="formModel"></v-apply>
+      <v-basic title="基础信息" :is-view="isView" :data-obj.sync="formModel"></v-basic>
+      <v-rules title="规则设置" :is-view="isView" :data-obj.sync="formModel" @add-goods="showDialog"></v-rules>
+      <v-apply title="申请信息" :is-view="isView" :data-obj.sync="formModel"></v-apply>
       <el-form-item class="form-btn" v-if="!isView">
         <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
       </el-form-item>
@@ -56,10 +56,9 @@ export default {
         couponRuleType: 0,
         preferentialType: 0,
         couponPreferentialRules: [], // 优惠规则
-        returnRule: [0, 2]
+        returnRule: []
       },
       isView: false,
-      isEdit: false,
       isDisabled: false,
       btnLoading: false,
       dialogObj: {
@@ -102,9 +101,13 @@ export default {
   },
 
   created() {
-    const { id } = this.$route.params
-    if (id) {
-      this.fetchData(id)
+    const { params, name } = this.$route
+    if (params.id) {
+      this.fetchData(params.id)
+    }
+    if (name === 'couponRuleView') {
+      this.isView = true
+      this.isDisabled = true
     }
   },
 
@@ -120,12 +123,16 @@ export default {
     fetchData(couponRuleId) {
       this.$api.marketing.getCouponRuleDetail({ couponRuleId }).then(res => {
         this.setTagsViewTitle()
-        const { pointLimit, repeatUse, useCode, userLevel, ...other } = res
+        const { pointLimit, repeatUse, useCode, userLevel, returnRules, platforms, marketPreferentialRules, ...other } = res
         this.formModel = {
+          ...this.formModel,
           pointLimit: Boolean(pointLimit),
           repeatUse: Boolean(repeatUse),
           useCode: Boolean(useCode),
           userLevel: Boolean(userLevel),
+          returnRule: returnRules || [],
+          platform: platforms || [],
+          couponPreferentialRules: marketPreferentialRules || [],
           ...other
         }
       })
