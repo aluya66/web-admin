@@ -22,7 +22,13 @@ export default {
     coupon: '券中心',
     couponRuleList: '券规则列表',
     couponRuleInfo: '券规则信息',
-    couponList: '券列表'
+    couponRuleView: '券规则',
+    couponList: '券列表',
+    payCenter: '支付中心',
+    payManage: '支付管理',
+    payManageList: '支付记录',
+    payManageAccount: '账户管理',
+    payManageChannel: '渠道管理'
   },
   navbar: {
     logout: '退出',
