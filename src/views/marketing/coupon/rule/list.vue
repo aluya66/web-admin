@@ -281,7 +281,6 @@ export default {
           label: '类型状态',
           prop: 'couponRuleStatus',
           formatter(row) {
-            console.log(row.couponRuleStatus)
             return row.couponRuleStatus === 0 ? '已作废' : '启用中'
           }
         },

@@ -10,39 +10,27 @@
     <el-form-item label="劵名称:" prop="couponName">
       <el-input v-model.trim="formModel.couponName" class="form-item" placeholder='请输入劵名称'/>
     </el-form-item>
-    <el-row>
-      <el-col :span="13">
-        <el-form-item label="劵规则名称:" prop="couponRuleId">
-          <el-select v-model="formModel.couponRuleId" class="form-item" clearable>
-            <el-option
-              v-for="item in couponRuleSelect"
-              :key="item.couponRuleId"
-              :label="item.couponRuleName"
-              :value="item.couponRuleId"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
-      <el-col :span="8" class="test-item">
-        <a href="#">劵规则查询</a>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="13">
-        <el-form-item label="生成数量:" prop="couponNumber">
-          <el-input-number
-            v-model.trim="formModel.couponNumber"
-            class="form-item"
-            controls-position="right"
-            :min="1"
-            :max="100"
-          ></el-input-number>
-        </el-form-item>
-      </el-col>
-      <el-col :span="8" class="test-item">
-        <span>单位：张</span>
-      </el-col>
-    </el-row>
+    <el-form-item label="劵规则名称:" prop="couponRuleId">
+      <el-select v-model="formModel.couponRuleId" class="select-item" clearable>
+        <el-option
+          v-for="item in couponRuleSelect"
+          :key="item.couponRuleId"
+          :label="item.couponRuleName"
+          :value="item.couponRuleId"
+        ></el-option>
+      </el-select>
+    <el-link type="primary" class="input-info" :underline="false">劵规则查询</el-link>
+    </el-form-item>
+    <el-form-item label="生成数量:" prop="couponNumber">
+      <el-input-number
+        v-model.trim="formModel.couponNumber"
+        class="select-item"
+        controls-position="right"
+        :min="1"
+        :max="100"
+      ></el-input-number>
+      <span class="input-info">单位：张</span>
+    </el-form-item>
     <el-form-item label="激活时间类型:" prop="limitActivateDayType">
       <el-select
         v-model="formModel.limitActivateDayType"
