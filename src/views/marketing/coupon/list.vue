@@ -164,6 +164,13 @@ export default {
         {
           label: '通用劵',
           value: 2
+        },
+        {
+          label: '运费劵',
+          value: 3
+        },{
+          label: '售后代金劵',
+          value: 4
         }
       ],
       tableInnerBtns: [
@@ -266,13 +273,7 @@ export default {
           prop: 'couponRuleType',
           width: 100,
           formatter(row) {
-            return row.couponRuleType === 0
-              ? '劵'
-              : row.couponRuleType === 1
-                ? '卡'
-                : row.couponRuleType === 2
-                  ? '通用劵'
-                  : '无'
+            return row.couponRuleType !== '' ? vm.couponRuleSelect[row.couponRuleType].label : ''
           }
         },
         {
