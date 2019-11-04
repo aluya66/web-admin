@@ -48,7 +48,7 @@
         >添加互斥商品(包含该商品则不可用券)</el-button>
       </div>
     </el-form-item>
-    <el-form-item label="重复规则:">
+    <el-form-item label="重复规则:" prop="repeatUse">
       <el-checkbox v-model="formModel.repeatUse" :disabled="isView || isDisabled">本券可重复使用</el-checkbox>
       <span class="input-info">* 可重复使用代表券金额抵扣后若仍大于0，则可在下次订单结算时继续选中抵扣;
         <br>&nbsp;&nbsp;若不能重复使用，则即时抵扣金额小于券金额，使用一次券后券状态也会变更为“已使用”;
@@ -95,36 +95,45 @@
           :value="item.value"
         ></el-option>
       </el-select>
-    </el-form-item>
-    <!-- <el-checkbox :disabled="isDisabled">无门槛</el-checkbox> -->
-    <el-form-item prop="couponPreferentialRules">
-      <div
-        class="user-limit mag-top"
-        v-for="(item, index) in formModel.couponPreferentialRules"
-        :key="item.key"
-      >
-        <template v-if="formModel.preferentialType === 0">
-          <span class="text">满</span>
-          <el-input v-model="item.preferentialLevel" :size="size" :disabled="isDisabled" clearable/>
-          <span class="text">元 减</span>
-          <el-input v-model="item.preferentialValue" :size="size" :disabled="isDisabled" clearable/>
-          <span class="text">元</span>
-          <el-button type="text" v-if="!isView" @click.prevent="detelePreferential(item, index)">删除</el-button>
-        </template>
-        <template v-if="formModel.preferentialType === 1">
-          <span class="text">满</span>
-          <el-input v-model="item.preferentialLevel" :size="size" :disabled="isDisabled" clearable/>
-          <span class="text">元 打</span>
-          <el-input v-model="item.preferentialValue" :size="size" :disabled="isDisabled" clearable/>
-          <span class="text">折</span>
-          <el-button type="text" v-if="!isView" @click.prevent="detelePreferential(item, index)">删除</el-button>
-        </template>
-      </div>
-      <div class="user-limit mag-top">
+      <div class="user-limit">
         <el-button type="text" v-if="!isView" :disabled="isDisabled" @click="addPreferential">添加门槛限制</el-button>
       </div>
     </el-form-item>
-    <el-form-item label="返还规则:" prop="returnRule">
+    <!-- <el-checkbox :disabled="isDisabled">无门槛</el-checkbox> -->
+    <div
+      class="user-limit"
+      v-for="(item, index) in formModel.couponPreferentialRules"
+      :key="item.index"
+    >
+      <el-form-item
+        :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+        :rules="{
+          required: true, message: '优惠门槛不能为空', trigger: 'blur'
+        }"
+      >
+        <span class="text">满</span>
+        <el-input v-model="item.preferentialLevel" :size="size" :disabled="isDisabled" clearable/>
+        <span class="text">元</span>
+      </el-form-item>
+      <el-form-item
+        :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+        :rules="{
+          required: true, message: '优惠值不能为空', trigger: 'blur'
+        }"
+      >
+        <span class="text">{{formModel.preferentialType === 0 ? '减': '打'}}</span>
+        <el-input v-model="item.preferentialValue" :size="size" :disabled="isDisabled" clearable/>
+        <span class="text">{{formModel.preferentialType === 0 ? '元': '折'}}</span>
+        <el-button type="text" v-if="!isView" @click.prevent="detelePreferential(item, index)">删除</el-button>
+      </el-form-item>
+    </div>
+    <el-form-item
+      label="返还规则:"
+      prop="returnRule[0]"
+      :rules="{
+        required: true, message: '请选择取消返还规则', trigger: 'change'
+      }"
+    >
       <el-radio-group v-model="formModel.returnRule[0]">
         <el-radio
           v-for="item in returnRuleCancelArr"
@@ -133,7 +142,14 @@
           :label="item.value"
         >{{item.label}}</el-radio>
       </el-radio-group>
-      <el-radio-group class="mag-left" v-model="formModel.returnRule[1]">
+    </el-form-item>
+    <el-form-item
+      prop="returnRule[1]"
+      :rules="{
+        required: true, message: '请选择退款返还规则', trigger: 'change'
+      }"
+    >
+      <el-radio-group v-model="formModel.returnRule[1]">
         <el-radio
           v-for="item in returnRuleArr"
           :key="item.value"
@@ -256,12 +272,6 @@ export default {
     .el-button {
       text-decoration: underline;
     }
-  }
-  .mag-top {
-    margin-top: 10px;
-  }
-  .mag-left {
-    margin-left: 20px;
   }
 }
 </style>

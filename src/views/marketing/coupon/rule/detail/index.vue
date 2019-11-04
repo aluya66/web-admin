@@ -50,13 +50,18 @@ export default {
   data() {
     return {
       formModel: {
-        couponRuleName: '',
-        categoryType: 0,
-        limitReceive: 0,
-        couponRuleType: 0,
-        preferentialType: 0,
-        couponPreferentialRules: [], // 优惠规则
-        returnRule: []
+        couponRuleName: '', // 券名称
+        categoryType: 0, // 品类规则
+        limitReceive: 0, // 人均限量
+        couponRuleType: 0, // 卡券类型
+        preferentialType: 0, // 优惠类型
+        couponPreferentialRules: [{ // 优惠门槛列表
+          preferentialLevel: '',
+          preferentialValue: ''
+        }],
+        repeatUse: false, // 重复使用，默认不可重复
+        returnRule: [], // 返回规则
+        platform: [] // 渠道
       },
       isView: false,
       isDisabled: false,
@@ -81,20 +86,20 @@ export default {
         couponRuleName: [
           { required: true, message: '请输入券名称', trigger: 'blur' }
         ],
+        platform: [
+          { required: true, message: '请选择渠道', trigger: 'change' }
+        ],
         limitReceive: [
-          { required: true, message: '每人限选1张券', trigger: 'blur' }
+          { required: true, message: '人均限领不能为空', trigger: 'blur' }
         ],
         categoryType: [
           { required: true, message: '请选择品类', trigger: 'change' }
         ],
-        returnRule: [
-          { required: true, message: '请选择返还规则', trigger: 'change' }
+        repeatUse: [
+          { required: true, message: '请选择重复规则', trigger: 'change' }
         ],
         preferentialType: [
           { required: true, message: '请选择优惠规则', trigger: 'change' }
-        ],
-        couponPreferentialRules: [
-          { required: true, message: '请选择优惠规则', trigger: 'blur' }
         ]
       }
     }
@@ -124,15 +129,19 @@ export default {
       this.$api.marketing.getCouponRuleDetail({ couponRuleId }).then(res => {
         this.setTagsViewTitle()
         const { pointLimit, repeatUse, useCode, userLevel, returnRules, platforms, marketPreferentialRules, ...other } = res
+        let returnRule = []
+        if (returnRules && returnRules.length) {
+          returnRule = returnRules.length > 1 ? returnRules : returnRules[0] < 2 ? [returnRules[0]] : ['', returnRules[0]]
+        }
         this.formModel = {
           ...this.formModel,
           pointLimit: Boolean(pointLimit),
           repeatUse: Boolean(repeatUse),
           useCode: Boolean(useCode),
           userLevel: Boolean(userLevel),
-          returnRule: returnRules || [],
+          returnRule,
           platform: platforms || [],
-          couponPreferentialRules: marketPreferentialRules || [],
+          couponPreferentialRules: marketPreferentialRules && marketPreferentialRules.length ? marketPreferentialRules.map(res => ({ preferentialLevel: res.preferentialLevel, preferentialValue: res.preferentialValue })) : [],
           ...other
         }
       })

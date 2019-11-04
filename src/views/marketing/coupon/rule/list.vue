@@ -127,6 +127,23 @@ export default {
       },
       pickerOptions: utils.pickerOptions,
       dialogObj: {}, // 对话框数据
+      channelList: [{
+        label: 'IPX',
+        code: 'YSDP',
+        value: 1
+      }, {
+        label: '星购',
+        code: 'YSGO',
+        value: 2
+      }, {
+        label: 'YOSHOP',
+        code: 'YOSHOP',
+        value: 4
+      }, {
+        label: 'YSIA',
+        code: 'YSIA',
+        value: 8
+      }],
       couponRuleTypeSelect: [
         {
           value: 0,
@@ -210,10 +227,14 @@ export default {
           }
         },
         {
-          label: '平台ID',
+          label: '渠道',
           prop: 'platforms',
+          width: 120,
           formatter(row) {
-            return row.platforms.join('/')
+            return row && row.platforms ? row.platforms.map(res => {
+              const curVal = vm.channelList.find(val => val.value === res)
+              return curVal ? curVal.label : ''
+            }).join(', ') : ''
           }
         },
         {
@@ -224,10 +245,24 @@ export default {
           }
         },
         {
+          label: '等级门槛',
+          prop: 'userLevel',
+          formatter(row) {
+            return row.userLevel === 0 ? '有' : '无'
+          }
+        },
+        {
+          label: '积分门槛',
+          prop: 'pointLimit',
+          formatter(row) {
+            return row.pointLimit === 1 ? '有' : '无'
+          }
+        },
+        {
           label: '优惠门槛',
           prop: 'preferentialLevel',
           formatter(row) {
-            return row.preferentialLevel === 0 ? '无' : '有'
+            return row.preferentialLevel === 1 ? '有' : '无'
           }
         },
         {
@@ -239,49 +274,53 @@ export default {
         },
         {
           label: '优惠值(元)',
-          prop: 'preferentialValue'
+          prop: 'preferentialValue',
+          width: 160,
+          formatter(row) {
+            if (row.marketPreferentialRules && row.marketPreferentialRules.length) {
+              return row.marketPreferentialRules.map(res => {
+                if (res.preferentialType === 0) {
+                  return `满 ${res.preferentialLevel}元 减 ${res.preferentialValue} 元`
+                }
+                return `满 ${res.preferentialLevel}元 打 ${res.preferentialValue} 折`
+              }).join(';')
+            }
+          }
         },
         {
           label: '重复使用',
           prop: 'repeatUse',
           formatter(row) {
-            return row.repeatUse === 0 ? '不可以' : '可以'
+            return row.repeatUse === 1 ? '可以' : '不可以'
           }
         },
         {
-          label: '等级门槛',
-          prop: 'userLevel'
-        },
-        {
-          label: '人均限领',
+          label: '人均限领(张)',
           prop: 'limitReceive'
-        },
-        {
-          label: '积分门槛',
-          prop: 'pointLimit',
-          formatter(row) {
-            return row.pointLimit === 0 ? '无' : '有'
-          }
         },
         {
           label: '返回规则',
           prop: 'returnRules',
+          width: 120,
           formatter(row) {
-            return row.returnRules.join('/')
+            return row && row.returnRules ? row.returnRules.map(res => {
+              const curVal = vm.returnRulesSelect.find(val => res === val.value)
+              return curVal ? curVal.label : ''
+            }).join(';') : ''
           }
         },
         {
           label: '需要密码',
           prop: 'useCode',
           formatter(row) {
-            return row.useCode === 0 ? '使用' : '不使用'
+            return row.useCode === 0 ? '需要' : '不需要'
           }
         },
         {
           label: '类型状态',
           prop: 'couponRuleStatus',
           formatter(row) {
-            return row.couponRuleStatus === 0 ? '已作废' : '启用中'
+            return row.couponRuleStatus === 1 ? '启用中' : '已作废'
           }
         },
         {
