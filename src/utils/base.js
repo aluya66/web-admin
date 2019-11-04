@@ -86,14 +86,17 @@ export const confirmTip = function () {
   window.globalVue.$confirm(msg, title || '温馨提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
+    distinguishCancelAndClose: true,
     closeOnClickModal: false,
     type: 'warning',
     center: true,
     ...other
   }).then(() => {
     params.confirmHandle && params.confirmHandle()
-  }).catch(() => {
-    params.cancalHandle && params.cancalHandle()
+  }).catch(action => {
+    if (action === 'cancel') {
+      params.cancalHandle && params.cancalHandle()
+    }
     console.log('取消')
   })
 }
