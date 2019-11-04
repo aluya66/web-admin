@@ -318,17 +318,54 @@ export default {
         // }
       ],
       tableHeader: [
-        {
-          label: '用户名称',
-          prop: 'tradeUserName',
-          width: 130,
-          fixed: true
-        },
+        // {
+        //   label: '用户名称',
+        //   prop: 'tradeUserName',
+        //   width: 130,
+        //   fixed: true
+        // },
         {
           label: '订单编号',
           prop: 'transactionCode',
           width: 160,
           fixed: true
+        },
+        {
+          label: '业务线编码',
+          prop: 'appCode',
+          fixed: true,
+          formatter(row) {
+            return row.appCode === 'ysdp' ? 'IPX' : row.appCode === 'yssp' ? 'yoshop' : row.appCode === 'ysgo' ? '星GO' : '无'
+          }
+        },
+        // {
+        //   label: '门店编码',
+        //   prop: 'shopCode',
+        //   width: 180
+        // },
+        {
+          label: '第三方交易编码',
+          prop: 'thirdTradeCode',
+          width: 250
+        },
+        {
+          label: '流水号',
+          prop: 'tradeItemCode',
+          width: 220
+        },
+        {
+          label: '支付类型',
+          prop: 'payType'
+        },
+        {
+          label: '对账状态',
+          prop: 'accountStatus',
+          width: 120,
+          formatter(row) {
+            return row.accountStatus
+              ? vm.accountStatusSelect[row.accountStatus].label
+              : ''
+          }
         },
         {
           label: '交易状态',
@@ -339,9 +376,11 @@ export default {
           }
         },
         {
-          label: '交易时间',
-          prop: 'tradeTime',
-          width: 100
+          label: '交易渠道',
+          prop: 'channelCode',
+          formatter(row) {
+            return row.channelCode === 'ZFBAPP' ? '支付宝' : row.channelCode === 'WXAPP' ? '微信' : row.channelCode === 'JSAPI' ? '微信小程序' : row.channelCode === 'NATIVE' ? '微信二维码支付' : '无'
+          }
         },
         {
           label: '交易通知时间',
@@ -349,37 +388,13 @@ export default {
           width: 100
         },
         {
-          label: '业务线编码',
-          prop: 'appCode',
-          formatter(row) {
-            return row.appCode === 'ysdp' ? 'IPX' : row.appCode === 'yssp' ? 'yoshop' : row.appCode === 'ysgo' ? '星GO' : '无'
-          }
-        },
-        {
-          label: '门店编码',
-          prop: 'shopCode',
-          width: 180
-        },
-        {
-          label: '第三方交易编码',
-          prop: 'thirdTradeCode',
-          width: 140
-        },
-        {
-          label: '流水号',
-          prop: 'tradeItemCode',
-          width: 140
+          label: '交易时间',
+          prop: 'tradeTime',
+          width: 100
         },
         {
           label: '交易手续费(元)',
           prop: 'fee'
-        },
-        {
-          label: '交易渠道',
-          prop: 'channelCode',
-          formatter(row) {
-            return row.channelCode === 'ZFBAPP' ? '支付宝' : row.channelCode === 'WXAPP' ? '微信' : row.channelCode === 'JSAPI' ? '微信小程序' : row.channelCode === 'NATIVE' ? '微信二维码支付' : '无'
-          }
         },
         {
           label: '交易支付总金额(元)',
@@ -396,19 +411,6 @@ export default {
         {
           label: '交易实际退款的金额(元)',
           prop: 'refundAmountYuan'
-        },
-        {
-          label: '对账状态',
-          prop: 'accountStatus',
-          formatter(row) {
-            return row.accountStatus
-              ? vm.accountStatusSelect[row.accountStatus].label
-              : ''
-          }
-        },
-        {
-          label: '支付类型',
-          prop: 'payType'
         },
         {
           label: '创建时间',

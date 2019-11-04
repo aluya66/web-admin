@@ -138,7 +138,7 @@ export default {
         }
       ],
       tableInnerBtns: [{
-        width: 130,
+        width: 100,
         icon: 'el-icon-check',
         formatter(row) {
           return row && row.channelState === 0 ? '启用' : '禁用'
@@ -162,7 +162,8 @@ export default {
       tableHeader: [
         {
           label: 'ID',
-          prop: 'channelId'
+          prop: 'channelId',
+          width: 100
         },
         {
           label: '名称',
@@ -198,13 +199,14 @@ export default {
                     : '无'
           }
         },
-        {
-          label: '交易金额*比例',
-          prop: 'channelFeeRule'
-        },
+        // {
+        //   label: '交易金额*比例',
+        //   prop: 'channelFeeRule'
+        // },
         {
           label: '状态',
           prop: 'channelState',
+          width: 120,
           formatter(row) {
             return row.channelState === 1 ? '启用' : '禁用'
           }

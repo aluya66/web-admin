@@ -19,12 +19,7 @@
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
             <el-form-item label="app编码">
-              <el-select
-                v-model="searchObj.appCode"
-                class="search-item"
-                :size="size"
-                clearable
-              >
+              <el-select v-model="searchObj.appCode" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in appCodeSelect"
                   :key="item.value"
@@ -40,13 +35,8 @@
                 :size="size"
                 placeholder="渠道编号"
                 clearable
-              /> -->
-              <el-select
-                v-model="searchObj.channelCode"
-                class="search-item"
-                :size="size"
-                clearable
-              >
+              />-->
+              <el-select v-model="searchObj.channelCode" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in channelCodeSelect"
                   :key="item.value"
@@ -65,12 +55,7 @@
               />
             </el-form-item>
             <el-form-item label="状态">
-              <el-select
-                v-model="searchObj.status"
-                class="search-item"
-                :size="size"
-                clearable
-              >
+              <el-select v-model="searchObj.status" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in appSecretSelect"
                   :key="item.value"
@@ -92,7 +77,6 @@
         </template>
       </c-table>
     </div>
-
   </c-view>
 </template>
 
@@ -103,8 +87,7 @@ import utils from 'utils'
 export default {
   name: 'accountList',
   mixins: [mixinTable],
-  components: {
-  },
+  components: {},
   data(vm) {
     return {
       pickerOptions: utils.pickerOptions,
@@ -115,23 +98,30 @@ export default {
         mchId: '', // 商户号
         status: '' // 状态
       },
-      appCodeSelect: [{
-        label: 'ipx',
-        value: 'ysdp'
-      }, {
-        label: 'yoshop',
-        value: 'yssp'
-      }, {
-        label: '星go',
-        value: 'ysgo'
-      }],
-      appSecretSelect: [{
-        label: '禁用',
-        value: 0
-      }, {
-        label: '启用',
-        value: 1
-      }],
+      appCodeSelect: [
+        {
+          label: 'ipx',
+          value: 'ysdp'
+        },
+        {
+          label: 'yoshop',
+          value: 'yssp'
+        },
+        {
+          label: '星go',
+          value: 'ysgo'
+        }
+      ],
+      appSecretSelect: [
+        {
+          label: '禁用',
+          value: 0
+        },
+        {
+          label: '启用',
+          value: 1
+        }
+      ],
       channelCodeSelect: [
         {
           label: '支付宝',
@@ -151,110 +141,141 @@ export default {
         }
       ],
       tableInnerBtns: [
-      //   {
-      //   width: 180,
-      //   name: '查看详情',
-      //   icon: 'el-icon-view',
-      //   handle(row) {
-      //     vm.showDialog({
-      //       title: '详情',
-      //       initData: row,
-      //       isEdit: true
-      //     })
-      //   }
-      // },
+        //   {
+        //   width: 180,
+        //   name: '查看详情',
+        //   icon: 'el-icon-view',
+        //   handle(row) {
+        //     vm.showDialog({
+        //       title: '详情',
+        //       initData: row,
+        //       isEdit: true
+        //     })
+        //   }
+        // },
         {
-          name: '启用/禁用',
-          width: 130,
+          width: 100,
           icon: 'el-icon-check',
+          formatter(row) {
+            return row && row.status === 0 ? '启用' : '禁用'
+          },
           handle(row) {
-            const { id, appCode } = row
-            vm.confirmTip(`请确认启用/禁用 ${appCode} 此账户`, {
+            const { id, appCode, status } = row
+            const tip = status === 1 ? '禁用' : '启用'
+            vm.confirmTip(`请确认是否${tip} ${appCode} 账户`, {
               confirmHandle() {
-                vm.verifyData({ id })
+                if (status === 1) {
+                  vm.forbiddenData({ id })
+                } else {
+                  vm.verifyData({ id })
+                }
               },
-              cancalHandle() {
-                vm.forbiddenData({ id })
-              },
-              confirmButtonText: '启用',
-              cancelButtonText: '禁用'
+              confirmButtonText: '确定',
+              cancelButtonText: '取消'
             })
           }
-        }],
-      tableHeader: [{
-        label: 'app编号',
-        prop: 'appCode',
-        fixed: true,
-        width: 100,
-        formatter(row) {
-          return row.appCode === 'ysdp' ? 'IPX' : row.appCode === 'yssp' ? 'yoshop' : row.appCode === 'ysgo' ? '星GO' : row.appCode
-          // vm.appCodeSelect.find(item => {
-          //   return  item.value === row.appCode
-          // }).label
         }
-      }, {
-        label: '渠道编号',
-        prop: 'channelCode',
-        fixed: true,
-        width: 130,
-        formatter(row) {
-          return row.channelCode === 'ZFBAPP' ? '支付宝' : row.channelCode === 'WXAPP' ? '微信' : row.channelCode === 'JSAPI' ? '微信小程序' : row.channelCode === 'NATIVE' ? '微信二维码' : row.channelCode
+      ],
+      tableHeader: [
+        {
+          label: 'app编号',
+          prop: 'appCode',
+          fixed: true,
+          width: 100,
+          formatter(row) {
+            // return row.appCode === 'ysdp' ? 'IPX' : row.appCode === 'yssp' ? 'yoshop' : row.appCode === 'ysgo' ? '星GO' : row.appCode
+            const items =
+              row &&
+              row.appCode &&
+              vm.appCodeSelect.find(item => item.value === row.appCode)
+            return items ? items.label : ''
+          }
+        },
+        {
+          label: '渠道编号',
+          prop: 'channelCode',
+          fixed: true,
+          width: 130,
+          formatter(row) {
+            return row.channelCode === 'ZFBAPP'
+              ? '支付宝'
+              : row.channelCode === 'WXAPP'
+                ? '微信'
+                : row.channelCode === 'JSAPI'
+                  ? '微信小程序'
+                  : row.channelCode === 'NATIVE'
+                    ? '微信二维码'
+                    : row.channelCode
+          }
+        },
+        {
+          label: '门店id',
+          prop: 'shopCode',
+          width: 130
+        },
+        {
+          label: '商户号',
+          prop: 'mchId',
+          width: 120
+        },
+        {
+          label: '应用ID',
+          prop: 'appId',
+          width: 170
+        },
+        // {
+        //   label: "应用 key",
+        //   prop: "appKey",
+        //   width: 120
+        // },
+        // {
+        //   label: "应用密钥",
+        //   prop: "appSecret",
+        //   width: 200
+        // },
+        {
+          label: '商户私钥',
+          prop: 'mchPrivateKey',
+          width: 300
+        },
+        {
+          label: '平台公钥',
+          prop: 'platPublicKey',
+          width: 300
+        },
+        {
+          label: '支付密钥Key',
+          prop: 'payKey',
+          width: 300
+        },
+        {
+          label: '状态',
+          prop: 'status',
+          formatter(row) {
+            return row.status === 1 ? '启用' : '禁用'
+          }
+        },
+        {
+          label: '创建人',
+          prop: 'opCreator',
+          width: 100
+        },
+        // {
+        //   label: "更新人",
+        //   prop: "opEditor",
+        //   width: 100
+        // },
+        {
+          label: '创建时间',
+          prop: 'created',
+          width: 100
+        },
+        {
+          label: '最后更新时间',
+          prop: 'updated',
+          width: 100
         }
-      }, {
-        label: '应用ID',
-        prop: 'appId',
-        width: 170
-      }, {
-        label: '应用 key',
-        prop: 'appKey',
-        width: 120
-      }, {
-        label: '商户号',
-        prop: 'mchId',
-        width: 120
-      }, {
-        label: '应用密钥',
-        prop: 'appSecret',
-        width: 150
-      }, {
-        label: '商户私钥',
-        prop: 'mchPrivateKey',
-        width: 150
-      }, {
-        label: '平台公钥',
-        prop: 'platPublicKey',
-        width: 150
-      }, {
-        label: '状态',
-        prop: 'status',
-        formatter(row) {
-          return row.status === 0 ? '禁用' : '启用'
-        }
-      }, {
-        label: '支付密钥Key',
-        prop: 'payKey',
-        width: 130
-      }, {
-        label: '门店id',
-        prop: 'shopCode',
-        width: 130
-      }, {
-        label: '创建人',
-        prop: 'opCreator',
-        width: 100
-      }, {
-        label: '更新人',
-        prop: 'opEditor',
-        width: 100
-      }, {
-        label: '创建时间',
-        prop: 'created',
-        width: 100
-      }, {
-        label: '最后更新时间',
-        prop: 'updated',
-        width: 100
-      }]
+      ]
     }
   },
   created() {
