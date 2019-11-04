@@ -40,7 +40,7 @@
             <el-form-item label="类型">
               <el-select v-model="searchObj.channelType" class="search-item" :size="size" clearable>
                 <el-option
-                  v-for="(item, index) in findchannel"
+                  v-for="(item, index) in channelList"
                   :key="index"
                   :label="item.label"
                   :value="item.value"
@@ -88,7 +88,6 @@ export default {
   components: {},
   data(vm) {
     return {
-      findchannel: [], // 渠道枚举值
       pickerOptions: utils.pickerOptions,
       dialogObj: {},
       searchObj: {
@@ -115,7 +114,7 @@ export default {
           value: 'NATIVE'
         }
       ],
-      findchannel: [{
+      channelList: [{ // 渠道枚举值
         label: '支付宝',
         value: 'ZPF'
       }, {
@@ -139,20 +138,24 @@ export default {
         }
       ],
       tableInnerBtns: [{
-        name: '启用/禁用',
         width: 130,
         icon: 'el-icon-check',
+        formatter(row) {
+          return row && row.channelState === 0 ? '启用' : '禁用'
+        },
         handle(row) {
-          const { channelId, channelName } = row
-          vm.confirmTip(`请确认启用/禁用 ${channelName} 此账户`, {
+          const { channelId, channelName, channelState } = row
+          const tip = channelState === 1 ? '禁用' : '启用'
+          vm.confirmTip(`请确认是否${tip} ${channelName} 渠道`, {
             confirmHandle() {
-              vm.verifyData({ channelId })
+              if (channelState === 1) {
+                vm.forbiddenData({ channelId })
+              } else {
+                vm.verifyData({ channelId })
+              }
             },
-            cancalHandle() {
-              vm.forbiddenData({ channelId })
-            },
-            confirmButtonText: '启用',
-            cancelButtonText: '禁用'
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
           })
         }
       }],
@@ -203,7 +206,7 @@ export default {
           label: '状态',
           prop: 'channelState',
           formatter(row) {
-            return row.channelState === 0 ? '禁用' : '启用'
+            return row.channelState === 1 ? '启用' : '禁用'
           }
         },
         {

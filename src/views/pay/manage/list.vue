@@ -137,7 +137,7 @@
         </template>
       </c-table>
     </div>
-   
+
   </c-view>
 </template>
 
@@ -332,13 +332,11 @@ export default {
         },
         {
           label: '交易状态',
-          prop: 'tradeStatus'
-          // formatter(row){
-          // return row.tradeStatus ? vm.tradeStatusSelect[row.tradeStatus] : ''
-          // vm.tradeStatusSelect.find(item =>
-          //   item.value === row.tradeStatus
-          // ).label
-          // }
+          prop: 'tradeStatus',
+          formatter(row) {
+            const curStatus = row && row.tradeStatus && vm.tradeStatusSelect.find(item => item.value === row.tradeStatus)
+            return curStatus ? curStatus.label : ''
+          }
         },
         {
           label: '交易时间',
@@ -451,7 +449,7 @@ export default {
             this.tableList = res || []
           }
         })
-    },
+    }
 
     // showDialog(opts) {
     //   this.dialogObj = {

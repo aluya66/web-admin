@@ -92,7 +92,7 @@
         </template>
       </c-table>
     </div>
-    
+
   </c-view>
 </template>
 
@@ -162,32 +162,32 @@ export default {
       //       isEdit: true
       //     })
       //   }
-      // }, 
-      {
-        name: '启用/禁用',
-        width: 130,
-        icon: 'el-icon-check',
-        handle(row) {
-          const { id, appCode } = row
-          vm.confirmTip(`请确认启用/禁用 ${appCode} 此账户`, {
-            confirmHandle() {
-              vm.verifyData({ id })
-            },
-            cancalHandle() {
-              vm.forbiddenData({ id })
-            },
-            confirmButtonText: '启用',
-            cancelButtonText: '禁用'
-          })
-        }
-      }],
+      // },
+        {
+          name: '启用/禁用',
+          width: 130,
+          icon: 'el-icon-check',
+          handle(row) {
+            const { id, appCode } = row
+            vm.confirmTip(`请确认启用/禁用 ${appCode} 此账户`, {
+              confirmHandle() {
+                vm.verifyData({ id })
+              },
+              cancalHandle() {
+                vm.forbiddenData({ id })
+              },
+              confirmButtonText: '启用',
+              cancelButtonText: '禁用'
+            })
+          }
+        }],
       tableHeader: [{
         label: 'app编号',
         prop: 'appCode',
         fixed: true,
         width: 100,
-        formatter(row){
-          return row.appCode === 'ysdp' ? 'IPX' : row.appCode === 'yssp' ? 'yoshop' : row.appCode === 'ysgo' ? '星GO' : row.appCode 
+        formatter(row) {
+          return row.appCode === 'ysdp' ? 'IPX' : row.appCode === 'yssp' ? 'yoshop' : row.appCode === 'ysgo' ? '星GO' : row.appCode
           // vm.appCodeSelect.find(item => {
           //   return  item.value === row.appCode
           // }).label
@@ -197,7 +197,7 @@ export default {
         prop: 'channelCode',
         fixed: true,
         width: 130,
-        formatter(row){
+        formatter(row) {
           return row.channelCode === 'ZFBAPP' ? '支付宝' : row.channelCode === 'WXAPP' ? '微信' : row.channelCode === 'JSAPI' ? '微信小程序' : row.channelCode === 'NATIVE' ? '微信二维码' : row.channelCode
         }
       }, {
