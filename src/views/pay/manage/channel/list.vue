@@ -140,6 +140,7 @@ export default {
       ],
       tableInnerBtns: [{
         name: '启用/禁用',
+        width: 130,
         icon: 'el-icon-check',
         handle(row) {
           const { channelId, channelName } = row

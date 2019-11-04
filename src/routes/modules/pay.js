@@ -21,7 +21,7 @@ export default {
     children: [{
       path: '/pay/manage/channel',
       name: 'payManageChannel',
-      component: () => import('@/views/pay/manage/account/list'),
+      component: () => import('@/views/pay/manage/channel/list'),
       meta: {
         icon: 'table',
         title: 'payManageChannel'

@@ -137,31 +137,18 @@
         </template>
       </c-table>
     </div>
-    <div v-if="dialogObj.isShow">
-      <c-dialog
-        :is-show="dialogObj.isShow"
-        :title="dialogObj.title"
-        close-btn
-        @before-close="dialogObj.isShow = false"
-      >
-        <add-pay ref="childRef" :init-data="dialogObj.initData"></add-pay>
-      </c-dialog>
-    </div>
+   
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
-import AddPay from './add'
 import utils from 'utils'
 
 export default {
   name: 'payList',
   mixins: [mixinTable],
   components: {
-    CDialog,
-    AddPay
   },
   data(vm) {
     return {
@@ -317,18 +304,18 @@ export default {
         }
       ],
       tableInnerBtns: [
-        {
-          width: 100,
-          name: '查看详情',
-          icon: 'el-icon-view',
-          handle(row) {
-            vm.showDialog({
-              title: '详情',
-              initData: row,
-              isEdit: true
-            })
-          }
-        }
+        // {
+        //   width: 100,
+        //   name: '查看详情',
+        //   icon: 'el-icon-view',
+        //   handle(row) {
+        //     vm.showDialog({
+        //       title: '详情',
+        //       initData: row,
+        //       isEdit: true
+        //     })
+        //   }
+        // }
       ],
       tableHeader: [
         {
@@ -466,14 +453,14 @@ export default {
         })
     },
 
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title,
-        isEdit: opts.isEdit,
-        initData: opts.initData
-      }
-    }
+    // showDialog(opts) {
+    //   this.dialogObj = {
+    //     isShow: true,
+    //     title: opts.title,
+    //     isEdit: opts.isEdit,
+    //     initData: opts.initData
+    //   }
+    // }
   }
 }
 </script>
