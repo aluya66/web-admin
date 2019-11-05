@@ -9,7 +9,7 @@
       :max-height="maxHeight"
       v-loading="loading"
       :data="tableList"
-      :highlight-current-row="single"
+      highlight-current-row
       :span-method="objectSpanMethod"
       tooltip-effect="dark"
       style="width: 100%"
@@ -41,11 +41,16 @@
             </div>
           </el-popover>
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
-          <template v-else>
+          <div v-else-if="item.handle" class="title-active" @click="item.handle(scope.row)">
             {{
             item.formatter ? item.formatter(scope.row, index) : scope.row[item.prop]
             }}
-          </template>
+          </div>
+          <span :class="item.setColor && item.setColor(scope.row)" v-else>
+            {{
+            item.formatter ? item.formatter(scope.row, index) : scope.row[item.prop]
+            }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -60,8 +65,8 @@
           <el-button
             v-for="(btn, index) in curBtns(scope.row)"
             :key="index"
-            :type="btn.type || 'text'"
-            :icon="btn.icon"
+            :type="setBtnAttribute(btn, scope.row, 'type') || 'text'"
+            :icon="setBtnAttribute(btn, scope.row, 'icon')"
             :size="btn.size || 'mini'"
             @click="
 							btn.handle && handleClick(btn.handle, scope.row, scope.$index)
@@ -82,6 +87,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
+            <template v-else-if="btn.prop">{{setBtnAttribute(btn, scope.row, 'title')}}</template>
             <template v-else>
               {{
               btn.formatter
@@ -190,6 +196,14 @@ export default {
     }
   },
   methods: {
+    // 设置button的type、icon、name
+    setBtnAttribute(btn, row, type) {
+      const { toggle, name } = btn.prop || {}
+      if (name && toggle && type) {
+        return toggle[row[name]][type]
+      }
+      return btn[type]
+    },
     curBtns(row) {
       return this.tableInnerBtns.filter(res => {
         if (res.notBtn) {
@@ -265,8 +279,12 @@ export default {
       width: 250px;
     }
   }
-  .text-multi-ellipsis{
+  .text-multi-ellipsis {
     .multi-ellipsis(2);
+  }
+  .title-active {
+    color: @active;
+    cursor: pointer;
   }
 }
 </style>

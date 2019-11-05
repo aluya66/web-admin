@@ -139,9 +139,15 @@ export default {
       ],
       tableInnerBtns: [{
         width: 100,
-        icon: 'el-icon-check',
-        formatter(row) {
-          return row && row.channelState === 0 ? '启用' : '禁用'
+        prop: {
+          name: 'channelState', // 为0或1
+          toggle: [{
+            icon: 'el-icon-check',
+            title: '启用'
+          }, {
+            icon: 'el-icon-close',
+            title: '禁用'
+          }]
         },
         handle(row) {
           const { channelId, channelName, channelState } = row
@@ -188,8 +194,8 @@ export default {
           label: '类型',
           prop: 'channelType',
           formatter(row) {
-              const curType = vm.channelList.find(e => e.value === row.channelType)
-              return curType ? curType.label : row.channelType
+            const curType = vm.channelList.find(e => e.value === row.channelType)
+            return curType ? curType.label : row.channelType
           }
         },
         // {
