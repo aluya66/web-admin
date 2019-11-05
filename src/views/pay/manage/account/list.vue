@@ -236,17 +236,23 @@ export default {
         {
           label: '商户私钥',
           prop: 'mchPrivateKey',
-          width: 300
+          formatter(row) {
+            return row.mchPrivateKey ? '已配置' : ''
+          }
         },
         {
           label: '平台公钥',
           prop: 'platPublicKey',
-          width: 300
+          formatter(row) {
+            return row.platPublicKey ? '已配置' : ''
+          }
         },
         {
           label: '支付密钥Key',
           prop: 'payKey',
-          width: 300
+          formatter(row) {
+            return row.payKey ? '已配置' : ''
+          }
         },
         {
           label: '状态',
@@ -288,22 +294,20 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime, 'dateTime')
       this.isLoading = true
-      this.$api.pay
-        .getAccount({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.pay.getAccount({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     },
     // showDialog(opts) {
     //   this.dialogObj = {
@@ -328,6 +332,3 @@ export default {
   }
 }
 </script>
-
-<style lang='less' scoped>
-</style>

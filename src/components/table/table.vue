@@ -34,6 +34,12 @@
             fit="contain"
             :preview-src-list="[scope.row[item.prop]]"
           ></c-image>
+          <el-popover trigger="hover" placement="top" v-else-if="item.isPopover">
+            <p>{{scope.row[item.prop]}}</p>
+            <div slot="reference" class="name-wrapper">
+              <div class="text-multi-ellipsis">{{ scope.row[item.prop] }}</div>
+            </div>
+          </el-popover>
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
           <template v-else>
             {{
@@ -258,6 +264,9 @@ export default {
     .search-item {
       width: 250px;
     }
+  }
+  .text-multi-ellipsis{
+    .multi-ellipsis(2);
   }
 }
 </style>

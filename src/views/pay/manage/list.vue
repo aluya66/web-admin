@@ -52,12 +52,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="业务线">
-              <el-select
-                v-model="searchObj.appCode"
-                class="search-item"
-                :size="size"
-                clearable
-              >
+              <el-select v-model="searchObj.appCode" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in appCodeSelect"
                   :key="item.value"
@@ -67,12 +62,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="渠道">
-              <el-select
-                v-model="searchObj.channelCode"
-                class="search-item"
-                :size="size"
-                clearable
-              >
+              <el-select v-model="searchObj.channelCode" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in channelCodeSelect"
                   :key="item.value"
@@ -137,7 +127,6 @@
         </template>
       </c-table>
     </div>
-
   </c-view>
 </template>
 
@@ -368,6 +357,13 @@ export default {
           }
         },
         {
+          label: '交易渠道',
+          prop: 'channelCode',
+          formatter(row) {
+            return row.channelCode === 'ZFBAPP' ? '支付宝' : row.channelCode === 'WXAPP' ? '微信' : row.channelCode === 'JSAPI' ? '微信小程序' : row.channelCode === 'NATIVE' ? '微信二维码支付' : '无'
+          }
+        },
+        {
           label: '交易状态',
           prop: 'tradeStatus',
           formatter(row) {
@@ -376,11 +372,29 @@ export default {
           }
         },
         {
-          label: '交易渠道',
-          prop: 'channelCode',
-          formatter(row) {
-            return row.channelCode === 'ZFBAPP' ? '支付宝' : row.channelCode === 'WXAPP' ? '微信' : row.channelCode === 'JSAPI' ? '微信小程序' : row.channelCode === 'NATIVE' ? '微信二维码支付' : '无'
-          }
+          label: '交易手续费(元)',
+          prop: 'fee',
+          width: 100
+        },
+        {
+          label: '交易支付总金额(元)',
+          prop: 'payTotalAmountYuan',
+          width: 100
+        },
+        {
+          label: '交易实际支付的金额(元)',
+          prop: 'paiedAmountYuan',
+          width: 100
+        },
+        {
+          label: '交易退款总金额(元)',
+          prop: 'refundTotalAmountYuan',
+          width: 100
+        },
+        {
+          label: '交易实际退款的金额(元)',
+          prop: 'refundAmountYuan',
+          width: 100
         },
         {
           label: '交易通知时间',
@@ -393,32 +407,12 @@ export default {
           width: 100
         },
         {
-          label: '交易手续费(元)',
-          prop: 'fee'
-        },
-        {
-          label: '交易支付总金额(元)',
-          prop: 'payTotalAmountYuan'
-        },
-        {
-          label: '交易实际支付的金额(元)',
-          prop: 'paiedAmountYuan'
-        },
-        {
-          label: '交易退款总金额(元)',
-          prop: 'refundTotalAmountYuan'
-        },
-        {
-          label: '交易实际退款的金额(元)',
-          prop: 'refundAmountYuan'
-        },
-        {
           label: '创建时间',
           prop: 'created',
           width: 100
         },
         {
-          label: '修改时间',
+          label: '更新时间',
           prop: 'updated',
           width: 100
         }
@@ -435,22 +429,20 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime, 'dateTime')
       this.isLoading = true
-      this.$api.pay
-        .getPay({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.pay.getPay({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     }
 
     // showDialog(opts) {
@@ -464,6 +456,3 @@ export default {
   }
 }
 </script>
-
-<style lang='less' scoped>
-</style>
