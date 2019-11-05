@@ -155,9 +155,15 @@ export default {
         // },
         {
           width: 100,
-          icon: 'el-icon-check',
-          formatter(row) {
-            return row && row.status === 0 ? '启用' : '禁用'
+          prop: {
+            name: 'status', // 为0或1
+            toggle: [{
+              icon: 'el-icon-check',
+              title: '启用'
+            }, {
+              icon: 'el-icon-close',
+              title: '禁用'
+            }]
           },
           handle(row) {
             const { id, appCode, status } = row

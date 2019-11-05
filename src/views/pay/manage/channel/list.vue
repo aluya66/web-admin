@@ -28,14 +28,13 @@
               />
             </el-form-item>
             <el-form-item label="编码">
-              <el-select v-model="searchObj.channelCode" class="search-item" :size="size" clearable>
-                <el-option
-                  v-for="item in channelCodeSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
+              <el-input
+                v-model="searchObj.channelCode"
+                class="search-item"
+                :size="size"
+                placeholder="编码"
+                clearable
+              />
             </el-form-item>
             <el-form-item label="类型">
               <el-select v-model="searchObj.channelType" class="search-item" :size="size" clearable>
@@ -167,28 +166,12 @@ export default {
       }],
       tableHeader: [
         {
-          label: 'ID',
-          prop: 'channelId',
-          width: 100
-        },
-        {
           label: '名称',
           prop: 'channelName'
         },
         {
           label: '编码',
-          prop: 'channelCode',
-          formatter(row) {
-            return row.channelCode === 'ZFBAPP'
-              ? '支付宝'
-              : row.channelCode === 'WXAPP'
-                ? '微信'
-                : row.channelCode === 'JSAPI'
-                  ? '微信小程序'
-                  : row.channelCode === 'NATIVE'
-                    ? '微信二维码支付'
-                    : row.channelCode
-          }
+          prop: 'channelCode'
         },
         {
           label: '类型',
@@ -205,20 +188,17 @@ export default {
         {
           label: '状态',
           prop: 'channelState',
-          width: 120,
           formatter(row) {
             return row.channelState === 1 ? '启用' : '禁用'
           }
         },
         {
           label: '创建人',
-          prop: 'opCreator',
-          width: 100
+          prop: 'opCreator'
         },
         {
           label: '更新人',
-          prop: 'opEditor',
-          width: 100
+          prop: 'opEditor'
         },
         {
           label: '创建时间',
