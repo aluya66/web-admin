@@ -188,7 +188,7 @@ export default {
               row &&
               row.appCode &&
               vm.appCodeSelect.find(item => item.value === row.appCode)
-            return items ? items.label : ''
+            return items ? items.label : row.appCode
           }
         },
         {
@@ -209,19 +209,19 @@ export default {
           }
         },
         {
-          label: '门店id',
+          label: '门店ID',
           prop: 'shopCode',
           width: 130
-        },
-        {
-          label: '商户号',
-          prop: 'mchId',
-          width: 120
         },
         {
           label: '应用ID',
           prop: 'appId',
           width: 170
+        },
+        {
+          label: '商户号',
+          prop: 'mchId',
+          width: 120
         },
         // {
         //   label: "应用 key",
@@ -248,7 +248,7 @@ export default {
           }
         },
         {
-          label: '支付密钥Key',
+          label: '支付密钥',
           prop: 'payKey',
           formatter(row) {
             return row.payKey ? '已配置' : ''
@@ -266,18 +266,18 @@ export default {
           prop: 'opCreator',
           width: 100
         },
-        // {
-        //   label: "更新人",
-        //   prop: "opEditor",
-        //   width: 100
-        // },
+        {
+          label: '更新人',
+          prop: 'opEditor',
+          width: 100
+        },
         {
           label: '创建时间',
           prop: 'created',
           width: 100
         },
         {
-          label: '最后更新时间',
+          label: '更新时间',
           prop: 'updated',
           width: 100
         }

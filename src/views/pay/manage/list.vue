@@ -201,7 +201,7 @@ export default {
         },
         {
           label: '失败',
-          value: 5
+          value: 9
         }
       ],
       tradeStatusSelect: [
@@ -344,21 +344,22 @@ export default {
         },
         {
           label: '支付类型',
-          prop: 'payType'
+          prop: 'payType',
+          width: 130
         },
         {
           label: '对账状态',
           prop: 'accountStatus',
           width: 120,
           formatter(row) {
-            return row.accountStatus
-              ? vm.accountStatusSelect[row.accountStatus].label
-              : ''
+            const curStatus = row && row.accountStatus && vm.accountStatusSelect.find(item => item.value === row.accountStatus)
+            return curStatus ? curStatus.label : ''
           }
         },
         {
           label: '交易渠道',
           prop: 'channelCode',
+          width: 100,
           formatter(row) {
             return row.channelCode === 'ZFBAPP' ? '支付宝' : row.channelCode === 'WXAPP' ? '微信' : row.channelCode === 'JSAPI' ? '微信小程序' : row.channelCode === 'NATIVE' ? '微信二维码支付' : '无'
           }
