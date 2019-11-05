@@ -165,11 +165,11 @@ export default {
       },
       tradeItemSelect: [
         {
-          label: '支付',
+          label: '支付成功',
           value: 10
         },
         {
-          label: '退款',
+          label: '退款成功',
           value: 20
         },
         {
@@ -212,7 +212,7 @@ export default {
         },
         {
           label: '失败',
-          value: 5
+          value: 9
         }
       ],
       tradeStatusSelect: [
@@ -363,9 +363,8 @@ export default {
           prop: 'accountStatus',
           width: 120,
           formatter(row) {
-            return row.accountStatus
-              ? vm.accountStatusSelect[row.accountStatus].label
-              : ''
+            let curAccount =  row && row.accountStatus && vm.accountStatusSelect.find(e => e.value === row.accountStatus)
+            return curAccount ? curAccount.label : ''
           }
         },
         {
