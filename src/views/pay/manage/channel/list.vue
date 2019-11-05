@@ -116,7 +116,7 @@ export default {
       ],
       channelList: [{ // 渠道枚举值
         label: '支付宝',
-        value: 'ZPF'
+        value: 'ZFB'
       }, {
         label: '微信',
         value: 'WX'
@@ -188,15 +188,8 @@ export default {
           label: '类型',
           prop: 'channelType',
           formatter(row) {
-            return row.channelType === 'ZPF'
-              ? '支付宝'
-              : row.channelType === 'WX'
-                ? '微信'
-                : row.channelType === 'WALLET'
-                  ? '钱包'
-                  : row.channelType === 'GOCARD'
-                    ? '星购卡'
-                    : row.channelType
+              const curType = vm.channelList.find(e => e.value === row.channelType)
+              return curType ? curType.label : row.channelType
           }
         },
         // {

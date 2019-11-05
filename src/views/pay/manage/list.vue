@@ -367,6 +367,7 @@ export default {
         {
           label: '交易状态',
           prop: 'tradeStatus',
+          width: 120,
           formatter(row) {
             const curStatus = row && row.tradeStatus && vm.tradeStatusSelect.find(item => item.value === row.tradeStatus)
             return curStatus ? curStatus.label : ''
