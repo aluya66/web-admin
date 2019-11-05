@@ -61,7 +61,7 @@ export default {
         }],
         repeatUse: false, // 重复使用，默认不可重复
         returnRule: [], // 返回规则
-        platform: [] // 渠道
+        platforms: [] // 渠道
       },
       isView: false,
       isDisabled: false,
@@ -128,10 +128,10 @@ export default {
     fetchData(couponRuleId) {
       this.$api.marketing.getCouponRuleDetail({ couponRuleId }).then(res => {
         this.setTagsViewTitle()
-        const { pointLimit, repeatUse, useCode, userLevel, returnRules, platforms, marketPreferentialRules, ...other } = res
+        const { pointLimit, repeatUse, useCode, userLevel, returnRules, marketPreferentialRules, ...other } = res
         let returnRule = []
         if (returnRules && returnRules.length) {
-          returnRule = returnRules.length > 1 ? returnRules : returnRules[0] < 2 ? [returnRules[0]] : ['', returnRules[0]]
+          returnRule = returnRules.length > 1 ? returnRules : returnRules[0] <= 2 ? [returnRules[0]] : ['', returnRules[0]]
         }
         this.formModel = {
           ...this.formModel,
@@ -140,7 +140,6 @@ export default {
           useCode: Boolean(useCode),
           userLevel: Boolean(userLevel),
           returnRule,
-          platform: platforms || [],
           couponPreferentialRules: marketPreferentialRules && marketPreferentialRules.length ? marketPreferentialRules.map(res => ({ preferentialLevel: res.preferentialLevel, preferentialValue: res.preferentialValue })) : [],
           ...other
         }
@@ -149,27 +148,33 @@ export default {
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          this.addUpdateHandle()
+          const { pointLimit, repeatUse, useCode, userLevel, ...other } = this.formModel
+          const curForm = Object.assign({}, {
+            pointLimit: Number(pointLimit),
+            repeatUse: Number(repeatUse),
+            useCode: Number(useCode),
+            userLevel: Number(userLevel),
+            ...other
+          })
+          if (this.$route.params.id) {
+            this.updateHandle(curForm)
+          } else {
+            this.addHandle(curForm)
+          }
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    addUpdateHandle() {
-      const { pointLimit, repeatUse, useCode, userLevel, ...other } = this.formModel
-      this.$api.marketing.addCouponRule({
-        pointLimit: Number(pointLimit),
-        repeatUse: Number(repeatUse),
-        useCode: Number(useCode),
-        userLevel: Number(userLevel),
-        ...other
-      }).then(res => {
-        if (this.formModel.couponRuleId) {
-          this.$msgTip('更新成功')
-        } else {
-          this.$msgTip('新增成功')
-        }
+    addHandle(params) {
+      this.$api.marketing.addCouponRule(params).then(res => {
+        this.$msgTip('新增成功')
+      })
+    },
+    updateHandle(params) {
+      this.$api.marketing.updCouponRule(params).then(() => {
+        this.$msgTip('更新成功')
       })
     }
   },

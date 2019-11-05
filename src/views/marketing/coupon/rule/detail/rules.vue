@@ -180,27 +180,19 @@ export default {
       }],
       returnRuleCancelArr: [{
         label: '订单取消返还',
-        value: 0
+        value: 1
       }, {
         label: '订单取消不返还',
-        value: 1
+        value: 2
       }],
       returnRuleArr: [{
         label: '订单退款返还',
-        value: 2
+        value: 4
       }, {
         label: '订单退款不返还',
-        value: 4
+        value: 8
       }],
-      tableInnerBtns: [{
-        name: '删除',
-        icon: 'el-icon-delete',
-        handle(row) {
-          if (vm.addGoodsType === 1) {
-          } else {
-          }
-        }
-      }],
+      tableInnerBtns: [],
       tableList: [],
       mutexTableList: [],
       tableHeader: [{

@@ -221,7 +221,6 @@ export default {
           label: '类型',
           prop: 'couponRuleType',
           width: 100,
-          fixed: true,
           formatter(row) {
             return row.couponRuleType !== '' ? vm.couponRuleSelect[row.couponRuleType].label : ''
           }
@@ -296,7 +295,8 @@ export default {
         },
         {
           label: '人均限领(张)',
-          prop: 'limitReceive'
+          prop: 'limitReceive',
+          width: 100
         },
         {
           label: '返回规则',
@@ -309,13 +309,13 @@ export default {
             }).join(';') : ''
           }
         },
-        {
-          label: '需要密码',
-          prop: 'useCode',
-          formatter(row) {
-            return row.useCode === 0 ? '需要' : '不需要'
-          }
-        },
+        // {
+        //   label: '需要密码',
+        //   prop: 'useCode',
+        //   formatter(row) {
+        //     return row.useCode === 0 ? '需要' : '不需要'
+        //   }
+        // },
         {
           label: '类型状态',
           prop: 'couponRuleStatus',

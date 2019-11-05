@@ -22,14 +22,14 @@
         >{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="渠道:" prop="platform">
+    <el-form-item label="渠道:" prop="platforms">
       <el-select
         v-if="!isView"
         multiple
         filterable
         class="select-item"
         :disabled="isDisabled"
-        v-model="formModel.platform"
+        v-model="formModel.platforms"
         placeholder="请选择渠道"
         clearable
       >
@@ -42,9 +42,9 @@
       </el-select>
       <span v-else>{{formModel.goodsTypeId ? channelList[formModel.goodsTypeId - 1].label : ''}}</span>
     </el-form-item>
-    <el-form-item label="生成密码:">
+    <!-- <el-form-item label="生成密码:">
       <el-switch v-model="formModel.useCode" :disabled="isView || isDisabled"></el-switch>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="限制类型:">
       <el-radio-group v-model="formModel.limit">
         <el-radio

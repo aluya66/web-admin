@@ -8,6 +8,12 @@ export const addCouponRule = params =>
     method: 'post'
   })
 
+// 新增券规则
+export const updCouponRule = params =>
+  Http.fetch(`${context}/api/mks/coupon/rule`, params, {
+    method: 'put'
+  })
+
 // 券规则列表
 export const getCouponRule = params =>
   Http.fetch(`${context}/api/mks/coupon/rule`, params, {
