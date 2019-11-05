@@ -12,7 +12,7 @@ export default {
   children: [{
     path: '/marketing/coupon',
     name: 'coupon',
-    component: () => import('@/views/marketing/index'),
+    component: () => import('@/views/common/index'),
     redirect: '/marketing/coupon/ruleList',
     meta: {
       title: 'coupon',

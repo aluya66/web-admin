@@ -12,7 +12,7 @@ export default {
   children: [{
     path: '/pay/manage',
     name: 'payManage',
-    component: () => import('@/views/pay/index'),
+    component: () => import('@/views/common/index'),
     redirect: '/pay/manage/list',
     meta: {
       title: 'payManage',
