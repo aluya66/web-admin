@@ -154,11 +154,11 @@ export default {
       },
       tradeItemSelect: [
         {
-          label: '支付',
+          label: '支付成功',
           value: 10
         },
         {
-          label: '退款',
+          label: '退款成功',
           value: 20
         },
         {
