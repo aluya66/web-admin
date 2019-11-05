@@ -181,7 +181,7 @@ export default {
                   ? '微信小程序'
                   : row.channelCode === 'NATIVE'
                     ? '微信二维码支付'
-                    : '无'
+                    : row.channelCode
           }
         },
         {
@@ -196,7 +196,7 @@ export default {
                   ? '钱包'
                   : row.channelType === 'GOCARD'
                     ? '星购卡'
-                    : '无'
+                    : row.channelType
           }
         },
         // {
@@ -217,7 +217,7 @@ export default {
           width: 100
         },
         {
-          label: '修改人',
+          label: '更新人',
           prop: 'opEditor',
           width: 100
         },
@@ -227,7 +227,7 @@ export default {
           width: 100
         },
         {
-          label: '最后更新时间',
+          label: '更新时间',
           prop: 'updated',
           width: 100
         }

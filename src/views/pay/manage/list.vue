@@ -355,7 +355,8 @@ export default {
         },
         {
           label: '支付类型',
-          prop: 'payType'
+          prop: 'payType',
+          width: 130
         },
         {
           label: '对账状态',
@@ -370,6 +371,7 @@ export default {
         {
           label: '交易状态',
           prop: 'tradeStatus',
+          width: 130,
           formatter(row) {
             const curStatus = row && row.tradeStatus && vm.tradeStatusSelect.find(item => item.value === row.tradeStatus)
             return curStatus ? curStatus.label : ''
@@ -378,6 +380,7 @@ export default {
         {
           label: '交易渠道',
           prop: 'channelCode',
+          width: 100,
           formatter(row) {
             return row.channelCode === 'ZFBAPP' ? '支付宝' : row.channelCode === 'WXAPP' ? '微信' : row.channelCode === 'JSAPI' ? '微信小程序' : row.channelCode === 'NATIVE' ? '微信二维码支付' : '无'
           }
