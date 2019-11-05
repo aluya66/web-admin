@@ -18,15 +18,6 @@
       >
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="用户名称">
-              <el-input
-                v-model="searchObj.tradeUserName"
-                class="search-item"
-                :size="size"
-                placeholder="用户名称"
-                clearable
-              />
-            </el-form-item>
             <el-form-item label="订单编号">
               <el-input
                 v-model="searchObj.transactionCode"
@@ -36,7 +27,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="业务线">
+            <el-form-item label="业务线编码">
               <el-select v-model="searchObj.appCode" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in appCodeSelect"
@@ -45,6 +36,15 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="用户姓名">
+              <el-input
+                v-model="searchObj.tradeUserName"
+                class="search-item"
+                :size="size"
+                placeholder="用户姓名"
+                clearable
+              />
             </el-form-item>
             <!-- <el-form-item label="支付类型">
               <el-select
@@ -308,12 +308,6 @@ export default {
       ],
       tableHeader: [
         {
-          label: '用户名称',
-          prop: 'tradeUserName',
-          width: 130,
-          fixed: true
-        },
-        {
           label: '订单编号',
           prop: 'transactionCode',
           width: 160,
@@ -327,6 +321,11 @@ export default {
           formatter(row) {
             return row.appCode === 'ysdp' ? 'IPX' : row.appCode === 'yssp' ? 'yoshop' : row.appCode === 'ysgo' ? '星GO' : '无'
           }
+        },
+        {
+          label: '用户姓名',
+          prop: 'tradeUserName',
+          width: 130
         },
         // {
         //   label: '门店编码',

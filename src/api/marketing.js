@@ -1,6 +1,6 @@
 import Http from '../utils/request'
 
-const context = process.env.VUE_APP_CONSOLE_MARKETING
+const context = process.env.VUE_APP_CONSOLE_COMMON
 
 // 新增券规则
 export const addCouponRule = params =>
