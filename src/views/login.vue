@@ -65,12 +65,12 @@
 import utils from 'utils'
 
 export default {
-  name: 'Login',
+  name: 'login',
   data () {
     return {
       title: process.env.VUE_APP_TITLE,
       loginForm: {
-        userName: utils.isDebug ? 'admin' : '',
+        userName: utils.isDebug ? 'system' : '',
         password: utils.isDebug ? '123456' : ''
       },
       loginRules: {
@@ -189,7 +189,7 @@ export default {
     background-color: @light_gray;
   }
   .el-checkbox__label {
-    color: @menuText;
+    color: @light_gray;
     font-size: @f12;
   }
 }

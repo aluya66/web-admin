@@ -1,9 +1,7 @@
-// import { login, logout } from 'api/auth'
+import { login, logout } from 'api/common'
 
 import utils from 'utils'
-import {
-  resetRouter
-} from '@/routes'
+import { resetRouter } from '@/routes'
 
 const state = {
   userInfo: utils.getStore('SET_USERINFO'),
@@ -12,7 +10,7 @@ const state = {
 
 const mutations = {
   SET_USERINFO: (state, userInfo) => {
-    state.userInfo = Object.assign({}, userInfo)
+    state.userInfo = userInfo
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
@@ -21,24 +19,27 @@ const mutations = {
 
 const actions = {
   // user login
-  login ({
-    commit
-  }, userInfo) {
+  login({ commit }, params) {
+    const {
+      userName,
+      password
+    } = params
     return new Promise((resolve, reject) => {
-      const data = {
-        token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzA4NDYwOTksImxvZ2luTmFtZSI6InplZ2FuZyIsImlzcyI6Inlvc2FyLXVwbXMiLCJleHAiOjE1NzA4ODIwOTksInVzZXJJZCI6MTA1LCJpYXQiOjE1NzA4NDYwOTl9.Bd05FCd4gP1UvNxyKfMLEQeuwE0X7ToYBR55AiZM4qs',
-        id: '5'
-      }
-      commit('SET_USERINFO', data)
-      utils.setStore('SET_USERINFO', data)
-      resolve()
+      login({
+        userName: userName,
+        password: utils.encrypt(password)
+      }).then(data => {
+        // 默认system用户角色id为0
+        const curData = { ...data, id: 0 }
+        commit('SET_USERINFO', curData)
+        utils.setStore('SET_USERINFO', curData)
+        resolve()
+      })
     })
   },
 
   // get user info
-  getInfo ({
-    commit
-  }) {
+  getInfo({ commit }) {
     return new Promise(resolve => {
       let role = utils.getUrlParam('parentId')
       const data = {
@@ -50,22 +51,23 @@ const actions = {
   },
 
   // user logout
-  logout ({
-    commit
-  }) {
+  logout({ commit }) {
     return new Promise((resolve, reject) => {
-      commit('SET_ROLES', [])
-      commit('SET_USERINFO', '')
-      utils.clearStore()
-      resetRouter()
-      resolve()
+      logout()
+        .then(() => {
+          commit('SET_ROLES', [])
+          commit('SET_USERINFO', '')
+          utils.clearStore()
+          resetRouter()
+          resolve()
+        }).catch(err => {
+          reject(err)
+        })
     })
   },
 
   // remove token
-  resetToken ({
-    commit
-  }) {
+  resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_ROLES', [])
       resolve()

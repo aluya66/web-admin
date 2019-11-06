@@ -93,7 +93,7 @@ export default {
 <style lang="less" scoped>
 .pagination-container {
 	margin-top: 10px;
-	background: @bg-main;
+	background: @white;
 	text-align: center;
 }
 .pagination-container.hidden {

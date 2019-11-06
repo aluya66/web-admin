@@ -14,10 +14,9 @@
 
 				<screenfull class="right-menu-item hover-effect" />
 
-        <lang-select class="right-menu-item hover-effect" />
 			</template> -->
 
-			<!-- <el-dropdown class="avatar-container" trigger="click">
+			<el-dropdown class="avatar-container" trigger="click">
 				<div class="avatar-wrapper">
 					<span class="user-name">{{ userInfo.userName }}</span>
 					<svg-icon icon-class="user-pic" class="user-avatar" />
@@ -30,12 +29,10 @@
 						</el-dropdown-item>
 					</router-link>
 					<el-dropdown-item divided>
-						<span style="display:block;" @click="logout">
-							{{ $t("navbar.logout") }}</span
-						>
+						<span style="display:block;" @click="logout"> {{ $t("navbar.logout") }}</span>
 					</el-dropdown-item>
 				</el-dropdown-menu>
-			</el-dropdown> -->
+			</el-dropdown>
 		</div>
 	</div>
 </template>
@@ -60,11 +57,11 @@ export default {
   methods: {
     toggleSideBar () {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    async logout () {
+      await this.$store.dispatch('user/logout')
+      this.$router.push('/login')
     }
-    // async logout () {
-    //   await this.$store.dispatch('user/logout')
-    //   this.$router.push('/login')
-    // }
   }
 }
 </script>
