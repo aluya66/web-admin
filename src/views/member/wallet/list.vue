@@ -49,18 +49,36 @@
         </template>
       </c-table>
     </div>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        :btns="dialogObj.btns"
+      >
+        <w-add ref="childRef"></w-add>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
+import CDialog from 'components/dialog'
+import WAdd from './add'
 import utils from 'utils'
 
 export default {
   name: 'memberWalletList',
   mixins: [mixinTable],
+  components: {
+    CDialog,
+    WAdd
+  },
   data(vm) {
     return {
+      id: '',
       pickerOptions: utils.pickerOptions,
       tableList: [],
       dialogObj: {},
@@ -68,7 +86,17 @@ export default {
         nickName: '', // 昵称
         phoneNumber: '' // 手机号
       },
-      tableInnerBtns: [],
+      tableInnerBtns: [
+        {
+          width: 100,
+          name: '详情',
+          icon: 'el-icon-view',
+          handle(row) {
+            console.log(row.id)
+            vm.showDialog(row.id)
+          }
+        }
+      ],
       tableHeader: [
         {
           label: '昵称',
@@ -138,6 +166,17 @@ export default {
             this.tableList = res || []
           }
         })
+    },
+    showDialog(id) {
+      this.dialogObj = {
+        id,
+        isShow: true,
+        title: '收入明细列表',
+        btns: [{
+          label: '取消',
+          name: 'cancel'
+        }]
+      }
     }
   }
 }

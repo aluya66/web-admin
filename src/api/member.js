@@ -37,6 +37,15 @@ export const getWallet = params =>
   })
 
 /**
+ * @param {*} 收入明细列表-会员钱包
+ */
+export const getWalletList = params =>
+  Http.fetch(`${context}/api/wallet/revenuelist`, params, {
+    method: 'get',
+    mockFile: 'member-walletList'
+  })
+
+/**
  * @param {*} 积分列表
  */
 export const getPoint = params =>
