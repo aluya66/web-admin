@@ -26,6 +26,15 @@ export default {
         icon: 'table',
         title: 'memberManageList'
       }
+    }, {
+      path: '/member/manage/detail/:id',
+      name: 'memberManageListDetail',
+      hidden: true,
+      component: () => import('@/views/member/manage/detail/index'),
+      meta: {
+        icon: 'table',
+        title: 'memberManageListDetail'
+      }
     }]
   },
   {

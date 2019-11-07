@@ -39,7 +39,8 @@ export default {
     memberUser: '用户管理',
     memberUserList: '用户列表',
     memberWallet: '钱包管理',
-    memberWalletList: '会员钱包'
+    memberWalletList: '会员钱包',
+    memberManageListDetail: '会员详情'
   },
   navbar: {
     logout: '退出',
