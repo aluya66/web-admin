@@ -223,7 +223,6 @@ export default {
 			line-height: 30px;
 			border: 1px solid @active-bg;
 			border-radius: 3px;
-			color: @menuBg;
 			background: @white;
 			padding: 0 8px;
 			font-size: 12px;
