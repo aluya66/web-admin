@@ -40,7 +40,7 @@
         </span>
       </el-form-item>
       <el-form-item prop="isChecked" class="no-class">
-        <el-checkbox v-model="isChecked" @change="changeValue">记住密码</el-checkbox>
+        <el-checkbox v-model="isChecked" @change="changeValue">自动登录</el-checkbox>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -58,6 +58,9 @@
 				<router-link to="/forgetPwd">忘记密码</router-link>
       </div>-->
     </el-form>
+    <div class="footer">
+      Copyright © 2019  深圳市云尚星科技有限公司  版权所有
+    </div>
   </div>
 </template>
 
@@ -254,6 +257,14 @@ export default {
     color: @dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+  .footer{
+    position: absolute;
+    bottom: 20px;
+    font-size:@f12;
+    color: @light_gray;
+    width: 100%;
+    text-align: center;
   }
 }
 </style>
