@@ -1,19 +1,19 @@
-import { login, logout } from 'api/common'
+import { login, logout, getMenuList } from 'api/common'
 
 import utils from 'utils'
 import { resetRouter } from '@/routes'
 
 const state = {
   userInfo: utils.getStore('SET_USERINFO'),
-  roles: []
+  roles: null // 菜单id
 }
 
 const mutations = {
   SET_USERINFO: (state, userInfo) => {
     state.userInfo = userInfo
   },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
+  SET_ROLES: (state, role) => {
+    state.roles = role
   }
 }
 
@@ -29,11 +29,16 @@ const actions = {
         userName: userName,
         password: utils.encrypt(password)
       }).then(data => {
-        // 默认system用户角色id为0
-        const curData = { ...data, id: 0 }
-        commit('SET_USERINFO', curData)
-        utils.setStore('SET_USERINFO', curData)
-        resolve()
+        // 默认system用户角色id为0,中台默认5
+        utils.setStore('SET_USERINFO', data)
+        getMenuList({ parentId: 0 }).then(res => {
+          const curMenu = res.find(item => item.path.indexOf('pillar-console.yosar') !== -1 || item.title.indexOf('中台') === 0)
+          if (curMenu) {
+            commit('SET_USERINFO', { ...data, id: curMenu.id })
+            utils.setStore('SET_USERINFO', { ...data, id: curMenu.id })
+          }
+          resolve()
+        })
       })
     })
   },

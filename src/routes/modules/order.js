@@ -15,7 +15,8 @@ export default {
     component: () => import('@/views/order/list'),
     meta: {
       title: 'orderList',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   }]
 }

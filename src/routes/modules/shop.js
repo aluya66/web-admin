@@ -15,7 +15,8 @@ export default {
     component: () => import('@/views/shop/list'),
     meta: {
       title: 'shopList',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {

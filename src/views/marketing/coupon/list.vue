@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" icon="el-icon-plus" @click="showDialog">新增</el-button>
+        <el-button type="primary" v-permission="$route.meta.roles" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">

@@ -14,6 +14,7 @@ export default (err, callBackFun, duration) => {
   let errMsg = err.message
   console.log('err', err)
   switch (errCode) {
+    case 8:
     case 9:
       utils.removeStore('SET_USERINFO')
       utils.goToLogin()

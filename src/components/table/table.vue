@@ -54,7 +54,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableInnerBtns.length"
+        v-if="tableInnerBtns.length && hasBtn"
         :width="tableInnerBtns.length && tableInnerBtns[0].width"
         :align="align"
         fixed="right"
@@ -186,6 +186,15 @@ export default {
   data() {
     return {
       multipleSelection: []
+    }
+  },
+  computed: {
+    hasBtn() {
+      const { roles } = this.$route.meta
+      // const curRoles = this.$store.getters.roleList
+      // return curRoles.some(role => roles.includes(role))
+      console.log(this.$store.getters.roleList.includes('review'))
+      return roles && roles.length && !roles.includes('review')
     }
   },
   watch: {
