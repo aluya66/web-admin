@@ -28,7 +28,9 @@ export default {
     payManage: '支付管理',
     payManageList: '支付记录',
     payManageAccount: '账户管理',
-    payManageChannel: '渠道管理'
+    payManageChannel: '渠道管理',
+    channel: '渠道',
+    channelRule: '渠道规则'
   },
   navbar: {
     logout: '退出',

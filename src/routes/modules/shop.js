@@ -27,5 +27,45 @@ export default {
       title: 'shopDetail',
       icon: 'table'
     }
+  },
+  {
+    path: '/shop/channel',
+    name: 'channel',
+    component: () => import('@/views/shop/channel/list'),
+    meta: {
+      title: 'channel',
+      icon: 'table'
+    }
+  },
+  {
+    path: '/shop/channel/channelInfo/:id?',
+    name: 'channelDetail',
+    hidden: true,
+    component: () => import('@/views/shop/channel/detail/index'),
+    meta: {
+      title: 'channelDetail',
+      icon: 'table',
+      activeMenu: '/shop/channel/detail'
+    }
+  },
+  {
+    path: '/shop/rule',
+    name: 'channelRule',
+    component: () => import('@/views/shop/rule/list'),
+    meta: {
+      title: 'channelRule',
+      icon: 'table'
+    }
+  },
+  {
+    path: '/shop/rule/ruleInfo/:id?',
+    name: 'channelRuleDetail',
+    hidden: true,
+    component: () => import('@/views/shop/rule/detail/index'),
+    meta: {
+      title: 'channelRuleDetail',
+      icon: 'table',
+      activeMenu: '/shop/rule/detail'
+    }
   }]
 }
