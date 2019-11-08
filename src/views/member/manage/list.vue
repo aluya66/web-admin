@@ -189,18 +189,18 @@ export default {
       ],
       tableHeader: [
         {
-          label: '头像',
-          prop: 'avatar',
-          isImage: true,
-          width: 100,
-          fixed: true
-        },
-        {
           label: '用户',
           prop: 'name',
+          fixed: true,
           formatter(row) {
             return `${row.name}[${row.nickname}]`
           }
+        },
+        {
+          label: '头像',
+          prop: 'avatar',
+          isImage: true,
+          width: 100
         },
         {
           label: '性别',
