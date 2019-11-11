@@ -150,7 +150,10 @@ export default {
         },
         {
           label: '状态',
-          prop: 'isEnable'
+          prop: 'isEnable',
+          formatter(row) {
+            return row.isEnable === 1 ? '启用' : '禁用'
+          }
         },
         {
           label: '创建时间',

@@ -31,13 +31,14 @@
               />
             </el-form-item>
             <el-form-item label="姓别">
-              <el-input
-                v-model="searchObj.gender"
-                class="search-item"
-                :size="size"
-                placeholder="姓别"
-                clearable
-              />
+              <el-select v-model="searchObj.gender" class="search-item" :size="size" clearable>
+                <el-option
+                  v-for="item in genderSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="手机号">
               <el-input
@@ -48,7 +49,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="所属店铺">
+            <!-- <el-form-item label="所属店铺">
               <el-input
                 v-model="searchObj.shopId"
                 class="search-item"
@@ -56,8 +57,8 @@
                 placeholder="所属店铺"
                 clearable
               />
-            </el-form-item>
-            <el-form-item label="所属店员">
+            </el-form-item> -->
+            <!-- <el-form-item label="所属店员">
               <el-input
                 v-model="searchObj.pid"
                 class="search-item"
@@ -65,7 +66,7 @@
                 placeholder="所属店员"
                 clearable
               />
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="会员来源">
               <el-select v-model="searchObj.source" class="search-item" :size="size" clearable>
                 <el-option
@@ -86,9 +87,9 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="地区">
+            <!-- <el-form-item label="地区">
               <el-cascader :options="options" :props="{ checkStrictly: true }" clearable></el-cascader>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="加入时间">
               <el-date-picker
                 :size="size"
@@ -166,6 +167,13 @@ export default {
           value: 1
         }
       ],
+      genderSelect: [{
+        label: '男',
+        value: 1
+      }, {
+        label: '女',
+        value: 2
+      }],
       // 会员类型
       memberTypeSelect: [
         {
