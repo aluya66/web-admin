@@ -129,16 +129,33 @@
         </template>
       </c-table>
     </div>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <add-manage ref="childRef" :init-data="dialogObj.initData"></add-manage>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
+import CDialog from 'components/dialog'
+import AddManage from './add'
 import utils from 'utils'
 
 export default {
   name: 'memberManageList',
   mixins: [mixinTable],
+  components: {
+    AddManage,
+    CDialog
+  },
   data(vm) {
     return {
       pickerOptions: utils.pickerOptions,
@@ -187,11 +204,31 @@ export default {
       ],
       tableInnerBtns: [
         {
-          width: 100,
+          width: 150,
           name: '查看详情',
           icon: 'el-icon-view',
           handle(row) {
             vm.routerLink(`/member/manage/detail/${row.id}`)
+          }
+        },
+        {
+          name: '编辑',
+          icon: 'el-icon-edit',
+          handle(row) {
+            const {
+              memberId,
+              nickname, // 昵称
+              status // 会员状态
+            } = row
+            vm.showDialog({
+              title: '编辑',
+              initData: {
+                memberId,
+                nickname, // 昵称
+                status // 会员状态
+              },
+              isEdit: true
+            })
           }
         }
       ],
@@ -199,6 +236,7 @@ export default {
         {
           label: '用户',
           prop: 'name',
+          width: 120,
           fixed: true,
           formatter(row) {
             return `${row.name}[${row.nickname}]`
@@ -216,21 +254,17 @@ export default {
         },
         {
           label: '手机号',
-          prop: 'phoneNumber'
+          prop: 'phoneNumber',
+          width: 110
         },
         {
           label: '会员来源',
           prop: 'source'
-          // formatter(row){
-          //   return row.source ? vm.sourceSelect[row.source].label : ''
-          // }
         },
         {
           label: '会员类型',
-          prop: 'memberType'
-          // formatter(row){
-          //   return row.memberType ? vm.memberTypeSelect[row.memberType].label : ''
-          // }
+          prop: 'memberType',
+          width: 130
         },
         {
           label: '会员归属',
@@ -247,6 +281,11 @@ export default {
         {
           label: '消费金额(元)',
           prop: 'expenseAmount'
+        },
+        {
+          label: '加入时间',
+          prop: 'firstJoinTime',
+          width: 100
         }
       ]
     }
@@ -277,6 +316,24 @@ export default {
           } else {
             this.tableList = res || []
           }
+        })
+    },
+    dialogConfirm() {
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const childFormModel = childRef.formModel
+          this.addHandle(childFormModel)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    addHandle(childFormModel) {
+      this.$api.member.updateMember(childFormModel)
+        .then(res => {
+          this.addSoreList = res.data
         })
     },
     showDialog(opts) {

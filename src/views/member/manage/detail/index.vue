@@ -20,7 +20,7 @@
           </el-avatar>
         </el-form-item>
         <el-form-item label="姓名:">
-          <span>{{formModel.name}}</span>
+          <span>{{formModel.name}}[{{formModel.nickname}}]</span>
         </el-form-item>
         <el-form-item label="手机号:">
           <span>{{formModel.phoneNumber}}</span>
@@ -35,20 +35,23 @@
           <span>{{formModel.couponNum}}</span>
         </el-form-item>
         <el-form-item label="钱包余额:">
-          <span>{{formModel.nickname}}</span>
+          <span>{{formModel.balance}}</span>
         </el-form-item>
         <el-form-item label="星购卡余额:">
-          <span>{{formModel.nickname}}</span>
+          <span>{{formModel.starGoCardAmout}}</span>
         </el-form-item>
       </c-card>
 
       <c-card name="基本属性" class="form-card">
-        <el-form-item label="生日:">
+        <el-form-item label="会员等级:">
+          <span>{{formModel.memberName}}</span>
+        </el-form-item>
+        <!-- <el-form-item label="生日:">
           <span>{{formModel.name}}</span>
         </el-form-item>
         <el-form-item label="所在城市:">
           <span>{{formModel.nickname}}</span>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="会员类型:">
           <span>{{formModel.memberType}}</span>
         </el-form-item>
@@ -61,17 +64,17 @@
       </c-card>
 
       <c-card name="消费属性" class="form-card">
-        <el-form-item label="消费总额:">
+        <el-form-item label="消费金额:">
           <span>{{formModel.expenseAmount}}</span>
         </el-form-item>
         <el-form-item label="消费次数:">
-          <span>{{formModel.nickname}}</span>
+          <span>{{formModel.expenseNum}}</span>
         </el-form-item>
         <el-form-item label="客单价:">
-          <span>{{formModel.nickname}}</span>
+          <span>{{formModel.customerPrice}}</span>
         </el-form-item>
-        <el-form-item label="最后一次消费时间:">
-          <span>{{formModel.nickname}}</span>
+        <el-form-item label="首次消费时间:">
+          <span>{{formModel.firstJoinTime}}</span>
         </el-form-item>
       </c-card>
     </el-form>
@@ -99,9 +102,10 @@ export default {
     fetchData() {
       const { params } = this.$route
       this.isDisabled = true
-      this.$api.member.getMemberDetail({ id: params.id }).then(res => {
+      this.$api.member.getMemberDetail({ memberId: params.id }).then(res => {
         if (res) {
-          this.formModel = res.data
+          this.formModel = res
+          console.log(res)
         } else {
           this.$msgTip('接口数据异常，请稍后重新尝试')
         }

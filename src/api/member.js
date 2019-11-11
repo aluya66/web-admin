@@ -11,6 +11,12 @@ export const getMember = params =>
     mockFile: 'member-list'
   })
 
+// 修改会员
+export const updateMember = params =>
+  Http.fetch(`${context}/api/member`, params, {
+    method: 'put'
+  })
+
 // 会员详情
 export const getMemberDetail = params =>
   Http.fetch(`${context}/api/member/detail`, params, {

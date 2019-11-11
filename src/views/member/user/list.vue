@@ -84,18 +84,18 @@ export default {
       },
       tableInnerBtns: [],
       tableHeader: [
-        {
-          label: '手机号',
-          prop: 'phoneNumber'
-        },
+        // {
+        //   label: '手机号',
+        //   prop: 'phoneNumber'
+        // },
         {
           label: '登录地点',
           prop: 'ip'
         },
-        {
-          label: '来源',
-          prop: 'aaaa'
-        },
+        // {
+        //   label: '来源',
+        //   prop: 'aaaa'
+        // },
         {
           label: '登录时间',
           prop: 'created'
