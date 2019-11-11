@@ -4,16 +4,6 @@
 			<div class="title">
 				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
 			</div>
-       <div class="header-btn">
-         <div class="header-btn">
-          <el-button
-            :size="size"
-            type="primary"
-            icon="el-icon-plus"
-            @click="routerLink('/shop/rule/ruleInfo')"
-          >新增</el-button>
-        </div>
-      </div>
 		</template>
     <div class="main__box">
       <c-table
@@ -30,7 +20,47 @@
       >
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
-
+            <!-- <el-form-item label="店铺名称">
+              <el-input
+                v-model="searchObj.shopName"
+                class="search-item"
+                size="medium"
+                placeholder="店铺名称"
+                clearable
+              />
+            </el-form-item> -->
+            <!-- <el-form-item label="店铺类型">
+              <el-select
+                v-model="searchObj.shopType"
+                size="medium"
+                class="search-item"
+                clearable
+                placeholder="店铺类型"
+              >
+                <el-option
+                  v-for="(item, index) in shopTypeSelect"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item> -->
+            <!-- <el-form-item label="店铺状态">
+              <el-select
+                v-model="searchObj.status"
+                size="medium"
+                class="search-item"
+                clearable
+                placeholder="店铺状态"
+              >
+                <el-option
+                  v-for="(item, index) in shopStatusSelect"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item> -->
             <el-form-item>
               <el-button
                 type="primary"
@@ -51,7 +81,7 @@
 import mixinTable from 'mixins/table'
 
 export default {
-  name: 'channelRule',
+  name: 'channelDetail',
   mixins: [mixinTable],
   data(vm) {
     return {
@@ -60,16 +90,7 @@ export default {
       },
       dialogObj: {}, // 对话框数据
       tableList: [],
-      tableInnerBtns: [
-        {
-          width: 150,
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            vm.routerLink(`/shop/rule/ruleInfo/${row.id}`)
-          }
-        }
-      ],
+      tableInnerBtns: [],
       tableHeader: [{
         label: '',
         prop: ''
@@ -131,7 +152,7 @@ export default {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.shop.getChannelRule({
+      this.$api.channel.getChannel({
         ...this.searchObj,
         ...other,
         ...page

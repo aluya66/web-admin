@@ -1,71 +1,71 @@
 import Layout from '@/views/layout'
 
 export default {
-  path: '/shop',
+  path: '/channel',
   name: 'shop',
   component: Layout,
-  redirect: '/shop/list',
+  redirect: '/channel/list',
   meta: {
     title: 'shop',
     icon: 'nested'
   },
   children: [{
-    path: '/shop/list',
+    path: '/channel/list',
     name: 'shopList',
-    component: () => import('@/views/shop/list'),
+    component: () => import('@/views/channel/list'),
     meta: {
       title: 'shopList',
       icon: 'table'
     }
   },
   {
-    path: '/shop/detail/:shopId',
+    path: '/channel/detail/:shopId',
     name: 'shopDetail',
     hidden: true,
-    component: () => import('@/views/shop/detail/index'),
+    component: () => import('@/views/channel/detail/index'),
     meta: {
       title: 'shopDetail',
       icon: 'table'
     }
   },
   {
-    path: '/shop/channel',
-    name: 'channel',
-    component: () => import('@/views/shop/channel/list'),
+    path: '/channel/manage',
+    name: 'channelManage',
+    component: () => import('@/views/channel/manage/list'),
     meta: {
-      title: 'channel',
+      title: 'channelManage',
       icon: 'table'
     }
   },
   {
-    path: '/shop/channel/channelInfo/:id?',
+    path: '/channel/manage/channelInfo/:id?',
     name: 'channelDetail',
     hidden: true,
-    component: () => import('@/views/shop/channel/detail/index'),
+    component: () => import('@/views/channel/manage/detail/index'),
     meta: {
       title: 'channelDetail',
       icon: 'table',
-      activeMenu: '/shop/channel/detail'
+      activeMenu: '/channel/manage/detail'
     }
   },
   {
-    path: '/shop/rule',
+    path: '/channel/rule',
     name: 'channelRule',
-    component: () => import('@/views/shop/rule/list'),
+    component: () => import('@/views/channel/rule/list'),
     meta: {
       title: 'channelRule',
       icon: 'table'
     }
   },
   {
-    path: '/shop/rule/ruleInfo/:id?',
+    path: '/channel/rule/ruleInfo/:id?',
     name: 'channelRuleDetail',
     hidden: true,
-    component: () => import('@/views/shop/rule/detail/index'),
+    component: () => import('@/views/channel/rule/detail/index'),
     meta: {
       title: 'channelRuleDetail',
       icon: 'table',
-      activeMenu: '/shop/rule/detail'
+      activeMenu: '/channel/rule/detail'
     }
   }]
 }

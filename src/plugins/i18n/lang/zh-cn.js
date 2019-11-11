@@ -29,7 +29,7 @@ export default {
     payManageList: '支付记录',
     payManageAccount: '账户管理',
     payManageChannel: '渠道管理',
-    channel: '渠道',
+    channelManage: '渠道管理',
     channelRule: '渠道规则'
   },
   navbar: {

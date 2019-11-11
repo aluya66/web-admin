@@ -1,10 +1,8 @@
 <template>
   <c-view>
     <template v-slot:header>
-			<div class="title">
-				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-			</div>
-		</template>
+      <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
+    </template>
     <div class="main__box">
       <c-table
         selection
@@ -28,7 +26,7 @@
                 placeholder="店铺名称"
                 clearable
               />
-            </el-form-item> -->
+            </el-form-item>-->
             <!-- <el-form-item label="店铺类型">
               <el-select
                 v-model="searchObj.shopType"
@@ -44,7 +42,7 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-            </el-form-item> -->
+            </el-form-item>-->
             <!-- <el-form-item label="店铺状态">
               <el-select
                 v-model="searchObj.status"
@@ -60,7 +58,7 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-            </el-form-item> -->
+            </el-form-item>-->
             <el-form-item>
               <el-button
                 type="primary"
@@ -85,62 +83,54 @@ export default {
   mixins: [mixinTable],
   data(vm) {
     return {
-      searchObj: {
-
-      },
+      searchObj: {},
       dialogObj: {}, // 对话框数据
       tableList: [],
       tableInnerBtns: [],
-      tableHeader: [{
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: ' ',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      },
-      {
-        label: '',
-        prop: ''
-      }, {
-        label: ' ',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }]
+      tableHeader: [
+        {
+          label: '规则名称',
+          prop: 'ruleName'
+        },
+        {
+          label: '规则code',
+          prop: 'ruleCode'
+        },
+        {
+          label: '主键ID',
+          prop: 'ruleId'
+        },
+        {
+          label: '是否删除',
+          prop: 'isDelete',
+          formatter(row) {
+            return row.isDelete === 1 ? '删除' : '不删除'
+          }
+        },
+        {
+          label: '渠道状态',
+          prop: 'status',
+          formatter(row) {
+            return row.status === 1 ? '开启' : '关闭'
+          }
+        },
+        {
+          label: '创建人',
+          prop: 'createBy'
+        },
+        {
+          label: '更新人',
+          prop: 'updateBy'
+        },
+        {
+          label: '创建时间',
+          prop: 'created'
+        },
+        {
+          label: '更新时间',
+          prop: 'updated'
+        }
+      ]
     }
   },
   created() {
@@ -148,15 +138,16 @@ export default {
   },
 
   methods: {
-    fetchData () {
+    fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.shop.getChannel({
-        ...this.searchObj,
-        ...other,
-        ...page
-      })
+      this.$api.channel
+        .getChannel({
+          ...this.searchObj,
+          ...other,
+          ...page
+        })
         .then(res => {
           this.isLoading = false
           if (res && res.totalCount) {

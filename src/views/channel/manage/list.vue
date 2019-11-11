@@ -8,7 +8,7 @@
             :size="size"
             type="primary"
             icon="el-icon-plus"
-            @click="routerLink('/shop/channel/channelInfo')"
+            @click="routerLink('/channel/manage/channelInfo')"
           >新增</el-button>
         </div>
       </div>
@@ -114,7 +114,7 @@
 import mixinTable from 'mixins/table'
 
 export default {
-  name: 'channel',
+  name: 'channelManage',
   mixins: [mixinTable],
   data(vm) {
     return {
@@ -148,7 +148,7 @@ export default {
         name: '编辑',
         icon: 'el-icon-edit',
         handle (row) {
-          vm.routerLink(`/shop/channel/channelInfo/${row.id}`)
+          vm.routerLink(`/channel/manage/channelInfo/${row.id}`)
         }
       }, {
         name: '删除',
@@ -246,7 +246,7 @@ export default {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.shop
+      this.$api.channel
         .getChannel({
           ...this.searchObj,
           ...other,
@@ -264,7 +264,7 @@ export default {
         })
     },
     deleteData(params, msgTip = '删除成功') {
-      this.$api.shop.deleteChannel(params).then(() => {
+      this.$api.channel.deleteChannel(params).then(() => {
         this.$msgTip(msgTip)
         this.fetchData()
       })

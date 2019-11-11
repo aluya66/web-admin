@@ -61,7 +61,7 @@ export default {
     fetchData() {
       const { params } = this.$route
       this.isDisabled = true
-      this.$api.shop.getShopDetail({ id: params.shopId }).then(res => {
+      this.$api.channel.getShopDetail({ id: params.shopId }).then(res => {
         if (res) {
           this.formModel = res
         } else {
