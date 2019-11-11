@@ -1,6 +1,6 @@
 import Http from '../utils/request'
 
-const context = process.env.VUE_APP_CONSOLE_ORDER
+const context = process.env.VUE_APP_CONSOLE_COMMON
 
 /**
  * @param {*} 会员列表
