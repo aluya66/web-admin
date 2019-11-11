@@ -30,7 +30,8 @@ export default {
     payManageAccount: '账户管理',
     payManageChannel: '渠道管理',
     channelManage: '渠道管理',
-    channelRule: '渠道规则'
+    channelRule: '渠道规则',
+    channelDetail: '渠道管理详情'
   },
   navbar: {
     logout: '退出',

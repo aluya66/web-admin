@@ -131,11 +131,7 @@ export default {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.channel.getChannelRule({
-        ...this.searchObj,
-        ...other,
-        ...page
-      })
+      this.$api.channel.getChannelRule()
         .then(res => {
           this.isLoading = false
           if (res && res.totalCount) {

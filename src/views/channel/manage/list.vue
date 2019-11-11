@@ -8,7 +8,7 @@
             :size="size"
             type="primary"
             icon="el-icon-plus"
-            @click="routerLink('/channel/manage/channelInfo')"
+            @click="addChannel"
           >新增</el-button>
         </div>
       </div>
@@ -78,22 +78,6 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="店铺状态">
-              <el-select
-                v-model="searchObj.status"
-                size="medium"
-                class="search-item"
-                clearable
-                placeholder="店铺状态"
-              >
-                <el-option
-                  v-for="(item, index) in shopStatusSelect"
-                  :key="index"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>-->
             <el-form-item>
               <el-button
                 type="primary"
@@ -107,24 +91,66 @@
         </template>
       </c-table>
     </div>
+    <div v-if="channelDialogObj.isShow">
+      <c-dialog
+        :is-show="channelDialogObj.isShow"
+        :title="channelDialogObj.title"
+        close-btn
+        @before-close="channelDialogObj.isShow = false"
+        @on-submit="submitHandle"
+      >
+        <el-form
+          ref="formRef"
+          :model="formModel"
+          label-width="120px"
+          class="form"
+          label-position="right"
+        >
+          <el-form-item label="所属层级:" prop="channelType">
+            <el-select v-model="formModel.channelType" class="select-item" clearable>
+              <el-option
+                v-for="item in channelTypeSelect"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item> 
+          <el-form-item 
+            label="渠道名称:" prop="channelName" 
+            :rules="[{ required: true, message: '渠道名称不能为空'}]"
+          >
+            <el-input v-model.trim="formModel.channelName" class="form-item" placeholder='请输入渠道名称'/>
+          </el-form-item> 
+        </el-form>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
-
+import CDialog from 'components/dialog'
 export default {
   name: 'channelManage',
   mixins: [mixinTable],
+  components: {
+    CDialog
+  },
   data(vm) {
     return {
+      btnLoading: false,
+      formModel: { // 渠道弹窗数据
+        channelType: 1,
+        channelName: ''
+      },
       searchObj: {
         channelName: '', // 渠道名称
         channelCode: '', // 渠道号码
         channelType: '', // 渠道类型
         status: '' // 渠道状态
       },
-      channelTypeSelect: [
+      channelTypeSelect: [ // 渠道类型
         {
           label: '主渠道',
           value: 1
@@ -141,25 +167,61 @@ export default {
         label: '开启 ',
         value: 1
       }],
-      dialogObj: {}, // 对话框数据
-      tableList: [],
+      channelDialogObj: { // 渠道弹窗
+        title: '新增渠道',
+        isShow: false,
+        btns: [{
+          label: '取 消',
+          name: 'cancel'
+        },
+        {
+          label: '保存',
+          name: 'submit',
+          type: 'primary',
+          handle() {
+            console.log('确认加入')
+          }
+        }]
+      },
+      tableList: [], // 渠道管理列表
       tableInnerBtns: [{
+        width: 150,
+        name: '开关',
+        icon: 'el-icon-switch-button',
+        handle (row) {
+          const { channelId, channelName, status } = row
+          const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
+          vm.confirmTip(
+            `是否${handleStatus === 0 ? '关闭' : '开启'} ${channelName} 渠道`,
+            {
+              confirmHandle() {
+                vm.handleChannelStatus({ id: channelId, status: handleStatus })
+              }
+            }
+          )
+        }
+      }, {
         width: 150,
         name: '编辑',
         icon: 'el-icon-edit',
-        handle (row) {
-          vm.routerLink(`/channel/manage/channelInfo/${row.id}`)
+        handle ({channelId, channelName, channelType}) {
+          vm.formModel = {
+            channelId,
+            channelName,
+            channelType
+          }
+          vm.channelDialogObj.isShow = true;
         }
       }, {
         name: '删除',
         icon: 'el-icon-detail',
         handle (row) {
-          const { id, channelName } = row
+          const { channelId, channelName } = row
           vm.confirmTip(
             `是否删除 ${channelName} 渠道`,
             {
               confirmHandle() {
-                vm.deleteData({ id })
+                vm.deleteData({ id: channelId })
               }
             }
           )
@@ -176,19 +238,21 @@ export default {
         },
         {
           label: '渠道主图',
-          prop: 'channelImage'
+          prop: 'channelImage',
+          width: 100,
+          isImage: true
         },
         {
           label: '渠道LOGO ',
-          prop: 'channelLogo'
+          prop: 'channelLogo',
+          width: 100,
+          isImage: true
         },
         {
           label: '渠道类型',
           prop: 'channelType',
           formatter(row) {
-            return row.channelType
-              ? vm.channelTypeSelect[row.channelType - 1].label
-              : ''
+            return row.channelType === 1 ? '主渠道' : '子渠道'
           }
         },
         {
@@ -208,15 +272,11 @@ export default {
           prop: 'created'
         },
         {
-          label: '是否删除',
-          prop: 'isDelete',
-          formatter(row) {
-            return row.isDelete === 1 ? '删除' : '不删除'
-          }
-        },
-        {
           label: '渠道状态',
-          prop: 'status'
+          prop: 'status',
+          formatter(row) {
+            return row.status === 0 ? '关闭' : '开启'
+          }
         },
         {
           label: '更新人',
@@ -225,14 +285,6 @@ export default {
         {
           label: '更新时间',
           prop: 'updated'
-        },
-        {
-          label: '视频截图',
-          prop: 'videoCapture'
-        },
-        {
-          label: '视频地址',
-          prop: '视频截图'
         }
       ]
     }
@@ -240,8 +292,36 @@ export default {
   created() {
     this.fetchData()
   },
-
   methods: {
+    submitHandle() {
+      this.$refs.formRef.validate(valid => {
+        if (valid) {
+          const method = this.formModel.channelId ? 'put' : 'post' // 新增post 编辑put
+          this.$api.channel.handleChannel({...this.formModel}, method).then(() => {
+            const msg =  this.formModel.channelId ? '编辑成功' : '新增成功'
+            this.$msgTip(msg)
+            this.fetchData()
+            this.channelDialogObj.isShow = false
+          })   
+        }
+      })
+    },
+    // 新增渠道
+    addChannel() {
+      this.formModel = { 
+        channelType: 1,
+        channelName: ''
+      }
+      this.channelDialogObj.isShow = true
+    },
+    // 开启、关闭渠道
+    handleChannelStatus({id, status}) {
+      this.$api.channel.handleChannelStatus({id, status}).then(() => {
+        const msg = status === 0 ? '已关闭' : '已开启'
+        this.$msgTip(msg)
+        this.fetchData()
+      })
+    },
     fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
@@ -263,6 +343,7 @@ export default {
           }
         })
     },
+    // 删除渠道
     deleteData(params, msgTip = '删除成功') {
       this.$api.channel.deleteChannel(params).then(() => {
         this.$msgTip(msgTip)
