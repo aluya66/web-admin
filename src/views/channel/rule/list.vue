@@ -127,22 +127,7 @@ export default {
   },
 
   methods: {
-    fetchData () {
-      const { dataTime, ...other } = this.searchObj
-      const { totalNum, ...page } = this.pageInfo
-      this.isLoading = true
-      this.$api.channel.getChannelRule()
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
-    }
+    fetchData () {}
   }
 }
 </script>

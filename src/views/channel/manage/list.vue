@@ -109,19 +109,19 @@
           <el-form-item label="所属层级:" prop="channelType">
             <el-select v-model="formModel.channelType" class="select-item" clearable>
               <el-option
-                v-for="item in channelTypeSelect"
+                v-for="item in JSON.parse(JSON.stringify(channelTypeSelect))"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
-          </el-form-item> 
-          <el-form-item 
-            label="渠道名称:" prop="channelName" 
+          </el-form-item>
+          <el-form-item
+            label="渠道名称:" prop="channelName"
             :rules="[{ required: true, message: '渠道名称不能为空'}]"
           >
             <el-input v-model.trim="formModel.channelName" class="form-item" placeholder='请输入渠道名称'/>
-          </el-form-item> 
+          </el-form-item>
         </el-form>
       </c-dialog>
     </div>
@@ -169,19 +169,7 @@ export default {
       }],
       channelDialogObj: { // 渠道弹窗
         title: '新增渠道',
-        isShow: false,
-        btns: [{
-          label: '取 消',
-          name: 'cancel'
-        },
-        {
-          label: '保存',
-          name: 'submit',
-          type: 'primary',
-          handle() {
-            console.log('确认加入')
-          }
-        }]
+        isShow: false
       },
       tableList: [], // 渠道管理列表
       tableInnerBtns: [{
@@ -204,13 +192,27 @@ export default {
         width: 150,
         name: '编辑',
         icon: 'el-icon-edit',
-        handle ({channelId, channelName, channelType}) {
+        handle ({ channelId, channelName, channelType }) {
           vm.formModel = {
             channelId,
             channelName,
             channelType
           }
-          vm.channelDialogObj.isShow = true;
+          vm.channelDialogObj.isShow = true
+          vm.channelDialogObj.title = '编辑渠道'
+        }
+      }, {
+        width: 150,
+        name: '编辑',
+        icon: 'el-icon-edit',
+        handle ({ channelId, channelName, channelType }) {
+          vm.formModel = {
+            channelId,
+            channelName,
+            channelType
+          }
+          vm.channelDialogObj.isShow = true
+          vm.channelDialogObj.title = '编辑渠道'
         }
       }, {
         name: '删除',
@@ -297,26 +299,26 @@ export default {
       this.$refs.formRef.validate(valid => {
         if (valid) {
           const method = this.formModel.channelId ? 'put' : 'post' // 新增post 编辑put
-          this.$api.channel.handleChannel({...this.formModel}, method).then(() => {
-            const msg =  this.formModel.channelId ? '编辑成功' : '新增成功'
+          this.$api.channel.handleChannel({ ...this.formModel }, method).then(() => {
+            const msg = this.formModel.channelId ? '编辑成功' : '新增成功'
             this.$msgTip(msg)
             this.fetchData()
             this.channelDialogObj.isShow = false
-          })   
+          })
         }
       })
     },
     // 新增渠道
     addChannel() {
-      this.formModel = { 
+      this.formModel = {
         channelType: 1,
         channelName: ''
       }
       this.channelDialogObj.isShow = true
     },
     // 开启、关闭渠道
-    handleChannelStatus({id, status}) {
-      this.$api.channel.handleChannelStatus({id, status}).then(() => {
+    handleChannelStatus({ id, status }) {
+      this.$api.channel.handleChannelStatus({ id, status }).then(() => {
         const msg = status === 0 ? '已关闭' : '已开启'
         this.$msgTip(msg)
         this.fetchData()

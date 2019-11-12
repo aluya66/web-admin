@@ -25,14 +25,13 @@ export const getChannel = params =>
 
 /**
  * 新增、编辑渠道
- * @param {*} params, put编辑 post新增 
+ * @param {*} params, put编辑 post新增
  */
 export const handleChannel = (params, method = 'post') =>
   Http.fetch(`${context}/api/channel`, params, {
     method,
     mockFile: 'channel-add'
   })
-
 
 // 渠道开启、关闭
 export const handleChannelStatus = params =>

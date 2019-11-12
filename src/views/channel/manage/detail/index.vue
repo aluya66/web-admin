@@ -7,7 +7,7 @@
       ></el-page-header>
     </template>
     <div class="main__box">
-      
+
     </div>
   </c-view>
 </template>
@@ -26,11 +26,11 @@ export default {
     }
   },
   created() {
-    
+
   },
 
   methods: {
-    
+
   }
 }
 </script>
