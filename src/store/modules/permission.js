@@ -1,5 +1,5 @@
 import { asyncRoutes, constantRoutes } from '@/routes'
-import { getMenuList } from 'api/ipx'
+import { getMenuList } from 'api/common'
 import utils from 'utils'
 
 const state = {

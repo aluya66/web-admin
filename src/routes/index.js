@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './modules'
 import store from '../store'
+import errFun from 'utils/err'
 
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css' // Progress 进度条样式
@@ -100,10 +101,21 @@ const createRouter = () =>
     }
   })
 
+// 嵌入别的系统时，从url截取token // http://pillar-console.yosar.develop
+const token = utils.getUrlParam('token')
+if (token) {
+  const id = utils.getUrlParam('parentId')
+  const userName = utils.getUrlParam('userName')
+  utils.setStore('SET_USERINFO', {
+    token,
+    userName,
+    id
+  })
+}
+
 const router = createRouter()
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
-  const token = utils.getUrlParam('token') // 嵌入别的系统时，从url截取token
   if (token || (store.getters.userInfo && store.getters.userInfo.token)) {
     if (to.path === '/login') {
       next({
@@ -117,6 +129,9 @@ router.beforeEach(async (to, from, next) => {
       } else {
         try {
           const { roles } = await store.dispatch('user/getInfo')
+          if (!roles) {
+            throw new Error('菜单数据异常,请重新登录')
+          }
           const accessRoutes = await store.dispatch(
             'permission/generateRoutes',
             roles
@@ -128,7 +143,7 @@ router.beforeEach(async (to, from, next) => {
           })
         } catch (error) {
           await store.dispatch('user/resetToken')
-          utils.errFun(error || 'Has Error')
+          errFun(error || 'Has Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }

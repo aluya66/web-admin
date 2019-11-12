@@ -38,12 +38,10 @@ export const openNewWin = (routerOpts) => {
 /**
  *  统一跳转到登陆页面
  */
-export const goToLogin = (page = 'login', type = 'push', time = 1.5) => {
-  setTimeout(() => {
-    window.globalVue.$router[type]({
-      path: `/${page}?redirect=${window.globalVue.$route.fullPath}`
-    })
-  }, time * 1000)
+export const goToLogin = (page = 'login', type = 'push') => {
+  window.globalVue.$router[type]({
+    path: `/${page}?redirect=${window.globalVue.$route.fullPath}`
+  })
 }
 
 /**

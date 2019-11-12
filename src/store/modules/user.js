@@ -46,7 +46,8 @@ const actions = {
   // get user info
   getInfo({ commit }) {
     return new Promise(resolve => {
-      let role = utils.getUrlParam('parentId')
+      const localData = utils.getStore('SET_USERINFO')
+      let role = localData ? localData.id : ''
       const data = {
         roles: role || state.userInfo.id
       }
@@ -60,7 +61,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout()
         .then(() => {
-          commit('SET_ROLES', [])
+          commit('SET_ROLES', '')
           commit('SET_USERINFO', '')
           utils.clearStore()
           resetRouter()
@@ -74,7 +75,9 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      commit('SET_ROLES', [])
+      commit('SET_ROLES', '')
+      commit('SET_USERINFO', '')
+      utils.clearStore()
       resolve()
     })
   }
