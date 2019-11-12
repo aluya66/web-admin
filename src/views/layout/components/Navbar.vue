@@ -12,11 +12,11 @@
 			<template>
 				<!-- <search id="header-search" class="right-menu-item" /> -->
 
-				<screenfull class="right-menu-item hover-effect" />
+				<screenfull class="right-menu-item hover-effect" v-if="isExt" />
 
 			</template>
 
-			<el-dropdown class="avatar-container" trigger="click">
+			<el-dropdown class="avatar-container" trigger="click" v-if="isExt">
 				<div class="avatar-wrapper">
 					<span class="user-name">{{ userInfo.userName }}</span>
 					<svg-icon icon-class="user-pic" class="user-avatar" />
@@ -43,6 +43,7 @@ import Breadcrumb from './breadcrumb'
 import Hamburger from './hamburger'
 import Screenfull from './screenfull'
 // import Search from "./HeaderSearch";
+import utils from 'utils'
 
 export default {
   components: {
@@ -52,6 +53,10 @@ export default {
     // Search
   },
   computed: {
+    isExt() {
+      const token = utils.getUrlParam('token')
+      return !token
+    },
     ...mapGetters(['sidebar', 'device', 'userInfo'])
   },
   methods: {
