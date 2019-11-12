@@ -28,7 +28,10 @@ export default {
     payManage: '支付管理',
     payManageList: '支付记录',
     payManageAccount: '账户管理',
-    payManageChannel: '渠道管理'
+    payManageChannel: '渠道管理',
+    settings: '配置管理',
+    dictList: '字典管理',
+    dictInfo: '字典信息'
   },
   navbar: {
     logout: '退出',

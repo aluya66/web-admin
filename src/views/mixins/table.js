@@ -1,16 +1,32 @@
 import utils from 'utils'
 import CTable from 'components/table'
+import QueryDict from '../common/queryDict'
 
 export default {
   data() {
     return {
+      dictData: {}, // 字典数据
       isLoading: false, // 数据加载状态
       size: 'medium', // 表格、按钮大小
       tableList: [], // 列表数据
+      tableCheckedList: [], // 列表批量选中
       pageInfo: { // 页码信息
         pageNo: 1,
         pageSize: 10,
         totalNum: 0
+      }
+    }
+  },
+  created() {
+    if (this.dictOpts) { // 业务页面配置字典参数时触发
+      const { codes, dictLob } = this.dictOpts
+      if (codes && codes.length) {
+        this.$store.dispatch('views/getDict', {
+          codes,
+          dictLob
+        }).then(res => {
+          this.dictData = res
+        })
       }
     }
   },
@@ -62,6 +78,7 @@ export default {
     }
   },
   components: {
-    CTable
+    CTable,
+    QueryDict
   }
 }

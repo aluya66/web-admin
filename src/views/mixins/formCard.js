@@ -1,4 +1,5 @@
 import CCard from 'components/card'
+import QueryDict from '../common/queryDict'
 
 export default {
   props: {
@@ -31,6 +32,7 @@ export default {
     }
   },
   components: {
-    CCard
+    CCard,
+    QueryDict
   }
 }

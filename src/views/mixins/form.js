@@ -1,7 +1,23 @@
+import QueryDict from '../common/queryDict'
 
 export default {
   data() {
-    return {}
+    return {
+      dictData: {} // 字典数据
+    }
+  },
+  created() {
+    if (this.dictOpts) { // 业务页面配置字典参数时触发
+      const { codes, dictLob } = this.dictOpts
+      if (codes && codes.length) {
+        this.$store.dispatch('views/getDict', {
+          codes,
+          dictLob
+        }).then(res => {
+          this.dictData = res
+        })
+      }
+    }
   },
   methods: {
     setTagsViewTitle() {
@@ -15,5 +31,7 @@ export default {
       this.$router.go(-1)
     }
   },
-  components: {}
+  components: {
+    QueryDict
+  }
 }

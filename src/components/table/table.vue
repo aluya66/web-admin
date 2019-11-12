@@ -193,7 +193,7 @@ export default {
       const { roles } = this.$route.meta
       // const curRoles = this.$store.getters.roleList
       // return curRoles.some(role => roles.includes(role))
-      console.log(this.$store.getters.roleList.includes('review'))
+      // console.log(this.$store.getters.roleList.includes('review'))
       return roles && roles.length && !roles.includes('review')
     }
   },
@@ -286,6 +286,21 @@ export default {
     width: 100%;
     .search-item {
       width: 250px;
+    }
+  }
+  .check-list {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border: 1px solid @border-default;
+    font-size: @f12;
+    line-height: @f14;
+    border-radius: 3px;
+    span {
+      color: @active;
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
     }
   }
   .text-multi-ellipsis {

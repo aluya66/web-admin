@@ -73,7 +73,7 @@ export default {
     return {
       title: process.env.VUE_APP_TITLE,
       loginForm: {
-        userName: utils.isDebug ? 'system' : '',
+        userName: utils.isDebug ? 'zegang' : '',
         password: utils.isDebug ? '123456' : ''
       },
       loginRules: {
