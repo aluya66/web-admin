@@ -27,7 +27,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="业务线编码">
+            <el-form-item label="业务线名称">
               <el-select v-model="searchObj.appCode" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in appCodeSelect"
@@ -314,7 +314,7 @@ export default {
           fixed: true
         },
         {
-          label: '业务线编码',
+          label: '业务线名称',
           prop: 'appCode',
           width: 100,
           fixed: true,
