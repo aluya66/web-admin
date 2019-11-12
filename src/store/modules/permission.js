@@ -4,7 +4,8 @@ import utils from 'utils'
 
 const state = {
   routes: [],
-  addRoutes: []
+  addRoutes: [],
+  roleList: [] // api获取的权限列表，预设置权限在路由roles里面
 }
 
 const mutations = {

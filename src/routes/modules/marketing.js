@@ -24,8 +24,8 @@ export default {
       component: () => import('@/views/marketing/coupon/rule/list'),
       meta: {
         icon: 'table',
-        noCache: true,
-        title: 'couponRuleList'
+        title: 'couponRuleList',
+        roles: ['admin']
       }
     }, {
       path: '/marketing/coupon/ruleInfo/:id?',
@@ -57,7 +57,8 @@ export default {
       component: () => import('@/views/marketing/coupon/list'),
       meta: {
         title: 'couponList',
-        icon: 'table'
+        icon: 'table',
+        roles: ['admin']
       }
     }]
   }]

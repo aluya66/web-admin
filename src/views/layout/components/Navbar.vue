@@ -9,15 +9,14 @@
 		<breadcrumb class="breadcrumb-container" />
 
 		<div class="right-menu">
-			<!-- <template>
-				<search id="header-search" class="right-menu-item" />
+			<template>
+				<!-- <search id="header-search" class="right-menu-item" /> -->
 
 				<screenfull class="right-menu-item hover-effect" />
 
-        <lang-select class="right-menu-item hover-effect" />
-			</template> -->
+			</template>
 
-			<!-- <el-dropdown class="avatar-container" trigger="click">
+			<el-dropdown class="avatar-container" trigger="click">
 				<div class="avatar-wrapper">
 					<span class="user-name">{{ userInfo.userName }}</span>
 					<svg-icon icon-class="user-pic" class="user-avatar" />
@@ -30,12 +29,10 @@
 						</el-dropdown-item>
 					</router-link>
 					<el-dropdown-item divided>
-						<span style="display:block;" @click="logout">
-							{{ $t("navbar.logout") }}</span
-						>
+						<span style="display:block;" @click="logout"> {{ $t("navbar.logout") }}</span>
 					</el-dropdown-item>
 				</el-dropdown-menu>
-			</el-dropdown> -->
+			</el-dropdown>
 		</div>
 	</div>
 </template>
@@ -44,14 +41,14 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from './breadcrumb'
 import Hamburger from './hamburger'
-// import Screenfull from "./Screenfull";
+import Screenfull from './screenfull'
 // import Search from "./HeaderSearch";
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
-    // Screenfull,
+    Hamburger,
+    Screenfull
     // Search
   },
   computed: {
@@ -60,11 +57,11 @@ export default {
   methods: {
     toggleSideBar () {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    async logout () {
+      await this.$store.dispatch('user/logout')
+      this.$router.push('/login')
     }
-    // async logout () {
-    //   await this.$store.dispatch('user/logout')
-    //   this.$router.push('/login')
-    // }
   }
 }
 </script>
@@ -74,7 +71,7 @@ export default {
 	height: 50px;
 	overflow: hidden;
 	position: relative;
-	background: #fff;
+	background: @white;
 	box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
 	.hamburger-container {
@@ -112,10 +109,9 @@ export default {
 			line-height: 50px;
 			display: inline-block;
 			padding: 0 8px;
-			height: 100%;
 			font-size: 18px;
 			color: #5a5e66;
-			vertical-align: text-bottom;
+			vertical-align: top;
 
 			&.hover-effect {
 				cursor: pointer;

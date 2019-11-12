@@ -13,6 +13,7 @@
         <div class="header-btn">
           <el-button
             type="primary"
+            v-permission="$route.meta.roles"
             :size="size"
             icon="el-icon-plus"
             @click="showDialog"

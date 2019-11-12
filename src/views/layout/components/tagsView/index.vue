@@ -211,7 +211,7 @@ export default {
 <style lang="less" scoped>
 .tags-view-container {
 	width: 100%;
-	background: @bg-main;
+	background: @white;
 	border-bottom: 1px solid @light_gray;
 	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
 	.tags-view-wrapper {
@@ -223,8 +223,7 @@ export default {
 			line-height: 30px;
 			border: 1px solid @active-bg;
 			border-radius: 3px;
-			color: @menuBg;
-			background: @bg-main;
+			background: @white;
 			padding: 0 8px;
 			font-size: 12px;
 			margin:4px 5px 2px 5px;
@@ -237,11 +236,11 @@ export default {
 			}
 			&.active {
 				background-color: @active;
-				color: @bg-main;
+				color: @white;
 				border-color: @active;
 				&::before {
 					content: "";
-					background: @bg-main;
+					background: @white;
 					display: inline-block;
 					width: 8px;
 					height: 8px;

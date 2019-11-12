@@ -11,16 +11,13 @@ import utils from 'utils'
 
 export default (err, callBackFun, duration) => {
   const errCode = err.code
-  let errMsg = ''
+  let errMsg = err.message
   console.log('err', err)
   switch (errCode) {
+    case 8:
     case 9:
-      errMsg = 'token失效'
-      const token = utils.getUrlParam('token')
-      if (!token) {
-        errMsg = 'token不能为空'
-      }
-      utils.goToLogin('401')
+      utils.removeStore('SET_USERINFO')
+      utils.goToLogin()
       break
     case 102:
       errMsg = ''
