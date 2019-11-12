@@ -1,6 +1,6 @@
 import Http from '../utils/request'
 // ipx服务相关接口
-const context = process.env.VUE_APP_SERVERPATH_IPX
+const context = process.env.VUE_APP_IPX
 
 /**
  * mock模拟数据 示例
