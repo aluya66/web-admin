@@ -59,7 +59,7 @@ const globalVue = new Vue({
       })
     }
     Vue.prototype.$staticFile =
-      process.env.NODE_ENV === 'production'
+      process.env.NODE_ENV === 'production' && process.env.VUE_APP_BASEURLPATH !== '/'
         ? `${process.env.VUE_APP_BASEURLPATH}${process.env.VUE_APP_STATICFILE}`
         : process.env.VUE_APP_STATICFILE
     Vue.prototype.$filePath =
