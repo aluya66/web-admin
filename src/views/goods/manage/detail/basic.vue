@@ -1,6 +1,30 @@
 <template>
   <c-card :name="title" class="form-card">
-    <el-form-item label="商品类目:">
+    <el-form-item label="商品名称:" prop="goodsName">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        v-model.trim="formModel.goodsName"
+        :size="size"
+        :disabled="isDisabled"
+        placeholder="请输入商品名称"
+        clearable
+      />
+      <span v-else>{{formModel.goodsName}}</span>
+    </el-form-item>
+    <el-form-item label="商品短名称:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        v-model.trim="formModel.goodsShortName"
+        :size="size"
+        :disabled="isDisabled"
+        placeholder="请输入商品短名称"
+        clearable
+      />
+      <span v-else>{{formModel.goodsShortName}}</span>
+    </el-form-item>
+    <el-form-item label="基础分类:">
       <el-cascader
         v-if="!isView"
         class="select-item"
@@ -11,6 +35,18 @@
         filterable
       ></el-cascader>
       <span v-else>{{formModel.categoryName}}</span>
+    </el-form-item>
+    <el-form-item label="商品款号:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.goodsBn"
+        :size="size"
+        placeholder="请输入商品款号"
+        clearable
+      />
+      <span v-else>{{formModel.goodsBn}}</span>
     </el-form-item>
     <el-form-item label="经营类型:" prop="businessValue">
       <!-- <el-select
@@ -49,30 +85,6 @@
       </el-select>
       <span v-else>{{formModel.goodsTypeId ? goodsTypeArr[formModel.goodsTypeId - 1].label : ''}}</span>
     </el-form-item> -->
-    <el-form-item label="商品名称:" prop="goodsName">
-      <el-input
-        v-if="!isView"
-        class="select-item"
-        v-model.trim="formModel.goodsName"
-        :size="size"
-        :disabled="isDisabled"
-        placeholder="请输入商品名称"
-        clearable
-      />
-      <span v-else>{{formModel.goodsName}}</span>
-    </el-form-item>
-    <el-form-item label="商品短名称:">
-      <el-input
-        v-if="!isView"
-        class="select-item"
-        v-model.trim="formModel.goodsShortName"
-        :size="size"
-        :disabled="isDisabled"
-        placeholder="请输入商品短名称"
-        clearable
-      />
-      <span v-else>{{formModel.goodsShortName}}</span>
-    </el-form-item>
     <el-form-item label="封面图片:">
       <c-image
         class="coverImg"
@@ -216,7 +228,7 @@ export default {
   },
   computed: {
     formModel() {
-      const { categoryCode, businessValue, goodsTypeId, brandName, brandId, goodsName, goodsShortName, goodsStaticFiles, goodsBrief, origin, coverImg, categoryName } = this.dataObj
+      const { categoryCode, businessValue, goodsTypeId, brandName, brandId, goodsName, goodsShortName, goodsStaticFiles, goodsBrief, goodsBn, origin, coverImg, categoryName } = this.dataObj
       const fileList = goodsStaticFiles && goodsStaticFiles.length ? goodsStaticFiles.map(res => ({
         name: res.imageId,
         url: res.imageUrl,
@@ -237,7 +249,7 @@ export default {
       }
       // console.log(curCategoryCode)
       // const categoryCode = [categoryCode.substr(0, 2), categoryCode.substr(2, 4)]
-      return { fileList, categoryName, categoryCode: curCategoryCode, businessValue, brandName, brandId, goodsTypeId, goodsName, goodsShortName, goodsBrief, origin, coverImg }
+      return { fileList, goodsBn, categoryName, categoryCode: curCategoryCode, businessValue, brandName, brandId, goodsTypeId, goodsName, goodsShortName, goodsBrief, origin, coverImg }
     }
   },
   mounted() {

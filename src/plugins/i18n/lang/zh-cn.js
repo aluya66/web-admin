@@ -7,13 +7,16 @@ export default {
     version: '版本管理',
     category: '商品类目',
     brand: '品牌管理',
+    brandInfo: '品牌信息',
+    brandLabel: '品牌标签',
     merchandise: '商品类型',
     label: '标签管理',
     logistics: '物流管理',
     goods: '商品中心',
-    goodsList: '商品信息',
+    goodsManage: '商品管理',
     goodsLogs: '商品日志',
     goodsDetail: '商品详情',
+    goodsLabelDetail: '商品标签',
     goodsSnapshoot: '商品快照',
     goodsSnapshootDetail: '快照详情',
     shop: '渠道中心',
@@ -31,7 +34,8 @@ export default {
     payManageChannel: '渠道管理',
     settings: '配置管理',
     dictList: '字典管理',
-    dictInfo: '字典信息'
+    dictInfo: '字典信息',
+    settingsLabel: '标签管理'
   },
   navbar: {
     logout: '退出',

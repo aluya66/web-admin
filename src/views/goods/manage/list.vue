@@ -154,23 +154,30 @@ export default {
       }],
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [{
-        width: 100,
+        width: 150,
         name: '详情',
         icon: 'el-icon-view',
         handle(row) {
-          vm.routerLink(`/goods/detail/${row.id}`)
+          vm.routerLink(`/goods/manage/detail/${row.id}`)
+        }
+      },
+      {
+        name: '添加标签',
+        icon: 'el-icon-plus',
+        handle(row) {
+          vm.routerLink(`/goods/manage/label/${row.id}`)
         }
       }
-        // {
-        //   name: '删除',
-        //   icon: 'el-icon-delete',
-        //   handle(row) {
-        //     const { goodsName, id } = row
-        //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
-        //       vm.deleteData({ id })
-        //     })
-        //   }
-        // }
+      // {
+      //   name: '删除',
+      //   icon: 'el-icon-delete',
+      //   handle(row) {
+      //     const { goodsName, id } = row
+      //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
+      //       vm.deleteData({ id })
+      //     })
+      //   }
+      // }
       ],
       tableHeader: [
         {

@@ -50,8 +50,13 @@
 </template>
 <script>
 import CCard from 'components/card'
+import MixinFormCard from 'mixins/formCard'
 
 export default {
+  mixins: [MixinFormCard],
+  components: {
+    CCard
+  },
   data() {
     return {
       curAttrs: [], // 全部商品参数
@@ -59,29 +64,6 @@ export default {
       checkAttrs: [] // 选中商品参数值[{1010:[212,3133]}]
       // formModel: {
       // }
-    }
-  },
-  props: {
-    title: String,
-    dataObj: {
-      type: Object,
-      required: true
-    },
-    type: {
-      type: Number,
-      default: 1
-    },
-    isView: {
-      type: Boolean,
-      default: false
-    },
-    size: {
-      type: String,
-      default: 'medium'
-    },
-    isDisabled: {
-      type: Boolean,
-      default: false
     }
   },
   created() {
@@ -100,7 +82,7 @@ export default {
           data.forEach((val, index) => {
             const checkedAttr = []
             const attrs = val.bmsGoodsAttrVals.map(item => {
-              if (goodsAttrs.length) {
+              if (goodsAttrs && goodsAttrs.length) {
                 goodsAttrs.forEach(eidtAttr => {
                   if (eidtAttr.attrId === val.id && eidtAttr.attributeId === item.id) {
                     checkedAttr.push(eidtAttr.attributeId)
@@ -121,9 +103,6 @@ export default {
       this.checkAttrs[this.curIndex] = { [this.curAttrs[this.curIndex].id]: value }
       console.log(this.checkAttrs)
     }
-  },
-  components: {
-    CCard
   }
 }
 </script>

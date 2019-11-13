@@ -19,7 +19,12 @@
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span>{{ node.label }}</span>
               <span>
-                <el-button type="text" v-if="!node.data.leaf" size="mini" @click="() => append(data)">新增</el-button>
+                <el-button
+                  type="text"
+                  v-if="!node.data.leaf"
+                  size="mini"
+                  @click="() => append(data)"
+                >新增</el-button>
                 <el-button type="text" size="mini" @click="() => editHandle(node, data)">编辑</el-button>
               </span>
             </span>
@@ -87,26 +92,24 @@ export default {
   },
   methods: {
     fetchData(callback) {
-      this.$api.basic
-        .queryAllRegion({
-          parentCode: this.parentCode
-        })
-        .then(res => {
-          const { data } = res
-          let curData = []
-          if (data && data.length) {
-            curData = data.map(res => ({
-              leaf: !res.hasChildBoolean,
-              name: res.name,
-              code: res.code,
-              parentCode: res.parentCode
-            }))
-          }
-          if (this.parentCode === 0) {
-            this.data = curData
-          }
-          callback && callback(curData)
-        })
+      this.$api.basic.queryAllRegion({
+        parentCode: this.parentCode
+      }).then(res => {
+        const { data } = res
+        let curData = []
+        if (data && data.length) {
+          curData = data.map(res => ({
+            leaf: !res.hasChildBoolean,
+            name: res.name,
+            code: res.code,
+            parentCode: res.parentCode
+          }))
+        }
+        if (this.parentCode === 0) {
+          this.data = curData
+        }
+        callback && callback(curData)
+      })
     },
 
     loadNode(node, resolve) {
@@ -176,7 +179,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 .main__box {
   .area__box__centen {

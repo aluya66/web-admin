@@ -28,5 +28,15 @@ export default {
       title: 'dictInfo',
       icon: 'table'
     }
-  }]
+  }, {
+    path: '/settings/label',
+    name: 'settingsLabel',
+    component: () => import('@/views/settings/label/index'),
+    meta: {
+      title: 'settingsLabel',
+      icon: 'table',
+      roles: ['edit']
+    }
+  }
+  ]
 }

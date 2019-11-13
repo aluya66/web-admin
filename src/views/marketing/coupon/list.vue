@@ -463,7 +463,6 @@ export default {
         this.fetchData()
         this.dialogObj.isShow = false
       })
-      this.dialogObj.isShow = true
     },
     /**
      * 确认修改操作
@@ -474,7 +473,6 @@ export default {
         this.fetchData()
         this.dialogObj.isShow = false
       })
-      this.dialogObj.isShow = true
     }
   }
 }
