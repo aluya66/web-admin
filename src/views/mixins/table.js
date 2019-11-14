@@ -47,14 +47,14 @@ export default {
      * 获取搜索时间
      * @param {*} dataTime
      */
-    getSearchDate(dataTime, formatFlag) {
+    getSearchDate(dataTime, formatFlag, startFlag = 'beginDate', endFlag = 'endDate') {
       let type = formatFlag === 'dateTime' ? '{y}-{m}-{d} {h}:{i}:{s}' : '{y}-{m}-{d}'
       if (dataTime) {
         const beginDate = utils.fomartDate(dataTime[0], type)
         const endDate = utils.fomartDate(dataTime[1], type)
         return {
-          beginDate,
-          endDate
+          [startFlag]: beginDate,
+          [endFlag]: endDate
         }
       }
       return {}
