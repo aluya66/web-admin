@@ -15,7 +15,7 @@
     </template>
     <div class="main__box">
       <keep-alive>
-        <component v-bind:is="activeName" @showDialog="showDialog"></component>
+        <component v-bind:is="activeName" @showDialog="showDialog" :tag-type="tagTypeList"></component>
       </keep-alive>
     </div>
     <div v-if="dialogObj.isShow">
@@ -31,6 +31,7 @@
           v-if="activeName === 'labelList'"
           :is-edit="dialogObj.isEdit"
           :init-data.sync="dialogObj.initData"
+          :tag-type="tagTypeList"
         ></label-add>
         <type-add
           ref="childRef"
@@ -62,6 +63,7 @@ export default {
     return {
       dialogObj: {}, // 对话框数据
       activeName: 'labelList',
+      tagTypeList: [], // 标签类型数据
       tabTitle: [
         {
           value: 'labelList',
@@ -74,7 +76,21 @@ export default {
       ]
     }
   },
+  created() {
+    this.getTagType()
+  },
   methods: {
+    // 获取标签类型数据
+    getTagType() {
+      this.$api.settings.getTabTypeList({
+        pageNo: 1,
+        pageSize: 100
+      }).then(res => {
+        if (res.data) {
+          this.tagTypeList = res.data.map(res => ({ label: res.categoryName, value: res.id }))
+        }
+      })
+    },
     dialogConfirm() {
       const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
@@ -83,7 +99,7 @@ export default {
           if (!this.dialogObj.isEdit) {
             this.addHandle(childFormModel)
           } else {
-            this.editHandle(childRef)
+            this.editHandle(childFormModel)
           }
         } else {
           console.log('error submit!!')
@@ -99,36 +115,33 @@ export default {
         initData: opts.initData
       }
     },
-    addHandle(formModel) {
+    addHandle(formData) {
+      console.log(formData)
       if (this.activeName === 'labelList') {
-        let data = {
-          ...formModel
-        }
-        this.$api.basic.addGoodsattrval(data).then(res => {
-          this.dialogObj.isShow = false
-          this.$msgTip('新增成功')
-          this.fetchData()
+        this.$api.settings.addTag(formData).then(res => {
+          this.responeHandle()
         })
       } else {
-
+        this.$api.settings.addTagCate(formData).then(res => {
+          this.responeHandle()
+        })
       }
     },
-    editHandle(childData) {
+    editHandle(formData) {
       if (this.activeName === 'labelList') {
-        const { delArr, formModel } = childData
-        const { items, ...other } = formModel
-        this.$api.basic.updateGoodsattrval({
+        const { delArr, formModel } = formData
+        const { tagValues, ...other } = formModel
+        this.$api.settings.updateTag({
           ...other,
-          addAndUpdate: items,
+          addAndUpdate: tagValues,
           del: delArr
         }).then(res => {
-          this.dialogObj.isShow = true
-          this.$msgTip('修改成功')
-          this.dialogObj.isShow = false
-          this.fetchData()
+          this.responeHandle('更新成功')
         })
       } else {
-
+        this.$api.settings.updateTag(formData).then(res => {
+          this.responeHandle('更新成功')
+        })
       }
     }
   }

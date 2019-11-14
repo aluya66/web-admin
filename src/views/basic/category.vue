@@ -136,7 +136,7 @@ export default {
           value: 3,
           label: '三级'
         }
-      ],
+      ]
     }
   },
   created() {

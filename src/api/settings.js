@@ -37,3 +37,39 @@ export const deleteDictbyCodes = params =>
   Http.fetch(`${context}/api/dict/codes`, params, {
     method: 'delete'
   })
+
+// 标签类型
+export const tagCate = (params, method) =>
+  Http.fetch(`${context}/api/tag/cate`, params, {
+    method
+  })
+
+// 新增标签类型
+export const addTagCate = params => tagCate(params, 'post')
+// 编辑标签类型
+export const updateTagCate = params => tagCate(params, 'put')
+
+// 获取标签分类列表
+export const getTabTypeList = params =>
+  Http.fetch(`${context}/api/tag/pagecate`, params, {
+    method: 'get'
+  })
+
+// 标签管理
+export const tagManage = (params, method) =>
+  Http.fetch(`${context}/api/tag`, params, {
+    method
+  })
+
+// 新增标签
+export const addTag = params => tagManage(params, 'post')
+// 编辑标签
+export const updateTag = params => tagManage(params, 'put')
+// 删除标签
+export const deleteTag = params => tagManage(params, 'delete')
+
+// 获取标签列表
+export const getTabList = params =>
+  Http.fetch(`${context}/api/tag/page`, params, {
+    method: 'get'
+  })

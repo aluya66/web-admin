@@ -13,39 +13,41 @@
   >
     <template v-slot:header>
       <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-        <el-form-item label="标签类型">
-          <el-select
-            v-model="searchObj.type"
-            :size="size"
-            class="search-item"
-            placeholder="请选择标签类型"
-            clearable
-          >
-            <el-option
-              v-for="item in parameterSelect"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="标签名称">
           <el-input
-            v-model="searchObj.name"
+            v-model="searchObj.tagName"
             class="search-item"
             :size="size"
             placeholder="标签名称"
             clearable
           />
         </el-form-item>
+        <el-form-item label="标签类型">
+          <query-dict
+            :dict-list="tagType"
+            class="search-item"
+            :size="size"
+            placeholder="请选择"
+            :value.sync="searchObj.categoryId"
+          ></query-dict>
+        </el-form-item>
         <el-form-item label="标签值">
           <el-input
-            v-model="searchObj.name"
+            v-model="searchObj.value"
             class="search-item"
             :size="size"
             placeholder="标签值"
             clearable
           />
+        </el-form-item>
+        <el-form-item label="标签状态">
+          <query-dict
+            :dict-list="disStatus"
+            class="search-item"
+            :size="size"
+            placeholder="请选择"
+            :value.sync="searchObj.tagStatus"
+          ></query-dict>
         </el-form-item>
         <el-form-item label="创建时间">
           <el-date-picker
@@ -75,33 +77,30 @@
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
+import dictObj from '@/store/dictData'
+
+const pageItemType = ['文本', '复选', '单选', '下拉', '多文本'] // 页面显示类型
 
 export default {
   name: 'labelList',
   mixins: [mixinTable],
+  props: {
+    tagType: Array,
+    default(){
+      return []
+    }
+  },
   data(vm) {
     return {
+      lobList: dictObj.lobList, // 业务线集合
+      disStatus: dictObj.disStatus, // 启用/禁用
       searchObj: {
-        name: '',
-        type: '',
-        isDelete: '',
-        dataTime: '',
-        paramType: ''
+        tagName: '', // 标签名称
+        categoryId: '', //标签类型id
+        value: '', // 标签值
+        dataTime: '', //操作时间
+        tagStatus: '' // 是否禁用
       },
-      parameterSelect: [
-        {
-          value: '0',
-          label: '分类'
-        },
-        {
-          value: 1,
-          label: '参数'
-        },
-        {
-          value: 2,
-          label: '属性'
-        }
-      ],
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [
         {
@@ -110,22 +109,22 @@ export default {
           icon: 'el-icon-edit',
           handle(row) {
             const {
-              type,
-              name,
-              sort,
-              bmsGoodsAttrVals,
+              categoryId,
+              tagName,
+              tagValues,
+              categoryLob,
+              tagStatus,
               id,
-              paramType
             } = row
             vm.$emit('showDialog', {
               title: '编辑标签',
               initData: {
-                type,
-                name,
-                sort,
-                items: bmsGoodsAttrVals.map(({ value, id, description }) => ({ value, id, description })),
-                paramType,
-                id
+                categoryId,
+                tagName,
+                categoryLob,
+                tagStatus,
+                id,
+                tagValues: tagValues.map(({ value, id, desc }) => ({ value, id, desc })),
               },
               isEdit: true
             })
@@ -135,8 +134,8 @@ export default {
           name: '删除',
           icon: 'el-icon-delete',
           handle(row) {
-            const { name, id } = row
-            vm.confirmTip(`确认删除${name}标签`, () => {
+            const { tagName, id } = row
+            vm.confirmTip(`确认删除${tagName}标签`, () => {
               vm.deleteData({ id })
             })
           }
@@ -145,30 +144,34 @@ export default {
       tableHeader: [
         {
           label: '标签名称',
-          prop: 'name',
+          prop: 'tagName',
           fixed: true,
           width: 150
         },
         {
           label: '标签类型',
-          prop: 'type',
-          formatter(row) {
-            return row.type ? vm.parameterSelect[row.type].label : '分类'
-          }
+          prop: 'categoryName'
         },
         {
           label: '标签值',
-          prop: 'value',
+          prop: 'tagValues',
+          width: 600,
           formatter(row) {
-            return row.bmsGoodsAttrVals.map(item => item.value).filter(d => d).join('/')
+            return row.tagValues.map(item => item.value).filter(d => d).join('/')
           }
         },
         {
-          label: '操作类型',
-          prop: 'paramType',
-          width: 100,
+          label: '标签状态',
+          prop: 'tagStatus',
+          formatter(row){
+            return row.tagStatus ? vm.disStatus[row.tagStatus].label : ''
+          }
+        },
+        {
+          label: '显示类型',
+          prop: 'operateType',
           formatter(row, index) {
-            return row.paramType === 'checkbox' ? '复选框' : row.paramType === 'radio' ? '单选框' : row.paramType === 'radio' ? '下拉框' : '无'
+            return row.operateType ? pageItemType[row.operateType - 1] : '无'
           }
         },
         {
@@ -193,7 +196,7 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
       this.isLoading = true
-      this.$api.basic.getGoodsattrval({
+      this.$api.settings.getTabList({
         ...searchDate,
         ...other,
         ...page
@@ -209,7 +212,7 @@ export default {
       })
     },
     deleteData(param, msgTip = '删除成功') {
-      this.$api.basic.deleteGoodsattrval(param).then(() => {
+      this.$api.settings.deleteTag(param).then(() => {
         this.$msgTip(msgTip)
         this.delResetData()
       })

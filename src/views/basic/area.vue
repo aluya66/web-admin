@@ -83,7 +83,7 @@ export default {
       ruleForm: {
         name: '',
         code: ''
-      },
+      }
     }
   },
   methods: {

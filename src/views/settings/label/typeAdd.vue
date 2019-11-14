@@ -8,22 +8,34 @@
     label-position="right"
     status-icon
   >
-    <el-form-item label="类型名称" prop="typeName">
-      <el-input v-model.trim="formModel.typeName" class="form-item" clearable/>
+    <el-form-item label="类型名称" prop="categoryName">
+      <el-input v-model.trim="formModel.categoryName" class="form-item" clearable/>
+    </el-form-item>
+    <el-form-item label="业务线">
+      <query-dict
+        :dict-list="lobList"
+        class="form-select"
+        placeholder="请选择业务线"
+        :value.sync="formModel.categoryLob"
+      ></query-dict>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+import dictObj from '@/store/dictData'
+import MixinForm from 'mixins/form'
 
 export default {
+  mixins: [MixinForm],
   props: {
     initData: {
       type: Object,
       default() {
         return {
-          logiName: '',
-          logiCode: ''
+          categoryName: '', // 标签类型
+          categoryLob: '',  // 业务线
+          categoryDesc: ''  // 描述
         }
       }
     },
@@ -34,9 +46,13 @@ export default {
   },
   data() {
     return {
+      lobList: dictObj.lobList, // 业务线集合
       rules: {
-        typeName: [
+        categoryName: [
           { required: true, message: '请输入类型名称', trigger: 'blur' }
+        ],
+        categoryLob: [
+          { required: true, message: '请选择业务线', trigger: 'change' }
         ]
       }
     }
@@ -59,6 +75,9 @@ export default {
   margin-right: 50px;
   .form-item {
     width: 100%;
+  }
+  .form-select{
+    width: 50%;
   }
 }
 </style>

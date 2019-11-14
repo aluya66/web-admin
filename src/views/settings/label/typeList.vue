@@ -13,14 +13,23 @@
   >
     <template v-slot:header>
       <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-        <el-form-item label="标签类型">
+        <el-form-item label="类型名称">
           <el-input
-            v-model="searchObj.logiName"
+            v-model="searchObj.categoryName"
             class="search-item"
             :size="size"
-            placeholder="标签类型"
+            placeholder="类型名称"
             clearable
           />
+        </el-form-item>
+        <el-form-item label="业务线">
+          <query-dict
+            :dict-list="lobList"
+            class="search-item"
+            :size="size"
+            placeholder="请选择"
+            :value.sync="searchObj.categoryLob"
+          ></query-dict>
         </el-form-item>
         <el-form-item>
           <el-button
@@ -39,55 +48,68 @@
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
+import dictObj from '@/store/dictData'
 
 export default {
   name: 'typeList',
   mixins: [mixinTable],
   data(vm) {
     return {
+      lobList: dictObj.lobList, // 业务线集合
       searchObj: {
-        logiName: '',
-        logiCode: ''
+        categoryName: '', // 类型名称
+        categoryLob: '' // 业务线
       },
       pickerOptions: utils.pickerOptions,
-      tableList: [],
       tableInnerBtns: [
         {
           name: '编辑',
           icon: 'el-icon-edit',
+          width: 130,
           handle(row) {
             const {
-              logiName,
-              logiCode,
+              categoryName,
+              categoryLob,
               id
             } = row
             vm.$emit('showDialog', {
               title: '编辑标签类型',
               initData: {
-                logiName,
-                logiCode,
+                categoryName,
+                categoryLob,
                 id: id
               },
               isEdit: true
-            })
-          }
-        },
-        {
-          name: '删除',
-          icon: 'el-icon-delete',
-          handle(row) {
-            const { name, id } = row
-            vm.confirmTip(`确认删除${name}类型`, () => {
-              vm.deleteData({ id })
             })
           }
         }
       ],
       tableHeader: [
         {
-          label: '标签类型',
-          prop: 'logiName',
-          fixed: true
+          label: '类型名称',
+          prop: 'categoryName',
+        },
+        {
+          label: '业务线',
+          prop: 'categoryLob',
+          formatter(row){
+            const lobObj = row.categoryLob && vm.lobList.find(res => row.categoryLob === res.value)
+            return lobObj ? lobObj.label : ''
+          }
+        },
+        {
+          label: '描述',
+          prop: 'categoryDesc'
+        },
+        {
+          label: '创建时间',
+          prop: 'created',
+          width: 100
+        },
+        {
+          label: '更新时间',
+          prop: 'updated',
+          width: 100
         }
       ]
     }
@@ -104,27 +126,19 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
       this.isLoading = true
-      this.$api.basic
-        .getLogistics({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
-    },
-    deleteData(param, msgTip = '删除成功') {
-      this.$api.basic.deleteGoodsattrval(param).then(() => {
-        this.$msgTip(msgTip)
-        this.delResetData()
+      this.$api.settings.getTabTypeList({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
       })
     }
   }
