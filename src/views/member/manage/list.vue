@@ -30,7 +30,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="姓别">
+            <!-- <el-form-item label="姓别">
               <el-select v-model="searchObj.gender" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in genderSelect"
@@ -39,7 +39,7 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="手机号">
               <el-input
                 v-model="searchObj.phoneNumber"
@@ -49,24 +49,24 @@
                 clearable
               />
             </el-form-item>
-            <!-- <el-form-item label="所属店铺">
+            <el-form-item label="所属店铺">
               <el-input
-                v-model="searchObj.shopId"
+                v-model="searchObj.shopName"
                 class="search-item"
                 :size="size"
                 placeholder="所属店铺"
                 clearable
               />
-            </el-form-item> -->
-            <!-- <el-form-item label="所属店员">
+            </el-form-item>
+            <el-form-item label="所属店员">
               <el-input
-                v-model="searchObj.pid"
+                v-model="searchObj.memberName"
                 class="search-item"
                 :size="size"
                 placeholder="所属店员"
                 clearable
               />
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item label="会员来源">
               <el-select v-model="searchObj.source" class="search-item" :size="size" clearable>
                 <el-option
@@ -88,7 +88,13 @@
               </el-select>
             </el-form-item>
             <!-- <el-form-item label="地区">
-              <el-cascader :options="options" :props="{ checkStrictly: true }" clearable></el-cascader>
+              <el-cascader
+                class="search-item"
+                placeholder="地区"
+                v-model="searchObj.areaCode"
+                :options="areaList"
+                filterable
+              ></el-cascader>
             </el-form-item> -->
             <el-form-item label="加入时间">
               <el-date-picker
@@ -103,19 +109,6 @@
                 :default-time="['00:00:00', '23:59:59']"
               >align="right"></el-date-picker>
             </el-form-item>
-            <!-- <el-form-item label="生日区间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                format="yyyy-MM-dd HH:mm:ss"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item> -->
             <el-form-item>
               <el-button
                 type="primary"
@@ -166,8 +159,8 @@ export default {
         name: '', // 姓名
         gender: '', // 性别
         phoneNumber: '', // 手机号
-        shopId: '', // 所属店铺
-        pid: '', // 所属店员
+        shopName: '', // 所属店铺
+        memberName: '', // 所属店员
         source: '', // 会员来源
         memberType: '', // 会员类型
         cityCode: '', // 地区
@@ -250,7 +243,10 @@ export default {
         },
         {
           label: '性别',
-          prop: 'gender'
+          prop: 'gender',
+          formatter(row) {
+            return row.gender === '1' ? '男' : '女'
+          }
         },
         {
           label: '手机号',
@@ -283,7 +279,15 @@ export default {
           prop: 'expenseAmount'
         },
         {
-          label: '加入时间',
+          label: '店铺名称',
+          prop: 'shopName',
+        },
+        {
+          label: '店员名称',
+          prop: 'memberName',
+        },
+        {
+          label: '首次加入时间',
           prop: 'firstJoinTime',
           width: 100
         }
@@ -299,24 +303,22 @@ export default {
     fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
       this.isLoading = true
-      this.$api.member
-        .getMember({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.member.getMember({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     },
     dialogConfirm() {
       const childRef = this.$refs.childRef
@@ -347,6 +349,3 @@ export default {
   }
 }
 </script>
-
-<style lang='less' scoped>
-</style>
