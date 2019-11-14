@@ -201,11 +201,6 @@ module.exports = {
         ws: false,
         pathRewrite: {}
       },
-      [process.env.VUE_APP_CONSOLE_MARKETING]: {
-        target: process.env.VUE_APP_SERVERPATH_CONSOLE,
-        ws: false,
-        pathRewrite: {}
-      },
       [process.env.VUE_APP_IPX]: {
         target: process.env.VUE_APP_SERVERPATH_IPX,
         ws: false,

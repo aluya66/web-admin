@@ -15,7 +15,8 @@ export default {
     component: () => import('@/views/basic/bussinessLine'),
     meta: {
       title: 'bussiness',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -24,7 +25,8 @@ export default {
     component: () => import('@/views/basic/area'),
     meta: {
       title: 'area',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -33,7 +35,8 @@ export default {
     component: () => import('@/views/basic/version'),
     meta: {
       title: 'version',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -42,7 +45,8 @@ export default {
     component: () => import('@/views/basic/category'),
     meta: {
       title: 'category',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -51,7 +55,8 @@ export default {
     component: () => import('@/views/basic/brand'),
     meta: {
       title: 'brand',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -60,7 +65,8 @@ export default {
     component: () => import('@/views/basic/merchandise'),
     meta: {
       title: 'merchandise',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -69,7 +75,8 @@ export default {
     component: () => import('@/views/basic/label'),
     meta: {
       title: 'label',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -78,7 +85,8 @@ export default {
     component: () => import('@/views/basic/logistics'),
     meta: {
       title: 'logistics',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   }
   ]

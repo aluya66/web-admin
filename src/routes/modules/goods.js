@@ -15,7 +15,8 @@ export default {
     component: () => import('@/views/goods/list'),
     meta: {
       title: 'goodsList',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {
@@ -26,7 +27,8 @@ export default {
     meta: {
       title: 'goodsDetail',
       noCache: true,
-      activeMenu: '/goods/list'
+      activeMenu: '/goods/list',
+      roles: ['admin']
     }
   },
   {
@@ -35,7 +37,8 @@ export default {
     component: () => import('@/views/goods/logs/list'),
     meta: {
       title: 'goodsLogs',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {
@@ -44,7 +47,8 @@ export default {
     component: () => import('@/views/goods/snapshoot/list'),
     meta: {
       title: 'goodsSnapshoot',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {

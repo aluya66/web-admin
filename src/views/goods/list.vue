@@ -2,14 +2,15 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
-      <!-- <div class="header-btn">
+      <div class="header-btn">
         <el-button
           :size="size"
           type="primary"
+          v-permission="$route.meta.roles"
           icon="el-icon-plus"
           @click="routerLink('/goods/add')"
         >新增</el-button>
-      </div>-->
+      </div>
     </template>
     <div class="main__box">
       <c-table

@@ -12,7 +12,7 @@ export default {
   children: [{
     path: '/pay/manage',
     name: 'payManage',
-    component: () => import('@/views/pay/index'),
+    component: () => import('@/views/common/index'),
     redirect: '/pay/manage/list',
     meta: {
       title: 'payManage',
@@ -24,7 +24,8 @@ export default {
       component: () => import('@/views/pay/manage/channel/list'),
       meta: {
         icon: 'table',
-        title: 'payManageChannel'
+        title: 'payManageChannel',
+        roles: ['admin']
       }
     }, {
       path: '/pay/manage/account',
@@ -32,7 +33,8 @@ export default {
       component: () => import('@/views/pay/manage/account/list'),
       meta: {
         icon: 'table',
-        title: 'payManageAccount'
+        title: 'payManageAccount',
+        roles: ['admin']
       }
     }, {
       path: '/pay/manage/list',
@@ -40,7 +42,8 @@ export default {
       component: () => import('@/views/pay/manage/list'),
       meta: {
         icon: 'table',
-        title: 'payManageList'
+        title: 'payManageList',
+        roles: ['admin']
       }
     }]
   }]

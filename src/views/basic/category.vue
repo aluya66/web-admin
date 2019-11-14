@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" icon="el-icon-plus" @click="addHandle(1)">新增</el-button>
+        <el-button type="primary" v-permission="$route.meta.roles" icon="el-icon-plus" @click="addHandle(1)">新增</el-button>
       </div>
     </template>
     <div class="main__box" >
@@ -24,7 +24,7 @@
               >
                 <span class="custom-tree-node" slot-scope="{ node, data }">
                   <span>{{ node.label }}</span>
-                  <span>
+                  <span v-permission="$route.meta.roles">
                     <el-button type="text" v-if="node.data.childrenList.length>0" @click="() => addHandle(2, data)">新增</el-button>
                     <el-button type="text" @click="() => editHandle(node, data)">编辑</el-button>
                     <el-button type="text" style="margin-left: 6px;" @click="deteleCategory(node, data)">删除</el-button>

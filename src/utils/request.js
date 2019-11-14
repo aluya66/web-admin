@@ -172,10 +172,14 @@ export default {
               reject(res.msg || res.retmsg)
             }
           } else {
-            if (res.totalCount || res.totalCount === 0) {
-              res.data = {
-                data: res.data || [],
-                totalCount: res.totalCount
+            if (res.totalCount !== undefined) {
+              if (res.totalCount) {
+                res.data = {
+                  data: res.data || [],
+                  totalCount: res.totalCount
+                }
+              } else {
+                res.data = []
               }
             }
             opt.cache && utils.setStore(opt.cache, res.data)

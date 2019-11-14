@@ -1,46 +1,53 @@
-// import { login, logout } from 'api/auth'
+import { login, logout, getMenuList } from 'api/common'
 
 import utils from 'utils'
-import {
-  resetRouter
-} from '@/routes'
+import { resetRouter } from '@/routes'
 
 const state = {
   userInfo: utils.getStore('SET_USERINFO'),
-  roles: []
+  roles: null // 菜单id
 }
 
 const mutations = {
   SET_USERINFO: (state, userInfo) => {
-    state.userInfo = Object.assign({}, userInfo)
+    state.userInfo = userInfo
   },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
+  SET_ROLES: (state, role) => {
+    state.roles = role
   }
 }
 
 const actions = {
   // user login
-  login ({
-    commit
-  }, userInfo) {
+  login({ commit }, params) {
+    const {
+      userName,
+      password
+    } = params
     return new Promise((resolve, reject) => {
-      const data = {
-        token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJsb2dpbiIsImF1ZCI6InVzZXIiLCJuYmYiOjE1NzA4NDYwOTksImxvZ2luTmFtZSI6InplZ2FuZyIsImlzcyI6Inlvc2FyLXVwbXMiLCJleHAiOjE1NzA4ODIwOTksInVzZXJJZCI6MTA1LCJpYXQiOjE1NzA4NDYwOTl9.Bd05FCd4gP1UvNxyKfMLEQeuwE0X7ToYBR55AiZM4qs',
-        id: '5'
-      }
-      commit('SET_USERINFO', data)
-      utils.setStore('SET_USERINFO', data)
-      resolve()
+      login({
+        userName: userName,
+        password: utils.encrypt(password)
+      }).then(data => {
+        // 默认system用户角色id为0,中台默认5
+        utils.setStore('SET_USERINFO', data)
+        getMenuList({ parentId: 0 }).then(res => {
+          const curMenu = res.find(item => item.path.indexOf('pillar-console.yosar') !== -1 || item.title.indexOf('中台') === 0)
+          if (curMenu) {
+            commit('SET_USERINFO', { ...data, id: curMenu.id })
+            utils.setStore('SET_USERINFO', { ...data, id: curMenu.id })
+          }
+          resolve()
+        })
+      })
     })
   },
 
   // get user info
-  getInfo ({
-    commit
-  }) {
+  getInfo({ commit }) {
     return new Promise(resolve => {
-      let role = utils.getUrlParam('parentId')
+      const localData = utils.getStore('SET_USERINFO')
+      let role = localData ? localData.id : ''
       const data = {
         roles: role || state.userInfo.id
       }
@@ -50,24 +57,27 @@ const actions = {
   },
 
   // user logout
-  logout ({
-    commit
-  }) {
+  logout({ commit }) {
     return new Promise((resolve, reject) => {
-      commit('SET_ROLES', [])
-      commit('SET_USERINFO', '')
-      utils.clearStore()
-      resetRouter()
-      resolve()
+      logout()
+        .then(() => {
+          commit('SET_ROLES', '')
+          commit('SET_USERINFO', '')
+          utils.clearStore()
+          resetRouter()
+          resolve()
+        }).catch(err => {
+          reject(err)
+        })
     })
   },
 
   // remove token
-  resetToken ({
-    commit
-  }) {
+  resetToken({ commit }) {
     return new Promise(resolve => {
-      commit('SET_ROLES', [])
+      commit('SET_ROLES', '')
+      commit('SET_USERINFO', '')
+      utils.clearStore()
       resolve()
     })
   }

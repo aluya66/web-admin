@@ -25,7 +25,7 @@ export default {
 .app-content {
 	header {
     position: relative;
-    background-color: @bg-main;
+    background-color: @white;
     margin-top: 2px;
     padding: 8px 15px;
     border-bottom: 1px solid @border-default;
@@ -45,7 +45,7 @@ export default {
 		&__box {
 			overflow: hidden;
 			padding: 10px 15px;
-			background-color: @bg-main;
+			background-color: @white;
 			min-height: calc(100vh - 133px);
 		}
 	}

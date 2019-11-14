@@ -40,7 +40,10 @@ export default {
     memberUserList: '用户列表',
     memberWallet: '钱包管理',
     memberWalletList: '会员钱包',
-    memberManageListDetail: '会员详情'
+    memberManageListDetail: '会员详情',
+    settings: '配置管理',
+    dictList: '字典管理',
+    dictInfo: '字典信息'
   },
   navbar: {
     logout: '退出',

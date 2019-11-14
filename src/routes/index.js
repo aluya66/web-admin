@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './modules'
 import store from '../store'
+import errFun from 'utils/err'
 
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css' // Progress 进度条样式
@@ -18,7 +19,7 @@ Vue.use(VueRouter)
 * redirect: noredirect           if `redirect:noredirect` will no redirect in the breadcrumb
 * name:'router-name'             the name is used by <keep-alive> (must set!!!)
 * meta : {
-    roles: ['admin','editor']    will control the page roles (you can set multiple roles)
+    roles: [roleId]                   will control the page roles (you can set multiple roles)['admin','editor']
     title: 'title'               the name show in submenu and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
     affix: true                  if set true, the tag will affix in the tags-view
@@ -100,10 +101,21 @@ const createRouter = () =>
     }
   })
 
+// 嵌入别的系统时，从url截取token // http://pillar-console.yosar.develop
+const token = utils.getUrlParam('token')
+if (token) {
+  const id = utils.getUrlParam('parentId')
+  const userName = utils.getUrlParam('userName')
+  utils.setStore('SET_USERINFO', {
+    token,
+    userName,
+    id
+  })
+}
+
 const router = createRouter()
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
-  const token = utils.getUrlParam('token')
   if (token || (store.getters.userInfo && store.getters.userInfo.token)) {
     if (to.path === '/login') {
       next({
@@ -111,15 +123,15 @@ router.beforeEach(async (to, from, next) => {
       })
       NProgress.done()
     } else {
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
-      if (hasRoles) {
+      const hasRoles = store.getters.roles
+      if (hasRoles || hasRoles === 0) {
         next()
       } else {
         try {
-          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const {
-            roles
-          } = await store.dispatch('user/getInfo')
+          const { roles } = await store.dispatch('user/getInfo')
+          if (!roles) {
+            throw new Error('菜单数据异常,请重新登录')
+          }
           const accessRoutes = await store.dispatch(
             'permission/generateRoutes',
             roles
@@ -131,8 +143,8 @@ router.beforeEach(async (to, from, next) => {
           })
         } catch (error) {
           await store.dispatch('user/resetToken')
-          utils.errFun(error || 'Has Error')
-          next(`/404?redirect=${to.path}`)
+          errFun(error || 'Has Error')
+          next(`/login?redirect=${to.path}`)
           NProgress.done()
         }
       }

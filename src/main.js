@@ -11,6 +11,7 @@ import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 // 需要用到vuex时，打开
 import store from './store'
 import importI18n from './plugins/i18n'
+import permission from './directive/permission'
 
 // 加入公共的全局methods方法
 import mixin from './views/mixins'
@@ -30,12 +31,16 @@ Vue.config.productionTip = false
 // registerComponent(Vue)
 
 Vue.mixin(mixin)
+
 Vue.use(ElementUI, {
   locale
 })
 
 // 国际化支持
 const i18n = importI18n(Vue)
+
+// 全局注册角色权限，主要是控制菜单按钮
+Vue.use(permission)
 
 const globalVue = new Vue({
   el: '#app',
@@ -54,7 +59,7 @@ const globalVue = new Vue({
       })
     }
     Vue.prototype.$staticFile =
-      process.env.NODE_ENV === 'production'
+      process.env.NODE_ENV === 'production' && process.env.VUE_APP_BASEURLPATH !== '/'
         ? `${process.env.VUE_APP_BASEURLPATH}${process.env.VUE_APP_STATICFILE}`
         : process.env.VUE_APP_STATICFILE
     Vue.prototype.$filePath =
