@@ -50,11 +50,11 @@ export default {
     getSearchDate(dataTime, formatFlag, startFlag = 'beginDate', endFlag = 'endDate') {
       let type = formatFlag === 'dateTime' ? '{y}-{m}-{d} {h}:{i}:{s}' : '{y}-{m}-{d}'
       if (dataTime) {
-        startFlag = utils.fomartDate(dataTime[0], type)
-        endFlag = utils.fomartDate(dataTime[1], type)
+        const beginDate = utils.fomartDate(dataTime[0], type)
+        const endDate = utils.fomartDate(dataTime[1], type)
         return {
-          startFlag,
-          endFlag
+          [startFlag]: beginDate,
+          [endFlag]: endDate
         }
       }
       return {}
