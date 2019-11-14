@@ -24,13 +24,30 @@ export const getChannel = params =>
   })
 
 /**
- * 新增、编辑渠道
- * @param {*} params, put编辑 post新增
+ * @param {*} 渠道管理关联规则
  */
-export const handleChannel = (params, method = 'post') =>
+export const relevanceRuleAjax = params =>
+  Http.fetch(`${context}/api/channel/join`, params, {
+    method: 'post'
+  })
+
+/**
+ * 新增渠道
+ * @param {*} params
+ */
+export const addChannel = (params) =>
   Http.fetch(`${context}/api/channel`, params, {
-    method,
+    method: 'post',
     mockFile: 'channel-add'
+  })
+
+/**
+ * 编辑渠道
+ * @param {*} params
+ */
+export const editChannel = (params) =>
+  Http.fetch(`${context}/api/channel`, params, {
+    method: 'put'
   })
 
 // 渠道开启、关闭
@@ -47,10 +64,47 @@ export const deleteChannel = params =>
   })
 
 /**
- * @param {*} 渠道规则列表
+ * 渠道规则列表
+ * @param {*}
  */
 export const getChannelRule = params =>
   Http.fetch(`${context}/api/rule/list`, params, {
     method: 'get',
     mockFile: 'channel-rule'
+  })
+
+/**
+ * 渠道规则开启、关闭
+ * @param {*}
+ */
+export const handleRuleStatus = params =>
+  Http.fetch(`${context}/api/rule/stopopen`, params, {
+    method: 'put'
+  })
+
+/**
+ * 渠道规则删除
+ * @param {*}
+ */
+export const deleteRule = params =>
+  Http.fetch(`${context}/api/rule`, params, {
+    method: 'delete'
+  })
+
+/**
+ * 渠道规则新增
+ * @param {*}
+ */
+export const addRule = params =>
+  Http.fetch(`${context}/api/rule`, params, {
+    method: 'post'
+  })
+
+/**
+ * 渠道规则编辑
+ * @param {*}
+ */
+export const editRule = params =>
+  Http.fetch(`${context}/api/rule`, params, {
+    method: 'put'
   })

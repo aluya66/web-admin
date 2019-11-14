@@ -38,17 +38,6 @@ export default {
     }
   },
   {
-    path: '/channel/manage/channelInfo/:id?',
-    name: 'channelDetail',
-    hidden: true,
-    component: () => import('@/views/channel/manage/detail/index'),
-    meta: {
-      title: 'channelDetail',
-      icon: 'table',
-      activeMenu: '/channel/manage/detail'
-    }
-  },
-  {
     path: '/channel/rule',
     name: 'channelRule',
     component: () => import('@/views/channel/rule/list'),

@@ -91,6 +91,7 @@
         </template>
       </c-table>
     </div>
+    <!-- 渠道新增、编辑弹窗 -->
     <div v-if="channelDialogObj.isShow">
       <c-dialog
         :is-show="channelDialogObj.isShow"
@@ -109,7 +110,7 @@
           <el-form-item label="所属层级:" prop="channelType">
             <el-select v-model="formModel.channelType" class="select-item" clearable>
               <el-option
-                v-for="item in JSON.parse(JSON.stringify(channelTypeSelect))"
+                v-for="item in channelTypeSelect"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -123,6 +124,26 @@
             <el-input v-model.trim="formModel.channelName" class="form-item" placeholder='请输入渠道名称'/>
           </el-form-item>
         </el-form>
+      </c-dialog>
+    </div>
+
+     <!-- 渠道关联规则弹窗 -->
+    <div v-if="ruleDialogObj.isShow">
+      <c-dialog
+        :is-show="ruleDialogObj.isShow"
+        :title="ruleDialogObj.title"
+        close-btn
+        @before-close="ruleDialogObj.isShow = false"
+        @on-submit="relevanceRule"
+      >
+        <el-transfer
+          filterable
+          filter-placeholder="请输入规则名称"
+          :titles="['规则列表', '已关联规则']"
+          v-model="selectedRuleList"
+          @change="changeSelectedRuleList"
+          :data="ruleList">
+        </el-transfer>
       </c-dialog>
     </div>
   </c-view>
@@ -139,6 +160,9 @@ export default {
   },
   data(vm) {
     return {
+      currentChannelId: null, // 关联规则的渠道id
+      ruleList: [], // 规则列表
+      selectedRuleList: [], // 已选规则列表
       btnLoading: false,
       formModel: { // 渠道弹窗数据
         channelType: 1,
@@ -167,11 +191,14 @@ export default {
         label: '开启 ',
         value: 1
       }],
+      ruleDialogObj: { // 关联规则弹窗
+        title: '关联规则',
+        isShow: false
+      },
       channelDialogObj: { // 渠道弹窗
         title: '新增渠道',
         isShow: false
       },
-      tableList: [], // 渠道管理列表
       tableInnerBtns: [{
         width: 150,
         name: '开关',
@@ -181,25 +208,32 @@ export default {
           const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
           vm.confirmTip(
             `是否${handleStatus === 0 ? '关闭' : '开启'} ${channelName} 渠道`,
-            {
-              confirmHandle() {
-                vm.handleChannelStatus({ id: channelId, status: handleStatus })
-              }
+            () => {
+              vm.handleChannelStatus({ id: channelId, status: handleStatus })
             }
           )
         }
       }, {
         width: 150,
-        name: '编辑',
-        icon: 'el-icon-edit',
-        handle ({ channelId, channelName, channelType }) {
-          vm.formModel = {
-            channelId,
-            channelName,
-            channelType
-          }
-          vm.channelDialogObj.isShow = true
-          vm.channelDialogObj.title = '编辑渠道'
+        name: '关联规则',
+        icon: 'el-icon-postcard',
+        handle(row) {
+          vm.$api.channel
+            .getChannelRule()
+            .then(res => {
+              vm.isLoading = false
+              let ruleList = res && res.totalCount ? res.data : res
+              vm.ruleList = ruleList.map((item) => {
+                return {
+                  key: item.ruleId,
+                  label: item.ruleName
+                }
+              })
+              vm.currentChannelId = row.channelId
+              vm.selectedRuleList = row.ruleInfos.map((item) => item.ruleId)
+              vm.ruleDialogObj.isShow = true
+              console.log(row, vm.selectedRuleList, vm.ruleList)
+            })
         }
       }, {
         width: 150,
@@ -295,17 +329,41 @@ export default {
     this.fetchData()
   },
   methods: {
+    // 已选中关联规则
+    changeSelectedRuleList(value, direction, movedKeys) {
+      console.log(value)
+      this.selectedRuleList = value
+    },
+    relevanceRule() {
+      if (!this.selectedRuleList.length) return this.$msgTip('已选规则不能为空')
+      this.$api.channel.relevanceRuleAjax({
+        channelId: this.currentChannelId,
+        ruleIds: this.selectedRuleList
+      }).then(() => {
+        this.fetchData()
+        this.$msgTip('操作成功')
+        this.ruleDialogObj.isShow = false
+      })
+    },
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          const method = this.formModel.channelId ? 'put' : 'post' // 新增post 编辑put
-          this.$api.channel.handleChannel({ ...this.formModel }, method).then(() => {
-            const msg = this.formModel.channelId ? '编辑成功' : '新增成功'
-            this.$msgTip(msg)
-            this.fetchData()
-            this.channelDialogObj.isShow = false
-          })
+          const requestType = this.formModel.channelId ? 'edit' : 'add' // 接口请求类型， add新增、edit编辑
+          this.handleChannel(requestType)
         }
+      })
+    },
+    handleChannel(requestType) {
+      const requestObj = {
+        add: this.$api.channel.addChannel,
+        edit: this.$api.channel.editChannel
+      }
+      const request = requestObj[requestType]
+      request({ ...this.formModel }).then(() => {
+        const msg = requestType === 'edit' ? '编辑成功' : '新增成功'
+        this.$msgTip(msg)
+        this.fetchData()
+        this.channelDialogObj.isShow = false
       })
     },
     // 新增渠道
@@ -325,13 +383,11 @@ export default {
       })
     },
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
       this.$api.channel
         .getChannel({
           ...this.searchObj,
-          ...other,
           ...page
         })
         .then(res => {
@@ -355,15 +411,3 @@ export default {
   }
 }
 </script>
-
-<style lang='less' scoped>
-.main__box {
-  .search {
-    margin-bottom: 10px;
-    width: 100%;
-    .search-item {
-      width: 250px;
-    }
-  }
-}
-</style>

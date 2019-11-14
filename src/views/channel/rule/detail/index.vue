@@ -164,13 +164,5 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.main__box {
-  .search {
-    margin-bottom: 10px;
-    width: 100%;
-    .search-item {
-      width: 250px;
-    }
-  }
-}
+
 </style>

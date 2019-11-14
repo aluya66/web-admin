@@ -28,20 +28,6 @@
         :table-inner-btns="tableInnerBtns"
         @change-pagination="changePagination"
       >
-        <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
-
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
-        </template>
       </c-table>
     </div>
   </c-view>
@@ -55,70 +41,59 @@ export default {
   mixins: [mixinTable],
   data(vm) {
     return {
-      searchObj: {
-
-      },
       dialogObj: {}, // 对话框数据
-      tableList: [],
-      tableInnerBtns: [
-        {
-          width: 150,
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            vm.routerLink(`/channel/rule/ruleInfo/${row.id}`)
-          }
+      tableInnerBtns: [{
+        width: 150,
+        name: '开关',
+        icon: 'el-icon-switch-button',
+        handle (row) {
+          const { ruleId, ruleName, status } = row
+          const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
+          vm.confirmTip(
+            `是否${handleStatus === 0 ? '关闭' : '开启'} ${ruleName} 渠道规则`,
+            () => {
+              vm.handleRuleStatus({ id: ruleId, status: handleStatus })
+            }
+          )
         }
-      ],
-      tableHeader: [{
-        label: '',
-        prop: ''
       }, {
-        label: '',
-        prop: ''
+        width: 150,
+        name: '编辑',
+        icon: 'el-icon-edit',
+        handle(row) {
+          vm.routerLink(`/channel/rule/ruleInfo/${row.id}`)
+        }
       }, {
-        label: '',
-        prop: ''
+        name: '删除',
+        icon: 'el-icon-detail',
+        handle (row) {
+          const { ruleId, ruleName } = row
+          vm.confirmTip(`是否删除 ${ruleName} 渠道规则`, () => {
+            vm.deleteRule({ id: ruleId })
+          })
+        }
+      }],
+      tableHeader: [ {
+        label: '规则名称',
+        prop: 'ruleName'
       }, {
-        label: ' ',
-        prop: ''
+        label: '渠道状态',
+        prop: 'status',
+        formatter(row) {
+          return row.status === 0 ? '关闭' : '开启'
+        }
       }, {
-        label: '',
-        prop: ''
-      },
-      {
-        label: '',
-        prop: ''
+        label: '创建人',
+        prop: 'createBy'
       }, {
-        label: ' ',
-        prop: ''
+        label: '创建时间',
+        prop: 'created'
       }, {
-        label: '',
-        prop: ''
+        label: '更新人',
+        prop: 'updateBy'
       }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
-      }, {
-        label: '',
-        prop: ''
+        label: '更新时间',
+        prop: 'updated'
       }]
     }
   },
@@ -127,19 +102,43 @@ export default {
   },
 
   methods: {
-    fetchData () {}
+    // 删除渠道
+    deleteRule(params, msgTip = '删除成功') {
+      this.$api.channel.deleteRule(params).then(() => {
+        this.$msgTip(msgTip)
+        this.fetchData()
+      })
+    },
+    // 开启、关闭渠道规则
+    handleRuleStatus({ id, status }) {
+      this.$api.channel.handleRuleStatus({ id, status }).then(() => {
+        const msg = status === 0 ? '已关闭' : '已开启'
+        this.$msgTip(msg)
+        this.fetchData()
+      })
+    },
+    fetchData() {
+      const { totalNum, ...page } = this.pageInfo
+      this.isLoading = true
+      this.$api.channel
+        .getChannelRule({
+          ...page
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data || []
+          } else {
+            this.tableList = res || []
+          }
+        })
+    }
   }
 }
 </script>
 
 <style lang='less' scoped>
-.main__box {
-  .search {
-    margin-bottom: 10px;
-    width: 100%;
-    .search-item {
-      width: 250px;
-    }
-  }
-}
+
 </style>
