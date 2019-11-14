@@ -12,7 +12,6 @@
           <el-tree
             :props="props"
             :load="loadNode"
-            :empty-text="isLoading ? '数据加载中...' : '暂无数据'"
             lazy
             :expand-on-click-node="false"
           >
@@ -85,19 +84,13 @@ export default {
         name: '',
         code: ''
       },
-      isLoading: false
     }
-  },
-  created() {
-    this.fetchData()
   },
   methods: {
     fetchData(callback) {
-      this.isLoading = true
       this.$api.basic.queryAllRegion({
         parentCode: this.parentCode
       }).then(res => {
-        this.isLoading = false
         const data = res.totalCount ? res.data : res
         let curData = []
         if (data && data.length) {
@@ -118,7 +111,9 @@ export default {
 
     loadNode(node, resolve) {
       if (node.level === 0) {
-        return resolve(this.data)
+        this.fetchData(res => {
+          resolve(res)
+        })
       }
       if (node.level > 0 && !node.data.leaf) {
         this.parentCode = node.data && node.data.code
@@ -189,7 +184,7 @@ export default {
     .area__box__tree {
       border: 1px solid @border-default;
       border-radius: 4px;
-      padding: 20px 10px;
+      padding: 10px 10px;
       margin: 10px 0;
       width: 40% !important;
       max-height: 780px;

@@ -137,7 +137,6 @@ export default {
           label: '三级'
         }
       ],
-      isLoading: false
     }
   },
   created() {
@@ -150,9 +149,7 @@ export default {
   },
   methods: {
     fetchData() {
-      this.isLoading = true
       this.$api.basic.queryCategory().then(res => {
-        this.isLoading = false
         this.dataItems = res || []
       })
     },
@@ -256,7 +253,7 @@ export default {
   .category__box__tree {
     border: 1px solid @border-default;
     border-radius: 4px;
-    padding: 20px 10px;
+    padding: 10px 10px;
     margin: 10px 0;
     width: 40%;
     max-height: 780px;
