@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" icon="el-icon-plus">导出</el-button>
+        <el-button :size="size" type="primary" icon="el-icon-download">导出</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -30,16 +30,6 @@
                 clearable
               />
             </el-form-item>
-            <!-- <el-form-item label="姓别">
-              <el-select v-model="searchObj.gender" class="search-item" :size="size" clearable>
-                <el-option
-                  v-for="item in genderSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item> -->
             <el-form-item label="手机号">
               <el-input
                 v-model="searchObj.phoneNumber"
@@ -48,6 +38,36 @@
                 placeholder="手机号"
                 clearable
               />
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-select v-model="searchObj.gender" class="search-item" :size="size" clearable>
+                <el-option
+                  v-for="item in genderSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="会员类型">
+              <el-select v-model="searchObj.memberTypeId" class="search-item" :size="size" clearable>
+                <el-option
+                  v-for="item in memberTypeSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="会员来源">
+              <el-select v-model="searchObj.type" class="search-item" :size="size" clearable>
+                <el-option
+                  v-for="item in sourceSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="所属店铺">
               <el-input
@@ -67,27 +87,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="会员来源">
-              <el-select v-model="searchObj.source" class="search-item" :size="size" clearable>
-                <el-option
-                  v-for="item in sourceSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="会员类型">
-              <el-select v-model="searchObj.memberType" class="search-item" :size="size" clearable>
-                <el-option
-                  v-for="item in memberTypeSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <!-- <el-form-item label="地区">
+            <!-- <el-form-item label="所在地区">
               <el-cascader
                 class="search-item"
                 placeholder="地区"
@@ -95,11 +95,24 @@
                 :options="areaList"
                 filterable
               ></el-cascader>
-            </el-form-item> -->
-            <el-form-item label="加入时间">
+            </el-form-item>-->
+            <el-form-item label="首次加入时间">
               <el-date-picker
                 :size="size"
                 v-model="searchObj.dataTime"
+                type="datetimerange"
+                :picker-options="pickerOptions"
+                range-separator="至"
+                start-placeholder="开始时间"
+                format="yyyy-MM-dd HH:mm:ss"
+                end-placeholder="结束时间"
+                :default-time="['00:00:00', '23:59:59']"
+              >align="right"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="生日区间">
+              <el-date-picker
+                :size="size"
+                v-model="searchObj.birDataTime"
                 type="datetimerange"
                 :picker-options="pickerOptions"
                 range-separator="至"
@@ -161,10 +174,11 @@ export default {
         phoneNumber: '', // 手机号
         shopName: '', // 所属店铺
         memberName: '', // 所属店员
-        source: '', // 会员来源
-        memberType: '', // 会员类型
+        type: '', // 会员来源
+        memberTypeId: '', // 会员类型
         cityCode: '', // 地区
-        dataTime: ''
+        dataTime: '', // 首次加入时间区间
+        birDataTime: '' // 生日区间
       },
       // 会员来源
       sourceSelect: [
@@ -186,55 +200,68 @@ export default {
       }],
       // 会员类型
       memberTypeSelect: [
-        {
-          label: '白金会员',
-          value: 0
-        },
-        {
-          label: '砖石会员',
-          value: 1
-        }
+        // {
+        //   label: '白金会员',
+        //   value: 0
+        // },
+        // {
+        //   label: '砖石会员',
+        //   value: 1
+        // }
       ],
       tableInnerBtns: [
         {
           width: 150,
-          name: '查看详情',
+          name: '查看',
           icon: 'el-icon-view',
           handle(row) {
             vm.routerLink(`/member/manage/detail/${row.id}`)
           }
         },
         {
-          name: '编辑',
+          name: '余额',
           icon: 'el-icon-edit',
           handle(row) {
-            const {
-              memberId,
-              nickname, // 昵称
-              status // 会员状态
-            } = row
-            vm.showDialog({
-              title: '编辑',
-              initData: {
-                memberId,
-                nickname, // 昵称
-                status // 会员状态
-              },
-              isEdit: true
-            })
-          }
-        }
-      ],
-      tableHeader: [
-        {
-          label: '用户',
-          prop: 'name',
-          width: 120,
-          fixed: true,
-          formatter(row) {
-            return `${row.name}[${row.nickname}]`
+            vm.routerLink(`/member/manage/detail/${row.id}`)
           }
         },
+        {
+          name: '积分',
+          icon: 'el-icon-edit',
+          handle(row) {
+            vm.routerLink(`/member/manage/detail/${row.id}`)
+          }
+        },
+        {
+          width: 100,
+          name: '会员',
+          icon: 'el-icon-edit',
+          handle(row) {
+            vm.routerLink(`/member/manage/detail/${row.id}`)
+          }
+        }
+        // {
+        //   name: '编辑',
+        //   icon: 'el-icon-edit',
+        //   handle(row) {
+        //     const {
+        //       memberId,
+        //       nickname, // 昵称
+        //       status // 会员状态
+        //     } = row
+        //     vm.showDialog({
+        //       title: '编辑',
+        //       initData: {
+        //         memberId,
+        //         nickname, // 昵称
+        //         status // 会员状态
+        //       },
+        //       isEdit: true
+        //     })
+        //   }
+        // }
+      ],
+      tableHeader: [
         {
           label: '头像',
           prop: 'avatar',
@@ -242,10 +269,12 @@ export default {
           width: 100
         },
         {
-          label: '性别',
-          prop: 'gender',
+          label: '用户',
+          prop: 'name',
+          width: 110,
+          fixed: true,
           formatter(row) {
-            return row.gender === '1' ? '男' : '女'
+            return `${row.name}[${row.nickname}]（${row.gender === '1' ? '男' : '女'}）`
           }
         },
         {
@@ -254,17 +283,20 @@ export default {
           width: 110
         },
         {
-          label: '会员来源',
-          prop: 'source'
-        },
-        {
           label: '会员类型',
           prop: 'memberType',
           width: 130
         },
         {
+          label: '会员来源',
+          prop: 'source'
+        },
+        {
           label: '会员归属',
-          prop: 'shopName'
+          prop: 'shopName',
+          formatter(row) {
+            return row && `${row.shopName}（${row.memberName}）`
+          }
         },
         {
           label: '可用积分',
@@ -279,14 +311,6 @@ export default {
           prop: 'expenseAmount'
         },
         {
-          label: '店铺名称',
-          prop: 'shopName',
-        },
-        {
-          label: '店员名称',
-          prop: 'memberName',
-        },
-        {
           label: '首次加入时间',
           prop: 'firstJoinTime',
           width: 100
@@ -296,6 +320,7 @@ export default {
   },
 
   created() {
+    this.getMemberType()
     this.fetchData()
   },
 
@@ -304,9 +329,11 @@ export default {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
+      const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.isLoading = true
       this.$api.member.getMember({
         ...searchDate,
+        ...birDateTime,
         ...other,
         ...page
       }).then(res => {
@@ -318,6 +345,11 @@ export default {
         } else {
           this.tableList = res || []
         }
+      })
+    },
+    getMemberType() {
+      this.$api.member.getMemberListType().then(res => {
+        this.memberTypeSelect = res.map(val => ({ label: val.name, value: val.id }))
       })
     },
     dialogConfirm() {

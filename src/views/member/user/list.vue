@@ -28,13 +28,14 @@
               />
             </el-form-item>
             <el-form-item label="来源">
-              <el-input
-                v-model="searchObj.aaaa"
-                class="search-item"
-                :size="size"
-                placeholder="来源"
-                clearable
-              />
+              <el-select v-model="searchObj.appCode" class="search-item" :size="size" clearable>
+                <el-option
+                  v-for="item in appCodeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="登录时间">
               <el-date-picker
@@ -75,27 +76,31 @@ export default {
   data(vm) {
     return {
       pickerOptions: utils.pickerOptions,
-      tableList: [],
-      dialogObj: {},
       searchObj: {
         phoneNumber: '', // 手机号
-        aaaa: '', // 来源
+        appCode: '', // 来源
         dataTime: ''
       },
       tableInnerBtns: [],
+      appCodeList:[
+        {
+          label: 'yoshop',
+          value: 1
+        }
+      ],
       tableHeader: [
-        // {
-        //   label: '手机号',
-        //   prop: 'phoneNumber'
-        // },
+        {
+          label: '手机号',
+          prop: 'phoneNumber'
+        },
         {
           label: '登录地点',
           prop: 'ip'
         },
-        // {
-        //   label: '来源',
-        //   prop: 'aaaa'
-        // },
+        {
+          label: '来源',
+          prop: 'appCode'
+        },
         {
           label: '登录时间',
           prop: 'created'

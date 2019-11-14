@@ -24,16 +24,19 @@ export default {
       component: () => import('@/views/member/manage/list'),
       meta: {
         icon: 'table',
-        title: 'memberManageList'
+        title: 'memberManageList',
+        roles: ['edit']
       }
     }, {
-      path: '/member/manage/detail/:id',
+      path: '/member/manage/detail/:id?',
       name: 'memberManageListDetail',
       hidden: true,
       component: () => import('@/views/member/manage/detail/index'),
       meta: {
         icon: 'table',
-        title: 'memberManageListDetail'
+        title: 'memberManageListDetail',
+        noCache: true,
+        activeMenu: '/member/manage/list'
       }
     }]
   },
@@ -52,7 +55,8 @@ export default {
       component: () => import('@/views/member/user/list'),
       meta: {
         icon: 'table',
-        title: 'memberUserList'
+        title: 'memberUserList',
+        roles: ['edit']
       }
     }]
   },
@@ -71,7 +75,8 @@ export default {
       component: () => import('@/views/member/config/type/list'),
       meta: {
         icon: 'table',
-        title: 'memberConfigType'
+        title: 'memberConfigType',
+        roles: ['edit']
       }
     }, {
       path: '/member/config/rule',
@@ -79,7 +84,8 @@ export default {
       component: () => import('@/views/member/config/rule/list'),
       meta: {
         icon: 'table',
-        title: 'memberConfigRule'
+        title: 'memberConfigRule',
+        roles: ['edit']
       }
     }, {
       path: '/member/config/point',
@@ -87,7 +93,8 @@ export default {
       component: () => import('@/views/member/config/point/list'),
       meta: {
         icon: 'table',
-        title: 'memberConfigPoint'
+        title: 'memberConfigPoint',
+        roles: ['edit']
       }
     }]
   },
@@ -106,8 +113,10 @@ export default {
       component: () => import('@/views/member/wallet/list'),
       meta: {
         icon: 'table',
-        title: 'memberWalletList'
+        title: 'memberWalletList',
+        roles: ['edit']
       }
     }]
-  }]
+  }
+  ]
 }

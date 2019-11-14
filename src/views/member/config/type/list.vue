@@ -39,7 +39,6 @@
                 clearable
               />
             </el-form-item>
-
             <el-form-item label="状态">
               <el-select v-model="searchObj.isEnable" class="search-item" :size="size" clearable>
                 <el-option
@@ -134,7 +133,7 @@ export default {
             vm.showDialog({
               title: '编辑类型配置',
               initData: {
-                id,
+                memberTypeId: id,
                 name,
                 isEnable
               },

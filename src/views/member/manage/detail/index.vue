@@ -13,7 +13,7 @@
       class="form"
       label-position="right"
     >
-      <c-card name="用户信息" class="form-card">
+      <c-card name="用户信息">
         <el-form-item>
           <el-avatar :size="60" src="https://empty" @error="errorHandler">
             <img :src="formModel.avatar">
@@ -41,42 +41,42 @@
           <span>{{formModel.starGoCardAmout}}</span>
         </el-form-item>
       </c-card>
-
-      <c-card name="基本属性" class="form-card">
-        <el-form-item label="会员等级:">
-          <span>{{formModel.memberName}}</span>
-        </el-form-item>
-        <!-- <el-form-item label="生日:">
+      <div class="form-card-container">
+        <c-card name="基本属性" class="form-card">
+          <el-form-item label="会员等级:">
+            <span>{{formModel.memberName}}</span>
+          </el-form-item>
+          <!-- <el-form-item label="生日:">
           <span>{{formModel.name}}</span>
         </el-form-item>
         <el-form-item label="所在城市:">
           <span>{{formModel.nickname}}</span>
-        </el-form-item> -->
-        <el-form-item label="会员类型:">
-          <span>{{formModel.memberType}}</span>
-        </el-form-item>
-        <el-form-item label="会员来源:">
-          <span>{{formModel.source}}</span>
-        </el-form-item>
-        <el-form-item label="会员归属:">
-          <span>{{formModel.shopName}}</span>
-        </el-form-item>
-      </c-card>
-
-      <c-card name="消费属性" class="form-card">
-        <el-form-item label="消费金额:">
-          <span>{{formModel.expenseAmount}}</span>
-        </el-form-item>
-        <el-form-item label="消费次数:">
-          <span>{{formModel.expenseNum}}</span>
-        </el-form-item>
-        <el-form-item label="客单价:">
-          <span>{{formModel.customerPrice}}</span>
-        </el-form-item>
-        <el-form-item label="首次消费时间:">
-          <span>{{formModel.firstJoinTime}}</span>
-        </el-form-item>
-      </c-card>
+          </el-form-item>-->
+          <el-form-item label="会员类型:">
+            <span>{{formModel.memberType}}</span>
+          </el-form-item>
+          <el-form-item label="会员来源:">
+            <span>{{formModel.source}}</span>
+          </el-form-item>
+          <el-form-item label="会员归属:">
+            <span>{{formModel.shopName}}</span>
+          </el-form-item>
+        </c-card>
+        <c-card name="消费属性" class="form-card">
+          <el-form-item label="消费金额:">
+            <span>{{formModel.expenseAmount}}</span>
+          </el-form-item>
+          <el-form-item label="消费次数:">
+            <span>{{formModel.expenseNum}}</span>
+          </el-form-item>
+          <el-form-item label="客单价:">
+            <span>{{formModel.customerPrice}}</span>
+          </el-form-item>
+          <el-form-item label="首次消费时间:">
+            <span>{{formModel.firstJoinTime}}</span>
+          </el-form-item>
+        </c-card>
+      </div>
     </el-form>
   </c-view>
 </template>
@@ -123,6 +123,13 @@ export default {
 
 <style lang='less' scoped>
 .form {
+  .form-card-container {
+    display: flex;
+    justify-content: space-between;
+    .form-card {
+      width: 49.6%;
+    }
+  }
   background-color: @white;
   padding: 15px 15px;
   .form-btn {

@@ -1,20 +1,15 @@
 <template>
-  <c-view>
-    <div>
-      <c-table
-        selection
-        hasBorder
-        :size="size"
-        :loading="isLoading"
-        :table-header="tableHeader"
-        :table-list="tableList"
-        :page-info="pageInfo"
-        :table-inner-btns="tableInnerBtns"
-        @change-pagination="changePagination"
-      >
-      </c-table>
-    </div>
-  </c-view>
+  <c-table
+    selection
+    hasBorder
+    :size="size"
+    :loading="isLoading"
+    :table-header="tableHeader"
+    :table-list="tableList"
+    :page-info="pageInfo"
+    :table-inner-btns="tableInnerBtns"
+    @change-pagination="changePagination"
+  ></c-table>
 </template>
 
 <script>
@@ -24,6 +19,8 @@ import utils from 'utils'
 export default {
   mixins: [mixinTable],
   props: {
+    walletId: Number,
+    required: true
   },
   data(vm) {
     return {
@@ -36,10 +33,6 @@ export default {
       },
       tableInnerBtns: [],
       tableHeader: [
-        {
-          label: '类型',
-          prop: 'amountType'
-        },
         {
           label: '类型名称',
           prop: 'amountTypeName'
@@ -68,41 +61,22 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime, 'dateTime')
       this.isLoading = true
-      this.$api.member
-        .getWalletList({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.member.getWalletList({
+        userId: this.walletId,
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     }
   }
 }
 </script>
-
-<style lang="less" scoped>
-.form {
-  width: 90%;
-  .form-item {
-    width: 100%;
-  }
-  .select-type {
-    width: 100%;
-  }
-}
-.body .el-select {
-  position: fixed !important;
-}
-.select-item {
-  width: 50%;
-}
-</style>

@@ -32,10 +32,23 @@
                 v-model="searchObj.phoneNumber"
                 class="search-item"
                 :size="size"
-                placeholder="手机号"
+                placeholder="手机号码"
                 clearable
               />
             </el-form-item>
+            <!-- <el-form-item label="操作时间">
+              <el-date-picker
+                :size="size"
+                v-model="searchObj.dataTime"
+                type="datetimerange"
+                :picker-options="pickerOptions"
+                range-separator="至"
+                start-placeholder="开始时间"
+                format="yyyy-MM-dd HH:mm:ss"
+                end-placeholder="结束时间"
+                :default-time="['00:00:00', '23:59:59']"
+              >align="right"></el-date-picker>
+            </el-form-item> -->
             <el-form-item>
               <el-button
                 type="primary"
@@ -57,7 +70,7 @@
         @before-close="dialogObj.isShow = false"
         :btns="dialogObj.btns"
       >
-        <w-add ref="childRef"></w-add>
+        <w-add ref="childRef" :wallet-id="dialogObj.id"></w-add>
       </c-dialog>
     </div>
   </c-view>
@@ -78,21 +91,19 @@ export default {
   },
   data(vm) {
     return {
-      id: '',
       pickerOptions: utils.pickerOptions,
-      tableList: [],
       dialogObj: {},
       searchObj: {
         nickName: '', // 昵称
-        phoneNumber: '' // 手机号
+        phoneNumber: '', // 手机号
+        dataTime: ''
       },
       tableInnerBtns: [
         {
           width: 100,
-          name: '详情',
+          name: '查看明细',
           icon: 'el-icon-view',
           handle(row) {
-            console.log(row.id)
             vm.showDialog(row.id)
           }
         }
@@ -150,28 +161,26 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
       this.isLoading = true
-      this.$api.member
-        .getWallet({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.member.getWallet({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     },
     showDialog(id) {
       this.dialogObj = {
         id,
         isShow: true,
-        title: '收入明细列表',
+        title: '明细列表',
         btns: [{
           label: '取消',
           name: 'cancel'

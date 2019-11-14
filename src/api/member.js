@@ -17,6 +17,18 @@ export const updateMember = params =>
     method: 'put'
   })
 
+// 修改余额
+export const updateBalance = params =>
+  Http.fetch(`${context}/api/member/balance`, params, {
+    method: 'put'
+  })
+
+// 修改积分
+export const updatePoint = params =>
+  Http.fetch(`${context}/api/member/point`, params, {
+    method: 'put'
+  })
+
 // 会员详情
 export const getMemberDetail = params =>
   Http.fetch(`${context}/api/member/detail`, params, {
@@ -127,4 +139,13 @@ export const updateMemberType = params =>
   Http.fetch(`${context}/api/member/type`, params, {
     method: 'put',
     mockFile: 'member-update'
+  })
+
+/**
+ * 获取已启用的会员类型数据
+ * @param {*} params
+ */
+export const getMemberListType = params =>
+  Http.fetch(`${context}/api/member/type/query`, params, {
+    method: 'get'
   })
