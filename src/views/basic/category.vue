@@ -3,35 +3,45 @@
     <template v-slot:header>
       <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" v-permission="$route.meta.roles" icon="el-icon-plus" @click="addHandle(1)">新增</el-button>
+        <el-button
+          type="primary"
+          v-permission="$route.meta.roles"
+          icon="el-icon-plus"
+          @click="addHandle(1)"
+        >新增</el-button>
       </div>
     </template>
-    <div class="main__box" >
+    <div class="main__box">
       <div class="category__box">
-          <el-input
-            class="category__box__input"
-            placeholder="输入关键字进行过滤"
-            v-model="filterText">
-          </el-input>
-          <div class="category__box__tree">
-            <el-tree
-              :data="dataItems"
-              :props="defaultProps"
-              ref="categoryTree"
-              node-key="id"
-              :expand-on-click-node="false"
-              :filter-node-method="filterNode"
-              >
-                <span class="custom-tree-node" slot-scope="{ node, data }">
-                  <span>{{ node.label }}</span>
-                  <span v-permission="$route.meta.roles">
-                    <el-button type="text" v-if="node.data.childrenList.length>0" @click="() => addHandle(2, data)">新增</el-button>
-                    <el-button type="text" @click="() => editHandle(node, data)">编辑</el-button>
-                    <el-button type="text" style="margin-left: 6px;" @click="deteleCategory(node, data)">删除</el-button>
-                  </span>
-                </span>
-            </el-tree>
-          </div>
+        <el-input class="category__box__input" placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+        <div class="category__box__tree">
+          <el-tree
+            :data="dataItems"
+            :props="defaultProps"
+            ref="categoryTree"
+            node-key="id"
+            :empty-text="loading ? '数据加载中...' : '暂无数据'"
+            :expand-on-click-node="false"
+            :filter-node-method="filterNode"
+          >
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+              <span>{{ node.label }}</span>
+              <span v-permission="$route.meta.roles">
+                <el-button
+                  type="text"
+                  v-if="node.data.childrenList.length>0"
+                  @click="() => addHandle(2, data)"
+                >新增</el-button>
+                <el-button type="text" @click="() => editHandle(node, data)">编辑</el-button>
+                <el-button
+                  type="text"
+                  style="margin-left: 6px;"
+                  @click="deteleCategory(node, data)"
+                >删除</el-button>
+              </span>
+            </span>
+          </el-tree>
+        </div>
       </div>
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogShop">
@@ -44,19 +54,11 @@
         label-position="right"
         status-icon
       >
-        <el-form-item label="类目名称:" prop="categoryName" >
-          <el-input
-            v-model.trim="formModel.categoryName"
-            class="form-item"
-            clearable
-          ></el-input>
+        <el-form-item label="类目名称:" prop="categoryName">
+          <el-input v-model.trim="formModel.categoryName" class="form-item" clearable></el-input>
         </el-form-item>
         <el-form-item label="安全级别:" prop="safeLevel">
-          <el-select
-            v-model="formModel.safeLevel"
-            class="select-item"
-            clearable
-          >
+          <el-select v-model="formModel.safeLevel" class="select-item" clearable>
             <el-option
               v-for="item in safeLevelSelect"
               :key="item.value"
@@ -75,11 +77,7 @@
           ></el-input-number>
         </el-form-item>
         <el-form-item label="执行标准:">
-          <el-input
-            v-model.trim="formModel.standard"
-            class="form-item"
-            clearable
-          ></el-input>
+          <el-input v-model.trim="formModel.standard" class="form-item" clearable></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -87,7 +85,6 @@
         <el-button type="primary" @click="addModalBtn">确 定</el-button>
       </div>
     </el-dialog>
-
   </c-view>
 </template>
 <script>
@@ -96,7 +93,6 @@ export default {
   name: 'category',
   data() {
     return {
-      popoverShow: false,
       dataItems: [],
       defaultProps: {
         children: 'childrenList',
@@ -140,7 +136,8 @@ export default {
           value: 3,
           label: '三级'
         }
-      ]
+      ],
+      isLoading: false
     }
   },
   created() {
@@ -154,12 +151,10 @@ export default {
   methods: {
     fetchData() {
       this.isLoading = true
-      this.$api.basic
-        .queryCategory()
-        .then(res => {
-          this.isLoading = false
-          this.dataItems = res || []
-        })
+      this.$api.basic.queryCategory().then(res => {
+        this.isLoading = false
+        this.dataItems = res || []
+      })
     },
     filterNode(value, data) {
       if (!value) return true
@@ -217,15 +212,6 @@ export default {
         })
       })
     },
-    deleteData(categoryId) {
-      this.$api.basic.deleteCategory({ categoryId }).then(() => {
-        if (this.dataItems.length === 1) {
-          const { pageNo } = this.pageInfo
-          this.pageInfo.pageNo = pageNo > 1 ? pageNo - 1 : 1
-        }
-        this.fetchData()
-      })
-    },
     addModalBtn(formModel) {
       if (this.isEdit === true) {
         // 新增
@@ -262,39 +248,36 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-.category__box{
-  height: 750px;
-  .category__box__input{
+.category__box {
+  .category__box__input {
     width: 40%;
   }
-  .category__box__tree{
+  .category__box__tree {
+    border: 1px solid @border-default;
+    border-radius: 4px;
+    padding: 20px 10px;
+    margin: 10px 0;
     width: 40%;
-    height: 720px;
-    overflow : auto;
+    max-height: 780px;
+    overflow: auto;
     padding-top: 10px;
   }
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
 }
-.form{
-  .form-item{
+.form {
+  .form-item {
     width: 90%;
   }
-  .select-item{
+  .select-item {
     width: 45%;
   }
-}
-.custom-tree-node {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 14px;
-  padding-right: 8px;
 }
 </style>

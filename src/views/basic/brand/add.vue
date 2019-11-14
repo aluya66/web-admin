@@ -99,6 +99,9 @@
         <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过1M</div>
       </el-upload>
       </el-form-item>-->
+      <el-form-item class="form-btn" v-if="!isDisabled">
+        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+      </el-form-item>
     </el-form>
   </c-view>
 </template>
@@ -191,7 +194,7 @@ export default {
         })
       }
     },
-    dialogConfirm() {
+    submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
           const formModel = this.formModel
@@ -222,16 +225,7 @@ export default {
       })
     },
     editHandle(formModel) {
-      // let status
-      // if (formModel.status === '启用') {
-      //   status = 1
-      // } else {
-      //   status = 2
-      // }
-      let data = {
-        ...formModel
-      }
-      this.$api.basic.updateBrand(data).then(res => {
+      this.$api.basic.updateBrand(formModel).then(res => {
         this.dialogObj.isShow = false
         this.$msgTip('修改成功')
         this.fetchData()

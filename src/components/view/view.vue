@@ -63,7 +63,7 @@ export default {
 			overflow: hidden;
 			padding: 10px 15px;
 			background-color: @white;
-			min-height: calc(100vh - 141px);
+			min-height: calc(100vh - 133px);
 		}
 	}
 }

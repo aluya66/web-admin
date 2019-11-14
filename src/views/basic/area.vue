@@ -8,16 +8,16 @@
     </template>
     <div class="main__box">
       <div class="area__box__centen">
-        <el-aside class="area__box__tree" width="400px">
+        <el-aside class="area__box__tree">
           <el-tree
-            v-if="data && data.length"
             :props="props"
             :load="loadNode"
+            :empty-text="isLoading ? '数据加载中...' : '暂无数据'"
             lazy
             :expand-on-click-node="false"
           >
             <span class="custom-tree-node" slot-scope="{ node, data }">
-              <span>{{ node.label }}</span>
+              <span>{{ node.label }}{{data.children ? `(${data.children})` : ''}} </span>
               <span>
                 <el-button
                   type="text"
@@ -70,7 +70,7 @@ export default {
       isEdit: false,
       props: {
         label: 'name',
-        children: '',
+        children: 'hasChild',
         isLeaf: 'leaf'
       },
       formModel: {
@@ -84,7 +84,8 @@ export default {
       ruleForm: {
         name: '',
         code: ''
-      }
+      },
+      isLoading: false
     }
   },
   created() {
@@ -92,16 +93,19 @@ export default {
   },
   methods: {
     fetchData(callback) {
+      this.isLoading = true
       this.$api.basic.queryAllRegion({
         parentCode: this.parentCode
       }).then(res => {
-        const { data } = res
+        this.isLoading = false
+        const data = res.totalCount ? res.data : res
         let curData = []
         if (data && data.length) {
           curData = data.map(res => ({
-            leaf: !res.hasChildBoolean,
+            leaf: !res.hasChild,
             name: res.name,
             code: res.code,
+            children: res.hasChild,
             parentCode: res.parentCode
           }))
         }
@@ -182,9 +186,13 @@ export default {
 <style lang="less" scoped>
 .main__box {
   .area__box__centen {
-    padding: 10px 0;
     .area__box__tree {
-      height: 740px;
+      border: 1px solid @border-default;
+      border-radius: 4px;
+      padding: 20px 10px;
+      margin: 10px 0;
+      width: 40% !important;
+      max-height: 780px;
       .custom-tree-node {
         flex: 1;
         display: flex;
@@ -198,10 +206,5 @@ export default {
 }
 .form-item {
   width: 90%;
-}
-.title {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
 }
 </style>
