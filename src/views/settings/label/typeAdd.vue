@@ -19,6 +19,16 @@
         :value.sync="formModel.categoryLob"
       ></query-dict>
     </el-form-item>
+    <el-form-item label="类型描述:" prop="categoryDesc">
+      <el-input
+        type="textarea"
+        :rows="3"
+        maxlength="300"
+        show-word-limit
+        placeholder="请输入类型描述"
+        v-model="formModel.categoryDesc"
+      ></el-input>
+    </el-form-item>
   </el-form>
 </template>
 
@@ -34,8 +44,8 @@ export default {
       default() {
         return {
           categoryName: '', // 标签类型
-          categoryLob: '',  // 业务线
-          categoryDesc: ''  // 描述
+          categoryLob: 'commons', // 业务线
+          categoryDesc: '' // 描述
         }
       }
     },

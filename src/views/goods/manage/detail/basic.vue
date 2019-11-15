@@ -62,10 +62,11 @@
           :label="item.label"
           :value="item.value"
         ></el-option>
-      </el-select> -->
+      </el-select>-->
+
       <!-- <span
         v-else
-      >{{formModel.goodsBusinessId ? businessArr[formModel.goodsBusinessId - 1].label : ''}}</span> -->
+      >{{formModel.goodsBusinessId ? businessArr[formModel.goodsBusinessId - 1].label : ''}}</span>-->
       {{formModel.businessValue}}
     </el-form-item>
     <!-- <el-form-item label="商品类型:" prop="goodsTypeId">
@@ -84,7 +85,8 @@
         ></el-option>
       </el-select>
       <span v-else>{{formModel.goodsTypeId ? goodsTypeArr[formModel.goodsTypeId - 1].label : ''}}</span>
-    </el-form-item> -->
+    </el-form-item>-->
+
     <el-form-item label="封面图片:">
       <c-image
         class="coverImg"
@@ -93,74 +95,88 @@
         :preview-src-list="[formModel.coverImg]"
       ></c-image>
     </el-form-item>
-    <el-form-item label="品牌:">
-      <el-select
-        v-if="!isView"
-        class="select-item"
-        :disabled="isDisabled"
-        v-model="formModel.brandId"
-        filterable
-        placeholder="请选择品牌"
-      >
-        <el-option
-          v-for="item in brandList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-      <span v-else>{{formModel.brandName}}</span>
+    <!-- 商品打标签  -->
+    <el-form-item label="sku图片:" v-if="isTag">
+      <c-image
+        v-for="(item, index) in formModel.skuList"
+        :key="index"
+        class="coverImg"
+        :url="item.coverImg"
+        fit="contain"
+        :preview-src-list="[item.coverImg]"
+      ></c-image>
     </el-form-item>
-    <el-form-item label="商品来源:">
-      <el-select
-        v-if="!isView"
-        :disabled="isDisabled"
-        class="select-item"
-        v-model="formModel.origin"
-        filterable
-        placeholder="请选择商品来源"
-      >
-        <el-option
-          v-for="item in originList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-      <span v-else>{{formModel.origin ? originList[formModel.origin -1].label : ''}}</span>
-    </el-form-item>
-    <el-form-item label="商品展示:">
-      <c-upload
-        ref="curUpload"
-        class="pic"
-        :fileList="formModel.fileList"
-        is-auto
-        :size="20"
-        :limit="5"
-        :disabled="isView || isDisabled"
-        action-path="/auth/uploadFile"
-        upload-style="picture-card"
-        @upload-success="uploadSuccess"
-        @upload-remove="uploadRemove"
-        @upload-review="uploadReview"
-      >
-        <i class="el-icon-plus"></i>
-        <div class="info">上传图片/视频应小于20M</div>
-      </c-upload>
-    </el-form-item>
-    <el-form-item label="商品简介:">
-      <el-input
-        v-if="!isView"
-        type="textarea"
-        :disabled="isDisabled"
-        :rows="4"
-        v-model.trim="formModel.goodsBrief"
-        :size="size"
-        placeholder="请输入商品简介"
-        clearable
-      />
-      <p v-else>{{formModel.goodsBrief}}</p>
-    </el-form-item>
+    <!-- 商品新增、编辑  -->
+    <template v-else>
+      <el-form-item label="品牌:">
+        <el-select
+          v-if="!isView"
+          class="select-item"
+          :disabled="isDisabled"
+          v-model="formModel.brandId"
+          filterable
+          placeholder="请选择品牌"
+        >
+          <el-option
+            v-for="item in brandList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <span v-else>{{formModel.brandName}}</span>
+      </el-form-item>
+      <el-form-item label="商品来源:">
+        <el-select
+          v-if="!isView"
+          :disabled="isDisabled"
+          class="select-item"
+          v-model="formModel.origin"
+          filterable
+          placeholder="请选择商品来源"
+        >
+          <el-option
+            v-for="item in originList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <span v-else>{{formModel.origin ? originList[formModel.origin -1].label : ''}}</span>
+      </el-form-item>
+      <el-form-item label="商品展示:">
+        <c-upload
+          ref="curUpload"
+          class="pic"
+          :fileList="formModel.fileList"
+          is-auto
+          :size="20"
+          :limit="5"
+          :disabled="isView || isDisabled"
+          action-path="/auth/uploadFile"
+          upload-style="picture-card"
+          @upload-success="uploadSuccess"
+          @upload-remove="uploadRemove"
+          @upload-review="uploadReview"
+        >
+          <i class="el-icon-plus"></i>
+          <div class="info">上传图片/视频应小于20M</div>
+        </c-upload>
+      </el-form-item>
+      <el-form-item label="商品简介:">
+        <el-input
+          v-if="!isView"
+          type="textarea"
+          :disabled="isDisabled"
+          :rows="4"
+          v-model.trim="formModel.goodsBrief"
+          :size="size"
+          placeholder="请输入商品简介"
+          clearable
+        />
+        <p v-else>{{formModel.goodsBrief}}</p>
+      </el-form-item>
+    </template>
   </c-card>
 </template>
 <script>
@@ -209,6 +225,10 @@ export default {
   },
   props: {
     title: String,
+    isTag: {
+      type: Boolean,
+      default: false
+    },
     dataObj: {
       type: Object,
       required: true
@@ -228,15 +248,17 @@ export default {
   },
   computed: {
     formModel() {
-      const { categoryCode, businessValue, goodsTypeId, brandName, brandId, goodsName, goodsShortName, goodsStaticFiles, goodsBrief, goodsBn, origin, coverImg, categoryName } = this.dataObj
+      const { categoryCode, businessValue, goodsTypeId, brandName, brandId, goodsName, goodsShortName, goodsStaticFiles, goodsBrief, goodsBn, origin, coverImg, categoryName, skus } = this.dataObj
       const fileList = goodsStaticFiles && goodsStaticFiles.length ? goodsStaticFiles.map(res => ({
         name: res.imageId,
         url: res.imageUrl,
         videoUrl: res.videoUrl,
         fileType: res.fileType
       })) : []
-
-      console.log(fileList, this.dataObj)
+      let skuList = [] //商品打标签下 sku 图片列表
+      if(this.isTag){
+        skuList =  skus ? skus.some(sku => {console.log(sku) }): []
+      }
 
       const curCategoryCode = []
       if (categoryCode) {
@@ -249,12 +271,14 @@ export default {
       }
       // console.log(curCategoryCode)
       // const categoryCode = [categoryCode.substr(0, 2), categoryCode.substr(2, 4)]
-      return { fileList, goodsBn, categoryName, categoryCode: curCategoryCode, businessValue, brandName, brandId, goodsTypeId, goodsName, goodsShortName, goodsBrief, origin, coverImg }
+      return { fileList, goodsBn, categoryName, categoryCode: curCategoryCode, businessValue, brandName, brandId, goodsTypeId, goodsName, goodsShortName, goodsBrief, origin, coverImg, skuList }
     }
   },
   mounted() {
     this.getCategoryList()
-    this.getbrandList()
+    if(!this.isTag){
+      this.getbrandList()
+    }
   },
   methods: {
     getCategoryList() {

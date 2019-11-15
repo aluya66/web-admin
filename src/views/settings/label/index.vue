@@ -15,7 +15,7 @@
     </template>
     <div class="main__box">
       <keep-alive>
-        <component v-bind:is="activeName" @showDialog="showDialog" :tag-type="tagTypeList"></component>
+        <component ref="childList" v-bind:is="activeName" @showDialog="showDialog" :tag-type="tagTypeList"></component>
       </keep-alive>
     </div>
     <div v-if="dialogObj.isShow">
@@ -82,10 +82,7 @@ export default {
   methods: {
     // 获取标签类型数据
     getTagType() {
-      this.$api.settings.getTabTypeList({
-        pageNo: 1,
-        pageSize: 100
-      }).then(res => {
+      this.$api.settings.getGoodsTabType().then(res => {
         if (res.data) {
           this.tagTypeList = res.data.map(res => ({ label: res.categoryName, value: res.id }))
         }
@@ -95,11 +92,10 @@ export default {
       const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
-          const childFormModel = childRef.formModel
           if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel)
+            this.addHandle(childRef)
           } else {
-            this.editHandle(childFormModel)
+            this.editHandle(childRef)
           }
         } else {
           console.log('error submit!!')
@@ -115,21 +111,21 @@ export default {
         initData: opts.initData
       }
     },
-    addHandle(formData) {
-      console.log(formData)
+    addHandle(childRef) {
+      const { formModel } = childRef
       if (this.activeName === 'labelList') {
-        this.$api.settings.addTag(formData).then(res => {
+        this.$api.settings.addTag(formModel).then(res => {
           this.responeHandle()
         })
       } else {
-        this.$api.settings.addTagCate(formData).then(res => {
+        this.$api.settings.addTagCate(formModel).then(res => {
           this.responeHandle()
         })
       }
     },
-    editHandle(formData) {
+    editHandle(childRef) {
       if (this.activeName === 'labelList') {
-        const { delArr, formModel } = formData
+        const { delArr, formModel } = childRef
         const { tagValues, ...other } = formModel
         this.$api.settings.updateTag({
           ...other,
@@ -139,10 +135,20 @@ export default {
           this.responeHandle('更新成功')
         })
       } else {
-        this.$api.settings.updateTag(formData).then(res => {
+        const { formModel } = childRef
+        this.$api.settings.updateTagCate(formModel).then(res => {
           this.responeHandle('更新成功')
         })
       }
+    },
+    /**
+     * 新增&编辑保存时,请求返回通用处理函数
+     * @param {*} msg
+     */
+    responeHandle(msg = '新增成功') {
+      this.dialogObj.isShow = false
+      this.$msgTip(msg)
+      this.$refs.childList.fetchData()
     }
   }
 }

@@ -70,6 +70,7 @@ export default {
             const {
               categoryName,
               categoryLob,
+              categoryDesc,
               id
             } = row
             vm.$emit('showDialog', {
@@ -77,6 +78,7 @@ export default {
               initData: {
                 categoryName,
                 categoryLob,
+                categoryDesc,
                 id: id
               },
               isEdit: true
@@ -87,12 +89,12 @@ export default {
       tableHeader: [
         {
           label: '类型名称',
-          prop: 'categoryName',
+          prop: 'categoryName'
         },
         {
           label: '业务线',
           prop: 'categoryLob',
-          formatter(row){
+          formatter(row) {
             const lobObj = row.categoryLob && vm.lobList.find(res => row.categoryLob === res.value)
             return lobObj ? lobObj.label : ''
           }

@@ -40,13 +40,13 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="标签状态">
+        <el-form-item label="业务线">
           <query-dict
-            :dict-list="disStatus"
+            :dict-list="lobList"
             class="search-item"
             :size="size"
             placeholder="请选择"
-            :value.sync="searchObj.tagStatus"
+            :value.sync="searchObj.categoryLob"
           ></query-dict>
         </el-form-item>
         <el-form-item label="创建时间">
@@ -86,7 +86,7 @@ export default {
   mixins: [mixinTable],
   props: {
     tagType: Array,
-    default(){
+    default() {
       return []
     }
   },
@@ -96,9 +96,9 @@ export default {
       disStatus: dictObj.disStatus, // 启用/禁用
       searchObj: {
         tagName: '', // 标签名称
-        categoryId: '', //标签类型id
+        categoryId: '', // 标签类型id
         value: '', // 标签值
-        dataTime: '', //操作时间
+        dataTime: '', // 操作时间
         tagStatus: '' // 是否禁用
       },
       pickerOptions: utils.pickerOptions,
@@ -114,7 +114,9 @@ export default {
               tagValues,
               categoryLob,
               tagStatus,
-              id,
+              tagDesc,
+              operateType,
+              id
             } = row
             vm.$emit('showDialog', {
               title: '编辑标签',
@@ -123,8 +125,10 @@ export default {
                 tagName,
                 categoryLob,
                 tagStatus,
+                tagDesc,
+                operateType,
                 id,
-                tagValues: tagValues.map(({ value, id, desc }) => ({ value, id, desc })),
+                tagValues: tagValues.map(({ value, id, desc }) => ({ value, id, desc }))
               },
               isEdit: true
             })
@@ -163,7 +167,7 @@ export default {
         {
           label: '标签状态',
           prop: 'tagStatus',
-          formatter(row){
+          formatter(row) {
             return row.tagStatus ? vm.disStatus[row.tagStatus].label : ''
           }
         },
@@ -172,6 +176,14 @@ export default {
           prop: 'operateType',
           formatter(row, index) {
             return row.operateType ? pageItemType[row.operateType - 1] : '无'
+          }
+        },
+        {
+          label: '业务线',
+          prop: 'categoryLob',
+          formatter(row) {
+            const lobObj = row.categoryLob && vm.lobList.find(res => row.categoryLob === res.value)
+            return lobObj ? lobObj.label : ''
           }
         },
         {

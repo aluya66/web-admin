@@ -27,15 +27,6 @@
         :value.sync="formModel.tagStatus"
       ></query-dict>
     </el-form-item>
-    <el-form-item label="业务线:" prop="categoryLob">
-      <query-dict
-        :dict-list="lobList"
-        class="form-select"
-        placeholder="请选择业务线"
-        :value.sync="formModel.categoryLob"
-      ></query-dict>
-    </el-form-item>
-
     <el-form-item label="显示方式:" prop="operateType">
       <query-dict
         :dict-list="pageItemType"
@@ -48,7 +39,7 @@
       <el-input
         type="textarea"
         :rows="3"
-        maxlength="100"
+        maxlength="300"
         show-word-limit
         placeholder="请输入标签描述"
         v-model="formModel.tagDesc"
@@ -90,11 +81,10 @@ export default {
         return {
           tagName: '', // 标签名称
           categoryId: '', // 标签类型
-          tagStatus: '', // 标签状态
+          tagStatus: 1, // 标签状态
           tagDesc: '', // 标签描述
           operateType: '', // 显示类型
-          categoryLob: '', // 业务线
-          tagValues: [{  //标签值
+          tagValues: [{ // 标签值
             value: ''
           }]
         }
@@ -102,7 +92,7 @@ export default {
     },
     tagType: {
       type: Array,
-      default(){
+      default() {
         return []
       }
     },
@@ -114,11 +104,10 @@ export default {
   data() {
     return {
       delArr: [], // 删除id集合
-      lobList: dictObj.lobList, // 业务线集合
       disStatus: dictObj.disStatus, // 启用/禁用
       pageItemType: [{
         label: '文本',
-        value: 1,
+        value: 1
       }, {
         label: '复选',
         value: 2
@@ -142,12 +131,9 @@ export default {
         operateType: [
           { required: true, message: '请选择显示方式', trigger: 'change' }
         ],
-        categoryLob: [
-          { required: true, message: '请选择业务线', trigger: 'change' }
-        ],
         tagStatus: [
           { required: true, message: '请选择标签状态', trigger: 'change' }
-        ],
+        ]
       }
     }
   },

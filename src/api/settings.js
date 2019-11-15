@@ -55,6 +55,12 @@ export const getTabTypeList = params =>
     method: 'get'
   })
 
+// 获取商品标签类型
+export const getGoodsTabType = params =>
+  Http.fetch(`${context}/api/tag/catelist`, params, {
+    method: 'get'
+  })
+
 // 标签管理
 export const tagManage = (params, method) =>
   Http.fetch(`${context}/api/tag`, params, {

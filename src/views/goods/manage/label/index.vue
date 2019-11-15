@@ -15,13 +15,15 @@
       label-position="right"
     >
       <g-basic
+        is-tag
         :is-view="isView"
         :is-disabled="isDisabled"
         :data-obj="formModel"
         ref="basicRef"
         title="基础信息"
         @show-image="reviewImage"
-      ></g-basic>
+      >
+      </g-basic>
       <g-params
         :is-view="isView"
         :is-disabled="isDisabled"
