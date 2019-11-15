@@ -1,0 +1,57 @@
+{
+    "code": 0,
+    "data": [
+      {
+        "channelCode": "esse incididunt exercitation nostrud",
+        "channelDescription": "exercitation voluptate",
+        "channelId": 31183404,
+        "channelImage": "exercitation minim Excepteur",
+        "channelLogo": "consectetur laboris ullamco",
+        "channelName": "pariatur laboris sit eu",
+        "channelType": 14313044,
+        "channelTypeCN": "do",
+        "contact": "Ut velit Duis do",
+        "contactTel": "labore eu Lorem",
+        "createBy": 53038270,
+        "created": "nostrud cupidatat",
+        "id": 26266566,
+        "isDelete": 943298,
+        "opCreator": "deserunt sunt null",
+        "opEditor": "dolor",
+        "parentChannelId": 33280648,
+        "ruleInfos": [
+          {
+            "costPrice": 48680734,
+            "createBy": 6750567,
+            "created": "esse enim in",
+            "id": 14705058,
+            "isDelete": -6925443,
+            "largeBatchPrice": 26695163,
+            "memberPrice": 93739584,
+            "opCreator": "deserunt Excepteur nisi",
+            "opEditor": "nulla minim id ut irure",
+            "payment": 15571671,
+            "remark": "occaecat",
+            "retailPrice": 35594583,
+            "ruleCode": "consectetur in aliquip",
+            "ruleId": -35376003,
+            "ruleName": "nostrud dolor et consectetur non",
+            "status": 83837067,
+            "store": 45978913,
+            "supplyPrice": 42758346,
+            "updateBy": 38195058,
+            "updated": "velit in",
+            "wholesalePrice": 16783527
+          }
+        ],
+        "status": 93035571,
+        "updateBy": 41805926,
+        "updated": "magna Ut ut venia",
+        "videoCapture": "dolore",
+        "videoUrl": "proident"
+      }
+    ],
+    "message": "culpa sed nulla",
+    "success": true,
+    "totalCount": 1
+  }

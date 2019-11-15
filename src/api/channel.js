@@ -108,3 +108,12 @@ export const editRule = params =>
   Http.fetch(`${context}/api/rule`, params, {
     method: 'put'
   })
+
+/**
+ * 品牌查询
+ * @param {*}
+ */
+export const searchBrandAjax = params =>
+  Http.fetch(`${context}/api/brand/querypage`, params, {
+    method: 'get'
+  })
