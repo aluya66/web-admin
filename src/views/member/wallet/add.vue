@@ -19,8 +19,10 @@ import utils from 'utils'
 export default {
   mixins: [mixinTable],
   props: {
-    walletId: Number,
-    required: true
+    walletId: {
+      type: Number,
+      required: true
+    }
   },
   data(vm) {
     return {

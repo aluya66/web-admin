@@ -82,7 +82,7 @@ export default {
         dataTime: ''
       },
       tableInnerBtns: [],
-      appCodeList:[
+      appCodeList: [
         {
           label: 'yoshop',
           value: 1
