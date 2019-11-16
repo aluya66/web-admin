@@ -28,17 +28,6 @@ export default {
         roles: ['edit']
       }
     }, {
-      path: '/member/manage/detail/:id?',
-      name: 'memberManageListDetail',
-      hidden: true,
-      component: () => import('@/views/member/manage/detail/index'),
-      meta: {
-        icon: 'table',
-        title: 'memberManageListDetail',
-        noCache: true,
-        activeMenu: '/member/manage/list'
-      }
-    }, {
       path: '/member/manage/point',
       name: 'memberManagePoint',
       component: () => import('@/views/member/manage/point'),

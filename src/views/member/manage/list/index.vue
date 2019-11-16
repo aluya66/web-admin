@@ -148,11 +148,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <review-member
-          v-if="dialogObj.type === 1"
-          ref="childRef"
-          :init-data.sync="dialogObj.initData"
-        ></review-member>
+        <review-member v-if="dialogObj.type === 1" ref="childRef" :init-data="dialogObj.initData"></review-member>
         <edit-member
           v-if="dialogObj.type === 2"
           ref="childRef"
@@ -241,17 +237,15 @@ export default {
           icon: 'el-icon-view',
           handle(row) {
             const {
-              memberId,
-              nickname, // 昵称
-              status // 会员状态
+              userId,
+              appCode
             } = row
             vm.showDialog({
               title: '查看会员信息',
               type: 1,
               initData: {
-                memberId,
-                nickname, // 昵称
-                status // 会员状态
+                userId,
+                appCode
               },
               isEdit: true
             })
@@ -425,19 +419,15 @@ export default {
       })
     },
     reviewAndEditHandle(childFormModel, type) {
-      if (type === 1) {
-        // 查看会员
-
-      } else if (type === 2) {
+      if (type === 2) {
         // 编辑会员
-        this.$api.member.updateMember(childFormModel)
-          .then(res => {
-            this.addSoreList = res.data
-          })
+        this.$api.member.updateMember(childFormModel).then(res => {
+          this.addSoreList = res.data
+        })
       } else if (type === 3) {
         // 编辑余额
 
-      } else {
+      } else if (type === 4) {
         // 编辑积分
       }
     },

@@ -39,10 +39,9 @@ export default {
     memberConfigRule: '规则配置',
     memberConfigPoint: '积分配置',
     memberUser: '用户管理',
-    memberUserList: '用户列表',
+    memberUserList: '登录日志',
     memberWallet: '钱包管理',
     memberWalletList: '会员钱包',
-    memberManageListDetail: '会员详情',
 
     settings: '配置管理',
     dictList: '字典管理',

@@ -18,12 +18,12 @@
       >
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="手机号">
+            <el-form-item label="用户id">
               <el-input
-                v-model="searchObj.phoneNumber"
+                v-model="searchObj.userId"
                 class="search-item"
                 :size="size"
-                placeholder="手机号"
+                placeholder="用户id"
                 clearable
               />
             </el-form-item>
@@ -77,7 +77,7 @@ export default {
     return {
       pickerOptions: utils.pickerOptions,
       searchObj: {
-        phoneNumber: '', // 手机号
+        userId: '', // 用户id
         appCode: '', // 来源
         dataTime: ''
       },
@@ -90,15 +90,19 @@ export default {
       ],
       tableHeader: [
         {
-          label: '手机号',
-          prop: 'phoneNumber'
+          label: '用户id',
+          prop: 'userId'
         },
         {
           label: '登录地点',
           prop: 'ip'
         },
         {
-          label: '来源',
+          label: '业务线',
+          prop: 'channel'
+        },
+        {
+          label: '业务编码',
           prop: 'appCode'
         },
         {
