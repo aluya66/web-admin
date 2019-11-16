@@ -255,9 +255,9 @@ export default {
         videoUrl: res.videoUrl,
         fileType: res.fileType
       })) : []
-      let skuList = [] //商品打标签下 sku 图片列表
-      if(this.isTag){
-        skuList =  skus ? skus.some(sku => {console.log(sku) }): []
+      let skuList = [] // 商品打标签下 sku 图片列表
+      if (this.isTag) {
+        skuList = skus ? skus.some(sku => { console.log(sku) }) : []
       }
 
       const curCategoryCode = []
@@ -276,7 +276,7 @@ export default {
   },
   mounted() {
     this.getCategoryList()
-    if(!this.isTag){
+    if (!this.isTag) {
       this.getbrandList()
     }
   },
