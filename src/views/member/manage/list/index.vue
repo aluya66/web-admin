@@ -50,7 +50,12 @@
               </el-select>
             </el-form-item>
             <el-form-item label="会员类型">
-              <el-select v-model="searchObj.memberTypeId" class="search-item" :size="size" clearable>
+              <el-select
+                v-model="searchObj.memberTypeId"
+                class="search-item"
+                :size="size"
+                clearable
+              >
                 <el-option
                   v-for="item in memberTypeSelect"
                   :key="item.value"
@@ -143,7 +148,22 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <add-manage ref="childRef" :init-data="dialogObj.initData"></add-manage>
+        <review-member
+          v-if="dialogObj.type === 1"
+          ref="childRef"
+          :init-data.sync="dialogObj.initData"
+        ></review-member>
+        <edit-member
+          v-if="dialogObj.type === 2"
+          ref="childRef"
+          :init-data.sync="dialogObj.initData"
+        ></edit-member>
+        <edit-balance
+          v-if="dialogObj.type === 3"
+          ref="childRef"
+          :init-data.sync="dialogObj.initData"
+        ></edit-balance>
+        <edit-point v-if="dialogObj.type === 4" ref="childRef" :init-data.sync="dialogObj.initData"></edit-point>
       </c-dialog>
     </div>
   </c-view>
@@ -152,20 +172,25 @@
 <script>
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
-import AddManage from './add'
+import ReviewMember from './reviewMember'
+import EditMember from './editMember'
+import EditBalance from './editBalance'
+import EditPoint from './editPoint'
 import utils from 'utils'
 
 export default {
   name: 'memberManageList',
   mixins: [mixinTable],
   components: {
-    AddManage,
+    EditMember,
+    EditBalance,
+    EditPoint,
+    ReviewMember,
     CDialog
   },
   data(vm) {
     return {
       pickerOptions: utils.pickerOptions,
-      tableList: [],
       dialogObj: {},
       options: [], // 地区
       searchObj: {
@@ -215,51 +240,86 @@ export default {
           name: '查看',
           icon: 'el-icon-view',
           handle(row) {
-            vm.routerLink(`/member/manage/detail/${row.id}`)
+            const {
+              memberId,
+              nickname, // 昵称
+              status // 会员状态
+            } = row
+            vm.showDialog({
+              title: '查看会员信息',
+              type: 1,
+              initData: {
+                memberId,
+                nickname, // 昵称
+                status // 会员状态
+              },
+              isEdit: true
+            })
+          }
+        },
+        {
+          name: '编辑',
+          icon: 'el-icon-edit',
+          handle(row) {
+            const {
+              memberId,
+              nickname, // 昵称
+              status // 会员状态
+            } = row
+            vm.showDialog({
+              title: '编辑会员',
+              type: 2,
+              initData: {
+                memberId,
+                nickname, // 昵称
+                status // 会员状态
+              },
+              isEdit: true
+            })
           }
         },
         {
           name: '余额',
           icon: 'el-icon-edit',
           handle(row) {
-            vm.routerLink(`/member/manage/detail/${row.id}`)
+            const {
+              memberId,
+              nickname, // 昵称
+              status // 会员状态
+            } = row
+            vm.showDialog({
+              title: '编辑余额',
+              type: 3,
+              initData: {
+                memberId,
+                nickname, // 昵称
+                status // 会员状态
+              },
+              isEdit: true
+            })
           }
         },
         {
           name: '积分',
           icon: 'el-icon-edit',
           handle(row) {
-            vm.routerLink(`/member/manage/detail/${row.id}`)
-          }
-        },
-        {
-          width: 100,
-          name: '会员',
-          icon: 'el-icon-edit',
-          handle(row) {
-            vm.routerLink(`/member/manage/detail/${row.id}`)
+            const {
+              memberId,
+              nickname, // 昵称
+              status // 会员状态
+            } = row
+            vm.showDialog({
+              title: '编辑积分',
+              type: 4,
+              initData: {
+                memberId,
+                nickname, // 昵称
+                status // 会员状态
+              },
+              isEdit: true
+            })
           }
         }
-        // {
-        //   name: '编辑',
-        //   icon: 'el-icon-edit',
-        //   handle(row) {
-        //     const {
-        //       memberId,
-        //       nickname, // 昵称
-        //       status // 会员状态
-        //     } = row
-        //     vm.showDialog({
-        //       title: '编辑',
-        //       initData: {
-        //         memberId,
-        //         nickname, // 昵称
-        //         status // 会员状态
-        //       },
-        //       isEdit: true
-        //     })
-        //   }
-        // }
       ],
       tableHeader: [
         {
@@ -357,21 +417,33 @@ export default {
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
           const childFormModel = childRef.formModel
-          this.addHandle(childFormModel)
+          this.reviewAndEditHandle(childFormModel, this.dialogObj.type)
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    addHandle(childFormModel) {
-      this.$api.member.updateMember(childFormModel)
-        .then(res => {
-          this.addSoreList = res.data
-        })
+    reviewAndEditHandle(childFormModel, type) {
+      if (type === 1) {
+        // 查看会员
+
+      } else if (type === 2) {
+        // 编辑会员
+        this.$api.member.updateMember(childFormModel)
+          .then(res => {
+            this.addSoreList = res.data
+          })
+      } else if (type === 3) {
+        // 编辑余额
+
+      } else {
+        // 编辑积分
+      }
     },
     showDialog(opts) {
       this.dialogObj = {
+        type: opts.type,
         isShow: true,
         title: opts.title,
         isEdit: opts.isEdit,

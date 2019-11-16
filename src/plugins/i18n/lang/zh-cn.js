@@ -32,7 +32,9 @@ export default {
     memberCenter: '会员中心',
     memberManage: '会员管理',
     memberManageList: '会员列表',
-    memberConfig: '配置管理',
+    memberManagePoint: '会员积分',
+    memberManageEquity: '会员权益',
+    memberConfig: '会员配置',
     memberConfigType: '类型配置',
     memberConfigRule: '规则配置',
     memberConfigPoint: '积分配置',
@@ -41,6 +43,7 @@ export default {
     memberWallet: '钱包管理',
     memberWalletList: '会员钱包',
     memberManageListDetail: '会员详情',
+
     settings: '配置管理',
     dictList: '字典管理',
     dictInfo: '字典信息'

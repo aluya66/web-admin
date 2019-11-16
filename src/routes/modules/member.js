@@ -21,7 +21,7 @@ export default {
     children: [{
       path: '/member/manage/list',
       name: 'memberManageList',
-      component: () => import('@/views/member/manage/list'),
+      component: () => import('@/views/member/manage/list/index'),
       meta: {
         icon: 'table',
         title: 'memberManageList',
@@ -37,6 +37,24 @@ export default {
         title: 'memberManageListDetail',
         noCache: true,
         activeMenu: '/member/manage/list'
+      }
+    }, {
+      path: '/member/manage/point',
+      name: 'memberManagePoint',
+      component: () => import('@/views/member/manage/point'),
+      meta: {
+        icon: 'table',
+        title: 'memberManagePoint',
+        roles: ['edit']
+      }
+    }, {
+      path: '/member/manage/equity',
+      name: 'memberManageEquity',
+      component: () => import('@/views/member/manage/equity'),
+      meta: {
+        icon: 'table',
+        title: 'memberManageEquity',
+        roles: ['edit']
       }
     }]
   },

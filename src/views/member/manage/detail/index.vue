@@ -105,7 +105,6 @@ export default {
       this.$api.member.getMemberDetail({ memberId: params.id }).then(res => {
         if (res) {
           this.formModel = res
-          console.log(res)
         } else {
           this.$msgTip('接口数据异常，请稍后重新尝试')
         }
