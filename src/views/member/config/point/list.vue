@@ -22,13 +22,13 @@
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
             <el-form-item label="业务线">
-              <el-input
-                v-model="searchObj.appCode"
+              <query-dict
+                :dict-list="businessList"
                 class="search-item"
                 :size="size"
-                placeholder="业务线"
-                clearable
-              />
+                placeholder="请选择"
+                :value.sync="searchObj.appCode"
+              ></query-dict>
             </el-form-item>
             <el-form-item label="积分名称">
               <el-input
@@ -83,7 +83,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <point-add ref="childRef" :is-edit="dialogObj.isEdit" :init-data="dialogObj.initData"></point-add>
+        <point-add ref="childRef" :is-edit="dialogObj.isEdit" :init-data="dialogObj.initData" :businessList="businessList"></point-add>
       </c-dialog>
     </div>
   </c-view>
@@ -155,11 +155,19 @@ export default {
       tableHeader: [
         {
           label: '业务线',
-          prop: 'appCode'
-        },
-        {
-          label: '类型名称',
-          prop: 'typeName'
+          prop: 'appCode',
+          formatter(row) {
+            switch (row.appCode) {
+              case 'ysgo':
+                return '星GO'
+              case 'ysia':
+                return '星助手'
+              case 'yssp':
+                return 'YOSHOP'
+              case 'ysdp':
+                return '星鲜APP'
+            }
+          }
         },
         {
           label: '积分名称',
@@ -188,13 +196,30 @@ export default {
           label: '创建时间',
           prop: 'created'
         }
-      ]
+      ],
+      businessList: [] // 业务线
     }
   },
   created() {
     this.fetchData()
+    this.getBaseBusinessList()
   },
   methods: {
+    getBaseBusinessList() {
+      this.$api.basic.businessList(
+        {
+          status: 1,
+          pageSize: 100
+        }
+      ).then(res => {
+        if (res && res.totalCount) {
+          const { data } = res
+          this.businessList = data.map((item) => { return { value: item.appCode, label: item.appName } }) || []
+        } else {
+          this.businessList = res.map((item) => { return { value: item.appCode, label: item.appName } }) || []
+        }
+      })
+    },
     fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo

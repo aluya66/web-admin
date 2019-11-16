@@ -9,13 +9,26 @@
     status-icon
   >
     <el-form-item label="业务线:" prop="appCode">
-      <el-input v-model.trim="formModel.appCode" class="form-item" clearable></el-input>
+       <query-dict
+        :disabled="isEdit"
+        :dict-list="businessList"
+        class="search-item"
+        size="medium"
+        placeholder="请选择"
+        :value.sync="formModel.appCode"
+      ></query-dict>
     </el-form-item>
     <el-form-item label="会员类型名称:" prop="memberTypeName">
       <el-input v-model.trim="formModel.memberTypeName" class="form-item" clearable></el-input>
     </el-form-item>
     <el-form-item label="会员类型:" prop="memberTypeId">
-      <el-input v-model.trim="formModel.memberTypeId" class="form-item" clearable></el-input>
+      <query-dict
+        :dict-list="memberTypeList"
+        class="search-item"
+        size="medium"
+        placeholder="请选择"
+        :value.sync="formModel.memberTypeId"
+      ></query-dict>
     </el-form-item>
     <el-form-item label="状态:" prop="isEnable">
       <el-select
@@ -35,8 +48,23 @@
     <el-form-item label="会员开通送积分:" prop="pointGift">
       <el-input v-model.trim="formModel.pointGift" class="form-item" clearable></el-input>
     </el-form-item>
-    <el-form-item label="会员有效天数:" prop="days">
-      <el-input v-model.trim="formModel.days" class="form-item" clearable></el-input>
+    <el-form-item label="会员有效天数:" prop="val">
+      <el-input v-model.trim="formModel.val" class="form-item" clearable></el-input>
+    </el-form-item>
+    <el-form-item label="会员有效期单位:" prop="unit">
+      <el-select
+        v-model="formModel.unit"
+        class="select-item"
+        :popper-append-to-body="false"
+        clearable
+      >
+        <el-option
+          v-for="item in validDayUnitList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="当前开通价:" prop="currentPrice">
       <el-input v-model.trim="formModel.currentPrice" class="form-item" clearable></el-input>
@@ -52,7 +80,6 @@
         v-model="formModel.sort"
         controls-position="right"
         class="select-item"
-        @change="handleChange"
         :min="1"
         :max="10000"
       ></el-input-number>
@@ -79,8 +106,18 @@
 </template>
 
 <script>
+import QueryDict from '../../../common/queryDict'
 export default {
+  components: {
+    QueryDict
+  },
   props: {
+    memberTypeList: {
+      type: Array
+    },
+    businessList: {
+      type: Array
+    },
     initData: {
       type: Object,
       default() {
@@ -107,6 +144,16 @@ export default {
   },
   data() {
     return {
+      validDayUnitList: [{ // 1.年  2.月 3.日
+        label: '年',
+        value: 1
+      }, {
+        label: '月',
+        value: 2
+      }, {
+        label: '日',
+        value: 3
+      }],
       isEnableSelect: [
         {
           value: 0,
@@ -137,9 +184,7 @@ export default {
     }
   },
   methods: {
-    handleChange(val) {
-      console.log(val)
-    }
+
   }
 }
 </script>

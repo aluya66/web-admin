@@ -149,3 +149,12 @@ export const getMemberListType = params =>
   Http.fetch(`${context}/api/member/type/query`, params, {
     method: 'get'
   })
+
+/**
+ * 会员权益列表
+ * @param {*} params
+ */
+export const getMemberEquityList = params =>
+  Http.fetch(`${context}/api/member/activity/list`, params, {
+    method: 'get'
+  })

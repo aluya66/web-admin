@@ -22,22 +22,22 @@
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
             <el-form-item label="业务线">
-              <el-input
-                v-model="searchObj.appCode"
+              <query-dict
+                :dict-list="businessList"
                 class="search-item"
                 :size="size"
-                placeholder="业务线"
-                clearable
-              />
+                placeholder="请选择"
+                :value.sync="searchObj.appCode"
+              ></query-dict>
             </el-form-item>
             <el-form-item label="会员类型">
-              <el-input
-                v-model="searchObj.memberTypeId"
+              <query-dict
+                :dict-list="memberTypeList"
                 class="search-item"
                 :size="size"
-                placeholder="会员类型"
-                clearable
-              />
+                placeholder="请选择"
+                :value.sync="searchObj.memberTypeId"
+              ></query-dict>
             </el-form-item>
 
             <el-form-item label="状态">
@@ -50,19 +50,6 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="操作时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                format="yyyy-MM-dd HH:mm:ss"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item> -->
             <el-form-item>
               <el-button
                 type="primary"
@@ -84,7 +71,13 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <point-add ref="childRef" :is-edit="dialogObj.isEdit" :init-data="dialogObj.initData"></point-add>
+        <point-add
+          ref="childRef"
+          :is-edit="dialogObj.isEdit"
+          :init-data="dialogObj.initData"
+          :memberTypeList="memberTypeList"
+          :businessList="businessList"
+        ></point-add>
       </c-dialog>
     </div>
   </c-view>
@@ -111,8 +104,7 @@ export default {
       searchObj: {
         appCode: '', // 业务线
         memberTypeId: '', // 会员类型
-        isEnable: '', // 状态
-        dataTime: ''
+        isEnable: '' // 状态
       },
       isEnableSelect: [{
         label: '禁用',
@@ -134,7 +126,8 @@ export default {
               memberTypeId, // 会员类型
               isEnable, // 状态
               pointGift, // 会员开通送积分
-              days, // 会员有效天数
+              val, // 会员有效天数
+              unit, // 有效期单位
               currentPrice, // 当前开通价
               formerPrice, // 原开通价
               title, // 标题
@@ -151,7 +144,8 @@ export default {
                 memberTypeId, // 会员类型
                 isEnable, // 状态
                 pointGift, // 会员开通送积分
-                days, // 会员有效天数
+                val, // 会员有效天数
+                unit, // 有效期单位
                 currentPrice, // 当前开通价
                 formerPrice, // 原开通价
                 title, // 标题
@@ -168,7 +162,19 @@ export default {
         {
           label: '业务线',
           prop: 'appCode',
-          fixed: true
+          fixed: true,
+          formatter(row) {
+            switch (row.appCode) {
+              case 'ysgo':
+                return '星GO'
+              case 'ysia':
+                return '星助手'
+              case 'yssp':
+                return 'YOSHOP'
+              case 'ysdp':
+                return '星鲜APP'
+            }
+          }
         },
         {
           label: '会员类型',
@@ -180,7 +186,10 @@ export default {
         },
         {
           label: '状态',
-          prop: 'isEnable'
+          prop: 'isEnable',
+          formatter(row) {
+            return row.isEnable === 1 ? '启用' : '禁用'
+          }
         },
         {
           label: '标题信息',
@@ -218,13 +227,47 @@ export default {
           label: '创建时间',
           prop: 'created'
         }
-      ]
+      ],
+      memberTypeList: [], // 会员类型
+      businessList: [] // 业务线
     }
   },
   created() {
     this.fetchData()
+    this.getMemberTypeList()
+    this.getBaseBusinessList()
   },
   methods: {
+    getBaseBusinessList() {
+      this.$api.basic.businessList(
+        {
+          status: 1,
+          pageSize: 100
+        }
+      ).then(res => {
+        if (res && res.totalCount) {
+          const { data } = res
+          this.businessList = data.map((item) => { return { value: item.appCode, label: item.appName } }) || []
+        } else {
+          this.businessList = res.map((item) => { return { value: item.appCode, label: item.appName } }) || []
+        }
+      })
+    },
+    getMemberTypeList() {
+      this.$api.member
+        .getMemberType({
+          isEnable: 1,
+          pageSize: 100
+        })
+        .then(res => {
+          if (res && res.totalCount) {
+            const { data } = res
+            this.memberTypeList = data.map((item) => { return { value: item.id, label: item.name } }) || []
+          } else {
+            this.memberTypeList = res.map((item) => { return { value: item.id, label: item.name } }) || []
+          }
+        })
+    },
     fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo

@@ -9,7 +9,14 @@
     status-icon
   >
     <el-form-item label="业务线:" prop="appCode">
-      <el-input v-model.trim="formModel.appCode" class="form-item" clearable></el-input>
+      <query-dict
+        :disabled="isEdit"
+        :dict-list="businessList"
+        class="search-item"
+        size="medium"
+        placeholder="请选择"
+        :value.sync="formModel.appCode"
+      ></query-dict>
     </el-form-item>
     <el-form-item label="积分名称:" prop="pointName">
       <el-input v-model.trim="formModel.pointName" class="form-item" clearable></el-input>
@@ -62,7 +69,11 @@
 </template>
 
 <script>
+import QueryDict from '../../../common/queryDict'
 export default {
+  components: {
+    QueryDict
+  },
   props: {
     initData: {
       type: Object,
@@ -76,6 +87,9 @@ export default {
           appCode: '' // 业务线
         }
       }
+    },
+    businessList: {
+      type: Array
     },
     isEdit: {
       type: Boolean,
