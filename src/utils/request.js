@@ -124,7 +124,8 @@ const setParams = (url, params = {}, opt = {}) => {
       'Content-Type': contentType,
       'token': opt.token || token
     },
-    method
+    method,
+    responseType: opt.responseType || 'json' // 下载文件时传入 opt.responseType为 arraybuffer
   }
   // get请求和post请求参数和
   if (method.toLowerCase() === 'get') {

@@ -158,3 +158,25 @@ export const getMemberEquityList = params =>
   Http.fetch(`${context}/api/member/activity/list`, params, {
     method: 'get'
   })
+
+/**
+ * 导出会员积分
+ * @param {*} params
+ */
+export const exportPoint = params =>
+  Http.fetch(`${context}/api/pointlog/export`, params, {
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
+  })
+
+/**
+ * 导出会员列表
+ * @param {*} params
+ */
+export const exportMember = params =>
+  Http.fetch(`${context}/api/member/export`, params, {
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
+  })

@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" icon="el-icon-download">导出</el-button>
+        <el-button :size="size" type="primary" icon="el-icon-download" @click="exportFile">导出</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -437,6 +437,26 @@ export default {
         title: opts.title,
         initData: opts.initData
       }
+    },
+    exportFile() {
+      const { dataTime, ...other } = this.searchObj
+      const { totalNum, ...page } = this.pageInfo
+      const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
+      const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
+      this.exportLoading = true
+      this.$api.member.exportMember({
+        ...searchDate,
+        ...birDateTime,
+        ...other,
+        ...page
+      }).then(res => {
+        this.exportLoading = false
+        if (res) {
+          utils.createBlobFile(res)
+        } else {
+          this.$msgTip('导出数据失败', 'warning')
+        }
+      })
     }
   }
 }

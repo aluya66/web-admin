@@ -3,10 +3,10 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" icon="el-icon-download">导出</el-button>
+        <el-button :size="size" :loading="exportLoading" type="primary" icon="el-icon-download" @click="exportFile">导出</el-button>
       </div>
     </template>
-      <div class="main__box">
+    <div class="main__box">
       <c-table
         selection
         hasBorder
@@ -79,6 +79,7 @@ export default {
       pickerOptions: utils.pickerOptions,
       pointTypeList: dictObj.pointTypeList, // 积分来源下拉框选项
       searchObj: {},
+      exportLoading: false,
       tableHeader: [
         {
           label: '用户',
@@ -137,6 +138,24 @@ export default {
           this.tableList = data || []
         } else {
           this.tableList = res || []
+        }
+      })
+    },
+    exportFile() {
+      const { dataTime, ...other } = this.searchObj
+      const { totalNum } = this.pageInfo
+      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      this.exportLoading = true
+      this.$api.member.exportPoint({
+        ...searchDate,
+        ...other,
+        total: totalNum
+      }).then(res => {
+        this.exportLoading = false
+        if (res) {
+          utils.createBlobFile(res)
+        } else {
+          this.$msgTip('导出数据失败', 'warning')
         }
       })
     }
