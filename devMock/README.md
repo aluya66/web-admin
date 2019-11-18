@@ -10,7 +10,7 @@
 
 - api接口请求配置中添加`mockFile`文件名称，例如
 ````
-	export const getList = params => Http.fetch(`${context}/v1/goods/list`, params, {
+	export const getList = params => Http.fetch(`${context}/api/goods/list`, params, {
 		method: 'get',
 		mockFile: 'goods-list'
 	})

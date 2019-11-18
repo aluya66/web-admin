@@ -10,6 +10,12 @@ export const isDebug = process.env.NODE_ENV === 'development'
 export const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
 
 /**
+ * 判断是否为整数
+ * @param {Object}} val
+ */
+export const isInteger = val => val && !/^[1-9]\d*$/.test(val)
+
+/**
  * 判断是否为数组
  * @param {Array} arr
  */
@@ -367,6 +373,7 @@ export default {
   isDebug,
   isObject,
   isArray,
+  isInteger,
   confirmTip,
   getCurrentUserLanguage,
   donwFile,

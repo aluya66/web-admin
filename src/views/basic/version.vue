@@ -266,7 +266,6 @@ export default {
         this.fetchData()
         this.dialogObj.isShow = false
       })
-      this.dialogObj.isShow = true
     },
     publishDate(param, msgTip = '发布成功') {
       this.$api.basic.releaseRelease(param).then(() => {

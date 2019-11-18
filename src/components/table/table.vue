@@ -287,6 +287,9 @@ export default {
     .search-item {
       width: 250px;
     }
+    .search-number{
+      width: 114px;
+    }
   }
   .check-list {
     display: inline-block;

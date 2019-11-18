@@ -32,7 +32,7 @@
                 v-model="searchObj.goodsName"
                 class="search-item"
                 :size="size"
-                placeholder="请输入商品名称"
+                placeholder="商品名称"
                 clearable
               />
             </el-form-item>
@@ -41,7 +41,7 @@
                 v-model="searchObj.goodsBn"
                 class="search-item"
                 :size="size"
-                placeholder="请输入商品编码"
+                placeholder="商品编码"
                 clearable
               />
             </el-form-item>
@@ -50,7 +50,7 @@
                 v-model="searchObj.categoryCode"
                 class="search-item"
                 :size="size"
-                placeholder="请输入商品类目"
+                placeholder="商品类目"
                 clearable
               />
             </el-form-item>
@@ -68,7 +68,7 @@
                 v-model="searchObj.brandName"
                 class="search-item"
                 :size="size"
-                placeholder="请输入品牌"
+                placeholder="品牌"
                 clearable
               />
             </el-form-item>
@@ -87,6 +87,23 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="商品库存">
+              <el-input
+                v-model.number="searchObj.minStock"
+                class="search-number"
+                :size="size"
+                placeholder="最小值"
+                clearable
+              />
+              至
+              <el-input
+                v-model.number="searchObj.maxStock"
+                class="search-number"
+                :size="size"
+                placeholder="最大值"
+                clearable
+              />
             </el-form-item>
             <el-form-item label="操作时间">
               <el-date-picker
@@ -127,12 +144,14 @@ export default {
     return {
       searchObj: {
         // businessValue: '',
-        categoryCode: '',
-        goodsBn: '',
-        goodsName: '',
-        marketable: '',
-        brandName: '',
-        dataTime: ''
+        categoryCode: '', // 商品类目
+        goodsBn: '', // 商品编码
+        goodsName: '', // 商品名称
+        marketable: '', // 上下架
+        brandName: '', // 品牌名称
+        dataTime: '', // 操作时间
+        minStock: '', // 库存最小值
+        maxStock: '' // 库存最大值
       },
       marketableSelect: [{
         value: '1',
@@ -154,23 +173,30 @@ export default {
       }],
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [{
-        width: 100,
+        width: 150,
         name: '详情',
         icon: 'el-icon-view',
         handle(row) {
-          vm.routerLink(`/goods/detail/${row.id}`)
+          vm.routerLink(`/goods/manage/detail/${row.id}`)
+        }
+      },
+      {
+        name: '关联属性',
+        icon: 'el-icon-plus',
+        handle(row) {
+          vm.routerLink(`/goods/manage/label/${row.id}`)
         }
       }
-        // {
-        //   name: '删除',
-        //   icon: 'el-icon-delete',
-        //   handle(row) {
-        //     const { goodsName, id } = row
-        //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
-        //       vm.deleteData({ id })
-        //     })
-        //   }
-        // }
+      // {
+      //   name: '删除',
+      //   icon: 'el-icon-delete',
+      //   handle(row) {
+      //     const { goodsName, id } = row
+      //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
+      //       vm.deleteData({ id })
+      //     })
+      //   }
+      // }
       ],
       tableHeader: [
         {
@@ -248,6 +274,11 @@ export default {
           width: 90
         },
         {
+          label: '成衣库存(件)',
+          prop: 'stock',
+          width: 100
+        },
+        {
           label: '上架状态',
           prop: 'marketable',
           width: 100,
@@ -276,15 +307,23 @@ export default {
      * 获取表格数据
     */
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dataTime, minStock, maxStock, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
+      if (utils.isInteger(minStock) || utils.isInteger(maxStock)) {
+        return this.$msgTip('商品库存请输入正整数', 'warning')
+      }
+      if (minStock > maxStock) {
+        return this.$msgTip('库存最小值不能大于最大值', 'warning')
+      }
       this.isLoading = true
       this.$api.goods.getList(
         {
           ...searchDate,
           ...other,
-          ...page
+          ...page,
+          minStock,
+          maxStock
         }
       ).then(res => {
         this.isLoading = false

@@ -1,19 +1,13 @@
 <template>
   <c-card :name="title" class="form-card">
-    <el-form-item label="商品款号:">
-      <el-input
-        v-if="!isView"
-        class="select-item"
-        :disabled="isDisabled"
-        v-model.trim="formModel.goodsBn"
-        :size="size"
-        placeholder="请输入商品款号"
-        clearable
-      />
-      <span v-else>{{formModel.goodsBn}}</span>
-    </el-form-item>
     <el-form-item label="商品规格:">
-      <sku-wrap :is-view="isView || isDisabled" v-if="curAttrs.length" :sku-attrs="curAttrs" :sku-list="formModel.skus" :spu-bn="formModel.goodsBn"></sku-wrap>
+      <sku-wrap
+        :is-view="isView || isDisabled"
+        v-if="curAttrs.length"
+        :sku-attrs="curAttrs"
+        :sku-list="formModel.skus"
+        :spu-bn="formModel.goodsBn"
+      ></sku-wrap>
     </el-form-item>
     <el-form-item label="样衣成本价(元):">
       <el-input
@@ -111,9 +105,7 @@ export default {
     return {
       curAttrs: [], // 全部商品属性
       paramsData: {}, // sku 规格值
-      formModel: {
-        goodsBn: ''
-      }
+      formModel: {}
     }
   },
   props: {
@@ -136,10 +128,16 @@ export default {
     }
   },
   mounted() {
-    const { goodsBn, skus } = this.dataObj
+    const { goodsBn, skus, sampleCostPrice, supplyprice, largeBatchPrice, costprice, memberPrice, retailPrice } = this.dataObj
     this.formModel = {
       goodsBn,
-      skus
+      skus,
+      sampleCostPrice,
+      supplyprice,
+      largeBatchPrice,
+      costprice,
+      memberPrice,
+      retailPrice
     }
   },
   created() {

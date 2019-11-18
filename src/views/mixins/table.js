@@ -75,6 +75,15 @@ export default {
         this.pageInfo.pageNo = pageNo > 1 ? pageNo - 1 : 1
       }
       this.fetchData()
+    },
+    /**
+     * 新增&编辑保存时,请求返回通用处理函数
+     * @param {*} msg
+     */
+    responeHandle(msg = '新增成功') {
+      this.dialogObj.isShow = false
+      this.$msgTip(msg)
+      this.fetchData()
     }
   },
   components: {

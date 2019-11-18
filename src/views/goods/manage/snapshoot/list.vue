@@ -103,7 +103,7 @@ export default {
         name: '详情',
         icon: 'el-icon-view',
         handle(row) {
-          vm.routerLink(`/goods/snapshootDetail/${row.id}`)
+          vm.routerLink(`/goods/manage/snapshootDetail/${row.id}`)
         }
       }],
       tableHeader: [

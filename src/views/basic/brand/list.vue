@@ -3,7 +3,13 @@
     <template v-slot:header>
       <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" v-permission="$route.meta.roles" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
+        <el-button
+          type="primary"
+          v-permission="$route.meta.roles"
+          :size="size"
+          icon="el-icon-plus"
+          @click="routerLink('/basic/brandInfo')"
+        >新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -29,7 +35,7 @@
                 placeholder="请输入品牌国家"
                 clearable
               />
-            </el-form-item> -->
+            </el-form-item>-->
             <el-form-item label="品牌名称">
               <el-input
                 v-model="searchObj.name"
@@ -89,35 +95,17 @@
         </template>
       </c-table>
     </div>
-    <div v-if="dialogObj.isShow">
-      <c-dialog
-        :is-show="dialogObj.isShow"
-        :title="dialogObj.title"
-        close-btn
-        @before-close="dialogObj.isShow = false"
-        @on-submit="dialogConfirm"
-      >
-        <brand-add ref="childRef" :init-data="dialogObj.initData"></brand-add>
-      </c-dialog>
-    </div>
   </c-view>
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
-import BrandAdd from './brandAdd'
 import utils from 'utils'
 
 export default {
   name: 'brand',
   mixins: [mixinTable],
-  components: {
-    CDialog,
-    BrandAdd
-  },
   data(vm) {
     return {
-      dialogObj: {}, // 对话框数据
       searchObj: {
         country: '',
         name: '',
@@ -133,49 +121,20 @@ export default {
         label: '禁用'
       }],
       pickerOptions: utils.pickerOptions,
-      tableList: [],
       tableInnerBtns: [
         {
-          width: 130,
+          width: 150,
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
-            const {
-              country,
-              name,
-              ename,
-              consumer,
-              logo,
-              intro,
-              description,
-              previewUrl,
-              videoUrl,
-              createdby,
-              updatedby,
-              status,
-              sort,
-              id
-            } = row
-            vm.showDialog({
-              title: '编辑品牌',
-              initData: {
-                country,
-                name,
-                ename,
-                consumer,
-                logo,
-                intro,
-                description,
-                previewUrl,
-                videoUrl,
-                createdby,
-                updatedby,
-                status,
-                sort,
-                id: id
-              },
-              isEdit: true
-            })
+            vm.routerLink(`/basic/brandInfo/${row.id}`)
+          }
+        },
+        {
+          name: '添加标签',
+          icon: 'el-icon-plus',
+          handle(row) {
+            vm.routerLink(`/basic/brandLabel/${row.id}`)
           }
         },
         {
@@ -298,63 +257,7 @@ export default {
         this.$msgTip(msgTip)
         this.delResetData()
       })
-    },
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const childFormModel = childRef.formModel
-          if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel)
-          } else {
-            this.editHandle(childFormModel)
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '新增品牌',
-        isEdit: opts.isEdit || false,
-        initData: opts.initData
-      }
-    },
-    addHandle(childFormModel) {
-      this.$api.basic.addBrand(childFormModel).then(res => {
-        this.$msgTip('添加成功')
-        this.fetchData()
-      })
-      this.dialogObj.isShow = false
-    },
-
-    editHandle(formModel) {
-      // let status
-      // if (formModel.status === '启用') {
-      //   status = 1
-      // } else {
-      //   status = 2
-      // }
-      let data = {
-        ...formModel
-      }
-      this.$api.basic.updateBrand(data).then(res => {
-        this.$msgTip('修改成功')
-        this.fetchData()
-      })
-      this.dialogObj.isShow = false
     }
-
   }
 }
 </script>
-<style lang="less" scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-</style>

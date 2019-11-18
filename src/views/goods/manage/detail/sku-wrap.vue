@@ -53,7 +53,7 @@
               v-for="(item, index) in batchList"
               :key="'th_'+index"
               :title="item.name"
-            >{{item.name !== 'sampleStock' ? item.label + '(元)': item.label}}</th>
+            >{{item.name !== 'stock' ? item.label + '(元)': item.label}}</th>
             <th>是否启用</th>
             <th>是否主sku</th>
           </tr>
@@ -241,9 +241,9 @@ export default {
         value: '',
         name: 'retailPrice'
       }, {
-        label: '样衣库存',
+        label: '成衣库存',
         value: '',
-        name: 'sampleStock'
+        name: 'stock'
       }]
     }
   },
@@ -387,7 +387,7 @@ export default {
         wholesalePrice: '', // 成衣散批价
         retailPrice: '', // 零售价
         memberPrice: '', // 成衣会员价
-        sampleStock: 0, // 样衣库存
+        stock: 0, // 成衣库存
         isUse: true, // 是否有用sku
         isDefalut: false // 是否默认SKU
       }
@@ -407,7 +407,7 @@ export default {
           largeBatchPrice: curSkuInfo.largeBatchPrice, // 成衣大批价
           retailPrice: curSkuInfo.retailPrice, // 零售价
           memberPrice: curSkuInfo.memberPrice, // 成衣会员价
-          sampleStock: curSkuInfo.sampleStock, // 样衣库存
+          stock: curSkuInfo.stock, // 成衣库存
           isDefalut: curSkuInfo.isDefalut === 1
         }
       }
