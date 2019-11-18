@@ -3,13 +3,13 @@
     ref="formRef"
     :model="formModel"
     :rules="rules"
-    label-width="120px"
+    label-width="150px"
     class="form"
     label-position="right"
     status-icon
   >
     <el-form-item label="业务线:" prop="appCode">
-       <query-dict
+      <query-dict
         :disabled="isEdit"
         :dict-list="businessList"
         class="search-item"
@@ -48,23 +48,17 @@
     <el-form-item label="会员开通送积分:" prop="pointGift">
       <el-input v-model.trim="formModel.pointGift" class="form-item" clearable></el-input>
     </el-form-item>
-    <el-form-item label="会员有效天数:" prop="val">
-      <el-input v-model.trim="formModel.val" class="form-item" clearable></el-input>
-    </el-form-item>
-    <el-form-item label="会员有效期单位:" prop="unit">
-      <el-select
-        v-model="formModel.unit"
-        class="select-item"
-        :popper-append-to-body="false"
-        clearable
-      >
-        <el-option
-          v-for="item in validDayUnitList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
+    <el-form-item label="会员有效时间:" prop="val">
+      <el-input v-model.number="formModel.val" class="select-item" clearable>
+        <el-select v-model="formModel.unit" class="input-select" slot="append">
+          <el-option
+            v-for="item in validDayUnitList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-input>
     </el-form-item>
     <el-form-item label="当前开通价:" prop="currentPrice">
       <el-input v-model.trim="formModel.currentPrice" class="form-item" clearable></el-input>
@@ -75,18 +69,9 @@
     <el-form-item label="标题信息:" prop="title">
       <el-input v-model.trim="formModel.title" class="form-item" clearable></el-input>
     </el-form-item>
-    <el-form-item label="排序:" prop="sort">
-      <el-input-number
-        v-model="formModel.sort"
-        controls-position="right"
-        class="select-item"
-        :min="1"
-        :max="10000"
-      ></el-input-number>
-    </el-form-item>
     <el-form-item label="会员说明:" prop="description">
       <el-input
-        type="text"
+        type="textarea"
         v-model.trim="formModel.description"
         placeholder="请输入内容"
         maxlength="300"
@@ -125,13 +110,13 @@ export default {
           appCode: '', // 业务线
           memberTypeName: '', // 会员名称
           memberTypeId: '', // 会员类型
-          isEnable: '', // 状态
+          isEnable: 1, // 状态
           pointGift: '', // 会员开通送积分
-          days: '', // 会员有效天数
+          unit: 1, // 会员有效时间单位
+          val: '', // 会员有效时间
           currentPrice: '', // 当前开通价
           formerPrice: '', // 原开通价
           title: '', // 标题
-          sort: 100, // 排序
           description: '', // 会员说明
           remark: '' // 备注
         }
@@ -142,7 +127,29 @@ export default {
       default: false
     }
   },
-  data() {
+  data(vm) {
+    const checkVal = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('会员有效期不能为空'))
+      }
+      if (!Number.isInteger(value)) {
+        return callback(new Error('请输入数字值'))
+      }
+      if (vm.formModel.unit === 1) {
+        if (value < 1) {
+          callback(new Error('请输入大于0的年数'))
+        }
+      } else if (vm.formModel.unit === 2) {
+        if (value < 1 || value > 12) {
+          callback(new Error('请输入1~12月份'))
+        }
+      } else if (vm.formModel.unit === 3) {
+        if (value < 1 || value > 31) {
+          callback(new Error('请输入1~31天数'))
+        }
+      }
+      callback()
+    }
     return {
       validDayUnitList: [{ // 1.年  2.月 3.日
         label: '年',
@@ -165,16 +172,10 @@ export default {
         }
       ],
       rules: {
-        appCode: [{ required: true, message: '请选择', trigger: 'change' }],
-        memberTypeName: [{ required: true, message: '请填写', trigger: 'blur' }],
-        memberTypeId: [{ required: true, message: '请选择', trigger: 'change' }],
-        isEnable: [{ required: true, message: '请选择', trigger: 'change' }],
-        pointGift: [{ required: true, message: '请填写', trigger: 'blur' }],
-        days: [{ required: true, message: '请填写', trigger: 'blur' }],
-        currentPrice: [{ required: true, message: '请填写', trigger: 'blur' }],
-        formerPrice: [{ required: true, message: '请填写', trigger: 'blur' }],
-        title: [{ required: true, message: '请填写', trigger: 'blur' }],
-        sort: [{ required: true, message: '请填写', trigger: 'blur' }]
+        appCode: [{ required: true, message: '请选择业务线', trigger: 'change' }],
+        memberTypeId: [{ required: true, message: '请选择会员类型', trigger: 'change' }],
+        isEnable: [{ required: true, message: '请选择状态', trigger: 'change' }],
+        val: [{ validator: checkVal, type: 'number', trigger: 'blur' }]
       }
     }
   },
@@ -182,9 +183,6 @@ export default {
     formModel() {
       return this.initData
     }
-  },
-  methods: {
-
   }
 }
 </script>
@@ -195,11 +193,11 @@ export default {
   .form-item {
     width: 100%;
   }
-}
-.body .el-select {
-  position: fixed !important;
-}
-.select-item {
-  width: 50%;
+  .select-item {
+    width: 50%;
+  }
+  .input-select {
+    width: 80px;
+  }
 }
 </style>

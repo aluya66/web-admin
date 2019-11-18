@@ -52,7 +52,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="分享状态:" prop="shareStatus">
+    <el-form-item label="分销状态:" prop="shareStatus">
       <el-select
         v-model.trim="formModel.shareStatus"
         class="select-item"
@@ -83,11 +83,11 @@ export default {
       shareStatusList: [
         {
           value: 1,
-          label: '启用'
+          label: '可用'
         },
         {
           value: 0,
-          label: '禁用'
+          label: '停用'
         }
       ],
       statusSelect: [

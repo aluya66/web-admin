@@ -37,7 +37,7 @@ export default {
       default() {
         return {
           name: '', // 会员名称
-          isEnable: '' // 状态
+          isEnable: 1 // 状态
         }
       }
     },

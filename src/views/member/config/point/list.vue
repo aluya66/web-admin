@@ -8,10 +8,10 @@
     </template>
     <div class="main__box">
       <c-table
-        :noPage=true
+        noPage
         selection
         hasBorder
-        :max-height="685"
+        :max-height="730"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -50,19 +50,6 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="操作时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                format="yyyy-MM-dd HH:mm:ss"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
             <el-form-item>
               <el-button
                 type="primary"
@@ -84,7 +71,12 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <point-add ref="childRef" :is-edit="dialogObj.isEdit" :init-data="dialogObj.initData" :businessList="businessList"></point-add>
+        <point-add
+          ref="childRef"
+          :is-edit="dialogObj.isEdit"
+          :init-data="dialogObj.initData"
+          :businessList="businessList"
+        ></point-add>
       </c-dialog>
     </div>
   </c-view>
@@ -111,9 +103,7 @@ export default {
       searchObj: {
         appCode: '', // 业务线
         pointName: '', // 积分名称
-        type: '', // 类型
-        typeName: '', // 类型名称
-        dataTime: ''
+        type: '' // 类型
       },
       typeNameSelect: [{
         label: '永久',
@@ -222,26 +212,17 @@ export default {
       })
     },
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
-      const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
       this.isLoading = true
-      this.$api.member
-        .getPointRule({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.member.getPointRule({
+        ...this.searchObj
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          this.tableList = res.data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     },
     dialogConfirm() {
       const childRef = this.$refs.childRef
@@ -284,6 +265,3 @@ export default {
   }
 }
 </script>
-
-<style lang='less' scoped>
-</style>

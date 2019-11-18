@@ -2,11 +2,7 @@
   <div class="detail">
     <div class="common">
       <div class="user">
-        <el-avatar
-          class="avatar"
-          :size="80"
-          :src="formModel.avatar"
-        >{{formModel.avatar ? '' : '头像'}}</el-avatar>
+        <el-avatar :size="80" :src="formModel.avatar" fit="contain"></el-avatar>
         <div class="item">
           <div>
             <span class="label">姓名:</span>
@@ -22,7 +18,7 @@
           </div>
           <div>
             <span class="label">性别:</span>
-          <span class="value">{{formModel.gender}}</span>
+            <span class="value">{{formModel.gender}}</span>
           </div>
         </div>
       </div>
@@ -36,11 +32,11 @@
           <span class="value">{{formModel.couponNum}}</span>
         </div>
         <div>
-          <span class="label">钱包余额:</span>
+          <span class="label">钱包余额(元):</span>
           <span class="value">{{formModel.balance}}</span>
         </div>
         <div>
-          <span class="label">星购卡余额:</span>
+          <span class="label">星购卡余额(元):</span>
           <span class="value">{{formModel.starGoCardAmout}}</span>
         </div>
       </div>
@@ -68,7 +64,7 @@
       <div class="item">
         <h3 class="title">销售信息</h3>
         <div>
-          <span class="label">消费金额:</span>
+          <span class="label">消费金额(元):</span>
           <span class="value">{{formModel.expenseAmount}}</span>
         </div>
         <div>
@@ -76,7 +72,7 @@
           <span class="value">{{formModel.expenseNum}}</span>
         </div>
         <div>
-          <span class="label">客单价:</span>
+          <span class="label">客单价(元):</span>
           <span class="value">{{formModel.customerPrice}}</span>
         </div>
         <div>
@@ -246,12 +242,12 @@ export default {
       display: inline-block;
       line-height: 26px;
       &.label {
-        font-weight: 500;
+        font-weight: 700;
         width: 100px;
         text-align: right;
       }
       &.value {
-        font-weight: 300;
+        font-weight: 400;
       }
     }
   }

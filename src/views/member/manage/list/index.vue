@@ -316,7 +316,6 @@ export default {
           label: '用户',
           prop: 'name',
           width: 110,
-          fixed: true,
           formatter(row) {
             return `${row.name}[${row.nickname}]（${row.gender === '1' ? '男' : '女'}）`
           }

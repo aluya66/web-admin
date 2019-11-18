@@ -82,13 +82,14 @@ export default {
       exportLoading: false,
       tableHeader: [
         {
-          label: '用户',
-          prop: 'nickName'
-        },
-        {
           label: '头像',
           prop: 'avatar',
-          isImage: true
+          isImage: true,
+          width: 100
+        },
+        {
+          label: '用户',
+          prop: 'nickName'
         },
         {
           label: '性别',
@@ -111,8 +112,7 @@ export default {
         },
         {
           label: '积分时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         }
       ]
     }

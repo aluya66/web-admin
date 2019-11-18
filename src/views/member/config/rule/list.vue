@@ -178,18 +178,7 @@ export default {
         },
         {
           label: '会员类型',
-          prop: 'memberTypeId'
-        },
-        {
-          label: '会员类型名称',
           prop: 'memberTypeName'
-        },
-        {
-          label: '状态',
-          prop: 'isEnable',
-          formatter(row) {
-            return row.isEnable === 1 ? '启用' : '禁用'
-          }
         },
         {
           label: '标题信息',
@@ -204,8 +193,11 @@ export default {
           prop: 'pointGift'
         },
         {
-          label: '会员有效天数(天)',
-          prop: 'days'
+          label: '会员有效时间',
+          prop: 'days',
+          formatter(row) {
+            return row && `${row.val} ${row.unit === 1 ? '年' : row.unit === 2 ? '月' : '天'}`
+          }
         },
         {
           label: '当前开通价(元)',
@@ -216,16 +208,20 @@ export default {
           prop: 'formerPrice'
         },
         {
-          label: '排序',
-          prop: 'sort'
-        },
-        {
           label: '会员说明',
           prop: 'description'
         },
         {
+          label: '状态',
+          prop: 'isEnable',
+          formatter(row) {
+            return row.isEnable === 1 ? '启用' : '禁用'
+          }
+        },
+        {
           label: '创建时间',
-          prop: 'created'
+          prop: 'created',
+          width: 100
         }
       ],
       memberTypeList: [], // 会员类型
