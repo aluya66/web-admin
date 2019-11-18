@@ -8,6 +8,7 @@
         selection
         hasBorder
         :size="size"
+        :max-height="685"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"

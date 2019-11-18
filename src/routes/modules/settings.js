@@ -18,16 +18,6 @@ export default {
       icon: 'table',
       roles: ['admin']
     }
-  },
-  {
-    path: '/settings/dict/info/:id?',
-    name: 'dictInfo',
-    hidden: true,
-    component: () => import('@/views/settings/dict/add'),
-    meta: {
-      title: 'dictInfo',
-      icon: 'table'
-    }
   }, {
     path: '/settings/label',
     name: 'settingsLabel',
@@ -37,6 +27,5 @@ export default {
       icon: 'table',
       roles: ['admin']
     }
-  }
-  ]
+  }]
 }
