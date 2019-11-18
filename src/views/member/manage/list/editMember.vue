@@ -8,25 +8,25 @@
     label-position="right"
     status-icon
   >
-    <el-form-item label="用户姓名:" prop="name">
+    <el-form-item label="用户姓名:">
       <el-input
         v-model.trim="formModel.name"
         class="form-item"
-        clearable
+        disabled
       ></el-input>
     </el-form-item>
-    <el-form-item label="昵称:" prop="nickname">
+    <el-form-item label="昵称:">
       <el-input
         v-model.trim="formModel.nickname"
         class="form-item"
-        clearable
+        disabled
       ></el-input>
     </el-form-item>
     <el-form-item label="手机号:" prop="phoneNumber">
       <el-input
         v-model.trim="formModel.phoneNumber"
         class="form-item"
-        clearable
+        disabled
       ></el-input>
     </el-form-item>
     <el-form-item label="生日:" prop="birthday">
@@ -38,14 +38,28 @@
         placeholder="选择日期">
       </el-date-picker>
     </el-form-item>
-    <el-form-item label="会员状态:" prop="status">
+    <el-form-item label="会员状态:" prop="isEnable">
       <el-select
-        v-model.trim="formModel.status"
+        v-model.trim="formModel.isEnable"
         class="select-item"
         clearable
       >
         <el-option
           v-for="item in statusSelect"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="分享状态:" prop="shareStatus">
+      <el-select
+        v-model.trim="formModel.shareStatus"
+        class="select-item"
+        clearable
+      >
+        <el-option
+          v-for="item in shareStatusList"
           :key="item.value"
           :label="item.label"
           :value="item.value"
@@ -60,24 +74,22 @@ export default {
   props: {
     initData: {
       type: Object,
-      default() {
-        return {
-          name: '', // 姓名
-          nickname: '', // 昵称
-          status: '', // 会员状态
-          birthday: '', // 生日
-          phoneNumber: ''
-        }
-      }
-    },
-    categoryType: {
-      type: String,
-      default: '1'
+      default() {}
     }
   },
   data() {
     return {
-      changeTab: '',
+      formModel: {},
+      shareStatusList: [
+        {
+          value: 1,
+          label: '启用'
+        },
+        {
+          value: 0,
+          label: '禁用'
+        }
+      ],
       statusSelect: [
         {
           value: 1,
@@ -88,35 +100,31 @@ export default {
           label: '禁用'
         }
       ],
-      addSoreList: [],
       rules: {
-        name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
-        ],
-        nickname: [
-          { required: true, message: '请输入昵称', trigger: 'blur' }
-        ],
-        phoneNumber: [
-          { required: true, message: '请输入手机号', trigger: 'blur' }
-        ],
         birthday: [
           { required: true, message: '请输入生日', trigger: 'blur' }
         ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'change' }
+        isEnable: [
+          { required: true, message: '请选择会员状态', trigger: 'change' }
+        ],
+        shareStatus: [
+          { required: true, message: '请选择分享状态', trigger: 'change' }
         ]
       }
-
     }
   },
   created() {
+    this.getMemberDetail()
   },
   methods: {
-
-  },
-  computed: {
-    formModel() {
-      return this.initData
+    getMemberDetail() {
+      const { userId, appCode } = this.initData
+      this.$api.member.getMemberDetail({
+        userId,
+        appCode
+      }).then(res => {
+        this.formModel = Object.assign({}, res, { userId, appCode }) || {}
+      })
     }
   }
 }

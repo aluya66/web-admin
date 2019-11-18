@@ -217,6 +217,9 @@ export default {
       width: 50%;
       display: flex;
       align-items: center;
+      .item {
+        width: 100%;
+      }
     }
   }
 

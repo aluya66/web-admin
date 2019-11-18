@@ -246,8 +246,7 @@ export default {
               initData: {
                 userId,
                 appCode
-              },
-              isEdit: true
+              }
             })
           }
         },
@@ -256,19 +255,16 @@ export default {
           icon: 'el-icon-edit',
           handle(row) {
             const {
-              memberId,
-              nickname, // 昵称
-              status // 会员状态
+              appCode, // 业务线
+              userId // 用户id
             } = row
             vm.showDialog({
               title: '编辑会员',
               type: 2,
               initData: {
-                memberId,
-                nickname, // 昵称
-                status // 会员状态
-              },
-              isEdit: true
+                userId,
+                appCode
+              }
             })
           }
         },
@@ -277,19 +273,16 @@ export default {
           icon: 'el-icon-edit',
           handle(row) {
             const {
-              memberId,
-              nickname, // 昵称
-              status // 会员状态
+              userId,
+              appCode
             } = row
             vm.showDialog({
               title: '编辑余额',
               type: 3,
               initData: {
-                memberId,
-                nickname, // 昵称
-                status // 会员状态
-              },
-              isEdit: true
+                userId,
+                appCode
+              }
             })
           }
         },
@@ -298,19 +291,16 @@ export default {
           icon: 'el-icon-edit',
           handle(row) {
             const {
-              memberId,
-              nickname, // 昵称
-              status // 会员状态
+              userId,
+              appCode
             } = row
             vm.showDialog({
               title: '编辑积分',
               type: 4,
               initData: {
-                memberId,
-                nickname, // 昵称
-                status // 会员状态
-              },
-              isEdit: true
+                userId,
+                appCode
+              }
             })
           }
         }
@@ -419,16 +409,25 @@ export default {
       })
     },
     reviewAndEditHandle(childFormModel, type) {
+      console.log(childFormModel)
       if (type === 2) {
         // 编辑会员
-        this.$api.member.updateMember(childFormModel).then(res => {
-          this.addSoreList = res.data
+        const { appCode, birthday, isEnable, shareStatus, userId } = childFormModel
+        this.$api.member.updateMember({ appCode, birthday, isEnable, shareStatus, userId }).then(res => {
+          this.responeHandle('修改成功')
         })
       } else if (type === 3) {
         // 编辑余额
-
+        const { appCode, userId, balance } = childFormModel
+        this.$api.member.updateBalance({ appCode, userId, balance }).then(res => {
+          this.responeHandle('修改余额成功')
+        })
       } else if (type === 4) {
         // 编辑积分
+        const { appCode, userId, point } = childFormModel
+        this.$api.member.updatePoint({ appCode, userId, point }).then(res => {
+          this.responeHandle('修改积分成功')
+        })
       }
     },
     showDialog(opts) {
@@ -436,7 +435,6 @@ export default {
         type: opts.type,
         isShow: true,
         title: opts.title,
-        isEdit: opts.isEdit,
         initData: opts.initData
       }
     }
