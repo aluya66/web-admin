@@ -82,38 +82,36 @@ export default {
       tableHeader: [
         {
           label: '用户',
-          prop: 'nickName',
-          width: 100
+          prop: 'nickName'
         },
         {
           label: '头像',
           prop: 'avatar',
-          isImage: true,
-          width: 100
+          isImage: true
         },
         {
           label: '性别',
-          prop: 'genderName',
-          width: 100
+          prop: 'gender',
+          formatter(row) {
+            return row.gender === 1 ? '男' : '女'
+          }
         },
         {
           label: '手机号',
-          prop: 'phoneNumber',
-          width: 110
+          prop: 'phoneNumber'
         },
         {
           label: '积分额',
-          prop: 'point',
-          width: 110
+          prop: 'point'
         },
         {
           label: '积分来源',
-          prop: 'pointTypeName',
-          width: 130
+          prop: 'pointTypeName'
         },
         {
           label: '积分时间',
-          prop: 'created'
+          prop: 'created',
+          width: 100
         }
       ]
     }

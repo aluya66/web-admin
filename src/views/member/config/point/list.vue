@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        :noPage=true
         selection
         hasBorder
         :max-height="685"

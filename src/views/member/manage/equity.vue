@@ -9,7 +9,8 @@
               <p class="info" v-show="subItem.activityDetailName">{{subItem.activityDetailName}}</p>
               <div class="status">
                 {{subItem.activityStatus}}
-                <el-button class="btn" size="small">编辑</el-button>
+                <el-button class="btn" size="small" v-if="item.activityId === 6 || item.activityId === 7">编辑</el-button>
+                <!-- item.activityId === 6 || item.activityId === 7" 积分、商品有编辑功能 -->
               </div>
             </div>
           </el-card>
@@ -46,7 +47,6 @@ export default {
       })
     }
   },
-
   components: {
     CCard
   }
@@ -54,9 +54,6 @@ export default {
 </script>
 
 <style lang='less' scoped>
-  .el-card {
-
-  }
   .card-container {
     display: flex;
     justify-content: center;
@@ -70,12 +67,12 @@ export default {
       }
       .info {
         margin-bottom: 30px;
-        font-size: 18px;
+        font-size: @f18;
       }
       .status {
         height: 50px;
         line-height: 50px;
-        background-color: gray;
+        background-color: @border-default;
         .btn {
           margin-left: 15px;
         }
