@@ -56,6 +56,7 @@ export default {
   data(vm) {
     return {
       lobList: dictObj.lobList, // 业务线集合
+      categoryType: dictObj.categoryType, // 类型分类集合
       searchObj: {
         categoryName: '', // 类型名称
         categoryLob: '' // 业务线
@@ -71,6 +72,7 @@ export default {
               categoryName,
               categoryLob,
               categoryDesc,
+              categoryType,
               id
             } = row
             vm.$emit('showDialog', {
@@ -78,6 +80,7 @@ export default {
               initData: {
                 categoryName,
                 categoryLob,
+                categoryType,
                 categoryDesc,
                 id: id
               },
@@ -100,18 +103,24 @@ export default {
           }
         },
         {
+          label: '类型分类',
+          prop: 'categoryType',
+          formatter(row) {
+            const lobObj = row.categoryType && vm.lobList.find(res => row.categoryType === res.value)
+            return lobObj ? lobObj.label : ''
+          }
+        },
+        {
           label: '描述',
           prop: 'categoryDesc'
         },
         {
           label: '创建时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         },
         {
           label: '更新时间',
-          prop: 'updated',
-          width: 100
+          prop: 'updated'
         }
       ]
     }

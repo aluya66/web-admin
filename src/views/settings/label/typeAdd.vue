@@ -20,6 +20,14 @@
         :value.sync="formModel.categoryLob"
       ></query-dict>
     </el-form-item>
+    <el-form-item label="类型分类" prop="categoryType">
+      <query-dict
+        :dict-list="categoryType"
+        class="form-select"
+        placeholder="请选择类型分类"
+        :value.sync="formModel.categoryType"
+      ></query-dict>
+    </el-form-item>
     <el-form-item label="类型描述:" prop="categoryDesc">
       <el-input
         type="textarea"
@@ -46,6 +54,7 @@ export default {
         return {
           categoryName: '', // 标签类型
           categoryLob: 'commons', // 业务线
+          categoryType: '', // 类型分类
           categoryDesc: '' // 描述
         }
       }
@@ -58,6 +67,7 @@ export default {
   data() {
     return {
       lobList: dictObj.lobList, // 业务线集合
+      categoryType: dictObj.categoryType, // 类型分类集合
       rules: {
         categoryName: [
           { required: true, message: '请输入类型名称', trigger: 'blur' }

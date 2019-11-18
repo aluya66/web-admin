@@ -195,6 +195,10 @@ export default {
           }
         },
         {
+          label: '字典描述',
+          prop: 'remark'
+        },
+        {
           label: '状态',
           prop: 'status',
           width: 100,
