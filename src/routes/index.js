@@ -29,6 +29,11 @@ Vue.use(VueRouter)
   }
 **/
 
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 NProgress.configure({
   showSpinner: false
 }) // NProgress Configuration
@@ -70,15 +75,19 @@ export const constantRoutes = [{
 ...Object.values(demos)
 ]
 
+// 通过解构数据屏蔽不需要引入到路由
+const { marketing, order, ...routeOthers } = routes
+
 export const asyncRoutes = [{
   path: '*',
   redirect: '/404',
   hidden: true
 },
-...Object.values(routes)
+...Object.values(routeOthers)
 ]
 
-const whiteList = ['/login'] // 不重定向白名单
+// 不重定向白名单
+const whiteList = ['/login']
 
 const createRouter = () =>
   new VueRouter({

@@ -100,7 +100,7 @@ export default {
           data.forEach((val, index) => {
             const checkedAttr = []
             const attrs = val.bmsGoodsAttrVals.map(item => {
-              if (goodsAttrs.length) {
+              if (goodsAttrs && goodsAttrs.length) {
                 goodsAttrs.forEach(eidtAttr => {
                   if (eidtAttr.attrId === val.id && eidtAttr.attributeId === item.id) {
                     checkedAttr.push(eidtAttr.attributeId)

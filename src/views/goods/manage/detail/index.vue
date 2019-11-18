@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import MixinForm from 'mixins/form'
 import GBasic from './basic'
 import GSales from './sales'
 import GParams from './params'
@@ -78,6 +79,7 @@ import GOther from './other'
 
 export default {
   name: 'goodsDetail',
+  mixins: [MixinForm],
   data() {
     return {
       formModel: {},
@@ -102,13 +104,6 @@ export default {
   },
 
   methods: {
-    setTagsViewTitle() {
-      const copyRoute = Object.assign({}, this.$route)
-      const { meta, params } = this.$route
-      const curTitle = this.$t(`route.${meta.title}`)
-      const curRoute = Object.assign({}, copyRoute, { title: `${curTitle}-${params.id}` })
-      this.$store.dispatch('tagsView/updateVisitedView', curRoute)
-    },
     fetchData() {
       const { params, name } = this.$route
       if (name === 'goodsSnapshootDetail') { // 快照详情数据
@@ -156,9 +151,6 @@ export default {
         videoUrl: file.videoUrl,
         fileType: file.fileType
       }
-    },
-    goBack() {
-      this.$router.go(-1)
     }
   },
 

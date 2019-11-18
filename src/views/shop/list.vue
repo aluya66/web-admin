@@ -176,7 +176,8 @@ export default {
         },
         {
           label: '添加时间',
-          prop: 'created'
+          prop: 'created',
+          width: 100
         }
       ]
     }

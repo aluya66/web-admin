@@ -195,8 +195,7 @@ export default {
         },
         {
           label: '创建时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         }
       ],
 
@@ -268,19 +267,19 @@ export default {
     },
     addHandle(childFormModel) {
       this.$api.basic.addBusiness({ ...childFormModel }).then(res => {
+        this.dialogObj.isShow = false
         this.$msgTip('添加成功')
         this.fetchData()
       })
-      this.dialogObj.isShow = false
     },
     editHandle(formModel) {
       this.$api.basic.updateBusiness({
         ...formModel
       }).then(res => {
+        this.dialogObj.isShow = false
         this.$msgTip('修改成功')
         this.fetchData()
       })
-      this.dialogObj.isShow = false
     }
   }
 }

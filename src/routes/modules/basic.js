@@ -52,11 +52,35 @@ export default {
   {
     path: '/basic/brand',
     name: 'brand',
-    component: () => import('@/views/basic/brand'),
+    component: () => import('@/views/basic/brand/list'),
     meta: {
       title: 'brand',
       icon: 'table',
       roles: ['review']
+    }
+  },
+  {
+    path: '/basic/brandInfo/:id?',
+    name: 'brandInfo',
+    hidden: true,
+    component: () => import('@/views/basic/brand/add'),
+    meta: {
+      title: 'brandInfo',
+      icon: 'table',
+      noCache: true,
+      activeMenu: '/basic/brand'
+    }
+  },
+  {
+    path: '/basic/brandLabel/:id',
+    name: 'brandLabel',
+    hidden: true,
+    component: () => import('@/views/basic/brand/addLabel'),
+    meta: {
+      title: 'brandLabel',
+      icon: 'table',
+      noCache: true,
+      activeMenu: '/basic/brand'
     }
   },
   {

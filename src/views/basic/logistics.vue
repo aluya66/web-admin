@@ -188,10 +188,10 @@ export default {
      */
     addHandle(formModel) {
       this.$api.basic.addLogistics(formModel).then(res => {
+        this.dialogObj.isShow = false
         this.$msgTip('新增成功')
         this.fetchData()
       })
-      this.dialogObj.isShow = false
     },
     /**
      * 确认修改操作
@@ -203,10 +203,10 @@ export default {
         ...formModel
       }
       this.$api.basic.updateLogistics(data).then(res => {
+        this.dialogObj.isShow = false
         this.$msgTip('修改成功')
         this.fetchData()
       })
-      this.dialogObj.isShow = false
     }
   }
 }

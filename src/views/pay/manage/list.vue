@@ -317,7 +317,6 @@ export default {
           label: '业务线名称',
           prop: 'appCode',
           width: 100,
-          fixed: true,
           formatter(row) {
             return row.appCode === 'ysdp' ? 'IPX' : row.appCode === 'yssp' ? 'yoshop' : row.appCode === 'ysgo' ? '星GO' : '无'
           }

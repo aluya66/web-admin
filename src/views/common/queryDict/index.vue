@@ -7,7 +7,6 @@
       :multiple="multiple"
       filterable
       clearable
-      placeholder="请选择"
       v-bind="$attrs"
       v-on="$listeners"
     >
