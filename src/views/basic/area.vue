@@ -17,7 +17,7 @@
           >
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span>{{ node.label }}{{data.children ? `(${data.children})` : ''}} </span>
-              <span>
+              <span v-permission="$route.meta.roles">
                 <el-button
                   type="text"
                   v-if="!node.data.leaf"

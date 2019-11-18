@@ -16,7 +16,7 @@ export default {
     meta: {
       title: 'dictList',
       icon: 'table',
-      roles: ['edit']
+      roles: ['admin']
     }
   },
   {
@@ -35,7 +35,7 @@ export default {
     meta: {
       title: 'settingsLabel',
       icon: 'table',
-      roles: ['edit']
+      roles: ['admin']
     }
   }
   ]

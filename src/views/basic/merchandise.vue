@@ -250,11 +250,6 @@ export default {
           }
         },
         {
-          label: '排序',
-          prop: 'sort',
-          width: 100
-        },
-        {
           label: '创建时间',
           prop: 'created',
           width: 100

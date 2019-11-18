@@ -20,7 +20,6 @@
             :props="defaultProps"
             ref="categoryTree"
             node-key="id"
-            :empty-text="loading ? '数据加载中...' : '暂无数据'"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
           >

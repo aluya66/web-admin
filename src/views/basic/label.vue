@@ -192,18 +192,15 @@ export default {
         {
           label: '标签名称',
           prop: 'labelName',
-          width: 120,
           fixed: true
         },
         {
           label: '拼音大写',
-          prop: 'initial',
-          width: 200
+          prop: 'initial'
         },
         {
           label: '标签编码',
-          prop: 'labelCode',
-          width: 120
+          prop: 'labelCode'
         },
         {
           label: '标签风格',
@@ -214,8 +211,7 @@ export default {
         },
         {
           label: '标签状态',
-          prop: 'labelStatusCN',
-          width: 120
+          prop: 'labelStatusCN'
         },
         {
           label: '标签描述',
@@ -233,13 +229,11 @@ export default {
         // },
         {
           label: '创建时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         },
         {
           label: '更新时间',
-          prop: 'updated',
-          width: 100
+          prop: 'updated'
         }
       ],
       activeName: '1',

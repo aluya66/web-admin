@@ -56,7 +56,7 @@ export default {
     meta: {
       title: 'brand',
       icon: 'table',
-      roles: ['edit']
+      roles: ['review']
     }
   },
   {

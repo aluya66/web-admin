@@ -195,8 +195,7 @@ export default {
         },
         {
           label: '创建时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         }
       ],
 

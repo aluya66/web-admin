@@ -16,7 +16,7 @@ export default {
     meta: {
       title: 'shopList',
       icon: 'table',
-      roles: ['admin']
+      roles: ['review']
     }
   },
   {
