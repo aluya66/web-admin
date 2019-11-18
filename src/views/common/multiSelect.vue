@@ -13,21 +13,21 @@
     </div>
     <div class="content">
       <div class="source">
-        <el-checkbox-group v-model="checkedAttr" @change="handleCheckedChange">
+        <el-checkbox-group v-model="checkedAttr">
           <el-checkbox
-            v-for="item in searchList"
+            v-for="(item, index) in searchList"
             :label="item.value"
-            :key="item.value"
+            :key="index"
             :disabled="disabled"
           >{{item.label}}</el-checkbox>
         </el-checkbox-group>
       </div>
       <div class="dist">
-        <el-checkbox-group v-model="checkedAttr" @change="handleCheckedChange">
+        <el-checkbox-group v-model="checkedAttr">
           <el-checkbox
-            v-for="item in distList"
+            v-for="(item, index) in distList"
             :label="item.value"
-            :key="item.value"
+            :key="index"
             :disabled="disabled"
           >{{item.label}}</el-checkbox>
         </el-checkbox-group>
@@ -40,59 +40,44 @@
 export default {
   name: 'multiSelect',
   props: {
-    disabled: Boolean
+    disabled: Boolean,
+    sourceList: { // 源数据集合
+      type: Array,
+      required: true
+    },
+    initChecked: { // 编辑初始化选中值
+      type: Array,
+      default() {
+        return []
+      }
+    }
   },
   data() {
     return {
-      searchValue: '',
-      sourceList: [],
-      checkedAttr: []
+      searchValue: '', // 搜索关键字
+      checkedAttr: [] // 选中的值
     }
   },
-  created() {
-    this.getAttrs()
-  },
-
   computed: {
-    distList() {
+    distList() { // 选中集合
       return this.checkedAttr.map(res => this.sourceList.find(val => res === val.value))
     },
-    searchList() {
-      const curData = this.searchValue ? [] : this.sourceList.slice()
-      this.sourceList.forEach(res => {
-        if (res.value.indexOf(this.searchValue) !== -1) {
-          curData.push(res)
-        }
-      })
+    searchList() { // 搜索列表集合
+      let curData = []
+      if (this.searchValue) {
+        this.sourceList.forEach(res => {
+          if (res && res.label && res.label.indexOf(this.searchValue) !== -1) {
+            curData.push(res)
+          }
+        })
+      } else {
+        curData = this.sourceList
+      }
       return curData
     }
   },
-
-  methods: {
-    getAttrs() {
-      this.$api.basic.getGoodsattrval({
-        pageNo: 1,
-        type: this.type, // 1:参数，2:属性
-        pageSize: 20
-      }).then(res => {
-        const { totalCount, data } = res
-        if (totalCount) {
-          this.sourceList = data[0].bmsGoodsAttrVals.map(item => {
-            return {
-              value: item.id,
-              label: item.value
-            }
-          })
-          console.log(this.checkedList)
-        }
-      })
-    },
-    handleCheckedChange(val) {
-
-    }
-  },
-
-  components: {
+  mounted() {
+    this.checkedAttr = this.initChecked
   }
 }
 </script>

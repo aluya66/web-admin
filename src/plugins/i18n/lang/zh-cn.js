@@ -16,7 +16,7 @@ export default {
     goodsManage: '商品管理',
     goodsLogs: '商品日志',
     goodsDetail: '商品详情',
-    goodsLabelDetail: '商品标签',
+    goodsLabelDetail: '商品属性',
     goodsSnapshoot: '商品快照',
     goodsSnapshootDetail: '快照详情',
     shop: '渠道中心',

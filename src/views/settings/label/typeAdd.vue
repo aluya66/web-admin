@@ -15,6 +15,7 @@
       <query-dict
         :dict-list="lobList"
         class="form-select"
+        disabled
         placeholder="请选择业务线"
         :value.sync="formModel.categoryLob"
       ></query-dict>

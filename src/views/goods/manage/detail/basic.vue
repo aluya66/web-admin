@@ -96,14 +96,14 @@
       ></c-image>
     </el-form-item>
     <!-- 商品打标签  -->
-    <el-form-item label="sku图片:" v-if="isTag">
+    <el-form-item label="sku图片:" v-if="isTag" class="sku-image">
       <c-image
         v-for="(item, index) in formModel.skuList"
         :key="index"
         class="coverImg"
-        :url="item.coverImg"
+        :url="item"
         fit="contain"
-        :preview-src-list="[item.coverImg]"
+        :preview-src-list="[item]"
       ></c-image>
     </el-form-item>
     <!-- 商品新增、编辑  -->
@@ -257,7 +257,10 @@ export default {
       })) : []
       let skuList = [] // 商品打标签下 sku 图片列表
       if (this.isTag) {
-        skuList = skus ? skus.some(sku => { console.log(sku) }) : []
+        skus && skus.forEach(({ imageUrl }) => {
+          skuList.push(imageUrl)
+        })
+        skuList = utils.uniqueArr(skuList) // 去重sku图片
       }
 
       const curCategoryCode = []
@@ -269,8 +272,6 @@ export default {
           }
         })
       }
-      // console.log(curCategoryCode)
-      // const categoryCode = [categoryCode.substr(0, 2), categoryCode.substr(2, 4)]
       return { fileList, goodsBn, categoryName, categoryCode: curCategoryCode, businessValue, brandName, brandId, goodsTypeId, goodsName, goodsShortName, goodsBrief, origin, coverImg, skuList }
     }
   },
@@ -342,6 +343,8 @@ export default {
   .coverImg {
     width: 200px;
     height: 200px;
+    display: inline-block;
+    margin-right: 5px;
   }
 }
 </style>

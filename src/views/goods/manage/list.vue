@@ -181,7 +181,7 @@ export default {
         }
       },
       {
-        name: '添加标签',
+        name: '关联属性',
         icon: 'el-icon-plus',
         handle(row) {
           vm.routerLink(`/goods/manage/label/${row.id}`)

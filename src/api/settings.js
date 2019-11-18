@@ -79,3 +79,33 @@ export const getTabList = params =>
   Http.fetch(`${context}/api/tag/page`, params, {
     method: 'get'
   })
+
+// 获取所有标签列表
+export const getAllTab = params =>
+  Http.fetch(`${context}/api/tag/all`, params, {
+    method: 'get'
+  })
+
+// 给商品打标签
+export const addTagrelate = params =>
+  Http.fetch(`${context}/api/tagrelate`, params, {
+    method: 'post'
+  })
+
+// 查询已打商品标签
+export const getTagrelate = params =>
+  Http.fetch(`${context}/api/tagrelate`, params, {
+    method: 'get'
+  })
+
+// 给品牌打标签
+export const addTagbrand = params =>
+  Http.fetch(`${context}/api/tagbrand`, params, {
+    method: 'post'
+  })
+
+// 查询已打品牌标签
+export const getTagbrand = params =>
+  Http.fetch(`${context}/api/tagbrand`, params, {
+    method: 'get'
+  })

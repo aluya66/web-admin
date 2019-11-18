@@ -1,29 +1,33 @@
 <template>
   <c-card :name="title" class="form-card">
-    <el-form-item :label="item.label" v-for="(item, index) in curAttrs" :key="item.id">
-      <el-checkbox-group
-        v-if="item.paramType === '' || item.paramType === 'checkbox'"
-        v-model="item.checkedAttr"
-        @change="handleCheckedChange"
-      >
-        <el-checkbox
-          v-for="attr in item.attrs"
-          :label="attr.value"
-          :key="attr.value"
+    <el-form-item :label="item.label" v-for="(item, tagIndex) in dataObj" :key="item.tagIndex">
+      <!-- <div v-if="item.operateType === 1">
+        <input type="text" class="select-item" v-model="item.checkedTag" :size="size" :disabled="isView || isDisabled" @change="handleCheckedChange">
+      </div> -->
+      <div v-if="item.operateType === 2">
+        <el-button
+          type="primary"
+          :size="size"
           :disabled="isView || isDisabled"
-          @change="curIndex = index"
-        >{{attr.label}}</el-checkbox>
-      </el-checkbox-group>
+          @click="setTagHandle(item.attrs, item.checkedTag, tagIndex)"
+        >设置</el-button>
+        <div class="checkedContent">
+          <el-tag
+            v-for="(tag, index) in getCheckedLabel(item.attrs, item.checkedTag)"
+            :key="index"
+          >{{ tag.label }}</el-tag>
+        </div>
+      </div>
       <el-select
+        v-else
         class="select-item"
-        v-if="item.paramType === 'select'"
-        v-model="item.checkedAttr"
+        v-model="item.checkedTag"
         :disabled="isView || isDisabled"
         filterable
         clearable
         placeholder="请选择"
         @change="handleCheckedChange"
-        @focus="curIndex = index"
+        @focus="curIndex = tagIndex"
       >
         <el-option
           v-for="attr in item.attrs"
@@ -32,9 +36,9 @@
           :value="attr.value"
         ></el-option>
       </el-select>
-      <el-radio-group
-        v-if="item.paramType === 'radio'"
-        v-model="item.checkedAttr"
+      <!-- <el-radio-group
+        v-if="item.operateType === 4"
+        v-model="item.checkedTag"
         @change="handleCheckedChange"
       >
         <el-radio
@@ -42,9 +46,9 @@
           :key="attr.value"
           :disabled="isView || isDisabled"
           :label="attr.value"
-          @change="curIndex = index"
+          @change="curIndex = tagIndex"
         >{{attr.label}}</el-radio>
-      </el-radio-group>
+      </el-radio-group> -->
     </el-form-item>
   </c-card>
 </template>
@@ -59,49 +63,24 @@ export default {
   },
   data() {
     return {
-      curAttrs: [], // 全部商品参数
-      curIndex: 0, // 一类商品参数下标
-      checkAttrs: [] // 选中商品参数值[{1010:[212,3133]}]
-      // formModel: {
-      // }
+      curIndex: 0, // 标签下标
+      checkAttrs: [] // 选中的标签
     }
   },
-  created() {
-    this.getAttrs()
-  },
   methods: {
-    getAttrs() {
-      this.$api.basic.getGoodsattrval({
-        pageNo: 1,
-        type: this.type, // 1:参数，2:属性
-        pageSize: 20
-      }).then(res => {
-        const { totalCount, data } = res
-        if (totalCount) {
-          const { goodsAttrs } = this.dataObj
-          data.forEach((val, index) => {
-            const checkedAttr = []
-            const attrs = val.bmsGoodsAttrVals.map(item => {
-              if (goodsAttrs && goodsAttrs.length) {
-                goodsAttrs.forEach(eidtAttr => {
-                  if (eidtAttr.attrId === val.id && eidtAttr.attributeId === item.id) {
-                    checkedAttr.push(eidtAttr.attributeId)
-                  }
-                })
-              }
-              return {
-                value: item.id,
-                label: item.value
-              }
-            })
-            this.curAttrs.push({ attrs, paramType: val.paramType || '', id: val.id, label: `${val.name}:`, checkedAttr })
-          })
-        }
-      })
-    },
     handleCheckedChange(value) {
-      this.checkAttrs[this.curIndex] = { [this.curAttrs[this.curIndex].id]: value }
-      console.log(this.checkAttrs)
+      this.checkAttrs[this.curIndex] = { [this.dataObj[this.curIndex].id]: value }
+    },
+    setTagHandle(val, checked, index) {
+      this.curIndex = index
+      this.$emit('set-tag', val, checked, index)
+    },
+    getCheckedLabel(tagsList, checkedTag) {
+      const curTags = checkedTag.map(res => {
+        const curTag = tagsList.find(val => val.value === res)
+        return curTag ? { label: curTag.label, value: curTag.value } : ''
+      })
+      return curTags
     }
   }
 }
@@ -118,6 +97,11 @@ export default {
   .el-radio {
     width: 100px;
     margin: 10px 0px;
+  }
+  .checkedContent{
+    .el-tag{
+      margin-right: 5px;
+    }
   }
 }
 </style>

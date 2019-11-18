@@ -5,7 +5,7 @@ export default {
   props: {
     title: String,
     dataObj: {
-      type: Object,
+      type: [Object, Array],
       required: true
     },
     isView: {

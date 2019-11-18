@@ -168,7 +168,7 @@ export default {
           label: '标签状态',
           prop: 'tagStatus',
           formatter(row) {
-            return row.tagStatus ? vm.disStatus[row.tagStatus].label : ''
+            return row.tagStatus || row.tagStatus === 0 ? vm.disStatus[row.tagStatus].label : ''
           }
         },
         {

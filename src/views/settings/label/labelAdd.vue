@@ -114,12 +114,6 @@ export default {
       }, {
         label: '单选',
         value: 3
-      }, {
-        label: '下拉',
-        value: 4
-      }, {
-        label: '多文本',
-        value: 5
       }], // 页面显示类型
       rules: {
         tagName: [

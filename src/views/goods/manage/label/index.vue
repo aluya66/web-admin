@@ -16,36 +16,44 @@
     >
       <g-basic
         is-tag
-        :is-view="isView"
+        :is-view="true"
         :is-disabled="isDisabled"
         :data-obj="formModel"
         ref="basicRef"
         title="基础信息"
-        @show-image="reviewImage"
-      >
-      </g-basic>
+      ></g-basic>
       <g-params
-        :is-view="isView"
+        :is-view="false"
         :is-disabled="isDisabled"
-        v-if="formModel.id"
-        :data-obj="formModel"
+        :data-obj="curTags"
         ref="paramsRef"
-        title="标签信息"
+        title="属性信息"
+        @set-tag="setTagValue"
       ></g-params>
-      <el-form-item class="form-btn" v-if="!isView">
-        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+      <el-form-item class="form-btn">
+        <el-button
+          :loading="btnLoading"
+          size="medium"
+          type="primary"
+          @click.native.prevent="submitHandle"
+        >保存</el-button>
       </el-form-item>
     </el-form>
     <div v-if="dialogObj.isShow">
-      <el-dialog :visible.sync="dialogObj.isShow" v-if="dialogObj.imageUrl || dialogObj.videoUrl">
-        <img
-          width="100%"
-          :src="dialogObj.imageUrl"
-          v-if="dialogObj.fileType === 1"
-          style="object-fit: contain;"
-          alt=""
-        >
-      </el-dialog>
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <multi-select
+          ref="childRef"
+          :is-edit="dialogObj.isEdit"
+          :source-list="dialogObj.initData"
+          :init-checked="dialogObj.initChecked"
+        ></multi-select>
+      </c-dialog>
     </div>
   </c-view>
 </template>
@@ -53,29 +61,29 @@
 <script>
 import GBasic from '../detail/basic'
 import GParams from './params'
-// import MultiSelect from '@/views/common/multiSelect'
+import MultiSelect from '@/views/common/multiSelect'
 import MixinForm from 'mixins/form'
+import CDialog from 'components/dialog'
+import utils from 'utils'
 
 export default {
   name: 'goodsLabelDetail',
   mixins: [MixinForm],
   components: {
+    CDialog,
     GBasic,
-    GParams
-    // MultiSelect
+    GParams,
+    MultiSelect
   },
   data() {
     return {
+      isDisabled: false,
       formModel: {},
-      isView: true,
-      dialogObj: {
-        isShow: false,
-        type: 1,
-        curData: {}
-      },
-      isDisabled: true,
+      dialogObj: {},
+      curTags: [], // 所有标签集合
       btnLoading: false,
-      rules: {}
+      rules: {},
+      tagIndex: '' // 标签下标
     }
   },
 
@@ -84,34 +92,105 @@ export default {
   },
 
   methods: {
+    getCheckedTags() {
+      const { goodsBn } = this.formModel
+      this.$api.settings.getTagrelate({
+        goodsBn
+      }).then(res => {
+        if (res && res.length) {
+          this.curTags.forEach((tag, index) => {
+            let curCheckedTags = []
+            tag.attrs.forEach(val => {
+              res.some(item => {
+                if (tag.id === item.tagId) {
+                  if (val.value === item.tagValueId) {
+                    if (tag.operateType === 2) {
+                      curCheckedTags.push(item.tagValueId)
+                    } else {
+                      curCheckedTags = item.tagValueId
+                    }
+                  }
+                }
+              })
+            })
+            this.curTags[index].checkedTag = curCheckedTags
+          })
+        }
+      })
+    },
     fetchData() {
-      const { params } = this.$route
-      this.isDisabled = true
-      this.$api.goods.getDetail({ id: params.id }).then(res => {
+      const { id } = this.$route.params
+      this.$api.goods.getDetail({ id }).then(res => {
         this.setTagsViewTitle()
         if (res) {
           this.formModel = res
+          this.getAttrs()
+          window.setTimeout(() => {
+            this.getCheckedTags()
+          }, 50)
         } else {
           this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
         }
       })
     },
+    getAttrs() {
+      this.$api.settings.getAllTab().then(data => {
+        if (data && data.length) {
+          data.forEach((val, index) => {
+            const attrs = val.tagValues.map(({ id, value }) => ({ value: id, label: value }))
+            this.curTags.push({ attrs, operateType: val.operateType, id: val.id, label: `${val.tagName}:`, name: val.tagName, type: val.categoryName, checkedTag: [] })
+          })
+        }
+      })
+    },
+    dialogConfirm() {
+      const checkedTagsList = this.$refs.childRef.checkedAttr
+      this.$set(this.curTags[this.tagIndex], 'checkedTag', checkedTagsList)
+      this.dialogObj.isShow = false
+    },
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          console.log(this.$refs.formModel)
+          const { goodsBn } = this.formModel
+          const tags = []
+          this.curTags.forEach(res => {
+            if (utils.isArray(res.checkedTag)) {
+              res.checkedTag.forEach(val => {
+                tags.push({
+                  tagId: res.id,
+                  tagName: res.name,
+                  tagValueId: val,
+                  goodsBn
+                })
+              })
+            } else if (res.checkedTag) {
+              tags.push({
+                tagId: res.id,
+                tagName: res.name,
+                tagValueId: res.checkedTag,
+                goodsBn
+              })
+            }
+          })
+          this.$api.settings.addTagrelate({
+            tags
+          }).then(res => {
+            this.$msgTip('保存成功')
+          })
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    reviewImage(file) {
+    setTagValue(val, checkedList, index) {
+      this.tagIndex = index
       this.dialogObj = {
+        title: '请选择',
         isShow: true,
-        type: 1,
-        imageUrl: file.url,
-        fileType: file.fileType
+        initData: val,
+        initChecked: checkedList,
+        isEdit: true
       }
     }
   }

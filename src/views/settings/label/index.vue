@@ -83,8 +83,8 @@ export default {
     // 获取标签类型数据
     getTagType() {
       this.$api.settings.getGoodsTabType().then(res => {
-        if (res.data) {
-          this.tagTypeList = res.data.map(res => ({ label: res.categoryName, value: res.id }))
+        if (res && res.length) {
+          this.tagTypeList = res.map(res => ({ label: res.categoryName, value: res.id }))
         }
       })
     },
