@@ -40,6 +40,7 @@
       ></brand-params>
       <el-form-item class="form-btn" v-if="!isDisabled">
         <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+        <el-button @click.native.prevent="goback">返回</el-button>
       </el-form-item>
     </el-form>
     <div v-if="dialogObj.isShow">
@@ -172,7 +173,7 @@ export default {
                   tagId: res.id,
                   tagName: res.name,
                   tagValueId: val,
-                  code
+                  brandCode: code
                 })
               })
             } else if (res.checkedTag) {
@@ -180,7 +181,7 @@ export default {
                 tagId: res.id,
                 tagName: res.name,
                 tagValueId: res.checkedTag,
-                code
+                brandCode: code
               })
             }
           })

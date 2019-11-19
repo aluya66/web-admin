@@ -37,6 +37,7 @@
           type="primary"
           @click.native.prevent="submitHandle"
         >保存</el-button>
+        <el-button size="medium" @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
     <div v-if="dialogObj.isShow">

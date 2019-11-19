@@ -15,9 +15,10 @@ export default (err, callBackFun, duration) => {
   console.log('err', err)
   switch (errCode) {
     case 8:
+    case 3:
     case 9:
       utils.removeStore('SET_USERINFO')
-      utils.goToLogin()
+      window.globalVue.$router.push('/login')
       break
     case 102:
       errMsg = ''
