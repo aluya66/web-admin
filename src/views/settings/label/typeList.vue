@@ -22,6 +22,15 @@
             clearable
           />
         </el-form-item>
+        <el-form-item label="类型分类">
+          <query-dict
+            :dict-list="categoryTypeList"
+            class="search-item"
+            :size="size"
+            placeholder="请选择"
+            :value.sync="searchObj.categoryType"
+          ></query-dict>
+        </el-form-item>
         <el-form-item label="业务线">
           <query-dict
             :dict-list="lobList"
@@ -56,10 +65,11 @@ export default {
   data(vm) {
     return {
       lobList: dictObj.lobList, // 业务线集合
-      categoryType: dictObj.categoryType, // 类型分类集合
+      categoryTypeList: dictObj.categoryTypeList, // 类型分类集合
       searchObj: {
         categoryName: '', // 类型名称
-        categoryLob: '' // 业务线
+        categoryLob: '', // 业务线
+        categoryType: '' // 分类类型
       },
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [
@@ -106,22 +116,21 @@ export default {
           label: '类型分类',
           prop: 'categoryType',
           formatter(row) {
-            const lobObj = row.categoryType && vm.lobList.find(res => row.categoryType === res.value)
-            return lobObj ? lobObj.label : ''
+            return row.categoryType || row.categoryType === 0 ? vm.categoryTypeList[row.categoryType].label : ''
           }
         },
-        {
-          label: '描述',
-          prop: 'categoryDesc'
-        },
+        // {
+        //   label: '描述',
+        //   prop: 'categoryDesc'
+        // },
         {
           label: '创建时间',
           prop: 'created'
-        },
-        {
-          label: '更新时间',
-          prop: 'updated'
         }
+        // {
+        //   label: '更新时间',
+        //   prop: 'updated'
+        // }
       ]
     }
   },

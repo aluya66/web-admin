@@ -3,7 +3,7 @@
     selection
     hasBorder
     :size="size"
-    :max-height="730"
+    :max-height="maxHeight"
     :loading="isLoading"
     :table-header="tableHeader"
     :table-list="tableList"
@@ -79,7 +79,7 @@ import mixinTable from 'mixins/table'
 import utils from 'utils'
 import dictObj from '@/store/dictData'
 
-const pageItemType = ['文本', '复选', '单选', '下拉', '多文本'] // 页面显示类型
+const pageItemType = ['文本', '复选', '单选'] // 页面显示类型
 
 export default {
   name: 'labelList',
@@ -165,13 +165,6 @@ export default {
           }
         },
         {
-          label: '标签状态',
-          prop: 'tagStatus',
-          formatter(row) {
-            return row.tagStatus || row.tagStatus === 0 ? vm.disStatus[row.tagStatus].label : ''
-          }
-        },
-        {
           label: '显示类型',
           prop: 'operateType',
           formatter(row, index) {
@@ -187,15 +180,22 @@ export default {
           }
         },
         {
+          label: '标签状态',
+          prop: 'tagStatus',
+          formatter(row) {
+            return row.tagStatus || row.tagStatus === 0 ? vm.disStatus[row.tagStatus].label : ''
+          }
+        },
+        {
           label: '创建时间',
           prop: 'created',
           width: 100
-        },
-        {
-          label: '更新时间',
-          prop: 'updated',
-          width: 100
         }
+        // {
+        //   label: '更新时间',
+        //   prop: 'updated',
+        //   width: 100
+        // }
       ]
     }
   },
@@ -209,6 +209,7 @@ export default {
       const searchDate = this.getSearchDate(dataTime)
       this.isLoading = true
       this.$api.settings.getTabList({
+        categoryType: 2, // 标签
         ...searchDate,
         ...other,
         ...page

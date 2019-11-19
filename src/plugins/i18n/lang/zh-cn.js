@@ -10,6 +10,7 @@ export default {
     brandInfo: '品牌信息',
     brandLabel: '品牌标签',
     merchandise: '商品类型',
+    goodsAttrs: '商品属性',
     label: '标签管理',
     logistics: '物流管理',
     goods: '商品中心',

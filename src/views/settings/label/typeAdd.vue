@@ -11,7 +11,7 @@
     <el-form-item label="类型名称" prop="categoryName">
       <el-input v-model.trim="formModel.categoryName" class="form-item" clearable/>
     </el-form-item>
-    <el-form-item label="业务线">
+    <el-form-item label="业务线" prop="categoryLob">
       <query-dict
         :dict-list="lobList"
         class="form-select"
@@ -27,6 +27,7 @@
         placeholder="请选择类型分类"
         :value.sync="formModel.categoryType"
       ></query-dict>
+      <span class="input-info">* 区分属性与标签</span>
     </el-form-item>
     <el-form-item label="类型描述:" prop="categoryDesc">
       <el-input
@@ -74,6 +75,9 @@ export default {
         ],
         categoryLob: [
           { required: true, message: '请选择业务线', trigger: 'change' }
+        ],
+        categoryType: [
+          { required: true, message: '请选择分类类型', trigger: 'change' }
         ]
       }
     }

@@ -22,12 +22,12 @@
       >
         <template v-slot:header>
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="字典编码">
+            <el-form-item label="字典名称">
               <el-input
                 v-model="searchObj.dictName"
                 class="search-item"
                 :size="size"
-                placeholder="字典编码"
+                placeholder="字典名称"
                 clearable
               />
             </el-form-item>
@@ -40,14 +40,14 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="业务线编码">
-              <el-input
-                v-model="searchObj.dictLob"
+            <el-form-item label="业务线">
+              <query-dict
+                :dict-list="lobList"
                 class="search-item"
                 :size="size"
-                placeholder="业务线编码"
-                clearable
-              />
+                placeholder="请选择"
+                :value.sync="searchObj.dictLob"
+              ></query-dict>
             </el-form-item>
             <el-form-item label="字典值">
               <el-input
@@ -59,7 +59,7 @@
               />
             </el-form-item>
             <el-form-item label="状态">
-              <el-select
+              <!-- <el-select
                 v-model="searchObj.status"
                 :size="size"
                 class="search-item"
@@ -72,13 +72,13 @@
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
-              </el-select>
-              <!-- <query-dict
-                :dict-list="dictData[dictOpts.codes[0]]"
+              </el-select> -->
+              <query-dict
+                :dict-list="lobList"
                 class="search-item"
                 :size="size"
                 :value.sync="searchObj.status"
-              ></query-dict> -->
+              ></query-dict>
             </el-form-item>
             <el-form-item>
               <el-button
@@ -114,7 +114,7 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import EnumAdd from './add'
-// import utils from 'utils'
+import dictObj from '@/store/dictData'
 
 export default {
   name: 'dictList',
@@ -125,10 +125,12 @@ export default {
   },
   data(vm) {
     return {
-      dictOpts: { // 字典参数, 路由页面需要配置
-        codes: [], // ['disabled']
-        dictLob: ''
-      },
+      lobList: dictObj.lobList, // 业务线集合
+      disStatus: dictObj.disStatus, // 启用禁用集合
+      // dictOpts: { // 字典参数, 路由页面需要配置
+      //   codes: [], // ['disabled']
+      //   dictLob: ''
+      // },
       dialogObj: {}, // 对话框数据
       searchObj: {
         dictCode: '', // 字典编码
@@ -137,16 +139,6 @@ export default {
         dictValue: '', // 字典值
         status: '' // 字典状态
       },
-      statusList: [
-        {
-          value: 0,
-          label: '禁用'
-        },
-        {
-          value: 1,
-          label: '启用'
-        }
-      ],
       tableList: [],
       tableInnerBtns: [
         {
@@ -183,8 +175,12 @@ export default {
           prop: 'dictCode'
         },
         {
-          label: '业务线编码',
-          prop: 'dictLob'
+          label: '业务线',
+          prop: 'dictLob',
+          formatter(row) {
+            const lobObj = row.dictLob && vm.lobList.find(res => row.dictLob === res.value)
+            return lobObj ? lobObj.label : ''
+          }
         },
         {
           label: '字典值',
@@ -203,7 +199,7 @@ export default {
           prop: 'status',
           width: 100,
           formatter(row, index) {
-            return vm.statusList[row.status].label
+            return row.status || row.status === 0 ? vm.disStatus[row.status].label : ''
           }
         }
       ]

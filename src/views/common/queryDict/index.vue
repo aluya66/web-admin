@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.dictList && this.dictList.length">
+  <div v-if="this.dictList && this.dictList.length" class="dict">
     <el-select
       v-if="showType === '' || showType === 'select'"
       v-model="dictValue"
@@ -82,7 +82,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.el-select {
-  width: 100%;
+.dict {
+  display: inline-block;
+  .el-select {
+    width: 100%;
+  }
 }
 </style>

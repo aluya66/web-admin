@@ -134,7 +134,9 @@ export default {
       })
     },
     getAttrs() {
-      this.$api.settings.getAllTab().then(data => {
+      this.$api.settings.getAllTab({
+        categoryType: 0 // 商品属性
+      }).then(data => {
         if (data && data.length) {
           data.forEach((val, index) => {
             const attrs = val.tagValues.map(({ id, value }) => ({ value: id, label: value }))

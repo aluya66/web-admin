@@ -25,7 +25,7 @@ export default {
     meta: {
       title: 'settingsLabel',
       icon: 'table',
-      roles: ['admin']
+      roles: ['review']
     }
   }]
 }

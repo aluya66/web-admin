@@ -18,7 +18,7 @@
         hasBorder
         :size="size"
         :loading="isLoading"
-        :max-height="730"
+        :max-height="maxHeight + 54"
         :table-header="tableHeader"
         :table-list="tableList"
         :page-info="pageInfo"
@@ -122,38 +122,38 @@ export default {
       }],
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [
-        {
-          width: 150,
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            vm.routerLink(`/basic/brandInfo/${row.id}`)
-          }
-        },
+        // {
+        //   width: 150,
+        //   name: '编辑',
+        //   icon: 'el-icon-edit',
+        //   handle(row) {
+        //     vm.routerLink(`/basic/brandInfo/${row.id}`)
+        //   }
+        // },
         {
           name: '添加标签',
           icon: 'el-icon-plus',
           handle(row) {
             vm.routerLink(`/basic/brandLabel/${row.id}`)
           }
-        },
-        {
-          name: '删除',
-          icon: 'el-icon-delete',
-          handle(row) {
-            const { name, id } = row
-            vm.confirmTip(`确认删除${name}品牌信息`, () => {
-              vm.deleteData({ id })
-            })
-          }
         }
+        // {
+        //   name: '删除',
+        //   icon: 'el-icon-delete',
+        //   handle(row) {
+        //     const { name, id } = row
+        //     vm.confirmTip(`确认删除${name}品牌信息`, () => {
+        //       vm.deleteData({ id })
+        //     })
+        //   }
+        // }
       ],
       tableHeader: [
         {
           label: '品牌LOGO',
           prop: 'logo',
-          isImage: true,
-          fixed: true
+          width: 100,
+          isImage: true
         },
         {
           label: '品牌名称',
@@ -195,11 +195,6 @@ export default {
         {
           label: '消费人群',
           prop: 'consumer',
-          width: 100
-        },
-        {
-          label: '品牌排序',
-          prop: 'sort',
           width: 100
         },
         // {

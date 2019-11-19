@@ -10,7 +10,7 @@
         ></el-tab-pane>
       </el-tabs>
       <div class="header-btn">
-        <el-button type="primary" icon="el-icon-plus" size="medium" @click="showDialog">新增</el-button>
+        <el-button type="primary" v-permission="$route.meta.roles" icon="el-icon-plus" size="medium" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -71,7 +71,7 @@ export default {
         },
         {
           value: 'typeList',
-          label: '标签类型'
+          label: '类型管理'
         }
       ]
     }
@@ -82,7 +82,9 @@ export default {
   methods: {
     // 获取标签类型数据
     getTagType() {
-      this.$api.settings.getGoodsTabType().then(res => {
+      this.$api.settings.getGoodsTabType({
+        categoryType: 2
+      }).then(res => {
         if (res && res.length) {
           this.tagTypeList = res.map(res => ({ label: res.categoryName, value: res.id }))
         }
