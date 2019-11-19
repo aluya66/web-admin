@@ -29,7 +29,7 @@
                 placeholder="业务线"
                 clearable
               />
-            </el-form-item> -->
+            </el-form-item>-->
             <el-form-item label="名称">
               <el-input
                 v-model="searchObj.name"
@@ -75,7 +75,7 @@
         </template>
       </c-table>
     </div>
-     <div v-if="dialogObj.isShow">
+    <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
@@ -171,22 +171,20 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime, 'dateTime')
       this.isLoading = true
-      this.$api.member
-        .getMemberType({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.member.getMemberType({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     },
     dialogConfirm() {
       const childRef = this.$refs.childRef
@@ -208,15 +206,15 @@ export default {
       this.$api.member.addMemberType(formModel).then(res => {
         this.$msgTip('添加成功')
         this.fetchData()
+        this.dialogObj.isShow = false
       })
-      this.dialogObj.isShow = false
     },
     editHandle(childData) {
       this.$api.member.updateMemberType(childData).then(res => {
         this.$msgTip('修改成功')
         this.fetchData()
+        this.dialogObj.isShow = false
       })
-      this.dialogObj.isShow = false
     },
     showDialog(opts) {
       this.dialogObj = {

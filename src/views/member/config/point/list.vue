@@ -200,6 +200,7 @@ export default {
       this.$api.basic.businessList(
         {
           status: 1,
+          pageNo: 1,
           pageSize: 100
         }
       ).then(res => {

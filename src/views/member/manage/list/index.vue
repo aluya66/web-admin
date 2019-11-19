@@ -97,13 +97,9 @@
                 :value.sync="areaCode"
                 :options="areaOptions"
                 :props="areaProps"
+                class="search-item"
               >
               </cascader>
-              <!-- <el-cascader
-                v-model="areaCode"
-                :options="areaOptions"
-                :props="areaProps"
-                clearable></el-cascader> -->
             </el-form-item>
             <el-form-item label="首次加入时间">
               <el-date-picker

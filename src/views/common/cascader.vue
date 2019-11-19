@@ -1,12 +1,12 @@
 <template>
-    <el-cascader
-        v-model="data"
-        :options="options"
-        :props="props"
-        v-bind="$attrs"
-        v-on="$listeners"
-        clearable>
-    </el-cascader>
+  <el-cascader
+    v-model="data"
+    :options="options"
+    :props="props"
+    v-bind="$attrs"
+    v-on="$listeners"
+    clearable
+  ></el-cascader>
 </template>
 <script>
 

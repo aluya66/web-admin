@@ -39,7 +39,6 @@
                 :value.sync="searchObj.memberTypeId"
               ></query-dict>
             </el-form-item>
-
             <el-form-item label="状态">
               <el-select v-model="searchObj.isEnable" class="search-item" :size="size" clearable>
                 <el-option
@@ -238,6 +237,7 @@ export default {
       this.$api.basic.businessList(
         {
           status: 1,
+          pageNo: 1,
           pageSize: 100
         }
       ).then(res => {
@@ -250,41 +250,31 @@ export default {
       })
     },
     getMemberTypeList() {
-      this.$api.member
-        .getMemberType({
-          isEnable: 1,
-          pageSize: 100
-        })
-        .then(res => {
-          if (res && res.totalCount) {
-            const { data } = res
-            this.memberTypeList = data.map((item) => { return { value: item.id, label: item.name } }) || []
-          } else {
-            this.memberTypeList = res.map((item) => { return { value: item.id, label: item.name } }) || []
-          }
-        })
+      this.$api.member.getMemberListType().then(res => {
+        if (res) {
+          this.memberTypeList = res.map((item) => { return { value: item.id, label: item.name } }) || []
+        }
+      })
     },
     fetchData() {
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime, 'dateTime')
       this.isLoading = true
-      this.$api.member
-        .getMemberRule({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.member.getMemberRule({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     },
     dialogConfirm() {
       const childRef = this.$refs.childRef
@@ -306,15 +296,15 @@ export default {
       this.$api.member.addMemberRule(formModel).then(res => {
         this.$msgTip('添加成功')
         this.fetchData()
+        this.dialogObj.isShow = false
       })
-      this.dialogObj.isShow = false
     },
     editHandle(childData) {
       this.$api.member.updateMemberRule(childData).then(res => {
         this.$msgTip('修改成功')
         this.fetchData()
+        this.dialogObj.isShow = false
       })
-      this.dialogObj.isShow = false
     },
     showDialog(opts) {
       this.dialogObj = {
