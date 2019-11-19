@@ -92,15 +92,19 @@
                 clearable
               />
             </el-form-item>
-            <!-- <el-form-item label="所在地区">
-              <el-cascader
-                class="search-item"
-                placeholder="地区"
-                v-model="searchObj.areaCode"
-                :options="areaList"
-                filterable
-              ></el-cascader>
-            </el-form-item>-->
+            <el-form-item label="所在地区">
+              <cascader
+                :value.sync="areaCode"
+                :options="areaOptions"
+                :props="areaProps"
+              >
+              </cascader>
+              <!-- <el-cascader
+                v-model="areaCode"
+                :options="areaOptions"
+                :props="areaProps"
+                clearable></el-cascader> -->
+            </el-form-item>
             <el-form-item label="首次加入时间">
               <el-date-picker
                 :size="size"
@@ -173,6 +177,7 @@ import EditMember from './editMember'
 import EditBalance from './editBalance'
 import EditPoint from './editPoint'
 import utils from 'utils'
+import Cascader from '../../../common/cascader'
 
 export default {
   name: 'memberManageList',
@@ -182,10 +187,23 @@ export default {
     EditBalance,
     EditPoint,
     ReviewMember,
-    CDialog
+    CDialog,
+    Cascader
   },
   data(vm) {
     return {
+      areaCode: [], // 省市区code列表  [省，市，区]
+      areaOptions: [], // 地区列表
+      areaProps: {
+        checkStrictly: true,
+        lazy: true,
+        lazyLoad (node, resolve) {
+          vm.fetchAreaData(node, (data) => {
+            // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+            resolve(data)
+          })
+        }
+      },
       pickerOptions: utils.pickerOptions,
       dialogObj: {},
       options: [], // 地区
@@ -197,9 +215,11 @@ export default {
         memberName: '', // 所属店员
         type: '', // 会员来源
         memberTypeId: '', // 会员类型
-        cityCode: '', // 地区
         dataTime: '', // 首次加入时间区间
-        birDataTime: '' // 生日区间
+        birDataTime: '', // 生日区间
+        provinceCode: '', // 省
+        cityCode: '', // 市
+        districtCode: '' // 区
       },
       // 会员来源
       sourceSelect: [
@@ -220,16 +240,7 @@ export default {
         value: 2
       }],
       // 会员类型
-      memberTypeSelect: [
-        // {
-        //   label: '白金会员',
-        //   value: 0
-        // },
-        // {
-        //   label: '砖石会员',
-        //   value: 1
-        // }
-      ],
+      memberTypeSelect: [],
       tableInnerBtns: [
         {
           width: 150,
@@ -368,7 +379,31 @@ export default {
   },
 
   methods: {
+    fetchAreaData(node = {}, callBack) {
+      const { level, value } = node
+      this.$api.basic.queryAllRegion({
+        parentCode: value || 0
+      }).then(res => {
+        const data = res.totalCount ? res.data : res
+        let curData = []
+        if (data && data.length) {
+          curData = data.map(res => ({
+            leaf: level ? level >= 2 : 0,
+            value: res.code,
+            label: res.name
+          }))
+        }
+        if (value === 0) {
+          this.areaOptions = curData
+        } else {
+          typeof callBack === 'function' && callBack(curData)
+        }
+      })
+    },
     fetchData() {
+      this.searchObj.provinceCode = this.areaCode[0] || ''
+      this.searchObj.cityCode = this.areaCode[1] || ''
+      this.searchObj.districtCode = this.areaCode[2] || ''
       const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
@@ -408,7 +443,6 @@ export default {
       })
     },
     reviewAndEditHandle(childFormModel, type) {
-      console.log(childFormModel)
       if (type === 2) {
         // 编辑会员
         const { appCode, birthday, isEnable, shareStatus, userId } = childFormModel

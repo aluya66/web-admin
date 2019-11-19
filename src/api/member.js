@@ -160,6 +160,15 @@ export const getMemberEquityList = params =>
   })
 
 /**
+ * 会员权益编辑
+ * @param {*} params
+ */
+export const editMemberEquity = params =>
+  Http.fetch(`${context}/api/member/activity`, params, {
+    method: 'put'
+  })
+
+/**
  * 导出会员积分
  * @param {*} params
  */

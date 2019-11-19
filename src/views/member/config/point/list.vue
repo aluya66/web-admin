@@ -242,17 +242,13 @@ export default {
     },
     addHandle(formModel) {
       this.$api.member.addPointRule(formModel).then(res => {
-        this.$msgTip('添加成功')
-        this.fetchData()
+        this.responeHandle('修改成功')
       })
-      this.dialogObj.isShow = false
     },
     editHandle(childData) {
       this.$api.member.updatePointRule(childData).then(res => {
-        this.$msgTip('修改成功')
-        this.fetchData()
+        this.responeHandle('修改成功')
       })
-      this.dialogObj.isShow = false
     },
     showDialog(opts) {
       this.dialogObj = {
