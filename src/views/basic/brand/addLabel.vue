@@ -108,9 +108,6 @@ export default {
           if (res) {
             this.formModel = res
             this.getAttrs()
-            window.setTimeout(() => {
-              this.getCheckedTags()
-            }, 50)
           } else {
             this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
           }
@@ -149,6 +146,7 @@ export default {
         categoryName: '品牌类'
       }).then(data => {
         if (data && data.length) {
+          this.getCheckedTags() // 获取已选中的标签
           data.forEach((val, index) => {
             const attrs = val.tagValues.map(({ id, value }) => ({ value: id, label: value }))
             this.curTags.push({ attrs, operateType: val.operateType, id: val.id, label: `${val.tagName}:`, name: val.tagName, type: val.categoryName, checkedTag: [] })
