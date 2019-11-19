@@ -327,8 +327,9 @@ export default {
       if (!this.goodsDialogObj.productCodes || this.goodsDialogObj.productCodes.length === 0) {
         return this.$msgTip('请选择商品导入')
       }
-      this.goodsDialogObj.productCodes = this.goodsDialogObj.productCodes.split(/[\s\n]/) // 字符串分割换行符、空格
-      const { activityDetailId, userLevel, activityId, productCodes } = this.goodsDialogObj
+      let productCodes = this.goodsDialogObj.productCodes.split(/[\s\n]/) // 字符串分割换行符、空格
+      // const { activityDetailId, userLevel, activityId, productCodes } = this.goodsDialogObj
+      const { activityDetailId, userLevel, activityId } = this.goodsDialogObj
       this.$api.member.editMemberEquity({ activityDetailId, userLevel, activityId, productCodes }).then(() => {
         this.$msgTip('商品导入成功')
         this.goodsDialogObj.isShow = false
