@@ -59,6 +59,18 @@
     <div v-if="goodsDialogObj.isShow">
       <c-dialog
         :is-show="goodsDialogObj.isShow"
+        title="导入商品"
+        close-btn
+        @before-close="goodsDialogObj.isShow = false"
+        @on-submit="goodsDialogConfirm('goodsRef')"
+      >
+        <h3 class="tip">输入商品SPU，一行一个商品SPU</h3>
+        <el-input type="textarea" v-model="goodsDialogObj.productCodes" rows="20"/>
+      </c-dialog>
+    </div>
+    <!-- <div v-if="goodsDialogObj.isShow">
+      <c-dialog
+        :is-show="goodsDialogObj.isShow"
         width="80vw"
         title="导入商品"
         close-btn
@@ -147,7 +159,7 @@
           </c-table>
         </div>
       </c-dialog>
-    </div>
+    </div> -->
     <!-- 商品弹窗结束 -->
   </c-view>
 </template>
@@ -315,6 +327,7 @@ export default {
       if (!this.goodsDialogObj.productCodes || this.goodsDialogObj.productCodes.length === 0) {
         return this.$msgTip('请选择商品导入')
       }
+      this.goodsDialogObj.productCodes = this.goodsDialogObj.productCodes.split(/[\s\n]/) // 字符串分割换行符、空格
       const { activityDetailId, userLevel, activityId, productCodes } = this.goodsDialogObj
       this.$api.member.editMemberEquity({ activityDetailId, userLevel, activityId, productCodes }).then(() => {
         this.$msgTip('商品导入成功')
@@ -406,5 +419,11 @@ export default {
   .rate-inp {
     margin: 0 10px;
     width: 200px;
+  }
+</style>
+<style lang='less' scoped>
+  .tip {
+    margin-bottom: 15px;
+    font-weight: 700;
   }
 </style>
