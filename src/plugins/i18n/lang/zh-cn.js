@@ -36,7 +36,8 @@ export default {
     settings: '配置管理',
     dictList: '字典管理',
     dictInfo: '字典信息',
-    settingsLabel: '标签管理'
+    settingsLabel: '标签管理',
+    settingsQrcode: '二维码管理'
   },
   navbar: {
     logout: '退出',

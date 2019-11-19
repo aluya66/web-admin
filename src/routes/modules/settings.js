@@ -27,5 +27,14 @@ export default {
       icon: 'table',
       roles: ['review']
     }
+  }, {
+    path: '/settings/qrcode',
+    name: 'settingsQrcode',
+    component: () => import('@/views/settings/qrcode/list'),
+    meta: {
+      title: 'settingsQrcode',
+      icon: 'table',
+      roles: ['admin']
+    }
   }]
 }
