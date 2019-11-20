@@ -1,14 +1,9 @@
 <template>
   <c-view>
     <template v-slot:header>
-      <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
-      <div class="header-btn">
-        <el-button
-          :size="size"
-          type="primary"
-          v-permission="$route.meta.roles"
-          icon="el-icon-plus"
-        >新增</el-button>
+      <div class="title">
+        {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -110,98 +105,179 @@
         </template>
       </c-table>
     </div>
+
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <qrcode-add ref="childRef" :init-data.sync="dialogObj.initData"></qrcode-add>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
-import mixinTable from "mixins/table";
+import mixinTable from 'mixins/table'
+import CDialog from 'components/dialog'
+import QrcodeAdd from './add'
 import dictObj from '@/store/dictData'
+
 export default {
-  name: "settingsQrcode",
+  name: 'settingsQrcode',
   mixins: [mixinTable],
+  components: {
+    CDialog,
+    QrcodeAdd
+  },
   data(vm) {
     return {
+      dialogObj: {}, // 弹窗数据
       lobList: dictObj.lobList, // 业务线集合
       statusList: dictObj.disStatus, // 状态
       searchObj: {},
       tableInnerBtns: [
         {
           width: 150,
-          name: "开关",
-          icon: "el-icon-open",
+          name: '开关',
+          icon: 'el-icon-open',
           handle(row) {
-            const { status, id, qrcodeName } = row;
+            const { status, id, qrcodeName } = row
             const updateStatus = status === 0 ? 1 : 0
             const updateMsg = status === 0 ? '启用' : '禁用'
             vm.confirmTip(`是否${updateMsg}【${qrcodeName}】二维码`, () => {
-              vm.changeStatus({ id, status: updateStatus });
-            });  
+              vm.changeStatus({ id, status: updateStatus })
+            })
           }
         },
         {
           width: 150,
-          name: "编辑",
-          icon: "el-icon-edit",
-          handle(row) {}
+          name: '编辑',
+          icon: 'el-icon-edit',
+          handle(row) {
+            const { id, contextKey, description, qrcodeCode, qrcodeName, producerCode, userCode, opCreator } = row
+            let contextKeyList = contextKey.split(',').map((item) => {
+              return { value: item }
+            })
+            let userCodeList = userCode && userCode.split(',')
+            console.log(contextKeyList)
+            vm.showDialog({
+              title: '编辑二维码',
+              initData: {
+                id,
+                contextKey: contextKeyList,
+                qrcodeCode,
+                qrcodeName,
+                producerCode,
+                userCode: userCodeList,
+                opCreator,
+                description
+              }
+            })
+          }
         },
         {
-          name: "删除",
-          icon: "el-icon-delete",
+          name: '删除',
+          icon: 'el-icon-delete',
           handle(row) {
-            const { qrcodeName, id } = row;
+            const { qrcodeName, id } = row
             vm.confirmTip(`是否删除【${qrcodeName}】二维码`, () => {
-              vm.deleteQrcode(id);
-            });
+              vm.deleteQrcode(id)
+            })
           }
         }
       ],
       tableHeader: [
         {
-          label: "二维码ID",
-          prop: "id",
+          label: '二维码ID',
+          prop: 'id',
           fixed: true
         },
         {
-          label: "二维码名称",
-          prop: "qrcodeName"
+          label: '二维码名称',
+          prop: 'qrcodeName'
         },
         {
-          label: "二维码编码",
-          prop: "qrcodeCode"
+          label: '二维码编码',
+          prop: 'qrcodeCode'
         },
         {
-          label: "二维码使用者",
-          prop: "userCode"
+          label: '二维码使用者',
+          prop: 'userCode'
         },
         {
-          label: "状态",
-          prop: "status",
+          label: '状态',
+          prop: 'status',
           formatter(row) {
             return row.status === 0 ? '禁用' : '启用'
           }
         },
         {
-          label: "更新人名字",
-          prop: "opEditor"
+          label: '更新人名字',
+          prop: 'opEditor'
         },
         {
-          label: "更新时间",
-          prop: "updated",
+          label: '更新时间',
+          prop: 'updated',
           width: 100
         }
       ]
-    };
+    }
   },
   created() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
+    // 新增、编辑提交
+    dialogConfirm() {
+      const childRef = this.$refs.childRef
+      const requestMethods = {
+        'add': this.$api.qrcode.saveQrcode,
+        'edit': this.$api.qrcode.updateQrcode
+      }
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const childFormModel = childRef.formModel
+          const request = childFormModel.id ? requestMethods['edit'] : requestMethods['add']
+          let { userCode, contextKey, qrcodeCode, ...other } = childFormModel
+          let userCodeStr = userCode ? userCode.join(',') : '' // 使用者字段处理
+          let contextKeyStr = contextKey.length && contextKey.map((item) => item.value).join(',') // 字段值处理
+          // 校验qrcode是否已存在
+          this.$api.qrcode.checkQrcode({ qrcodeCode }).then(() => {
+            request({
+              ...other,
+              qrcodeCode,
+              userCode: userCodeStr,
+              contextKey: contextKeyStr
+            }).then(() => {
+              this.responeHandle('操作成功')
+            })
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    // 弹窗
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || '新增二维码',
+        initData: opts.initData
+      }
+    },
+    // 删除二维码
     deleteQrcode(id) {
       this.$api.qrcode.deleteQrcode({ id }).then(() => {
         this.$msgTip('删除成功')
-        this.fetchData()  
+        this.fetchData()
       })
     },
+    // 启用、禁用
     changeStatus(params) {
       this.$api.qrcode.changeStatus(params).then(() => {
         this.$msgTip('更新成功')
@@ -209,9 +285,9 @@ export default {
       })
     },
     fetchData() {
-      const { pageSize, pageNo } = this.pageInfo;
+      const { pageSize, pageNo } = this.pageInfo
       const userCode = this.searchObj.userCode ? this.searchObj.userCode.join(',') : '' // 使用者字段
-      this.isLoading = true;
+      this.isLoading = true
       this.$api.qrcode
         .getQrcodeList({
           ...this.searchObj,
@@ -220,19 +296,24 @@ export default {
           userCode
         })
         .then(res => {
-          this.isLoading = false;
+          this.isLoading = false
           if (res.totalCount) {
-            const { data, totalCount } = res;
-            this.pageInfo.totalNum = totalCount;
-            this.tableList = data || [];
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data || []
           } else {
-            this.tableList = res || [];
+            this.tableList = res || []
           }
-        });
+        })
     }
   }
-};
+}
 </script>
 
 <style lang='less' scoped>
+.title {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 </style>
