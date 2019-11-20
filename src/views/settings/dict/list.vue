@@ -59,22 +59,8 @@
               />
             </el-form-item>
             <el-form-item label="状态">
-              <!-- <el-select
-                v-model="searchObj.status"
-                :size="size"
-                class="search-item"
-                placeholder="请选择"
-                clearable
-              >
-                <el-option
-                  v-for="item in statusList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select> -->
               <query-dict
-                :dict-list="lobList"
+                :dict-list="disStatus"
                 class="search-item"
                 :size="size"
                 :value.sync="searchObj.status"
@@ -187,7 +173,7 @@ export default {
           prop: 'values',
           width: 400,
           formatter(row) {
-            return row.values.map(item => `[${item.id}] ${item.dictValue}`).join('; ')
+            return row.values.map(item => item.dictValue).join('/')
           }
         },
         {
