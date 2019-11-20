@@ -132,7 +132,10 @@ const setParams = (url, params = {}, opt = {}) => {
     curParams = {
       ...curParams,
       url: curUrl,
-      params: opt.joinUrl ? {} : params
+      params: opt.joinUrl ? {} : params,
+      paramsSerializer(params) {
+        return utils.serializeParam(params, opt.joinUrl)
+      }
     }
   } else {
     curParams = {

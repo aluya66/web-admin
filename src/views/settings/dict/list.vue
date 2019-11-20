@@ -252,7 +252,7 @@ export default {
       const { values, ...other } = formModel
       this.$api.settings.updateDict({
         ...other,
-        updata: values,
+        update: values,
         del: delArr
       }).then(res => {
         this.$msgTip('修改成功')
