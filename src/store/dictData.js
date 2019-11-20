@@ -26,6 +26,7 @@ const disStatus = [{
   value: 1
 }
 ]
+
 // 标签分类类型
 const categoryTypeList = [{
   label: '属性类',
