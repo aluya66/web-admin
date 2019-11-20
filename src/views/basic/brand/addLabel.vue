@@ -40,7 +40,7 @@
       ></brand-params>
       <el-form-item class="form-btn" v-if="!isDisabled">
         <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
-        <el-button @click.native.prevent="goback">返回</el-button>
+        <el-button @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
     <div v-if="dialogObj.isShow">
