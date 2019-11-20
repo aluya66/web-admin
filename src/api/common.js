@@ -36,7 +36,8 @@ export const login = params => Http.fetch(`${ipxContext}/login`, params)
  * @param {*} params
  */
 export const logout = params => Http.fetch(`${ipxContext}/out`, params, {
-  method: 'get'
+  method: 'get',
+  hasErrMsg: true
 })
 
 /**
