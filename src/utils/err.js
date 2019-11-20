@@ -17,8 +17,9 @@ export default (err, callBackFun, duration) => {
     case 8:
     case 3:
     case 9:
-      utils.removeStore('SET_USERINFO')
-      window.globalVue.$router.push('/login')
+      errMsg = 'token异常，请重新登录'
+      window.globalVue.$store.dispatch('user/resetToken')
+      utils.goToLogin()
       break
     case 102:
       errMsg = ''
