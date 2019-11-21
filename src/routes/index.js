@@ -76,7 +76,7 @@ export const constantRoutes = [{
 ]
 
 // 通过解构数据屏蔽不需要引入到路由
-const { marketing, pay, order, ...routeOthers } = routes
+const { pay, order, ...routeOthers } = routes
 
 export const asyncRoutes = [{
   path: '*',

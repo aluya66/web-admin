@@ -27,6 +27,8 @@ export default {
     couponRuleList: '券规则列表',
     couponRuleInfo: '券规则信息',
     couponRuleView: '券规则',
+    ticket: '优惠券',
+    ticketList: '优惠券列表',
     couponList: '券列表',
     payCenter: '支付中心',
     payManage: '支付管理',
