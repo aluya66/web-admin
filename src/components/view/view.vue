@@ -50,6 +50,9 @@ export default {
 		.title {
 			font-size: @f18;
       line-height: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
     }
     .header-btn{
       position: absolute;
