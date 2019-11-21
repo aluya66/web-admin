@@ -66,7 +66,7 @@ export default {
       type: Boolean,
       default: false
     },
-    value: [Number, String],
+    value: [Number, String, Array],
     showType: {
       type: String,
       default: 'select'
