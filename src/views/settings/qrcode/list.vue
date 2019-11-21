@@ -39,24 +39,6 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="创建人">
-              <el-input
-                v-model="searchObj.opCreator"
-                class="search-item"
-                :size="size"
-                placeholder="创建人"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="更新人">
-              <el-input
-                v-model="searchObj.opEditor"
-                class="search-item"
-                :size="size"
-                placeholder="更新人"
-                clearable
-              />
-            </el-form-item>
             <el-form-item label="二维码生产者">
               <query-dict
                 :dict-list="lobList"
@@ -76,7 +58,7 @@
                 :value.sync="searchObj.userCode"
               ></query-dict>
             </el-form-item>
-            <el-form-item label="状态">
+            <el-form-item label="审核状态">
               <el-select
                 v-model="searchObj.status"
                 :size="size"
@@ -137,33 +119,39 @@ export default {
     return {
       dialogObj: {}, // 弹窗数据
       lobList: dictObj.lobList, // 业务线集合
-      statusList: dictObj.disStatus, // 状态
+      statusList: dictObj.auditStatus, // 状态
       searchObj: {},
       tableInnerBtns: [
         {
-          width: 150,
-          name: '开关',
-          icon: 'el-icon-open',
+          width: 200,
+          prop: {
+            name: 'status', // 为0或1
+            toggle: [{
+              icon: 'el-icon-check',
+              title: '已审核'
+            }, {
+              icon: 'el-icon-close',
+              title: '未审核'
+            }]
+          },
           handle(row) {
             const { status, id, qrcodeName } = row
             const updateStatus = status === 0 ? 1 : 0
-            const updateMsg = status === 0 ? '启用' : '禁用'
-            vm.confirmTip(`是否${updateMsg}【${qrcodeName}】二维码`, () => {
+            const updateMsg = status === 0 ? '审核不通过' : '审核通过'
+            vm.confirmTip(`确认${updateMsg}【${qrcodeName}】二维码`, () => {
               vm.changeStatus({ id, status: updateStatus })
             })
           }
         },
         {
-          width: 150,
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
-            const { id, contextKey, description, qrcodeCode, qrcodeName, producerCode, userCode, opCreator } = row
+            const { id, contextKey, description, qrcodeCode, qrcodeName, producerCode, userCode } = row
             let contextKeyList = contextKey.split(',').map((item) => {
               return { value: item }
             })
             let userCodeList = userCode && userCode.split(',')
-            console.log(contextKeyList)
             vm.showDialog({
               title: '编辑二维码',
               initData: {
@@ -173,7 +161,6 @@ export default {
                 qrcodeName,
                 producerCode,
                 userCode: userCodeList,
-                opCreator,
                 description
               }
             })
@@ -209,14 +196,28 @@ export default {
           prop: 'userCode'
         },
         {
-          label: '状态',
+          label: '审核状态',
           prop: 'status',
           formatter(row) {
-            return row.status === 0 ? '禁用' : '启用'
+            return row.status === 0 ? '未审核' : '已审核'
           }
         },
         {
-          label: '更新人名字',
+          label: '字段值',
+          prop: 'contextKey',
+          width: 200
+        },
+        {
+          label: '创建人',
+          prop: 'opCreator'
+        },
+        {
+          label: '创建时间',
+          prop: 'created',
+          width: 100
+        },
+        {
+          label: '更新人',
           prop: 'opEditor'
         },
         {
@@ -245,16 +246,13 @@ export default {
           let { userCode, contextKey, qrcodeCode, ...other } = childFormModel
           let userCodeStr = userCode ? userCode.join(',') : '' // 使用者字段处理
           let contextKeyStr = contextKey.length && contextKey.map((item) => item.value).join(',') // 字段值处理
-          // 校验qrcode是否已存在
-          this.$api.qrcode.checkQrcode({ qrcodeCode }).then(() => {
-            request({
-              ...other,
-              qrcodeCode,
-              userCode: userCodeStr,
-              contextKey: contextKeyStr
-            }).then(() => {
-              this.responeHandle('操作成功')
-            })
+          request({
+            ...other,
+            qrcodeCode,
+            userCode: userCodeStr,
+            contextKey: contextKeyStr
+          }).then(() => {
+            this.responeHandle('操作成功')
           })
         } else {
           console.log('error submit!!')

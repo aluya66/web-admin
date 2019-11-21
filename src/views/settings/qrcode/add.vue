@@ -17,6 +17,7 @@
         :disabled="!!formModel.id"
         class="form-item"
         maxlength="16"
+        @blur="checkQrcode"
         clearable></el-input>
     </el-form-item>
     <el-form-item label="二维码生产者:" prop="producerCode">
@@ -66,6 +67,7 @@
     <el-form-item>
       <el-button @click="addContextKey">新增</el-button>
     </el-form-item>
+    <h3 v-if="!!formModel.id">【tip】编辑成功后，二维码状态会更改为未审核</h3>
   </el-form>
 </template>
 
@@ -138,6 +140,14 @@ export default {
     }
   },
   methods: {
+    checkQrcode() {
+      const qrcodeCode = this.formModel.qrcodeCode
+      if (!utils.validater.validateUpperCase(qrcodeCode, '{4,16}')) return
+      // 校验qrcode是否已存在
+      this.$api.qrcode.checkQrcode({ qrcodeCode }).then(() => {
+        this.$msgTip('该二维码编码可用')  
+      })
+    },
     addContextKey() {
       this.formModel.contextKey.push({
         value: ''
@@ -159,5 +169,9 @@ export default {
   .form-select{
     width: 50%;
   }
+}
+h3 {
+  text-align: center;
+  color: red;
 }
 </style>
