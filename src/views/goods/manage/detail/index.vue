@@ -47,7 +47,7 @@
         title="其他信息"
       ></g-other>
       <el-form-item class="form-btn" v-if="!isView">
-        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+        <el-button :loading="btnLoading" v-permission="$route.meta.roles" type="primary" @click.native.prevent="submitHandle">保存</el-button>
       </el-form-item>
     </el-form>
     <div v-if="dialogObj.isShow">

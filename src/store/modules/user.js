@@ -62,7 +62,7 @@ const actions = {
       logout()
         .then(() => {
           commit('SET_ROLES', '')
-          commit('SET_USERINFO', '')
+          commit('SET_USERINFO', {})
           utils.clearStore()
           resetRouter()
           resolve()
@@ -76,7 +76,7 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_ROLES', '')
-      commit('SET_USERINFO', '')
+      commit('SET_USERINFO', {})
       utils.clearStore()
       resolve()
     })

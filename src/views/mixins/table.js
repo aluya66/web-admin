@@ -10,6 +10,7 @@ export default {
       size: 'medium', // 表格、按钮大小
       tableList: [], // 列表数据
       tableCheckedList: [], // 列表批量选中
+      maxHeight: 650, // table最大高度
       pageInfo: { // 页码信息
         pageNo: 1,
         pageSize: 10,

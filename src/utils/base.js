@@ -284,7 +284,7 @@ export const serializeParam = (params = {}, split = '&') => {
   let paramsStr = '' // 数据拼接字符串
   Object.keys(params).forEach(key => {
     if (split === '&') {
-      paramsStr += `${key}=${params[key]}${split}`
+      paramsStr += `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}${split}`
     } else if (split === '/') {
       paramsStr += `${params[key]}${split}`
     }

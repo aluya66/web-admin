@@ -284,11 +284,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-</style>

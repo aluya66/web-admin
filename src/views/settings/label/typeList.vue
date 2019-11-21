@@ -22,6 +22,15 @@
             clearable
           />
         </el-form-item>
+        <el-form-item label="类型分类">
+          <query-dict
+            :dict-list="categoryTypeList"
+            class="search-item"
+            :size="size"
+            placeholder="请选择"
+            :value.sync="searchObj.categoryType"
+          ></query-dict>
+        </el-form-item>
         <el-form-item label="业务线">
           <query-dict
             :dict-list="lobList"
@@ -56,9 +65,11 @@ export default {
   data(vm) {
     return {
       lobList: dictObj.lobList, // 业务线集合
+      categoryTypeList: dictObj.categoryTypeList, // 类型分类集合
       searchObj: {
         categoryName: '', // 类型名称
-        categoryLob: '' // 业务线
+        categoryLob: '', // 业务线
+        categoryType: '' // 分类类型
       },
       pickerOptions: utils.pickerOptions,
       tableInnerBtns: [
@@ -71,6 +82,7 @@ export default {
               categoryName,
               categoryLob,
               categoryDesc,
+              categoryType,
               id
             } = row
             vm.$emit('showDialog', {
@@ -78,6 +90,7 @@ export default {
               initData: {
                 categoryName,
                 categoryLob,
+                categoryType,
                 categoryDesc,
                 id: id
               },
@@ -100,19 +113,24 @@ export default {
           }
         },
         {
-          label: '描述',
-          prop: 'categoryDesc'
+          label: '类型分类',
+          prop: 'categoryType',
+          formatter(row) {
+            return row.categoryType || row.categoryType === 0 ? vm.categoryTypeList[row.categoryType].label : ''
+          }
         },
+        // {
+        //   label: '描述',
+        //   prop: 'categoryDesc'
+        // },
         {
           label: '创建时间',
-          prop: 'created',
-          width: 100
-        },
-        {
-          label: '更新时间',
-          prop: 'updated',
-          width: 100
+          prop: 'created'
         }
+        // {
+        //   label: '更新时间',
+        //   prop: 'updated'
+        // }
       ]
     }
   },

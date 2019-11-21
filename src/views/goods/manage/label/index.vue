@@ -37,6 +37,7 @@
           type="primary"
           @click.native.prevent="submitHandle"
         >保存</el-button>
+        <el-button size="medium" @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
     <div v-if="dialogObj.isShow">
@@ -92,14 +93,15 @@ export default {
   },
 
   methods: {
+    // 获取已选择商品属性
     getCheckedTags() {
       const { goodsBn } = this.formModel
       this.$api.settings.getTagrelate({
         goodsBn
       }).then(res => {
         if (res && res.length) {
-          this.curTags.forEach((tag, index) => {
-            let curCheckedTags = []
+          this.curTags.length && this.curTags.forEach((tag, index) => {
+            let curCheckedTags = tag.operateType === 2 ? [] : ''
             tag.attrs.forEach(val => {
               res.some(item => {
                 if (tag.id === item.tagId) {
@@ -125,20 +127,21 @@ export default {
         if (res) {
           this.formModel = res
           this.getAttrs()
-          window.setTimeout(() => {
-            this.getCheckedTags()
-          }, 50)
         } else {
           this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
         }
       })
     },
+    // 获取所有商品属性
     getAttrs() {
-      this.$api.settings.getAllTab().then(data => {
+      this.$api.settings.getAllTab({
+        categoryType: 0 // 商品属性
+      }).then(data => {
         if (data && data.length) {
+          this.getCheckedTags() // 获取已选中商品属性
           data.forEach((val, index) => {
             const attrs = val.tagValues.map(({ id, value }) => ({ value: id, label: value }))
-            this.curTags.push({ attrs, operateType: val.operateType, id: val.id, label: `${val.tagName}:`, name: val.tagName, type: val.categoryName, checkedTag: [] })
+            this.curTags.push({ attrs, operateType: val.operateType, id: val.id, label: `${val.tagName}:`, name: val.tagName, type: val.categoryName, checkedTag: val.operateType === 2 ? [] : '' })
           })
         }
       })

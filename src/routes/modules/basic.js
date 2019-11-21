@@ -56,7 +56,7 @@ export default {
     meta: {
       title: 'brand',
       icon: 'table',
-      roles: ['review']
+      roles: ['admin']
     }
   },
   {
@@ -83,26 +83,36 @@ export default {
       activeMenu: '/basic/brand'
     }
   },
+  // {
+  //   path: '/basic/merchandise',
+  //   name: 'merchandise',
+  //   component: () => import('@/views/basic/merchandise'),
+  //   meta: {
+  //     title: 'merchandise',
+  //     icon: 'table',
+  //     roles: ['review']
+  //   }
+  // },
   {
-    path: '/basic/merchandise',
-    name: 'merchandise',
-    component: () => import('@/views/basic/merchandise'),
+    path: '/basic/goodsAttrs',
+    name: 'goodsAttrs',
+    component: () => import('@/views/basic/goodsAttrs/list'),
     meta: {
-      title: 'merchandise',
+      title: 'goodsAttrs',
       icon: 'table',
       roles: ['review']
     }
   },
-  {
-    path: '/basic/label',
-    name: 'labelManage',
-    component: () => import('@/views/basic/label'),
-    meta: {
-      title: 'label',
-      icon: 'table',
-      roles: ['review']
-    }
-  },
+  // {
+  //   path: '/basic/label',
+  //   name: 'labelManage',
+  //   component: () => import('@/views/basic/label'),
+  //   meta: {
+  //     title: 'label',
+  //     icon: 'table',
+  //     roles: ['review']
+  //   }
+  // },
   {
     path: '/basic/logistics',
     name: 'logistics',

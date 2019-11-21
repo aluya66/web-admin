@@ -76,7 +76,7 @@ export const constantRoutes = [{
 ]
 
 // 通过解构数据屏蔽不需要引入到路由
-const { marketing, order, ...routeOthers } = routes
+const { marketing, pay, order, ...routeOthers } = routes
 
 export const asyncRoutes = [{
   path: '*',
@@ -160,6 +160,7 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     if (!token) {
+      console.log(to.path)
       if (whiteList.indexOf(to.path) !== -1) {
         next()
       } else {

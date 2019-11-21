@@ -50,6 +50,9 @@ export default {
 		.title {
 			font-size: @f18;
       line-height: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
     }
     .header-btn{
       position: absolute;
@@ -63,7 +66,7 @@ export default {
 			overflow: hidden;
 			padding: 10px 15px;
 			background-color: @white;
-			min-height: calc(100vh - 133px);
+			min-height: calc(100vh - 136px);
 		}
 	}
 }

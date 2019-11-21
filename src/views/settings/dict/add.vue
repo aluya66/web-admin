@@ -14,8 +14,13 @@
     <el-form-item label="字典编码" prop="dictCode">
       <el-input v-model.trim="formModel.dictCode" :disabled="isEdit" class="form-item" clearable></el-input>
     </el-form-item>
-    <el-form-item label="业务线编码:" prop="dictLob">
-      <el-input v-model.trim="formModel.dictLob" class="form-item" placeholder="请输入业务线编码，默认使用commons" clearable></el-input>
+    <el-form-item label="业务线:" prop="dictLob">
+      <query-dict
+        :dict-list="lobList"
+        class="form-select"
+        placeholder="请选择业务线"
+        :value.sync="formModel.dictLob"
+      ></query-dict>
     </el-form-item>
     <el-form-item label="状态:" prop="status">
       <el-radio-group v-model="formModel.status">
@@ -57,7 +62,11 @@
 </template>
 
 <script>
+import MixinForm from 'mixins/form'
+import dictObj from '@/store/dictData'
+
 export default {
+  mixins: [MixinForm],
   props: {
     initData: {
       type: Object,
@@ -81,6 +90,7 @@ export default {
   },
   data() {
     return {
+      lobList: dictObj.lobList, // 业务线集合
       delArr: [], // 删除id集合
       rules: {
         dictName: [
@@ -126,6 +136,9 @@ export default {
   margin-right: 50px;
   .form-item {
     width: 100%;
+  }
+  .form-select{
+    width: 50%;
   }
 }
 </style>
