@@ -88,15 +88,16 @@ export default {
           width: 100
         },
         {
-          label: '用户',
+          label: '姓名',
+          prop: 'name'
+        },
+        {
+          label: '昵称',
           prop: 'nickName'
         },
         {
           label: '性别',
-          prop: 'gender',
-          formatter(row) {
-            return row.gender === 1 ? '男' : '女'
-          }
+          prop: 'genderName'
         },
         {
           label: '手机号',

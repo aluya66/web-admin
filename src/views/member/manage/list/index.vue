@@ -321,11 +321,15 @@ export default {
         },
         {
           label: '用户',
-          prop: 'name',
-          width: 110,
-          formatter(row) {
-            return `${row.name}[${row.nickname}]（${row.gender === '1' ? '男' : '女'}）`
-          }
+          prop: 'name'
+        },
+        {
+          label: '昵称',
+          prop: 'nickname'
+        },
+        {
+          label: '性别',
+          prop: 'gender'
         },
         {
           label: '手机号',
@@ -345,7 +349,7 @@ export default {
           label: '会员归属',
           prop: 'shopName',
           formatter(row) {
-            return row && `${row.shopName}（${row.memberName}）`
+            return row && `${row.shopName || ''}${row.memberName ? '（'+ row.memberName +'）' : ''}`
           }
         },
         {
