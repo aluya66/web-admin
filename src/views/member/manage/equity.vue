@@ -12,8 +12,9 @@
                 <el-button
                   class="btn"
                   size="small"
-                  v-if="item.activityId === 6 || item.activityId === 7"
-                  @click="edit(item.activityId, subItem)">编辑</el-button>
+                  v-if="item.activityId === 6"
+                  @click="edit(item.activityId, subItem)"
+                >编辑</el-button>
                 <!-- item.activityId === 6 || item.activityId === 7" 积分、商品有编辑功能 -->
               </div>
             </div>
@@ -40,21 +41,20 @@
           status-icon
         >
           <el-form-item prop="rate">
-            <div>
-              消费享
+            <div>消费享
               <el-input
                 class="rate-inp"
                 v-model="pointDialogObj.rate"
                 :size="size"
                 placeholder="输入整数"
                 clearable
-              />倍积分</div>
+              />倍积分
+            </div>
           </el-form-item>
         </el-form>
       </c-dialog>
     </div>
     <!-- 积分弹窗结束 -->
-
     <!-- 商品弹窗开始 -->
     <div v-if="goodsDialogObj.isShow">
       <c-dialog
@@ -159,7 +159,8 @@
           </c-table>
         </div>
       </c-dialog>
-    </div> -->
+    </div>-->
+
     <!-- 商品弹窗结束 -->
   </c-view>
 </template>
@@ -392,39 +393,39 @@ export default {
 </script>
 
 <style lang='less' scoped>
-  .card-container {
-    display: flex;
-    justify-content: center;
-    .card {
-      margin: 0 100px;
-      width: 30vw;
-      text-align: center;
-      .title {
-        font-weight: 700;
-        padding: 30px;
-      }
-      .info {
-        margin-bottom: 30px;
-        font-size: @f18;
-      }
-      .status {
-        height: 50px;
-        line-height: 50px;
-        background-color: @border-default;
-        .btn {
-          margin-left: 15px;
-        }
+.card-container {
+  display: flex;
+  justify-content: center;
+  .card {
+    margin: 0 100px;
+    width: 30vw;
+    text-align: center;
+    .title {
+      font-weight: 700;
+      padding: 30px;
+    }
+    .info {
+      margin-bottom: 30px;
+      font-size: @f18;
+    }
+    .status {
+      height: 50px;
+      line-height: 50px;
+      background-color: @border-default;
+      .btn {
+        margin-left: 15px;
       }
     }
   }
-  .rate-inp {
-    margin: 0 10px;
-    width: 200px;
-  }
+}
+.rate-inp {
+  margin: 0 10px;
+  width: 200px;
+}
 </style>
 <style lang='less' scoped>
-  .tip {
-    margin-bottom: 15px;
-    font-weight: 700;
-  }
+.tip {
+  margin-bottom: 15px;
+  font-weight: 700;
+}
 </style>

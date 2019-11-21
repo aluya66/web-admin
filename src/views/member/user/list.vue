@@ -28,14 +28,13 @@
               />
             </el-form-item>
             <el-form-item label="来源">
-              <el-select v-model="searchObj.appCode" class="search-item" :size="size" clearable>
-                <el-option
-                  v-for="item in appCodeList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
+              <query-dict
+                :dict-list="lobList"
+                class="search-item"
+                :size="size"
+                placeholder="请选择"
+                :value.sync="searchObj.appCode"
+              ></query-dict>
             </el-form-item>
             <el-form-item label="登录时间">
               <el-date-picker
@@ -69,12 +68,14 @@
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
+import dictObj from '@/store/dictData'
 
 export default {
   name: 'memberUserList',
   mixins: [mixinTable],
   data(vm) {
     return {
+      lobList: dictObj.lobList, // 业务线集合
       pickerOptions: utils.pickerOptions,
       searchObj: {
         userId: '', // 用户id
@@ -82,12 +83,6 @@ export default {
         dataTime: ''
       },
       tableInnerBtns: [],
-      appCodeList: [
-        {
-          label: 'yoshop',
-          value: 1
-        }
-      ],
       tableHeader: [
         {
           label: '用户id',

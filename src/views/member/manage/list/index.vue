@@ -349,7 +349,7 @@ export default {
           label: '会员归属',
           prop: 'shopName',
           formatter(row) {
-            return row && `${row.shopName || ''}${row.memberName ? '（'+ row.memberName +'）' : ''}`
+            return row && `${row.shopName || ''}${row.memberName ? '（' + row.memberName + '）' : ''}`
           }
         },
         {

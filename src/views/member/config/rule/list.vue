@@ -40,14 +40,12 @@
               ></query-dict>
             </el-form-item>
             <el-form-item label="状态">
-              <el-select v-model="searchObj.isEnable" class="search-item" :size="size" clearable>
-                <el-option
-                  v-for="item in isEnableSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
+              <query-dict
+                :dict-list="disStatus"
+                class="search-item"
+                :size="size"
+                :value.sync="searchObj.isEnable"
+              ></query-dict>
             </el-form-item>
             <el-form-item>
               <el-button
@@ -87,6 +85,7 @@ import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import PointAdd from './add'
 import utils from 'utils'
+import dictObj from '@/store/dictData'
 
 export default {
   name: 'memberConfigRule',
@@ -97,6 +96,7 @@ export default {
   },
   data(vm) {
     return {
+      disStatus: dictObj.disStatus, // 启用禁用集合
       pickerOptions: utils.pickerOptions,
       dialogObj: {},
       tableList: [],
@@ -105,13 +105,6 @@ export default {
         memberTypeId: '', // 会员类型
         isEnable: '' // 状态
       },
-      isEnableSelect: [{
-        label: '禁用',
-        value: 0
-      }, {
-        label: '启用',
-        value: 1
-      }],
       tableInnerBtns: [
         {
           width: 100,
