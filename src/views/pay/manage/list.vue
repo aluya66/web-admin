@@ -144,7 +144,7 @@ export default {
       pickerOptions: utils.pickerOptions,
       dialogObj: {},
       searchObj: {
-        tradeUserName: '', // 用户名称
+        tradeUserName: '', // 用户姓名
         transactionCode: '', // 订单编号
         tradeItemType: '', // 类型
         appCode: '', // 业务线
