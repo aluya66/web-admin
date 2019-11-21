@@ -186,7 +186,9 @@ export default {
           this.$api.settings.addTagbrand({
             tags
           }).then(res => {
-            this.$msgTip('保存成功')
+            this.$msgTip('保存成功').then(() => {
+              this.goBack()
+            })
           })
         } else {
           console.log('error submit!!')

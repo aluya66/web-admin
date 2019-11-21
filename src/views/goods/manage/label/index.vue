@@ -178,7 +178,9 @@ export default {
           this.$api.settings.addTagrelate({
             tags
           }).then(res => {
-            this.$msgTip('保存成功')
+            this.$msgTip('保存成功').then(() => {
+              this.goBack()
+            })
           })
         } else {
           console.log('error submit!!')
