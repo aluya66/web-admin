@@ -145,7 +145,7 @@ export default {
       if (!utils.validater.validateUpperCase(qrcodeCode, '{4,16}')) return
       // 校验qrcode是否已存在
       this.$api.qrcode.checkQrcode({ qrcodeCode }).then(() => {
-        this.$msgTip('该二维码编码可用')  
+        this.$msgTip('该二维码编码可用')
       })
     },
     addContextKey() {
