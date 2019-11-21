@@ -142,15 +142,31 @@ export default {
     },
     getAttrs() {
       this.$api.settings.getAllTab({
-        categoryType: 2, // 标签类
-        categoryName: '品牌类'
+        categoryType: 2 // 标签类
       }).then(data => {
         if (data && data.length) {
           this.getCheckedTags() // 获取已选中的标签
+          let brandTags = []
           data.forEach((val, index) => {
-            const attrs = val.tagValues.map(({ id, value }) => ({ value: id, label: value }))
-            this.curTags.push({ attrs, operateType: val.operateType, id: val.id, label: `${val.tagName}:`, name: val.tagName, type: val.categoryName, checkedTag: [] })
+            if (val.categoryName === '消费偏好' || val.categoryName === '年龄') { // 品牌只显示这两类标签
+              const index = val.categoryName === '消费偏好' ? 0 : 1
+              if (!brandTags[index]) {
+                brandTags[index] = {
+                  attrs: []
+                }
+              }
+              brandTags[index] = {
+                ...brandTags[index],
+                operateType: val.operateType,
+                id: val.categoryId,
+                label: `${val.categoryName}:`,
+                name: val.categoryName,
+                checkedTag: val.operateType === 2 ? [] : ''
+              }
+              brandTags[index].attrs.push({ value: val.id, label: val.tagName })
+            }
           })
+          this.curTags = brandTags
         }
       })
     },
