@@ -96,20 +96,10 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <qrcode-add ref="childRef" :init-data.sync="dialogObj.initData"></qrcode-add>
-      </c-dialog>
-    </div>
-
-    <div v-if="previewDialogObj.isShow">
-      <c-dialog
-        :is-show="previewDialogObj.isShow"
-        :title="previewDialogObj.title"
-        close-btn
-        @before-close="previewDialogObj.isShow = false"
-      >
-        <div class="preview-dialog">
-          <h3>{{previewDialogObj.res.data}}}</h3>
-          <el-image :src="previewDialogObj.res.url"></el-image>
+        <qrcode-add ref="childRef" :init-data.sync="dialogObj.initData" v-if="dialogObj.type === 'handleQrcode'"></qrcode-add>
+        <div class="preview-dialog" v-if="dialogObj.type === 'previewQrcode'">
+          <el-image :src="dialogObj.res.url"></el-image>
+          <h3>二维码信息: {{dialogObj.res.data}}}</h3>
         </div>
       </c-dialog>
     </div>
@@ -131,7 +121,6 @@ export default {
   },
   data(vm) {
     return {
-      previewDialogObj: {}, // 二维码预览
       dialogObj: {}, // 弹窗数据
       lobList: dictObj.lobList, // 业务线集合
       statusList: dictObj.auditStatus, // 状态
@@ -176,6 +165,7 @@ export default {
             let userCodeList = userCode && userCode.split(',')
             vm.showDialog({
               title: '编辑二维码',
+              type: 'handleQrcode',
               initData: {
                 id,
                 contextKey: contextKeyList,
@@ -265,9 +255,10 @@ export default {
   methods: {
     previewQrcode(qrcodeCode) {
       this.$api.qrcode.previewQrcode({ qrcodeCode }).then((res) => {
-        this.previewDialogObj = {
+        this.dialogObj = {
           isShow: true,
           title: '预览',
+          type: 'previewQrcode',
           res
         }
       })
@@ -304,6 +295,7 @@ export default {
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
+        type: 'handleQrcode',
         title: opts.title || '新增二维码',
         initData: opts.initData
       }
