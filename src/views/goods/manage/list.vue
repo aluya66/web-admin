@@ -46,13 +46,18 @@
               />
             </el-form-item>
             <el-form-item label="商品类目">
-              <el-input
-                v-model="searchObj.categoryCode"
+              <el-cascader
+                clearable
                 class="search-item"
                 :size="size"
+                :props="{ checkStrictly: true }"
+                expandTrigger="hover"
+                :show-all-levels="false"
+                v-model="searchObj.categoryCode"
                 placeholder="商品类目"
-                clearable
-              />
+                :options="categoryList"
+                filterable>
+              </el-cascader>
             </el-form-item>
             <!-- <el-form-item label="经营类型">
               <el-input
@@ -153,6 +158,7 @@ export default {
         minStock: '', // 库存最小值
         maxStock: '' // 库存最大值
       },
+      categoryList: [], // 商品类目集合
       marketableSelect: [{
         value: '1',
         label: '上架'
@@ -300,6 +306,7 @@ export default {
     }
   },
   created() {
+    this.getCategoryList()
     this.fetchData()
   },
   methods: {
@@ -307,7 +314,8 @@ export default {
      * 获取表格数据
     */
     fetchData() {
-      const { dataTime, minStock, maxStock, ...other } = this.searchObj
+      const { dataTime, minStock, maxStock, categoryCode, ...other } = this.searchObj
+      const curCategoryCode = categoryCode && categoryCode[categoryCode.length - 1]
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
       if (utils.isInteger(minStock) || utils.isInteger(maxStock)) {
@@ -323,7 +331,8 @@ export default {
           ...other,
           ...page,
           minStock,
-          maxStock
+          maxStock,
+          categoryCode: curCategoryCode
         }
       ).then(res => {
         this.isLoading = false
@@ -334,6 +343,12 @@ export default {
         } else {
           this.tableList = res
         }
+      })
+    },
+    // 获取商品类目集合
+    getCategoryList(){
+      this.$api.basic.queryCategory().then(res => {
+        this.categoryList = utils.formartLevelData(res || [])
       })
     },
     /**
