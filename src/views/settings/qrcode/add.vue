@@ -8,6 +8,7 @@
     label-position="right"
     status-icon
   >
+    <h3 v-if="!!formModel.id">【tip】编辑成功后，二维码状态会更改为未审核</h3>
     <el-form-item label="二维码名称:" prop="qrcodeName">
       <el-input v-model.trim="formModel.qrcodeName" class="form-item" clearable></el-input>
     </el-form-item>
@@ -66,7 +67,6 @@
     <el-form-item>
       <el-button @click="addContextKey">新增</el-button>
     </el-form-item>
-    <h3 v-if="!!formModel.id">【tip】编辑成功后，二维码状态会更改为未审核</h3>
   </el-form>
 </template>
 
@@ -172,6 +172,7 @@ export default {
   }
 }
 h3 {
+  padding: 15px;
   text-align: center;
   color: red;
 }

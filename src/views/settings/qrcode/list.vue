@@ -50,7 +50,7 @@
             </el-form-item>
             <el-form-item label="二维码使用者">
               <query-dict
-                :multiple=true
+                multiple
                 :dict-list="lobList"
                 class="search-item"
                 :size="size"
@@ -138,7 +138,7 @@ export default {
       searchObj: {},
       tableInnerBtns: [
         {
-          width: 200,
+          width: 150,
           prop: {
             name: 'status', // 为0或1
             toggle: [{
