@@ -52,10 +52,16 @@ const globalVue = new Vue({
     // 添加全局事件bus
     Vue.prototype.$api = serviceApi
     Vue.prototype.$msgTip = (message, type = 'success', duration = 1500) => {
-      this.$message({
-        message,
-        type,
-        duration
+      // eslint-disable-next-line promise/param-names
+      return new Promise(reslove => {
+        this.$message({
+          message,
+          type,
+          duration
+        })
+        setTimeout(() => {
+          reslove()
+        }, duration)
       })
     }
     Vue.prototype.$staticFile =
