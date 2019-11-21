@@ -17,7 +17,8 @@ export const changeStatus = params =>
 // 新增, 异步校验是否存在相同的qrCode使用的接口
 export const checkQrcode = params =>
   Http.fetch(`${context}/api/qrcode/checkqrcode`, params, {
-    method: 'get'
+    method: 'get',
+    hasErrMsg: true
   })
 
 // 新增二维码数据
@@ -36,4 +37,10 @@ export const deleteQrcode = params =>
 export const updateQrcode = params =>
   Http.fetch(`${context}/api/qrcode/update`, params, {
     method: 'put'
+  })
+
+// 预览二维码
+export const previewQrcode = params =>
+  Http.fetch(`${context}/api/qrcode/preview`, params, {
+    method: 'get'
   })

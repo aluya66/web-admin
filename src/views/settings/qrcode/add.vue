@@ -17,7 +17,6 @@
         :disabled="!!formModel.id"
         class="form-item"
         maxlength="16"
-        @blur="checkQrcode"
         clearable></el-input>
     </el-form-item>
     <el-form-item label="二维码生产者:" prop="producerCode">
@@ -30,7 +29,7 @@
     </el-form-item>
     <el-form-item label="二维码使用者:" prop="userCode">
       <query-dict
-        :multiple=true
+        multiple
         :dict-list="lobList"
         class="form-select"
         placeholder="请选择"
@@ -99,9 +98,8 @@ export default {
       }
       if (!utils.validater.validateUpperCase(value, '{4,16}')) {
         return callback(new Error('请输入【限制: 纯大写英文字母, 长度4-16个字母】'))
-      } else {
-        callback()
       }
+      this.checkQrcode(callback)
     }
     let checkContextKey = (rule, value, callback) => {
       if (!value) {
@@ -121,7 +119,7 @@ export default {
           { required: true, message: '请输入二维码名称', trigger: 'blur' }
         ],
         qrcodeCode: [
-          { required: true, message: '请输入【限制: 纯大写英文字母, 长度4-16个字母】', validator: checkQrcodeCode, trigger: 'blur' }
+          { required: true, validator: checkQrcodeCode, trigger: 'blur' }
         ],
         producerCode: [
           { required: true, message: '请选择', trigger: 'blur' }
@@ -140,12 +138,15 @@ export default {
     }
   },
   methods: {
-    checkQrcode() {
+    checkQrcode(callback) {
       const qrcodeCode = this.formModel.qrcodeCode
-      if (!utils.validater.validateUpperCase(qrcodeCode, '{4,16}')) return
       // 校验qrcode是否已存在
-      this.$api.qrcode.checkQrcode({ qrcodeCode }).then(() => {
-        this.$msgTip('该二维码编码可用')
+      this.$api.qrcode.checkQrcode({ qrcodeCode }).then(({ code }) => {
+        if (code !== 0) {
+          callback(new Error('该二维码编码已存在'))
+        } else {
+          callback()
+        }
       })
     },
     addContextKey() {

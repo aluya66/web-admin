@@ -99,6 +99,20 @@
         <qrcode-add ref="childRef" :init-data.sync="dialogObj.initData"></qrcode-add>
       </c-dialog>
     </div>
+
+    <div v-if="previewDialogObj.isShow">
+      <c-dialog
+        :is-show="previewDialogObj.isShow"
+        :title="previewDialogObj.title"
+        close-btn
+        @before-close="previewDialogObj.isShow = false"
+      >
+        <div class="preview-dialog">
+          <h3>{{previewDialogObj.res.data}}}</h3>
+          <el-image :src="previewDialogObj.res.url"></el-image>
+        </div>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
@@ -117,6 +131,7 @@ export default {
   },
   data(vm) {
     return {
+      previewDialogObj: {}, // 二维码预览
       dialogObj: {}, // 弹窗数据
       lobList: dictObj.lobList, // 业务线集合
       statusList: dictObj.auditStatus, // 状态
@@ -128,19 +143,26 @@ export default {
             name: 'status', // 为0或1
             toggle: [{
               icon: 'el-icon-check',
-              title: '已审核'
+              title: '审核'
             }, {
               icon: 'el-icon-close',
-              title: '未审核'
+              title: '驳回'
             }]
           },
           handle(row) {
             const { status, id, qrcodeName } = row
             const updateStatus = status === 0 ? 1 : 0
-            const updateMsg = status === 0 ? '审核不通过' : '审核通过'
+            const updateMsg = status === 0 ? '审核通过' : '审核不通过'
             vm.confirmTip(`确认${updateMsg}【${qrcodeName}】二维码`, () => {
               vm.changeStatus({ id, status: updateStatus })
             })
+          }
+        },
+        {
+          name: '预览',
+          icon: 'el-icon-view',
+          handle(row) {
+            vm.previewQrcode(row.qrcodeCode)
           }
         },
         {
@@ -193,7 +215,16 @@ export default {
         },
         {
           label: '二维码使用者',
-          prop: 'userCode'
+          prop: 'userCode',
+          formatter(row) {
+            let userCodeList = row.userCode ? row.userCode.split(',') : []
+            let arr = []
+            return userCodeList.length && userCodeList.reduce((total, item) => {
+              let arrItem = vm.lobList.find((lobItem) => lobItem.value === item)
+              arr.push(arrItem.label)
+              return arr.join(',')
+            }, '')
+          }
         },
         {
           label: '审核状态',
@@ -232,6 +263,15 @@ export default {
     this.fetchData()
   },
   methods: {
+    previewQrcode(qrcodeCode) {
+      this.$api.qrcode.previewQrcode({ qrcodeCode }).then((res) => {
+        this.previewDialogObj = {
+          isShow: true,
+          title: '预览',
+          res
+        }
+      })
+    },
     // 新增、编辑提交
     dialogConfirm() {
       const childRef = this.$refs.childRef
@@ -313,5 +353,14 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+}
+.preview-dialog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  > h3 {
+    padding: 15px;
+  }
 }
 </style>
