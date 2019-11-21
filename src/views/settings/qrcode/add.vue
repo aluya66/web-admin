@@ -99,7 +99,7 @@ export default {
       if (!utils.validater.validateUpperCase(value, '{4,16}')) {
         return callback(new Error('请输入【限制: 纯大写英文字母, 长度4-16个字母】'))
       }
-      this.checkQrcode(callback)
+      this.formModel.id ? callback() : this.checkQrcode(callback) // 编辑不需要校验
     }
     let checkContextKey = (rule, value, callback) => {
       if (!value) {

@@ -91,6 +91,7 @@
     <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
+        :noBtn="dialogObj.type === 'previewQrcode'"
         :title="dialogObj.title"
         close-btn
         @before-close="dialogObj.isShow = false"
@@ -98,8 +99,8 @@
       >
         <qrcode-add ref="childRef" :init-data.sync="dialogObj.initData" v-if="dialogObj.type === 'handleQrcode'"></qrcode-add>
         <div class="preview-dialog" v-if="dialogObj.type === 'previewQrcode'">
-          <el-image :src="dialogObj.res.url"></el-image>
-          <h3>二维码信息: {{dialogObj.res.data}}}</h3>
+          <el-image :src="dialogObj.initData.url"></el-image>
+          <h3>二维码信息: {{dialogObj.initData.data}}}</h3>
         </div>
       </c-dialog>
     </div>
@@ -165,7 +166,6 @@ export default {
             let userCodeList = userCode && userCode.split(',')
             vm.showDialog({
               title: '编辑二维码',
-              type: 'handleQrcode',
               initData: {
                 id,
                 contextKey: contextKeyList,
@@ -255,12 +255,11 @@ export default {
   methods: {
     previewQrcode(qrcodeCode) {
       this.$api.qrcode.previewQrcode({ qrcodeCode }).then((res) => {
-        this.dialogObj = {
-          isShow: true,
+        this.showDialog({
           title: '预览',
-          type: 'previewQrcode',
-          res
-        }
+          dialogType: 'previewQrcode',
+          initData: res
+        })
       })
     },
     // 新增、编辑提交
@@ -295,7 +294,7 @@ export default {
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        type: 'handleQrcode',
+        type: opts.dialogType || 'handleQrcode',
         title: opts.title || '新增二维码',
         initData: opts.initData
       }
