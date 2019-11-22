@@ -76,6 +76,18 @@ export default {
         icon: 'table',
         roles: ['admin']
       }
+    }, {
+      path: '/marketing/ticket/ticketInfo/:id?',
+      name: 'ticketInfo',
+      component: () => import('@/views/marketing/ticket/detail/index'),
+      hidden: true,
+      meta: {
+        icon: 'table',
+        noCache: true,
+        title: 'ticketInfo',
+        activeMenu: '/marketing/ticket/list',
+        roles: ['admin']
+      }
     }]
   }]
 }

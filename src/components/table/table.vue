@@ -15,8 +15,14 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @current-change="handleSingleChange"
+      @expand-change="handleExpandChange"
     >
       <el-table-column v-if="selection" :align="align" type="selection" width="55"/>
+      <el-table-column v-if="expand" :align="align" type="expand" width="55">
+        <template slot-scope="scope">
+          <slot name="expand" :props="scope.row"/>
+        </template>
+      </el-table-column>
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
@@ -147,6 +153,11 @@ export default {
         return []
       }
     },
+    // 是否要扩展行
+    expand: {
+      type: Boolean,
+      default: false
+    },
     selection: {
       type: Boolean,
       default: false
@@ -268,6 +279,10 @@ export default {
     // 翻页和切换页码
     changePagination(pageInfo) {
       this.$emit('change-pagination', pageInfo)
+    },
+    // 展开一行
+    handleExpandChange(row) {
+      this.$emit('expand-change', row)
     }
   }
 }

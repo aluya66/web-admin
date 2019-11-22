@@ -173,7 +173,7 @@ import EditMember from './editMember'
 import EditBalance from './editBalance'
 import EditPoint from './editPoint'
 import utils from 'utils'
-import Cascader from '../../../common/cascader'
+import Cascader from 'components/cascader'
 
 export default {
   name: 'memberManageList',
