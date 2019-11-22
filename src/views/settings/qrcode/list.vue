@@ -100,7 +100,7 @@
         <qrcode-add ref="childRef" :init-data.sync="dialogObj.initData" v-if="dialogObj.type === 'handleQrcode'"></qrcode-add>
         <div class="preview-dialog" v-if="dialogObj.type === 'previewQrcode'">
           <el-image :src="dialogObj.initData.url"></el-image>
-          <h3>二维码信息: {{dialogObj.initData.data}}}</h3>
+          <h3>二维码信息: {{dialogObj.initData.data}}</h3>
         </div>
       </c-dialog>
     </div>
