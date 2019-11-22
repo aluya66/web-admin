@@ -46,13 +46,17 @@
               />
             </el-form-item>
             <el-form-item label="商品类目">
-              <el-input
-                v-model="searchObj.categoryCode"
+              <el-cascader
+                clearable
                 class="search-item"
                 :size="size"
+                expandTrigger="hover"
+                :show-all-levels="false"
+                v-model="searchObj.categoryCode"
                 placeholder="商品类目"
-                clearable
-              />
+                :options="categoryList"
+                filterable
+              ></el-cascader>
             </el-form-item>
             <!-- <el-form-item label="经营类型">
               <el-input
@@ -64,13 +68,15 @@
               />
             </el-form-item>-->
             <el-form-item label="品牌">
-              <el-input
-                v-model="searchObj.brandName"
+              <query-dict
+                allowCreate
+                filterable
+                :dict-list="brandList"
                 class="search-item"
                 :size="size"
-                placeholder="品牌"
-                clearable
-              />
+                placeholder="请选择"
+                :value.sync="searchObj.brandName"
+              ></query-dict>
             </el-form-item>
             <el-form-item label="上下架">
               <el-select
@@ -95,9 +101,7 @@
                 :size="size"
                 placeholder="最小值"
                 clearable
-              />
-              至
-              <el-input
+              /> 至 <el-input
                 v-model.number="searchObj.maxStock"
                 class="search-number"
                 :size="size"
@@ -144,7 +148,7 @@ export default {
     return {
       searchObj: {
         // businessValue: '',
-        categoryCode: '', // 商品类目
+        categoryCode: [], // 商品类目
         goodsBn: '', // 商品编码
         goodsName: '', // 商品名称
         marketable: '', // 上下架
@@ -153,6 +157,8 @@ export default {
         minStock: '', // 库存最小值
         maxStock: '' // 库存最大值
       },
+      brandList: [], // 品牌数据集合
+      categoryList: [], // 商品类目集合
       marketableSelect: [{
         value: '1',
         label: '上架'
@@ -187,16 +193,16 @@ export default {
           vm.routerLink(`/goods/manage/label/${row.id}`)
         }
       }
-      // {
-      //   name: '删除',
-      //   icon: 'el-icon-delete',
-      //   handle(row) {
-      //     const { goodsName, id } = row
-      //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
-      //       vm.deleteData({ id })
-      //     })
-      //   }
-      // }
+        // {
+        //   name: '删除',
+        //   icon: 'el-icon-delete',
+        //   handle(row) {
+        //     const { goodsName, id } = row
+        //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
+        //       vm.deleteData({ id })
+        //     })
+        //   }
+        // }
       ],
       tableHeader: [
         {
@@ -300,14 +306,17 @@ export default {
     }
   },
   created() {
+    this.getCategoryList()
+    this.getBrandList()
     this.fetchData()
   },
   methods: {
     /**
      * 获取表格数据
-    */
+     */
     fetchData() {
-      const { dataTime, minStock, maxStock, ...other } = this.searchObj
+      const { dataTime, minStock, maxStock, categoryCode, ...other } = this.searchObj
+      const curCategoryCode = categoryCode.length ? categoryCode[categoryCode.length - 1] : []
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
       if (utils.isInteger(minStock) || utils.isInteger(maxStock)) {
@@ -323,7 +332,8 @@ export default {
           ...other,
           ...page,
           minStock,
-          maxStock
+          maxStock,
+          categoryCode: curCategoryCode
         }
       ).then(res => {
         this.isLoading = false
@@ -333,6 +343,24 @@ export default {
           this.tableList = data
         } else {
           this.tableList = res
+        }
+      })
+    },
+    // 获取商品类目集合
+    getCategoryList() {
+      this.$api.basic.queryCategory().then(res => {
+        this.categoryList = utils.formartLevelData(res || [])
+      })
+    },
+    // 获取品牌列表
+    getBrandList() {
+      this.$api.basic.brandList({
+        pageNo: 1,
+        pageSize: 100,
+        status: 1
+      }).then(res => {
+        if (res && res.totalCount) {
+          this.brandList = res.data.map(res => ({ value: res.name, label: res.name })) || []
         }
       })
     },

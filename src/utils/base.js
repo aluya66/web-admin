@@ -41,6 +41,17 @@ export const openNewWin = (routerOpts) => {
   }
   window.open(routePath, '_blank')
 }
+
+/**
+ * 二进制流文件转换成xlsx文件
+ * @param {file} file
+ */
+export const createBlobFile = (file) => {
+  let blob = new Blob([file], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=ISO8859-1' })
+  let fileUrl = URL.createObjectURL(blob)
+  window.location.href = fileUrl
+}
+
 /**
  *  统一跳转到登陆页面
  */
@@ -374,6 +385,7 @@ export default {
   isObject,
   isArray,
   isInteger,
+  createBlobFile,
   confirmTip,
   getCurrentUserLanguage,
   donwFile,

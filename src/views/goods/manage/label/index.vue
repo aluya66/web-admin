@@ -141,7 +141,7 @@ export default {
           this.getCheckedTags() // 获取已选中商品属性
           data.forEach((val, index) => {
             const attrs = val.tagValues.map(({ id, value }) => ({ value: id, label: value }))
-            this.curTags.push({ attrs, operateType: val.operateType, id: val.id, label: `${val.tagName}:`, name: val.tagName, type: val.categoryName, checkedTag: val.operateType === 2 ? [] : '' })
+            this.curTags.push({ attrs, operateType: val.operateType, id: val.id, label: `${val.tagName}:`, name: val.tagName, checkedTag: val.operateType === 2 ? [] : '' })
           })
         }
       })

@@ -1,49 +1,57 @@
 <template>
-  <div v-if="this.dictList && this.dictList.length" class="dict">
-    <el-select
-      v-if="showType === '' || showType === 'select'"
-      v-model="dictValue"
-      :disabled="disabled"
-      :multiple="multiple"
-      filterable
-      clearable
-      v-bind="$attrs"
-      v-on="$listeners"
-    >
-      <el-option
-        v-for="dict in dictList"
-        :key="dict.value"
-        :label="dict.label"
-        :disabled="dict.disabled"
-        :value="dict.value"
-      ></el-option>
-    </el-select>
-    <el-checkbox-group
-      v-if="showType === 'checkbox'"
-      v-model="dictValue"
-      v-bind="$attrs"
-      v-on="$listeners"
-    >
-      <el-checkbox
-        v-for="dict in dictList"
-        :label="dict.value"
-        :key="dict.value"
-        :disabled="dict.disabled || disabled"
-      >{{dict.label}}</el-checkbox>
-    </el-checkbox-group>
-    <el-radio-group
-      v-if="showType === 'radio'"
-      v-model="dictValue"
-      v-bind="$attrs"
-      v-on="$listeners"
-    >
-      <el-radio
-        v-for="dict in dictList"
-        :key="dict.value"
-        :disabled="dict.disabled || disabled"
-        :label="dict.value"
-      >{{dict.label}}</el-radio>
-    </el-radio-group>
+  <div v-if="this.dictList" class="dict">
+    <template v-if="this.dictList.length">
+      <el-select
+        v-if="showType === '' || showType === 'select'"
+        v-model="dictValue"
+        :disabled="disabled"
+        clearable
+        v-bind="$attrs"
+        v-on="$listeners"
+      >
+        <el-option
+          v-for="(dict, index) in dictList"
+          :key="dict.value + '_' + index"
+          :label="dict.label"
+          :disabled="dict.disabled"
+          :value="dict.value"
+        ></el-option>
+      </el-select>
+      <el-checkbox-group
+        v-if="showType === 'checkbox'"
+        v-model="dictValue"
+        v-bind="$attrs"
+        v-on="$listeners"
+      >
+        <el-checkbox
+          v-for="dict in dictList"
+          :label="dict.value"
+          :key="dict.value"
+          :disabled="dict.disabled || disabled"
+        >{{dict.label}}</el-checkbox>
+      </el-checkbox-group>
+      <el-radio-group
+        v-if="showType === 'radio'"
+        v-model="dictValue"
+        v-bind="$attrs"
+        v-on="$listeners"
+      >
+        <el-radio
+          v-for="dict in dictList"
+          :key="dict.value"
+          :disabled="dict.disabled || disabled"
+          :label="dict.value"
+        >{{dict.label}}</el-radio>
+      </el-radio-group>
+    </template>
+    <template v-else>
+      <el-input
+        v-model="dictValue"
+        clearable
+        v-bind="$attrs"
+        v-on="$listeners"
+      />
+    </template>
   </div>
 </template>
 
@@ -54,15 +62,11 @@ export default {
     dictList: {
       type: Array
     },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
     disabled: {
       type: Boolean,
       default: false
     },
-    value: [Number, String],
+    value: [Number, String, Array],
     showType: {
       type: String,
       default: 'select'

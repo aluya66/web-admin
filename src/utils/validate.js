@@ -99,15 +99,18 @@ export const validater = {
     return reg.test(str)
   },
 
-  /* 大写字母 */
-  validateUpperCase (str) {
-    const reg = /^[A-Z]+$/
+  /* 大写字母 num位数限制 【例： '{2,20}'】 */
+  validateUpperCase (str, num) {
+    const reg = new RegExp('^[A-Z]' + (num || '+') + '$')
+    // const reg = /^[A-Z]+$/
     return reg.test(str)
   },
 
-  /* 大小写字母 */
-  validateAlphabets (str) {
-    const reg = /^[A-Za-z]+$/
+  /* 大小写字母 num位数限制 【例： '{2,20}'】 */
+  validateAlphabets (str, num) {
+    // const reg = /^[A-Za-z]+$/
+    const reg = new RegExp('^[A-Za-z]' + (num || '+') + '$')
+    console.log(reg, reg.test(str))
     return reg.test(str)
   },
   /**

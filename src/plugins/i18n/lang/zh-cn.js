@@ -35,10 +35,25 @@ export default {
     payManageList: '支付记录',
     payManageAccount: '账户管理',
     payManageChannel: '渠道管理',
+    memberCenter: '会员中心',
+    memberManage: '会员管理',
+    memberManageList: '会员列表',
+    memberManagePoint: '会员积分',
+    memberManageEquity: '会员权益',
+    memberConfig: '会员配置',
+    memberConfigType: '类型配置',
+    memberConfigRule: '规则配置',
+    memberConfigPoint: '积分配置',
+    memberUser: '用户管理',
+    memberUserList: '登录日志',
+    memberWallet: '钱包管理',
+    memberWalletList: '会员钱包',
+
     settings: '配置管理',
     dictList: '字典管理',
     dictInfo: '字典信息',
-    settingsLabel: '标签管理'
+    settingsLabel: '标签管理',
+    settingsQrcode: '二维码管理'
   },
   navbar: {
     logout: '退出',

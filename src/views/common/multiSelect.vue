@@ -119,7 +119,7 @@ export default {
         margin: 20px 20px;
         .el-checkbox {
           margin: 5px 12px;
-          width: 85px;
+          min-width: 85px;
         }
       }
     }
@@ -132,7 +132,7 @@ export default {
         margin: 20px 15px;
         .el-checkbox {
           margin: 5px 10px;
-          width: 80px;
+          min-width: 80px;
         }
       }
     }
