@@ -101,8 +101,7 @@
                 :size="size"
                 placeholder="最小值"
                 clearable
-              />至
-              <el-input
+              /> 至 <el-input
                 v-model.number="searchObj.maxStock"
                 class="search-number"
                 :size="size"
@@ -149,7 +148,7 @@ export default {
     return {
       searchObj: {
         // businessValue: '',
-        categoryCode: '', // 商品类目
+        categoryCode: [], // 商品类目
         goodsBn: '', // 商品编码
         goodsName: '', // 商品名称
         marketable: '', // 上下架
@@ -317,7 +316,7 @@ export default {
      */
     fetchData() {
       const { dataTime, minStock, maxStock, categoryCode, ...other } = this.searchObj
-      const curCategoryCode = categoryCode && categoryCode[categoryCode.length - 1]
+      const curCategoryCode = categoryCode.length ? categoryCode[categoryCode.length - 1] : []
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
       if (utils.isInteger(minStock) || utils.isInteger(maxStock)) {
