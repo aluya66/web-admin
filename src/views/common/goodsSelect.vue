@@ -166,34 +166,33 @@ export default {
 <style lang='less' scoped>
 .goods-select {
   border: 1px solid @border-default;
-  margin: 0 40px;
   border-radius: 4px;
   .header {
     display: flex;
     border-bottom: 1px solid @border-default;
     .title {
-      flex: 1.2;
+      flex: 1;
       font-size: @f16;
       font-weight: bold;
       padding: 16px 0;
       text-align: center;
     }
     .title-left {
-      flex: 3;
+      flex: 50%;
       border-right: 1px solid @border-default;
     }
   }
   .content {
     display: flex;
     .source {
-      flex: 3;
+      flex: 50%;
       flex-direction: row;
       padding: 15px;
       border-right: 1px solid @border-default;
       overflow-y: auto;
     }
     .dist {
-      flex: 1.2;
+      flex: 1;
       overflow-y: auto;
     }
   }
