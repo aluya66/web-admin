@@ -45,8 +45,12 @@
       <div class="item">
         <h3 class="title">基础信息</h3>
         <div>
-          <span class="label">会员等级:</span>
-          <span class="value">{{formModel.memberName}}</span>
+          <span class="label">生   日:</span>
+          <span class="value">{{formModel.birthday}}</span>
+        </div>
+        <div>
+          <span class="label">所在城市:</span>
+          <span class="value">{{formModel.provinceName}}-{{formModel.cityName}}-{{formModel.districtName}}</span>
         </div>
         <div>
           <span class="label">会员类型:</span>
@@ -58,7 +62,7 @@
         </div>
         <div>
           <span class="label">会员归属:</span>
-          <span class="value">{{formModel.shopName}}</span>
+          <span class="value">{{formModel.shopName}}[{{formModel.memberName}}]</span>
         </div>
       </div>
       <div class="item">

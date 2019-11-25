@@ -20,8 +20,8 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="姓名">
+          <el-form :inline="true" ref="searchForm" :model="searchObj" label-width="100px" class="search-form">
+            <el-form-item label="姓名" prop="name">
               <el-input
                 v-model="searchObj.name"
                 class="search-item"
@@ -30,7 +30,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="手机号">
+            <el-form-item label="手机号" prop="phoneNumber">
               <el-input
                 v-model="searchObj.phoneNumber"
                 class="search-item"
@@ -39,7 +39,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="性别">
+            <el-form-item label="性别" prop="gender">
               <el-select v-model="searchObj.gender" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in genderSelect"
@@ -49,7 +49,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="会员类型">
+            <el-form-item label="会员类型" prop="memberTypeId">
               <el-select
                 v-model="searchObj.memberTypeId"
                 class="search-item"
@@ -64,8 +64,8 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="会员来源">
-              <el-select v-model="searchObj.type" class="search-item" :size="size" clearable>
+            <el-form-item label="会员来源" prop="source">
+              <el-select v-model="searchObj.source" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in sourceSelect"
                   :key="item.value"
@@ -74,7 +74,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="所属店铺">
+            <el-form-item label="所属店铺" prop="shopName">
               <el-input
                 v-model="searchObj.shopName"
                 class="search-item"
@@ -83,7 +83,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="所属店员">
+            <el-form-item label="所属店员" prop="memberName">
               <el-input
                 v-model="searchObj.memberName"
                 class="search-item"
@@ -92,16 +92,16 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="所在地区">
+            <el-form-item label="所在地区" prop="areaCode">
               <cascader
-                :value.sync="areaCode"
+                :value.sync="searchObj.areaCode"
                 :options="areaOptions"
                 :props="areaProps"
                 class="search-item"
               >
               </cascader>
             </el-form-item>
-            <el-form-item label="首次加入时间">
+            <el-form-item label="首次加入时间" prop="dataTime">
               <el-date-picker
                 :size="size"
                 v-model="searchObj.dataTime"
@@ -114,7 +114,7 @@
                 :default-time="['00:00:00', '23:59:59']"
               >align="right"></el-date-picker>
             </el-form-item>
-            <el-form-item label="生日区间">
+            <el-form-item label="生日区间" prop="birDataTime">
               <el-date-picker
                 :size="size"
                 v-model="searchObj.birDataTime"
@@ -135,6 +135,11 @@
                 icon="el-icon-search"
                 @click="searchSubmit"
               >查询</el-button>
+              <el-button
+                :size="size"
+                icon="el-icon-refresh"
+                @click="searchReset"
+              >重置</el-button>
             </el-form-item>
           </el-form>
         </template>
@@ -188,7 +193,6 @@ export default {
   },
   data(vm) {
     return {
-      areaCode: [], // 省市区code列表  [省，市，区]
       areaOptions: [], // 地区列表
       areaProps: {
         checkStrictly: true,
@@ -209,13 +213,14 @@ export default {
         phoneNumber: '', // 手机号
         shopName: '', // 所属店铺
         memberName: '', // 所属店员
-        type: '', // 会员来源
+        source: '', // 会员来源
         memberTypeId: '', // 会员类型
         dataTime: '', // 首次加入时间区间
         birDataTime: '', // 生日区间
-        provinceCode: '', // 省
-        cityCode: '', // 市
-        districtCode: '' // 区
+        // provinceCode: '', // 省
+        // cityCode: '', // 市
+        // districtCode: '', // 区
+        areaCode: [], // 省市区code列表  [省，市，区]
       },
       // 会员来源
       sourceSelect: [
@@ -401,15 +406,18 @@ export default {
       })
     },
     fetchData() {
-      this.searchObj.provinceCode = this.areaCode[0] || ''
-      this.searchObj.cityCode = this.areaCode[1] || ''
-      this.searchObj.districtCode = this.areaCode[2] || ''
-      const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
+      const {areaCode, dataTime, ...other} = this.searchObj
+      const curArea = { // 传省、市、区code给api
+        provinceCode : areaCode[0] || '',
+        cityCode : areaCode[1] || '',
+        districtCode : areaCode[2] || ''
+      }
       const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
       const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.isLoading = true
       this.$api.member.getMember({
+        ...curArea,
         ...searchDate,
         ...birDateTime,
         ...other,
