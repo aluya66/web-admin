@@ -128,8 +128,16 @@ export default {
       },
       tableInnerBtns: [{
         width: 150,
-        name: '开关',
-        icon: 'el-icon-switch-button',
+        prop: {
+          name: 'status', // 为0或1
+          toggle: [{
+            icon: 'el-icon-close',
+            title: '关闭'
+          }, {
+            icon: 'el-icon-open',
+            title: '开启'
+          }]
+        },
         handle (row) {
           const { ruleId, ruleName, status } = row
           const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
@@ -141,7 +149,6 @@ export default {
           )
         }
       }, {
-        width: 150,
         name: '编辑',
         icon: 'el-icon-edit',
         handle(row) {
