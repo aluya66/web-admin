@@ -217,10 +217,7 @@ export default {
         memberTypeId: '', // 会员类型
         dataTime: '', // 首次加入时间区间
         birDataTime: '', // 生日区间
-        // provinceCode: '', // 省
-        // cityCode: '', // 市
-        // districtCode: '', // 区
-        areaCode: [], // 省市区code列表  [省，市，区]
+        areaCode: [] // 省市区code列表  [省，市，区]
       },
       // 会员来源
       sourceSelect: [
@@ -407,11 +404,11 @@ export default {
     },
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
-      const {areaCode, dataTime, ...other} = this.searchObj
+      const { areaCode, dataTime, ...other } = this.searchObj
       const curArea = { // 传省、市、区code给api
-        provinceCode : areaCode[0] || '',
-        cityCode : areaCode[1] || '',
-        districtCode : areaCode[2] || ''
+        provinceCode: areaCode[0] || '',
+        cityCode: areaCode[1] || '',
+        districtCode: areaCode[2] || ''
       }
       const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
       const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
