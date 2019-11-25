@@ -3,7 +3,7 @@ const pointTypeList = [{
   label: '订单消费',
   value: 1
 }, {
-  label: '订单折扣',
+  label: '订单抵扣',
   value: 2
 },
 {
