@@ -3,6 +3,13 @@ import utils from 'utils'
 
 import errFun from './err'
 
+// 请求编码模式
+const CONTENTTYPE = {
+  common: 'application/json', // 以json数据传输
+  upload: 'multipart/form-data', // 上传文件或二进制数据传输
+  serializeData: 'application/x-www-form-urlencoded' // post模式，数据以&key=value拼接传输
+}
+
 let cancel = null
 const promiseArr = {}
 // const CancelToken = axios.CancelToken;
@@ -58,8 +65,7 @@ instance.interceptors.response.use((response) => {
  */
 const setHeaderMethod = mtd => {
   let method = 'post'
-  let contentType = 'application/json'
-  // contentType = 'application/x-www-form-urlencoded'
+  let contentType = CONTENTTYPE.common
   switch (mtd) {
     case 'post':
     case 'get':
@@ -96,12 +102,7 @@ const setProxy = mockFile => `/mock/${mockFile}`
 
 const setParams = (url, params = {}, opt = {}) => {
   promiseArr.isGlobalErr = !!opt.hasErrMsg
-  // 所有接口统一参数
-  params = {
-    // 参数全局配置
-    // code...
-    ...params
-  }
+
   // 请求个性化配置
   instance.defaults.customConfig = {
     loading: true,
@@ -113,11 +114,14 @@ const setParams = (url, params = {}, opt = {}) => {
     url = setProxy(opt.mockFile)
   }
   // 设置header和method
-  const {
+  let {
     method,
     contentType
   } = setHeaderMethod(opt.method)
   const token = utils.getStore('SET_USERINFO') ? utils.getStore('SET_USERINFO').token : ''
+  if (CONTENTTYPE[opt.contentType]) {
+    contentType = CONTENTTYPE[opt.contentType] // 特殊接口指定contentType
+  }
   let curParams = {
     url,
     headers: {
@@ -140,7 +144,7 @@ const setParams = (url, params = {}, opt = {}) => {
     }
   } else {
     curParams = {
-      data: contentType === 'application/x-www-form-urlencoded' ? utils.serializeParam(params)
+      data: contentType === CONTENTTYPE.serializeData ? utils.serializeParam(params)
         : params,
       ...curParams
     }

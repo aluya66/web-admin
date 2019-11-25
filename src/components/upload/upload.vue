@@ -1,157 +1,183 @@
 <template>
-	<el-upload
-		class="upload"
-		:drag="isDrag"
-		:ref="uploadRef"
-		:list-type="uploadStyle"
-		:file-list="uploadList"
-		:headers="headers"
-		:data="uploadData"
-		:limit="limit"
-		:disabled="disabled"
-		:on-exceed="handleExceed"
-		:action="actionApi"
-		:on-preview="handleReview"
-		:on-remove="handleRemove"
-		:on-success="handleSuccess"
-		:on-change="handleChange"
-		:auto-upload="isAuto"
-		:before-upload="beforeUpload"
-		:before-remove="beforeRemove"
-		multiple
-	>
-		<slot></slot>
-		<template v-if="!$slots.default">
-			<i class="el-icon-upload"></i>
-			<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-			<div class="el-upload__tip" slot="tip">
-				只能上传excel格式文件，且不超过2M
-			</div>
-		</template>
-	</el-upload>
+  <el-upload
+    class="upload"
+    :ref="uploadRef"
+    :action="actionPath"
+    :headers="headersObj"
+    :auto-upload="autoUpload"
+    :disabled="disabled"
+    :on-change="handleChange"
+    :list-type="listType"
+    :file-list="uploadList"
+    :on-exceed="handleExceed"
+    :on-success="handleSuccess"
+    :before-upload="beforeUpload"
+    :before-remove="beforeRemove"
+    v-bind="$attrs"
+    v-on="$listeners"
+  >
+    <slot></slot>
+    <template v-if="!autoUpload && !$slots.default">
+      <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+    </template>
+    <template v-if="autoUpload && !$slots.default">
+      <i class="el-icon-upload"></i>
+      <div class="el-upload__text">
+        将文件拖到此处，或
+        <em>点击上传</em>
+      </div>
+      <div class="el-upload__tip" slot="tip">只能上传excel格式文件，且不超过2M</div>
+    </template>
+  </el-upload>
 </template>
 
 <script>
+
 export default {
   name: 'CUpload',
+  // inheritAttrs: false,
   props: {
     uploadRef: {
       type: String,
       default: 'upload'
     },
-    actionPath: {
-      type: String,
-      default: '/auth/importRegion'
-    },
-    isDrag: {
-      type: Boolean,
-      default: false
-    },
-    uploadStyle: {
+    listType: {
       type: String,
       default: 'text'
     },
+    action: {
+      type: String,
+      required: true
+    },
     size: {
       type: Number,
-      default: 2
-    },
-    isAuto: {
-      type: Boolean,
-      default: false
+      default: 1
     },
     limit: {
       type: Number,
       default: 1
     },
-    uploadData: {
+    fileList: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    headers: {
       type: Object,
-      default () {
+      default() {
         return {}
       }
     },
-    fileType: {
-      type: String,
-      default: ''
-    },
-    fileList: {
-      type: Array,
-      default () {
-        return []
-      }
+    autoUpload: {
+      type: Boolean,
+      default: false
     },
     disabled: {
       type: Boolean,
       default: false
     }
   },
-  computed: {
-    actionApi () {
-      return `${process.env.VUE_APP_serverUrl}${
-        process.env.VUE_APP_serverPath
-      }${this.actionPath}`
-    },
-    headers () {
-      const token = this.$store.getters.token
-      return {
-        Authorization: token
-      }
-    },
-    uploadList() {
-      return this.fileList
+  data() {
+    return {
+      mutiFiles: []
     }
   },
-  mounted () {
+  computed: {
+    actionPath() {
+      return `${process.env.VUE_APP_CONSOLE_COMMON}${this.action}`
+    },
+    uploadList: {
+      get() {
+        return this.fileList
+      },
+      set(val) {
+        this.$emit('update:upload-list', val)
+      }
+    },
+    headersObj() {
+      const { token } = this.$store.getters.userInfo
+      return {
+        token,
+        ...this.headers
+      }
+    }
+  },
+  mounted() {
     if (this.disabled) {
       const curUplist = document.getElementsByClassName('el-upload')
+      console.log(curUplist)
       for (let i = 0; i < curUplist.length; i++) {
         curUplist[i].style.display = 'none'
       }
     }
   },
   methods: {
-    handleExceed (files, fileList) {
+    customUpload(fileObj) {
+      const { uid } = fileObj.file
+      if (uid === this.mutiFiles.get('files').uid) {
+        this.$api.common.uploadFile(this.mutiFiles).then(res => {
+          const fileList = res.map(res => ({
+            name: fileObj.file.name,
+            id: res.id,
+            url: res.imageUrl
+          }))
+          this.$emit('update:fileList', fileList)
+          this.$emit('on-success', '', fileObj.file, fileList)
+        })
+      }
+    },
+    handleChange(file, fileList) {
+      if (!this.autoUpload) {
+        let formData = new FormData()
+        fileList.forEach(res => {
+          formData.append('files', res.raw)
+        })
+        this.mutiFiles = formData
+      }
+    },
+    handleExceed(files, fileList) {
       this.$message.warning(
         `当前限制选择 ${this.limit} 个文件，本次选择了 ${
           files.length
         } 个文件，共选择了 ${files.length + fileList.length} 个文件`
       )
-      this.$emit('handle-exceed', files, fileList)
+      this.$emit('on-exceed', files, fileList)
     },
-    handleSuccess (response, file, fileList) {
-      let curFileList = fileList
-      if (this.fileType !== 'excel') {
-        curFileList = fileList.map(res => ({
-          url: /.mp4$/g.test(res.name) || /.mp4$/g.test(res.mediaPath) ? `${this.$staticFile}/images/default-video.png` : res.response ? `${this.$filePath}${res.response.data}` : res.url,
-          uid: res.uid,
-          status: res.status,
-          mediaPath: /.mp4$/g.test(res.name)
-            ? `${this.$filePath}${res.response.data}`
-            : /.mp4$/g.test(res.mediaPath)
-              ? res.mediaPath
-              : ''
-        }))
+    handleSuccess(response, file, fileList) {
+      if (response.code === 0) {
+        let curFileList = fileList
+        if (this.fileType !== 'excel') {
+          curFileList = fileList.map(res => ({
+            url: /.mp4$/g.test(res.name) || /.mp4$/g.test(res.mediaPath) ? `${this.$staticFile}/images/default-video.png` : res.response ? `${this.$filePath}${res.response.data}` : res.url,
+            uid: res.uid,
+            status: res.status,
+            mediaPath: /.mp4$/g.test(res.name)
+              ? `${this.$filePath}${res.response.data}`
+              : /.mp4$/g.test(res.mediaPath)
+                ? res.mediaPath
+                : ''
+          }))
+        }
+        this.$emit('update:fileList', curFileList)
+        this.$emit('on-success', response, file, curFileList)
+        this.uploadList = curFileList
+      } else {
+        fileList.splice(fileList.length - 1, 1)
+        this.$emit('update:fileList', fileList)
+        this.$emit('on-success', response, file, fileList)
+        this.$msgTip(`${response.code}【${response.message}】`, 'warning')
       }
-      this.$emit('update:fileList', curFileList)
-      this.$emit('upload-success', response, file, curFileList)
-      this.uploadList = curFileList
     },
-    handleChange (file, fileList) {
-      this.$emit('upload-change', file, fileList)
-    },
-    handleReview (file) {
-      this.$emit('upload-review', file)
-    },
-    handleRemove (file, fileList) {
-      this.$emit('update:fileList', fileList)
-      this.$emit('upload-remove', file, fileList)
-    },
-    beforeRemove (file, fileList) {
+    beforeRemove(file, fileList) {
       if (this.fileType !== 'excel') {
         if (/\.(png|jpeg|jpg|mp4)$/.test(file.name)) {
           return this.$emit('before-remove', file, fileList)
-        } else if (/\.(png|jpeg|jpg|mp4)$/.test(file.url)) {
+        } else if (/\.(png|jpeg|jpg)$/.test(file.url)) {
           return this.$confirm(
-            `此图片/视频保存任务后，将无法恢复，是否确定删除`,
+            `确定移除 ${file.name}`,
             '提示',
             {
               confirmButtonText: '确定',
@@ -161,12 +187,14 @@ export default {
             }
           ).then(() => {
             this.$emit('before-remove')
+            this.$emit('update:fileList', fileList)
           })
         }
+        this.$emit('update:fileList', fileList)
         this.$emit('before-remove', file, fileList)
       }
     },
-    beforeUpload (file) {
+    beforeUpload(file) {
       if (this.fileType === 'image') {
         const isJPG = /\.(png|jpeg|jpg)$/.test(file.name)
         if (isJPG) {
@@ -199,7 +227,7 @@ export default {
       this.$emit('before-upload')
       return false
     },
-    showTip (file) {
+    showTip(file) {
       const isLimit = file.size / 1024 / 1024 < this.size
       if (!isLimit) {
         this.$message.error(`上传文件大小不能超过 ${this.size}MB!`)
@@ -207,7 +235,7 @@ export default {
       }
       return isLimit
     },
-    submitUpload () {
+    submitUpload() {
       this.$refs.upload.submit()
     }
   }
