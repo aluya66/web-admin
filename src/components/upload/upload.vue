@@ -1,24 +1,17 @@
 <template>
 	<el-upload
 		class="upload"
-		:drag="isDrag"
 		:ref="uploadRef"
-		:list-type="uploadStyle"
+    :http-request="customUpload"
+    :disabled="disabled"
+		:list-type="listType"
 		:file-list="uploadList"
-		:headers="headers"
-		:data="uploadData"
-		:limit="limit"
-		:disabled="disabled"
 		:on-exceed="handleExceed"
-		:action="actionApi"
-		:on-preview="handleReview"
-		:on-remove="handleRemove"
 		:on-success="handleSuccess"
-		:on-change="handleChange"
-		:auto-upload="isAuto"
 		:before-upload="beforeUpload"
 		:before-remove="beforeRemove"
-		multiple
+    v-bind="$attrs"
+    v-on="$listeners"
 	>
 		<slot></slot>
 		<template v-if="!$slots.default">
@@ -34,44 +27,23 @@
 <script>
 export default {
   name: 'CUpload',
+  inheritAttrs: false,
   props: {
     uploadRef: {
       type: String,
       default: 'upload'
     },
-    actionPath: {
-      type: String,
-      default: '/auth/importRegion'
-    },
-    isDrag: {
-      type: Boolean,
-      default: false
-    },
-    uploadStyle: {
+    listType: {
       type: String,
       default: 'text'
     },
     size: {
       type: Number,
-      default: 2
-    },
-    isAuto: {
-      type: Boolean,
-      default: false
+      default: 1
     },
     limit: {
       type: Number,
       default: 1
-    },
-    uploadData: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    fileType: {
-      type: String,
-      default: ''
     },
     fileList: {
       type: Array,
@@ -85,17 +57,6 @@ export default {
     }
   },
   computed: {
-    actionApi () {
-      return `${process.env.VUE_APP_serverUrl}${
-        process.env.VUE_APP_serverPath
-      }${this.actionPath}`
-    },
-    headers () {
-      const token = this.$store.getters.token
-      return {
-        Authorization: token
-      }
-    },
     uploadList() {
       return this.fileList
     }
@@ -103,19 +64,27 @@ export default {
   mounted () {
     if (this.disabled) {
       const curUplist = document.getElementsByClassName('el-upload')
+      console.log(curUplist)
       for (let i = 0; i < curUplist.length; i++) {
         curUplist[i].style.display = 'none'
       }
     }
   },
   methods: {
+    customUpload(fileObj) {
+      let params = new FormData()
+      params.append('files', [fileObj.file]) // 将数据转换成Form Data 文件上传模式
+      this.$api.common.uploadFile(params).then(res => {
+        console.log(res)
+      })
+    },
     handleExceed (files, fileList) {
       this.$message.warning(
         `当前限制选择 ${this.limit} 个文件，本次选择了 ${
           files.length
         } 个文件，共选择了 ${files.length + fileList.length} 个文件`
       )
-      this.$emit('handle-exceed', files, fileList)
+      this.$emit('on-exceed', files, fileList)
     },
     handleSuccess (response, file, fileList) {
       let curFileList = fileList
@@ -132,18 +101,8 @@ export default {
         }))
       }
       this.$emit('update:fileList', curFileList)
-      this.$emit('upload-success', response, file, curFileList)
+      this.$emit('on-success', response, file, curFileList)
       this.uploadList = curFileList
-    },
-    handleChange (file, fileList) {
-      this.$emit('upload-change', file, fileList)
-    },
-    handleReview (file) {
-      this.$emit('upload-review', file)
-    },
-    handleRemove (file, fileList) {
-      this.$emit('update:fileList', fileList)
-      this.$emit('upload-remove', file, fileList)
     },
     beforeRemove (file, fileList) {
       if (this.fileType !== 'excel') {

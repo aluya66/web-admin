@@ -1,10 +1,11 @@
 import { asyncRoutes, constantRoutes } from '@/routes'
-import { getMenuList } from 'api/ipx'
+import { getMenuList } from 'api/common'
 import utils from 'utils'
 
 const state = {
   routes: [],
-  addRoutes: []
+  addRoutes: [],
+  roleList: [] // api获取的权限列表，预设置权限在路由roles里面
 }
 
 const mutations = {

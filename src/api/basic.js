@@ -73,7 +73,7 @@ export const queryCategory = params =>
 
 /**
  * 查询所以商品类目数据
-*/
+ */
 export const queryCategoryAll = params =>
   Http.fetch(`${context}/api/category/recursions`, params, {
     method: 'get'
@@ -115,7 +115,7 @@ export const updateCategory = params =>
  */
 export const deleteCategory = params =>
   Http.fetch(`${context}/api/category`, params, {
-  // Http.fetch(`${context}/api/category/${params.categoryId}`, params, {
+    // Http.fetch(`${context}/api/category/${params.categoryId}`, params, {
     method: 'delete'
   })
 
@@ -139,29 +139,35 @@ export const queryAllVersion = params =>
 
 // 区域列表
 export const queryAllRegion = params =>
-  Http.fetch(`${context}/api/region/list/parentcodes`, params, {
-    method: 'get'
-  })
-
-// 区域下拉框列表
-export const queryAllParentcodes = params =>
-  Http.fetch(`${context}/api/region/list/parentcodes`, params, {
+  Http.fetch(`${context}/api/area/childrens`, params, {
     method: 'get'
   })
 
 // 区域添加
 export const addRegionInsert = params =>
-  Http.fetch(`${context}/api/region`, params)
+  Http.fetch(`${context}/api/area`, params)
 
 // 区域修改
 export const updataRegionInsert = params =>
-  Http.fetch(`${context}/api/region`, params, {
+  Http.fetch(`${context}/api/area`, params, {
     method: 'put'
+  })
+
+// 删除区域信息
+export const deleteArea = params =>
+  Http.fetch(`${context}/api/area`, params, {
+    method: 'detele'
   })
 
 // 品牌列表
 export const brandList = params =>
   Http.fetch(`${context}/api/brand/querypage`, params, {
+    method: 'get'
+  })
+
+// 根据id查询品牌
+export const getBrandById = params =>
+  Http.fetch(`${context}/api/brand`, params, {
     method: 'get'
   })
 
@@ -233,7 +239,7 @@ export const addSoreQuerypage = params =>
 
 // 物流列表
 export const getLogistics = params =>
-  Http.fetch(`${context}//api/logistics/list`, params, {
+  Http.fetch(`${context}/api/logistics/list`, params, {
     method: 'get'
   })
 
@@ -254,11 +260,5 @@ export const getLogisticsDel = params =>
 // 商品中心风格、sku
 export const getStyle = params =>
   Http.fetch(`${context}/api/attr/querypage`, params, {
-    method: 'get'
-  })
-
-// 区域整体返回接口
-export const getAreaAll = params =>
-  Http.fetch(`${context}/api/region/all`, params, {
     method: 'get'
   })

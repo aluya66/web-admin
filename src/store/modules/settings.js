@@ -1,3 +1,4 @@
+// 框架相关设置
 import defaultSettings from '@/settings'
 const {
   showSettings,

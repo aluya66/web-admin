@@ -27,7 +27,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="业务线编码">
+            <el-form-item label="业务线名称">
               <el-select v-model="searchObj.appCode" class="search-item" :size="size" clearable>
                 <el-option
                   v-for="item in appCodeSelect"
@@ -144,7 +144,7 @@ export default {
       pickerOptions: utils.pickerOptions,
       dialogObj: {},
       searchObj: {
-        tradeUserName: '', // 用户名称
+        tradeUserName: '', // 用户姓名
         transactionCode: '', // 订单编号
         tradeItemType: '', // 类型
         appCode: '', // 业务线
@@ -314,10 +314,9 @@ export default {
           fixed: true
         },
         {
-          label: '业务线编码',
+          label: '业务线名称',
           prop: 'appCode',
           width: 100,
-          fixed: true,
           formatter(row) {
             return row.appCode === 'ysdp' ? 'IPX' : row.appCode === 'yssp' ? 'yoshop' : row.appCode === 'ysgo' ? '星GO' : '无'
           }

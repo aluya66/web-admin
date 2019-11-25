@@ -3,8 +3,7 @@
     <template v-slot:header>
       <div class="title">
           {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-          <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">
-            新增</el-button>
+          <el-button type="primary" v-permission="$route.meta.roles" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
 
@@ -267,7 +266,6 @@ export default {
         this.fetchData()
         this.dialogObj.isShow = false
       })
-      this.dialogObj.isShow = true
     },
     publishDate(param, msgTip = '发布成功') {
       this.$api.basic.releaseRelease(param).then(() => {

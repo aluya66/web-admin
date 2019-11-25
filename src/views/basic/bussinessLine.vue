@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
+        <el-button type="primary" v-permission="$route.meta.roles" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -195,8 +195,7 @@ export default {
         },
         {
           label: '创建时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         }
       ],
 
@@ -268,28 +267,20 @@ export default {
     },
     addHandle(childFormModel) {
       this.$api.basic.addBusiness({ ...childFormModel }).then(res => {
+        this.dialogObj.isShow = false
         this.$msgTip('添加成功')
         this.fetchData()
       })
-      this.dialogObj.isShow = false
     },
     editHandle(formModel) {
       this.$api.basic.updateBusiness({
         ...formModel
       }).then(res => {
+        this.dialogObj.isShow = false
         this.$msgTip('修改成功')
         this.fetchData()
       })
-      this.dialogObj.isShow = false
     }
   }
 }
 </script>
-
-<style lang="less" scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-</style>

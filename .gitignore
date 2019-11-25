@@ -22,5 +22,7 @@ yarn-error.log*
 .svn
 _bak*
 package-lock.json
+devMock
+
 
 # git config core.ignorecase false  开启git区分大小写文件夹标识

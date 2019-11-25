@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
+        <el-button type="primary" v-permission="$route.meta.roles" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -250,11 +250,6 @@ export default {
           }
         },
         {
-          label: '排序',
-          prop: 'sort',
-          width: 100
-        },
-        {
           label: '创建时间',
           prop: 'created',
           width: 100
@@ -324,10 +319,10 @@ export default {
         bmsGoodsAttrValAddReqs: bmsGoodsAttrValAddReqs.flat()
       }
       this.$api.basic.addGoodsattrval(data).then(res => {
+        this.dialogObj.isShow = false
         this.$msgTip('新增成功')
         this.fetchData()
       })
-      this.dialogObj.isShow = false
     },
     editHandle(childData) {
       const { delArr, formModel } = childData
@@ -341,7 +336,6 @@ export default {
         this.dialogObj.isShow = false
         this.fetchData()
       })
-      this.dialogObj.isShow = true
     },
     deleteData(param, msgTip = '删除成功') {
       this.$api.basic.deleteGoodsattrval(param).then(() => {
@@ -352,10 +346,3 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-</style>

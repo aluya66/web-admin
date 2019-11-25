@@ -10,6 +10,12 @@ export const isDebug = process.env.NODE_ENV === 'development'
 export const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
 
 /**
+ * 判断是否为整数
+ * @param {Object}} val
+ */
+export const isInteger = val => val && !/^[1-9]\d*$/.test(val)
+
+/**
  * 判断是否为数组
  * @param {Array} arr
  */
@@ -35,15 +41,24 @@ export const openNewWin = (routerOpts) => {
   }
   window.open(routePath, '_blank')
 }
+
+/**
+ * 二进制流文件转换成xlsx文件
+ * @param {file} file
+ */
+export const createBlobFile = (file) => {
+  let blob = new Blob([file], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=ISO8859-1' })
+  let fileUrl = URL.createObjectURL(blob)
+  window.location.href = fileUrl
+}
+
 /**
  *  统一跳转到登陆页面
  */
-export const goToLogin = (page = 'login', type = 'push', time = 1.5) => {
-  setTimeout(() => {
-    window.globalVue.$router[type]({
-      path: `/${page}?redirect=${window.globalVue.$route.fullPath}`
-    })
-  }, time * 1000)
+export const goToLogin = (page = 'login', type = 'push') => {
+  window.globalVue.$router[type]({
+    path: `/${page}?redirect=${window.globalVue.$route.fullPath}`
+  })
 }
 
 /**
@@ -269,7 +284,7 @@ export const serializeParam = (params = {}, split = '&') => {
   let paramsStr = '' // 数据拼接字符串
   Object.keys(params).forEach(key => {
     if (split === '&') {
-      paramsStr += `${key}=${params[key]}${split}`
+      paramsStr += `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}${split}`
     } else if (split === '/') {
       paramsStr += `${params[key]}${split}`
     }
@@ -369,6 +384,8 @@ export default {
   isDebug,
   isObject,
   isArray,
+  isInteger,
+  createBlobFile,
   confirmTip,
   getCurrentUserLanguage,
   donwFile,

@@ -7,7 +7,7 @@
       <c-table
         selection
         hasBorder
-        :max-height="685"
+        :max-height="730"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -202,13 +202,11 @@ export default {
         },
         {
           label: '创建时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         },
         {
           label: '更新时间',
-          prop: 'updated',
-          width: 100
+          prop: 'updated'
         }
       ]
     }

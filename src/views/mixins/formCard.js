@@ -1,10 +1,11 @@
 import CCard from 'components/card'
+import QueryDict from '../common/queryDict'
 
 export default {
   props: {
     title: String,
     dataObj: {
-      type: Object,
+      type: [Object, Array],
       required: true
     },
     isView: {
@@ -31,6 +32,7 @@ export default {
     }
   },
   components: {
-    CCard
+    CCard,
+    QueryDict
   }
 }

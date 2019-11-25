@@ -1,23 +1,22 @@
 <template>
   <c-view>
-    <template v-slot:header>
-      <div class="title">
-        <el-tabs v-model="activeName" @tab-click="changeTitle">
-          <el-tab-pane
-            v-for="(item, index) in labelTitle"
-            :key="index"
-            :label="item.label"
-            :name="item.value"
-          ></el-tab-pane>
-        </el-tabs>
-        <div class="header-btn">
-          <el-button
-            type="primary"
-            :size="size"
-            icon="el-icon-plus"
-            @click="showDialog"
-          >新增</el-button>
-        </div>
+    <template v-slot:headerTab>
+      <el-tabs type="card" v-model="activeName" @tab-click="changeTitle">
+        <el-tab-pane
+          v-for="(item, index) in labelTitle"
+          :key="index"
+          :label="item.label"
+          :name="item.value"
+        ></el-tab-pane>
+      </el-tabs>
+      <div class="header-btn">
+        <el-button
+          type="primary"
+          v-permission="$route.meta.roles"
+          :size="size"
+          icon="el-icon-plus"
+          @click="showDialog"
+        >新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -54,12 +53,7 @@
               />
             </el-form-item>
             <el-form-item label="标签状态">
-              <el-select
-                v-model="searchObj.labelStatus"
-                class="select-item"
-                :size="size"
-                clearable
-              >
+              <el-select v-model="searchObj.labelStatus" class="select-item" :size="size" clearable>
                 <el-option
                   v-for="item in marketableSelect"
                   :key="item.value"
@@ -67,7 +61,7 @@
                   :value="item.value"
                 ></el-option>
               </el-select>
-              </el-form-item>
+            </el-form-item>
             <el-form-item label="创建时间">
               <el-date-picker
                 :size="size"
@@ -198,18 +192,15 @@ export default {
         {
           label: '标签名称',
           prop: 'labelName',
-          width: 120,
           fixed: true
         },
         {
           label: '拼音大写',
-          prop: 'initial',
-          width: 200
+          prop: 'initial'
         },
         {
           label: '标签编码',
-          prop: 'labelCode',
-          width: 120
+          prop: 'labelCode'
         },
         {
           label: '标签风格',
@@ -220,8 +211,7 @@ export default {
         },
         {
           label: '标签状态',
-          prop: 'labelStatusCN',
-          width: 120
+          prop: 'labelStatusCN'
         },
         {
           label: '标签描述',
@@ -239,13 +229,11 @@ export default {
         // },
         {
           label: '创建时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         },
         {
           label: '更新时间',
-          prop: 'updated',
-          width: 100
+          prop: 'updated'
         }
       ],
       activeName: '1',
@@ -333,10 +321,10 @@ export default {
         labelType: this.labelType
       }
       this.$api.basic.addQuerypage(data).then(res => {
+        this.dialogObj.isShow = false
         this.$msgTip('添加成功')
         this.fetchData()
       })
-      this.dialogObj.isShow = false
     },
     /**
      * 确认修改操作
@@ -354,10 +342,10 @@ export default {
         // labelStatus: status
       }
       this.$api.basic.updateQuerypage(data).then(res => {
+        this.dialogObj.isShow = false
         this.$msgTip('修改成功')
         this.fetchData()
       })
-      this.dialogObj.isShow = false
     },
     changeTitle(tab, event) {
       if (tab.name === '1') {
@@ -375,12 +363,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  height: 36px;
-}
-</style>

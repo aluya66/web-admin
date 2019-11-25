@@ -15,7 +15,8 @@ export default {
     component: () => import('@/views/basic/bussinessLine'),
     meta: {
       title: 'bussiness',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -24,7 +25,8 @@ export default {
     component: () => import('@/views/basic/area'),
     meta: {
       title: 'area',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -33,7 +35,8 @@ export default {
     component: () => import('@/views/basic/version'),
     meta: {
       title: 'version',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
@@ -42,43 +45,82 @@ export default {
     component: () => import('@/views/basic/category'),
     meta: {
       title: 'category',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   },
   {
     path: '/basic/brand',
     name: 'brand',
-    component: () => import('@/views/basic/brand'),
+    component: () => import('@/views/basic/brand/list'),
     meta: {
       title: 'brand',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {
-    path: '/basic/merchandise',
-    name: 'merchandise',
-    component: () => import('@/views/basic/merchandise'),
+    path: '/basic/brandInfo/:id?',
+    name: 'brandInfo',
+    hidden: true,
+    component: () => import('@/views/basic/brand/add'),
     meta: {
-      title: 'merchandise',
-      icon: 'table'
+      title: 'brandInfo',
+      icon: 'table',
+      noCache: true,
+      activeMenu: '/basic/brand'
     }
   },
   {
-    path: '/basic/label',
-    name: 'labelManage',
-    component: () => import('@/views/basic/label'),
+    path: '/basic/brandLabel/:id',
+    name: 'brandLabel',
+    hidden: true,
+    component: () => import('@/views/basic/brand/addLabel'),
     meta: {
-      title: 'label',
-      icon: 'table'
+      title: 'brandLabel',
+      icon: 'table',
+      noCache: true,
+      activeMenu: '/basic/brand'
     }
   },
+  // {
+  //   path: '/basic/merchandise',
+  //   name: 'merchandise',
+  //   component: () => import('@/views/basic/merchandise'),
+  //   meta: {
+  //     title: 'merchandise',
+  //     icon: 'table',
+  //     roles: ['review']
+  //   }
+  // },
+  {
+    path: '/basic/goodsAttrs',
+    name: 'goodsAttrs',
+    component: () => import('@/views/basic/goodsAttrs/list'),
+    meta: {
+      title: 'goodsAttrs',
+      icon: 'table',
+      roles: ['review']
+    }
+  },
+  // {
+  //   path: '/basic/label',
+  //   name: 'labelManage',
+  //   component: () => import('@/views/basic/label'),
+  //   meta: {
+  //     title: 'label',
+  //     icon: 'table',
+  //     roles: ['review']
+  //   }
+  // },
   {
     path: '/basic/logistics',
     name: 'logistics',
     component: () => import('@/views/basic/logistics'),
     meta: {
       title: 'logistics',
-      icon: 'table'
+      icon: 'table',
+      roles: ['review']
     }
   }
   ]
