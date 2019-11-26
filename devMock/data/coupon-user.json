@@ -1,0 +1,27 @@
+{
+	"code": 0,
+  "data": [{
+    "activateTime": "激活时间",
+    "activityAmount": 1,
+    "canUseAmount": 1,
+    "canUsestatus": 1,
+    "coupon": [],
+    "couponAmount": 1,
+    "couponId": 1,
+    "couponRuleId": 1,
+    "couponRuleType": 1,
+    "couponStoreId": 1,
+    "couponStoreNo": "用户券号",
+    "marketPriceDetail": [],
+    "rechargeAmount": 1,
+    "rechargeCanUseAmount": 1,
+    "rechargeUseAmount": 1,
+    "status": 1,
+    "useAmount": 1,
+    "useTimeEnd": "使用截至时间",
+    "userId": 1
+  }],
+  "message": "操作成功",
+  "success": true,
+  "totalCount": 0
+}

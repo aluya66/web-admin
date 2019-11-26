@@ -45,25 +45,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="联系人">
-              <el-input
-                v-model="searchObj.contact"
-                class="search-item"
-                size="medium"
-                placeholder="联系人"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="联系电话">
-              <el-input
-                v-model="searchObj.contactTel"
-                class="search-item"
-                size="medium"
-                placeholder="联系电话"
-                clearable
-              />
-            </el-form-item> -->
-            <el-form-item label="状态">
+            <el-form-item label="店铺状态">
               <el-select
                 v-model="searchObj.status"
                 size="medium"
@@ -106,31 +88,38 @@ export default {
       searchObj: {
         shopName: '',
         shopType: '',
-        status: '',
-        contact: '', // 联系人
-        contactTel: '' // 联系电话
+        status: ''
       },
       dialogObj: {}, // 对话框数据
       shopStatusSelect: [
         {
-          value: '0',
+          value: 0,
           label: '关闭'
         },
         {
-          value: '1',
+          value: 1,
           label: '开启'
         }
       ],
       shopTypeSelect: [{
         label: '自营',
-        value: '1'
+        value: 1
       }, {
         label: '加盟',
-        value: '2'
+        value: 2
       }],
       tableList: [],
       isLoading: false,
-      tableInnerBtns: [],
+      tableInnerBtns: [
+        {
+          width: 130,
+          name: '详情',
+          icon: 'el-icon-view',
+          handle (row) {
+            vm.routerLink(`/shop/detail/${row.shopId}`)
+          }
+        }
+      ],
       tableHeader: [
         {
           label: '店铺ID',
@@ -154,7 +143,8 @@ export default {
         },
         {
           label: 'LOGO',
-          prop: 'shopLogo'
+          prop: 'shopLogo',
+          isImage: true
         },
         {
           label: '店招',
@@ -177,7 +167,7 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? vm.shopStatusSelect[row.status].label : ''
+            return row.status ? vm.shopStatusSelect[row.status].label : '关闭'
           }
         },
         {
@@ -186,7 +176,8 @@ export default {
         },
         {
           label: '添加时间',
-          prop: 'created'
+          prop: 'created',
+          width: 100
         }
       ]
     }

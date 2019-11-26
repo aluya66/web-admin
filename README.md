@@ -29,15 +29,18 @@
 
 ## 2、项目配置
 
-> 见`.env.development & .env.production` 配置项
+> 见`.env.*` 配置项，开发模式下只需配置`.env.development`
 
 - 注意：
-    - 本地服务端口
+    - 本地服务端口`VUE_APP_PORT`
     - 代理数量（默认只代理一个，需要更多，修改`vue.config.js`中的`proxy`配置项）
-    - 接口服务地址
-    - 路由模式（基于nginx服务时，正式部署时以history模式，开发阶段以hash）
+    - 接口服务地址`VUE_APP_SERVERPATH_CONSOLE`
 
-## 3、开发构建
+## 3、开发注意
+- 所有表单页面，需在`data`数据中初始化必填字段
+- 通用列表表格页面，基于`components/table`组件做页面开发
+
+## 4、开发构建
 
 - 安装依赖
 ```
@@ -63,14 +66,14 @@ or
 	npm run build
 ```
 
-## 4、服务部署
+## 5、服务部署
 > nginx 部署
 
 - 1、在工程根目录中,将`dist`目录下文件部署在`nginx`服务器`html`目录下.
 - 2、配置`nginx`代理
 ```
 	// 在VUE_APP_BASEURLPATH为/,VUE_APP_ROUTEMODEL为hash时，目前中台默认hash部署
-	location ~ ^/(yosar-bms|yosar-pms) {
+	location ~ ^/(ysca-admin-web) {
 		proxy_pass  http://gateway.yosar.develop  (中台网关地址)
 	}
 
@@ -95,7 +98,7 @@ or
 
 > 自建node 服务部署，node版本8.11.0+
 
-## 5、相关参考
+## 6、相关参考
 
 - 组件编码规范
 - See [Configuration Reference](https://cli.vuejs.org/config/).

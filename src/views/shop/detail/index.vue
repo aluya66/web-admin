@@ -94,7 +94,7 @@ export default {
 }
 </script>
 
-<style lang='less' scope>
+<style lang='less' scoped>
 .form {
   background-color: @white;
   padding: 15px 15px;

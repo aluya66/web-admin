@@ -1,0 +1,197 @@
+{
+	"code": 0,
+	"message": "操作成功",
+	"data": [
+		{
+			"couponRuleId": 1,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "申请人",
+			"applyingDepartment": "申请部门",
+			"remark": "测试",
+			"returnRules": []
+		},
+		{
+			"couponRuleId": 2,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "测试部门",
+			"applyingDepartment": "测试部门",
+			"remark": "测试",
+			"returnRules": []
+		},
+		{
+			"couponRuleId": 3,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "测试部门",
+			"applyingDepartment": "测试部门",
+			"remark": "测试",
+			"returnRules": []
+		},
+		{
+			"couponRuleId": 4,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "测试部门",
+			"applyingDepartment": "测试部门",
+			"remark": "测试",
+			"returnRules": []
+		},
+		{
+			"couponRuleId": 5,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "测试部门",
+			"applyingDepartment": "测试部门",
+			"remark": "测试",
+			"returnRules": []
+		},
+		{
+			"couponRuleId": 6,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "测试部门",
+			"applyingDepartment": "测试部门",
+			"remark": "测试",
+			"returnRules": []
+		},
+		{
+			"couponRuleId": 7,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "测试部门",
+			"applyingDepartment": "测试部门",
+			"remark": "测试",
+			"returnRules": []
+		},
+		{
+			"couponRuleId": 8,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "测试部门",
+			"applyingDepartment": "测试部门",
+			"remark": "测试",
+			"returnRules": []
+		},
+		{
+			"couponRuleId": 9,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "测试部门",
+			"applyingDepartment": "测试部门",
+			"remark": "测试",
+			"returnRules": []
+		},
+		{
+			"couponRuleId": 10,
+			"couponRuleType": 0,
+			"couponRuleName": "测试劵",
+			"platforms": [
+				1
+			],
+			"repeatUse": 0,
+			"limitReceive": 10,
+			"userLevel": 1,
+			"categoryType": 0,
+			"preferentialType": 0,
+			"preferentialLevel": 2,
+			"preferentialValue": 0,
+			"applicants": "测试部门",
+			"applyingDepartment": "测试部门",
+			"remark": "测试",
+			"returnRules": []
+		}
+	],
+	"success": true
+}

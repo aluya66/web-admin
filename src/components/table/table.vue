@@ -9,17 +9,18 @@
       :max-height="maxHeight"
       v-loading="loading"
       :data="tableList"
-      :highlight-current-row="single"
+      highlight-current-row
       :span-method="objectSpanMethod"
       tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @current-change="handleSingleChange"
     >
-      <el-table-column v-if="selection" type="selection" width="55"/>
+      <el-table-column v-if="selection" :align="align" type="selection" width="55"/>
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
+        :align="align"
         :label="item.label"
         :prop="item.prop"
         :width="item.width"
@@ -33,17 +34,29 @@
             fit="contain"
             :preview-src-list="[scope.row[item.prop]]"
           ></c-image>
+          <el-popover trigger="hover" placement="top" v-else-if="item.isPopover">
+            <p>{{scope.row[item.prop]}}</p>
+            <div slot="reference" class="name-wrapper">
+              <div class="text-multi-ellipsis">{{ scope.row[item.prop] }}</div>
+            </div>
+          </el-popover>
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
-          <template v-else>
+          <div v-else-if="item.handle" class="title-active" @click="item.handle(scope.row)">
             {{
             item.formatter ? item.formatter(scope.row, index) : scope.row[item.prop]
             }}
-          </template>
+          </div>
+          <span :class="item.setColor && item.setColor(scope.row)" v-else>
+            {{
+            item.formatter ? item.formatter(scope.row, index) : scope.row[item.prop]
+            }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tableInnerBtns.length"
+        v-if="tableInnerBtns.length && hasBtn"
         :width="tableInnerBtns.length && tableInnerBtns[0].width"
+        :align="align"
         fixed="right"
         label="操作"
       >
@@ -52,8 +65,8 @@
           <el-button
             v-for="(btn, index) in curBtns(scope.row)"
             :key="index"
-            :type="btn.type || 'text'"
-            :icon="btn.icon"
+            :type="setBtnAttribute(btn, scope.row, 'type') || 'text'"
+            :icon="setBtnAttribute(btn, scope.row, 'icon')"
             :size="btn.size || 'mini'"
             @click="
 							btn.handle && handleClick(btn.handle, scope.row, scope.$index)
@@ -74,6 +87,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
+            <template v-else-if="btn.prop">{{setBtnAttribute(btn, scope.row, 'title')}}</template>
             <template v-else>
               {{
               btn.formatter
@@ -89,8 +103,8 @@
     <c-pagination
       v-show="!noPage && tableList.length > 0"
       :total="pageInfo.totalNum"
-      :page.sync="pageInfo.pageNum"
-      :limit.sync="pageInfo.numPerPage"
+      :page.sync="pageInfo.pageNo"
+      :limit.sync="pageInfo.pageSize"
       @pagination="changePagination"
     ></c-pagination>
   </div>
@@ -119,6 +133,10 @@ export default {
         return []
       }
     },
+    align: {
+      type: String,
+      default: 'center'
+    },
     noPage: {
       type: Boolean,
       default: false
@@ -141,9 +159,9 @@ export default {
       type: Object,
       default() {
         return {
-          pageNum: 1,
-          numPerPage: 10,
-          totalCount: 0
+          pageNo: 1,
+          pageSize: 10,
+          totalNum: 0
         }
       }
     },
@@ -170,6 +188,15 @@ export default {
       multipleSelection: []
     }
   },
+  computed: {
+    hasBtn() {
+      const { roles } = this.$route.meta
+      // const curRoles = this.$store.getters.roleList
+      // return curRoles.some(role => roles.includes(role))
+      // console.log(this.$store.getters.roleList.includes('review'))
+      return roles && roles.length && !roles.includes('review')
+    }
+  },
   watch: {
     clearSelect(val, old) {
       if (val && val !== old) {
@@ -178,6 +205,14 @@ export default {
     }
   },
   methods: {
+    // 设置button的type、icon、name
+    setBtnAttribute(btn, row, type) {
+      const { toggle, name } = btn.prop || {}
+      if (name && toggle && type) {
+        return toggle[row[name]][type]
+      }
+      return btn[type]
+    },
     curBtns(row) {
       return this.tableInnerBtns.filter(res => {
         if (res.notBtn) {
@@ -252,6 +287,31 @@ export default {
     .search-item {
       width: 250px;
     }
+    .search-number{
+      width: 114px;
+    }
+  }
+  .check-list {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border: 1px solid @border-default;
+    font-size: @f12;
+    line-height: @f14;
+    border-radius: 3px;
+    span {
+      color: @active;
+      font-weight: bold;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+  .text-multi-ellipsis {
+    .multi-ellipsis(2);
+  }
+  .title-active {
+    color: @active;
+    cursor: pointer;
   }
 }
 </style>

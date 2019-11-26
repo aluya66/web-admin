@@ -11,16 +11,15 @@ import utils from 'utils'
 
 export default (err, callBackFun, duration) => {
   const errCode = err.code
-  let errMsg = ''
+  let errMsg = err.message
   console.log('err', err)
   switch (errCode) {
+    case 8:
+    case 3:
     case 9:
-      errMsg = 'token失效'
-      const token = utils.getUrlParam('token')
-      if (!token) {
-        errMsg = 'token不能为空'
-      }
-      utils.goToLogin('401')
+      errMsg = 'token异常，请重新登录'
+      window.globalVue.$store.dispatch('user/resetToken')
+      utils.goToLogin()
       break
     case 102:
       errMsg = ''

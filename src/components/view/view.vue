@@ -3,6 +3,9 @@
 		<header v-if="$slots.header">
 			<slot name="header"></slot>
 		</header>
+    <div class="header-tab" v-if="$slots.headerTab">
+			<slot name="headerTab"></slot>
+		</div>
 		<main class="main">
 			<slot></slot>
 		</main>
@@ -14,18 +17,32 @@
 
 <script>
 export default {
-  name: 'CView',
-  props: {
-    title: String
-  }
+  name: 'CView'
 }
 </script>
 
 <style lang="less">
 .app-content {
+  .header-tab{
+    position: relative;
+    background-color: @white;
+    display: flex;
+    border-bottom: 1px solid @border-default;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px 0 15px;
+    height: 52px;
+
+    .el-tabs__header{
+      margin-bottom: 0
+    }
+    .header-btn{
+      margin-bottom: 8px;
+    }
+  }
 	header {
     position: relative;
-    background-color: @bg-main;
+    background-color: @white;
     margin-top: 2px;
     padding: 8px 15px;
     border-bottom: 1px solid @border-default;
@@ -33,6 +50,9 @@ export default {
 		.title {
 			font-size: @f18;
       line-height: 30px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
     }
     .header-btn{
       position: absolute;
@@ -45,8 +65,8 @@ export default {
 		&__box {
 			overflow: hidden;
 			padding: 10px 15px;
-			background-color: @bg-main;
-			min-height: calc(100vh - 133px);
+			background-color: @white;
+			min-height: calc(100vh - 136px);
 		}
 	}
 }

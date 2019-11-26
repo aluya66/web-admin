@@ -118,7 +118,7 @@ export default {
         status: ''
       },
       pageInfo: {
-        currentPage: 1,
+        pageNo: 1,
         pageSize: 10,
         totalSize: 0
       },
@@ -199,7 +199,7 @@ export default {
                 }).then(() => {
                   vm.$msgTip('删除成功')
                   if (vm.tableList.length === 1) {
-                    vm.pageInfo.currentPage = vm.pageInfo.currentPage > 1 ? vm.pageInfo.currentPage - 1 : 1
+                    vm.pageInfo.pageNo = vm.pageInfo.pageNo > 1 ? vm.pageInfo.pageNo - 1 : 1
                   }
                   vm.fetchData()
                 })
@@ -266,7 +266,7 @@ export default {
       return this.$api.menu.getResourceList
     },
     searchSubmit () {
-      this.pageInfo.currentPage = 1
+      this.pageInfo.pageNo = 1
       this.fetchData()
     },
     changeTreeNode (val, isChecked, treeRefs) {
@@ -280,14 +280,14 @@ export default {
         {
           ...this.searchObj
         },
-        this.pageInfo.currentPage,
+        this.pageInfo.pageNo,
         this.pageInfo.pageSize
       ).then(res => {
         this.isLoading = false
         if (res.page) {
           const { data, page } = res
-          const { currentPage, totalRow } = page
-          this.pageInfo.currentPage = currentPage
+          const { pageNo, totalRow } = page
+          this.pageInfo.pageNo = pageNo
           this.pageInfo.totalSize = totalRow
           this.tableList = data
         } else {
@@ -297,7 +297,7 @@ export default {
       })
     },
     changePagination (pageInfo) {
-      this.pageInfo.currentPage = pageInfo.page
+      this.pageInfo.pageNo = pageInfo.page
       this.pageInfo.pageSize = pageInfo.limit
       this.fetchData()
     }

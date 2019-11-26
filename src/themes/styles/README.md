@@ -41,7 +41,7 @@
 - `App.vue`中引入`app.less`，`app.less`引入`base.less`
 
 ```
-    <style lang="less" scope>
+    <style lang="less" scoped>
     @import '~themes/styles/app.less';
 
     // codeing...
