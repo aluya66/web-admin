@@ -14,6 +14,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :max-height="685"
@@ -26,8 +27,8 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="商品名称">
+          <el-form :inline="true" ref="searchForm" :model="searchObj" label-width="100px" class="search-form">
+            <el-form-item label="商品名称" prop="goodsName">
               <el-input
                 v-model="searchObj.goodsName"
                 class="search-item"
@@ -36,7 +37,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="商品编码">
+            <el-form-item label="商品编码" prop="goodsBn">
               <el-input
                 v-model="searchObj.goodsBn"
                 class="search-item"
@@ -45,7 +46,7 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="商品类目">
+            <el-form-item label="商品类目" prop="categoryCode">
               <el-cascader
                 clearable
                 class="search-item"
@@ -67,7 +68,7 @@
                 clearable
               />
             </el-form-item>-->
-            <el-form-item label="品牌">
+            <el-form-item label="品牌" prop="brandName">
               <query-dict
                 allowCreate
                 filterable
@@ -78,7 +79,7 @@
                 :value.sync="searchObj.brandName"
               ></query-dict>
             </el-form-item>
-            <el-form-item label="上下架">
+            <el-form-item label="上下架" prop="marketable">
               <el-select
                 v-model="searchObj.marketable"
                 :size="size"
@@ -94,22 +95,22 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="商品库存">
+            <el-form-item label="商品库存" prop="curStock">
               <el-input
-                v-model.number="searchObj.minStock"
+                v-model.number="searchObj.curStock[0]"
                 class="search-number"
                 :size="size"
                 placeholder="最小值"
                 clearable
               /> 至 <el-input
-                v-model.number="searchObj.maxStock"
+                v-model.number="searchObj.curStock[1]"
                 class="search-number"
                 :size="size"
                 placeholder="最大值"
                 clearable
               />
             </el-form-item>
-            <el-form-item label="操作时间">
+            <el-form-item label="操作时间" prop="dataTime">
               <el-date-picker
                 :size="size"
                 v-model="searchObj.dataTime"
@@ -129,6 +130,11 @@
                 icon="el-icon-search"
                 @click="searchSubmit"
               >查询</el-button>
+              <el-button
+                :size="size"
+                icon="el-icon-refresh"
+                @click="searchReset"
+              >重置</el-button>
             </el-form-item>
           </el-form>
         </template>
@@ -142,7 +148,7 @@ import mixinTable from 'mixins/table'
 import utils from 'utils'
 
 export default {
-  name: 'goodsList',
+  name: 'goodsManage',
   mixins: [mixinTable],
   data(vm) {
     return {
@@ -154,8 +160,7 @@ export default {
         marketable: '', // 上下架
         brandName: '', // 品牌名称
         dataTime: '', // 操作时间
-        minStock: '', // 库存最小值
-        maxStock: '' // 库存最大值
+        curStock: [] // 库存最小值
       },
       brandList: [], // 品牌数据集合
       categoryList: [], // 商品类目集合
@@ -315,14 +320,14 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { dataTime, minStock, maxStock, categoryCode, ...other } = this.searchObj
+      const { dataTime, curStock, categoryCode, ...other } = this.searchObj
       const curCategoryCode = categoryCode.length ? categoryCode[categoryCode.length - 1] : []
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
-      if (utils.isInteger(minStock) || utils.isInteger(maxStock)) {
+      if (utils.isInteger(curStock[0]) || utils.isInteger(curStock[1])) {
         return this.$msgTip('商品库存请输入正整数', 'warning')
       }
-      if (minStock > maxStock) {
+      if (curStock[0] > curStock[1]) {
         return this.$msgTip('库存最小值不能大于最大值', 'warning')
       }
       this.isLoading = true
@@ -331,18 +336,18 @@ export default {
           ...searchDate,
           ...other,
           ...page,
-          minStock,
-          maxStock,
+          minStock: curStock[0] || '',
+          maxStock: curStock[1] || '',
           categoryCode: curCategoryCode
         }
       ).then(res => {
         this.isLoading = false
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
-          this.tableList = data
+          this.tableList = data || []
         } else {
-          this.tableList = res
+          this.tableList = res || []
         }
       })
     },
