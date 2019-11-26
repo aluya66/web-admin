@@ -50,7 +50,7 @@ export default {
      */
     getSearchDate(dataTime, formatFlag, startFlag = 'beginDate', endFlag = 'endDate') {
       let type = formatFlag === 'dateTime' ? '{y}-{m}-{d} {h}:{i}:{s}' : '{y}-{m}-{d}'
-      if (dataTime) {
+      if (dataTime && dataTime[0]) {
         const beginDate = utils.fomartDate(dataTime[0], type)
         const endDate = utils.fomartDate(dataTime[1], type)
         return {
@@ -66,6 +66,14 @@ export default {
     searchSubmit() {
       this.pageInfo.pageNo = 1
       this.fetchData()
+      this.$refs.cTable && this.$refs.cTable.resetScroll()
+    },
+    /**
+     *  重置按钮
+     */
+    searchReset() {
+      this.$refs.searchForm.resetFields()
+      this.searchSubmit()
     },
     /**
      * 删除列表数据
