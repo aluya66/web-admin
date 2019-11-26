@@ -76,13 +76,6 @@ export default {
       this.searchSubmit()
     },
     /**
-     *  重置按钮
-     */
-    searchReset() {
-      this.$refs.searchForm.resetFields()
-      this.searchSubmit()
-    },
-    /**
      * 删除列表数据
      */
     delResetData(data) {
