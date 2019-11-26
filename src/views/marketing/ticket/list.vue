@@ -23,7 +23,7 @@
           <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
             <el-form-item label="卡券ID">
               <el-input
-                v-model="searchObj.couponName"
+                v-model="searchObj.couponId"
                 class="search-item"
                 :size="size"
                 placeholder="卡券ID"
@@ -39,22 +39,37 @@
                 clearable
               />
             </el-form-item>
-            <!-- <el-form-item label="使用渠道">
+            <el-form-item label="使用渠道">
               <el-select
-                v-model="searchObj.couponRuleType"
+                v-model="searchObj.platform"
                 class="search-item"
                 :size="size"
                 clearable
               >
                 <el-option
-                  v-for="item in couponRuleSelect"
+                  v-for="item in platformList"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
               </el-select>
-            </el-form-item> -->
-            <!-- <el-form-item label="卡券类型">
+            </el-form-item>
+            <el-form-item label="卡券类型">
+              <el-select
+                v-model="searchObj.type"
+                class="search-item"
+                :size="size"
+                clearable
+              >
+                <el-option
+                  v-for="item in typeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="卡券状态">
               <el-select
                 v-model="searchObj.couponStatus"
                 class="search-item"
@@ -62,37 +77,22 @@
                 clearable
               >
                 <el-option
-                  v-for="item in statusSelect"
+                  v-for="item in couponStatusList"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
               </el-select>
-            </el-form-item> -->
-            <!-- <el-form-item label="卡券状态">
-              <el-select
-                v-model="searchObj.couponStatus"
-                class="search-item"
-                :size="size"
-                clearable
-              >
-                <el-option
-                  v-for="item in statusSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item> -->
-            <!-- <el-form-item label="创建人">
+            </el-form-item>
+            <el-form-item label="创建人">
               <el-input
-                v-model="searchObj.couponName"
+                v-model="searchObj.createBy"
                 class="search-item"
                 :size="size"
-                placeholder="卡劵名称"
+                placeholder="创建人"
                 clearable
               />
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item>
               <el-button
                 type="primary"
@@ -133,6 +133,76 @@ export default {
   },
   data(vm) {
     return {
+      couponStatusList: [ // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
+        {
+          value: 0,
+          label: '草稿'
+        },
+        {
+          value: 1,
+          label: '审核中'
+        },
+        {
+          value: 2,
+          label: '审核不通过'
+        },
+        {
+          value: 3,
+          label: '审核通过'
+        },
+        {
+          value: 4,
+          label: '未发布'
+        },
+        {
+          value: 5,
+          label: '进行中'
+        },
+        {
+          value: 6,
+          label: '未开始'
+        },
+        {
+          value: 7,
+          label: '已下架'
+        },
+        {
+          value: 8,
+          label: '已结束(失效)'
+        }
+      ],
+      typeList: [ // 卡券类型
+        {
+          value: 1,
+          label: '现金券'
+        },
+        {
+          value: 2,
+          label: '折扣券'
+        },
+        {
+          value: 3,
+          label: '兑换券'
+        }
+      ],
+      platformList: [ // 渠道1 IPX, 2星购, 4YOSHOP, 8YSIA
+        {
+          value: 1,
+          label: 'ipx'
+        },
+        {
+          value: 2,
+          label: '星GO'
+        },
+        {
+          value: 4,
+          label: 'YOSHOP'
+        },
+        {
+          value: 8,
+          label: 'YSIA'
+        }
+      ],
       dialogObj: {}, // 对话框数据
       searchObj: {
         couponName: '', // 劵名称
@@ -145,6 +215,7 @@ export default {
         {
           width: 180,
           name: '编辑',
+          notBtn: 'status',
           icon: 'el-icon-edit',
           handle(row) {
             const {
@@ -188,6 +259,30 @@ export default {
             })
           }
         },
+        { // 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
+          prop: {
+            name: 'status',
+            toggle: [{
+              title: '发布',
+              icon: 'el-icon-check',
+              value: [0, 4]
+            }, {
+              title: '上架',
+              icon: 'el-icon-check',
+              value: [6, 7]
+            }, {
+              title: '下架',
+              icon: 'el-icon-check',
+              value: [5, 6]
+            }]
+          },
+          handle(row) {
+            const { couponName, couponId } = row
+            vm.confirmTip(`确认删除  ${couponName}  劵信息`, () => {
+              vm.deleteData({ couponId })
+            })
+          }
+        },
         {
           name: '删除',
           icon: 'el-icon-delete',
@@ -208,7 +303,20 @@ export default {
         },
         {
           label: '使用渠道',
-          prop: 'platforms'
+          prop: 'platforms',
+          formatter(row) {
+            let arr = []
+            // 渠道1 IPX, 2星购, 4YOSHOP, 8YSIA
+            row.platforms && row.platforms.length && row.platforms.forEach((item) => {
+              switch (item) {
+                case 1: arr.push('IPX'); break
+                case 2: arr.push('星GO'); break
+                case 4: arr.push('YOSHOP'); break
+                case 8: arr.push('YSIA'); break
+              }
+            })
+            return arr.join(',')
+          }
         },
         {
           label: '卡券名称',
@@ -216,7 +324,10 @@ export default {
         },
         {
           label: '卡券类型',
-          prop: 'couponRuleType'
+          prop: 'couponRuleType',
+          formatter(row) {
+            return row.couponRuleType === 1 ? '现金券' : row.couponRuleType === 2 ? '折扣券' : '兑换券'
+          }
         },
         {
           label: '卡券内容',
@@ -231,8 +342,21 @@ export default {
           prop: 'limitExpireTimeEnd'
         },
         {
-          label: '状态',
-          prop: 'status'
+          label: '状态', // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
+          prop: 'status',
+          formatter(row) {
+            switch (row.status) {
+              case 0: return '草稿'
+              case 1: return '审核中'
+              case 2: return '审核不通过'
+              case 3: return '审核通过'
+              case 4: return '未发布'
+              case 5: return '进行中'
+              case 6: return '未开始'
+              case 7: return '已下架'
+              case 8: return '已结束(失效)'
+            }
+          }
         },
         {
           label: '创建时间',

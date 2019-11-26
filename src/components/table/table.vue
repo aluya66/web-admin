@@ -220,18 +220,26 @@ export default {
     setBtnAttribute(btn, row, type) {
       const { toggle, name } = btn.prop || {}
       if (name && toggle && type) {
+        if (toggle.every((item) => item.value)) { // toggle是否都有value属性, typeof value === array value为状态支持显示的按钮
+          let item = toggle.find(item => item.value.includes(row[name]))
+          return item ? item[type] : ''
+        }
         return toggle[row[name]][type]
       }
       return btn[type]
     },
     curBtns(row) {
-      return this.tableInnerBtns.filter(res => {
+      this.tableInnerBtns.filter(res => {
+        if (res.prop) {
+          return res.prop.toggle.some(val => val.value.includes(row[res.prop.name]))
+        }
         if (res.notBtn) {
           return !!row[res.notBtn]
         } else {
           return true
         }
       })
+      return this.tableInnerBtns
     },
     // 选中取消
     toggleSelection(rows) {
