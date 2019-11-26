@@ -30,6 +30,7 @@ export default {
         })
       }
     }
+    this.setSearchItems()
   },
   methods: {
     // 删除二次确认
@@ -72,7 +73,7 @@ export default {
      *  重置按钮
      */
     searchReset() {
-      this.$refs.searchForm.resetFields()
+      this.$refs.searchForm && this.$refs.searchForm.resetFields()
       this.searchSubmit()
     },
     /**
@@ -93,6 +94,15 @@ export default {
       this.dialogObj.isShow = false
       this.$msgTip(msg)
       this.fetchData()
+    },
+    /**
+     * 设置搜索表单元素
+     */
+    setSearchItems() {
+      this.tableHeader && this.tableHeader.forEach(res => {
+        const { search, label, prop } = res
+        search && this.searchItems.push({ label, prop, ...search })
+      })
     }
   },
   components: {

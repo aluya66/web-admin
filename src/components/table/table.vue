@@ -304,11 +304,10 @@ export default {
 .c-table {
   position: relative;
   margin-top: 10px;
-  // min-height: calc(100vh - 150px);
-  .el-form-item {
-    margin-bottom: 10px;
-  }
   .search-form {
+    .el-form-item {
+      margin-bottom: 10px;
+    }
     margin-bottom: 10px;
     width: 100%;
     .search-item {
