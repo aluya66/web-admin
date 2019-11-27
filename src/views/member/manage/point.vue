@@ -129,7 +129,12 @@ export default {
       }).then(res => {
         this.exportLoading = false
         if (res) {
-          utils.createBlobFile(res)
+          const { data, filename } = res
+          if (data && filename) {
+            utils.createBlobFile(data, filename)
+          } else {
+            this.$msgTip('导出数据异常', 'warning')
+          }
         } else {
           this.$msgTip('导出数据失败', 'warning')
         }

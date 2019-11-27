@@ -3,7 +3,13 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" :loading="exportLoading" icon="el-icon-download" @click="exportFile">导出</el-button>
+        <el-button
+          :size="size"
+          type="primary"
+          :loading="exportLoading"
+          icon="el-icon-download"
+          @click="exportFile"
+        >导出</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -408,7 +414,12 @@ export default {
       }).then(res => {
         this.exportLoading = false
         if (res) {
-          utils.createBlobFile(res)
+          const { data, filename } = res
+          if (data && filename) {
+            utils.createBlobFile(data, filename)
+          } else {
+            this.$msgTip('导出数据异常', 'warning')
+          }
         } else {
           this.$msgTip('导出数据失败', 'warning')
         }
