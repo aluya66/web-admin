@@ -230,7 +230,7 @@ export default {
     },
     curBtns(row) {
       this.tableInnerBtns.filter(res => {
-        if (res.prop) {
+        if (res.prop && res.prop.toggle && res.prop.toggle.every((item) => item.value)) {
           return res.prop.toggle.some(val => val.value.includes(row[res.prop.name]))
         }
         if (res.notBtn) {

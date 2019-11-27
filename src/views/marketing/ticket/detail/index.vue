@@ -44,7 +44,7 @@
         </el-form-item>
 
         <!-- 卡券类型：现金券 订单满减开始 -->
-        <el-form-item label="订单满减:">
+        <el-form-item label="订单满减:" v-show="formModel.preferentialType === 0">
           <el-input
             class="discount-item"
             v-model.trim="formModel.couponName"
@@ -68,7 +68,7 @@
         <!-- 订单满减结束 -->
 
         <!-- 卡券类型：折扣券 订单满折开始 -->
-        <el-form-item label="订单满折:">
+        <el-form-item label="订单满折:" v-show="formModel.preferentialType === 1">
           <el-input
             class="discount-item"
             v-model.trim="formModel.couponName"
@@ -91,8 +91,8 @@
         </el-form-item>
         <!-- 订单满折结束 -->
 
-        <el-form-item label="卡券有效期:" prop="preferentialType">
-          <el-radio-group v-model="formModel.preferentialType">
+        <el-form-item label="卡券有效期:" prop="limitExpireDayType">
+          <el-radio-group v-model="formModel.limitExpireDayType">
             <el-radio
               v-for="item in ticketValidTypeArr"
               :key="item.value"
@@ -100,10 +100,10 @@
             >{{item.label}}</el-radio>
           </el-radio-group>
           <!-- 卡券有效期类型：指定日期 -->
-          <el-form-item prop="preferentialType">
+          <el-form-item prop="limitExpireTime" v-show="formModel.limitExpireDayType === 0">
             <el-date-picker
               size="medium"
-              v-model="formModel.dataTime"
+              v-model="formModel.limitExpireTime"
               type="datetimerange"
               :picker-options="pickerOptions"
               range-separator="至"
@@ -116,10 +116,10 @@
           </el-form-item>
 
           <!-- 卡券有效期类型：自领券N日内有效 -->
-          <el-form-item prop="preferentialType">
+          <el-form-item prop="limitExpireDay" v-show="formModel.limitExpireDayType === 1">
             <el-input
               class="discount-item"
-              v-model.trim="formModel.couponName"
+              v-model.trim="formModel.limitExpireDay"
               size="medium"
               placeholder="请输入优惠券有效的天数"
               clearable
@@ -142,8 +142,8 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="适用商品:" prop="preferentialType">
-          <el-radio-group v-model="formModel.preferentialType">
+        <el-form-item label="适用商品:">
+          <el-radio-group v-model="formModel.fitGoodsType">
             <el-radio
               v-for="item in fitGoodsTypeArr"
               :key="item.value"
@@ -152,7 +152,7 @@
           </el-radio-group>
 
           <!-- 指定商品开始 -->
-          <goodsSelect :sourceList="sourceList" />
+          <goodsSelect :sourceList="sourceList" v-show="formModel.fitGoodsType === 1"/>
           <!-- 指定商品结束 -->
         </el-form-item>
         <el-form-item class="form-btn">
@@ -243,16 +243,20 @@ export default {
       ],
       ticketTypeArr: [
         {
-          label: '代金券',
+          label: '现金券',
           value: 0
         },
         {
           label: '折扣券',
           value: 1
         },
+        // {
+        //   label: '积分',
+        //   value: 2
+        // },
         {
-          label: '积分',
-          value: 2
+          label: '兑换券',
+          value: 3
         }
       ],
       btnLoading: false,

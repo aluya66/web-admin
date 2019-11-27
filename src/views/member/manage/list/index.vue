@@ -221,11 +221,11 @@ export default {
       sourceSelect: [
         {
           label: '自主开通',
-          value: 0
+          value: 1
         },
         {
           label: '店员开通',
-          value: 1
+          value: 2
         }
       ],
       genderSelect: [{
