@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :max-height="685"
@@ -20,47 +21,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="名称">
-              <el-input
-                v-model="searchObj.name"
-                class="search-item"
-                :size="size"
-                placeholder="名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="状态">
-              <query-dict
-                :dict-list="disStatus"
-                class="search-item"
-                :size="size"
-                :value.sync="searchObj.isEnable"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="操作时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                format="yyyy-MM-dd HH:mm:ss"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -82,7 +48,6 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import TypeAdd from './add'
-import utils from 'utils'
 import dictObj from '@/store/dictData'
 
 export default {
@@ -94,15 +59,7 @@ export default {
   },
   data(vm) {
     return {
-      disStatus: dictObj.disStatus, // 启用禁用集合
-      pickerOptions: utils.pickerOptions,
       dialogObj: {},
-      tableList: [],
-      searchObj: {
-        name: '', // 姓名
-        isEnable: '', // 状态
-        dataTime: ''
-      },
       tableInnerBtns: [
         {
           width: 100,
@@ -129,18 +86,29 @@ export default {
       tableHeader: [
         {
           label: '名称',
-          prop: 'name'
+          prop: 'name',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '状态',
           prop: 'isEnable',
           formatter(row) {
             return row.isEnable === 1 ? '启用' : '禁用'
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.disStatus
           }
         },
         {
           label: '创建时间',
-          prop: 'created'
+          prop: 'created',
+          search: {
+            prop: 'dataTime',
+            type: 'dateTime'
+          }
         }
       ]
     }
@@ -211,6 +179,3 @@ export default {
   }
 }
 </script>
-
-<style lang='less' scoped>
-</style>

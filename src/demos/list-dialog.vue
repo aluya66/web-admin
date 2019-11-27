@@ -48,7 +48,6 @@ import mixinTable from 'mixins/table'
 import utils from 'utils'
 import CDialog from 'components/dialog'
 import AddGoods from './addGoods'
-import CSearch from 'components/search'
 
 const marketableSelect = [{
   value: '1',
@@ -60,27 +59,15 @@ const marketableSelect = [{
 }]
 
 export default {
+  name: 'demoGoodsList',
   mixins: [mixinTable],
   components: {
     CDialog,
-    AddGoods,
-    CSearch
+    AddGoods
   },
   data(vm) {
     return {
-      brandList: [], // 品牌数据集合
-      categoryList: [], // 商品类目集合
       dialogObj: {}, // 对话框数据
-      searchObj: {
-        categoryCode: [], // 商品类目
-        goodsBn: '', // 商品编码
-        goodsName: '', // 商品名称
-        marketable: '', // 上下架
-        brandName: '', // 品牌名称
-        dataTime: '', // 操作时间
-        retailPrice: [] // 库存最小值
-      },
-      searchItems: [],
       tableHeader: [
         {
           label: '商品ID',
@@ -110,20 +97,25 @@ export default {
           }
         },
         {
+          label: '品牌',
+          prop: 'brandName',
+          search: {
+            type: 'dict',
+            optionsList: [],
+            allowCreate: true,
+            filterable: true
+          }
+        },
+        {
           label: '商品类目',
           prop: 'categoryName',
           search: {
             prop: 'categoryCode',
             type: 'cascader',
-            optionsList: []
-          }
-        },
-        {
-          label: '品牌',
-          prop: 'brandName',
-          search: {
-            type: 'dict',
-            optionsList: []
+            optionsList: [],
+            optionsProps: {
+              expandTrigger: 'hover'
+            }
           }
         },
         {
@@ -137,7 +129,7 @@ export default {
         {
           label: '成本价',
           prop: 'marketable',
-          width: 100,
+          width: 100
         },
         {
           label: '市场价',
@@ -172,8 +164,7 @@ export default {
           width: 100,
           search: {
             prop: 'dataTime',
-            type: 'dateTime',
-            dateType: 'daterange'
+            type: 'dateTime'
           }
         },
         {
@@ -228,8 +219,8 @@ export default {
     // 获取商品类目集合
     getCategoryList() {
       this.$api.basic.queryCategory().then(res => {
-        this.categoryList = utils.formartLevelData(res || [])
-        this.$set(this.searchItems[2], 'optionsList', this.categoryList)
+        const categoryList = utils.formartLevelData(res || [])
+        this.setSearchOptionsList('categoryCode', categoryList)
       })
     },
     // 获取品牌列表
@@ -240,8 +231,8 @@ export default {
         status: 1
       }).then(res => {
         if (res && res.totalCount) {
-          this.brandList = res.data.map(res => ({ value: res.name, label: res.name })) || []
-          this.$set(this.searchItems[3], 'optionsList', this.brandList)
+          const brandList = res.data.map(res => ({ value: res.name, label: res.name })) || []
+          this.setSearchOptionsList('brandName', brandList)
         }
       })
     },

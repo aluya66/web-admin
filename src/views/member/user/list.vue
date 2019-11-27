@@ -5,6 +5,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :max-height="685"
@@ -17,48 +18,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="用户id">
-              <el-input
-                v-model="searchObj.userId"
-                class="search-item"
-                :size="size"
-                placeholder="用户id"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="来源">
-              <query-dict
-                :dict-list="lobList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.appCode"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="登录时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                format="yyyy-MM-dd HH:mm:ss"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -67,7 +32,6 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import utils from 'utils'
 import dictObj from '@/store/dictData'
 
 export default {
@@ -75,18 +39,14 @@ export default {
   mixins: [mixinTable],
   data(vm) {
     return {
-      lobList: dictObj.lobList, // 业务线集合
-      pickerOptions: utils.pickerOptions,
-      searchObj: {
-        userId: '', // 用户id
-        appCode: '', // 来源
-        dataTime: ''
-      },
       tableInnerBtns: [],
       tableHeader: [
         {
           label: '用户id',
-          prop: 'userId'
+          prop: 'userId',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '登录地点',
@@ -94,7 +54,12 @@ export default {
         },
         {
           label: '业务线',
-          prop: 'channel'
+          prop: 'channel',
+          search: {
+            type: 'dict',
+            prop: 'appCode',
+            optionsList: dictObj.lobList
+          }
         },
         {
           label: '业务编码',
@@ -102,7 +67,11 @@ export default {
         },
         {
           label: '登录时间',
-          prop: 'created'
+          prop: 'created',
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         }
       ]
     }
@@ -136,6 +105,3 @@ export default {
   }
 }
 </script>
-
-<style lang='less' scoped>
-</style>

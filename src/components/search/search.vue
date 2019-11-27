@@ -32,16 +32,14 @@
       </template>
       <template v-else-if="item.type === 'dict'">
         <query-dict
-          allowCreate
-          filterable
+          :allow-create="item.allowCreate"
+          :filterable="item.filterable"
           :size="size"
           :value.sync="formModel[item.prop]"
           :dict-list="item.optionsList"
           class="search-item"
           :placeholder="item.label || '请选择'"
           clearable
-          v-bind="$attrs"
-          v-on="$listeners"
         ></query-dict>
       </template>
       <template v-else-if="item.type === 'cascader'">
@@ -49,14 +47,12 @@
           clearable
           class="search-item"
           :size="size"
-          expandTrigger="hover"
+          :props="item.optionsProps"
           :show-all-levels="false"
           v-model="formModel[item.prop]"
           :placeholder="item.label"
           :options="item.optionsList"
           filterable
-          v-bind="$attrs"
-          v-on="$listeners"
         ></el-cascader>
       </template>
       <template v-else-if="item.type === 'min-max'">
@@ -145,7 +141,7 @@ export default create({
     }
   },
   mounted() {
-    this.initData = { ...this.formData } // 保存初始化数据
+    this.initData = { ...this.formModel } // 保存初始化数据
   },
   methods: {
     submitForm() {

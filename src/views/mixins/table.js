@@ -1,6 +1,7 @@
 import utils from 'utils'
 import CTable from 'components/table'
 import QueryDict from '../common/queryDict'
+import CSearch from 'components/search'
 
 export default {
   data() {
@@ -8,6 +9,8 @@ export default {
       dictData: {}, // 字典数据
       isLoading: false, // 数据加载状态
       size: 'medium', // 表格、按钮大小
+      searchObj: {}, // 搜索查询对象
+      searchItems: [], // 搜索表单元素配置项
       tableList: [], // 列表数据
       tableCheckedList: [], // 列表批量选中
       maxHeight: 650, // table最大高度
@@ -73,7 +76,6 @@ export default {
      *  重置按钮
      */
     searchReset() {
-      this.$refs.searchForm && this.$refs.searchForm.resetFields()
       this.searchSubmit()
     },
     /**
@@ -99,14 +101,31 @@ export default {
      * 设置搜索表单元素
      */
     setSearchItems() {
+      const searchObj = {} // 缓存查询初始值
       this.tableHeader && this.tableHeader.forEach(res => {
         const { search, label, prop } = res
-        search && this.searchItems.push({ label, prop, ...search })
+        if (search) {
+          const opts = { label, prop, ...search }
+          searchObj[opts.prop] = opts.type && (opts.type === 'cascader' || opts.type === 'min-max') ? [] : ''
+          this.searchItems.push(opts)
+        }
       })
+      this.searchObj = searchObj
+      // console.log(this.searchObj, this.searchItems)
+    },
+    /**
+     * 设置搜索元素cascader, dict的可选值
+     */
+    setSearchOptionsList(name, value, optionType = 'optionsList') {
+      const curIndex = this.searchItems.findIndex(res => name === res.prop)
+      if (curIndex !== -1) {
+        this.$set(this.searchItems[curIndex], optionType, value)
+      }
     }
   },
   components: {
     CTable,
-    QueryDict
+    QueryDict,
+    CSearch
   }
 }
