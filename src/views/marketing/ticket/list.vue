@@ -264,22 +264,39 @@ export default {
             name: 'status',
             toggle: [{
               title: '发布',
-              icon: 'el-icon-check',
+              icon: 'el-icon-s-tools',
               value: [0, 4]
             }, {
               title: '上架',
-              icon: 'el-icon-check',
-              value: [6, 7]
+              icon: 'el-icon-s-tools',
+              value: [7]
             }, {
               title: '下架',
-              icon: 'el-icon-check',
+              icon: 'el-icon-s-tools',
               value: [5, 6]
             }]
           },
           handle(row) {
-            const { couponName, couponId } = row
-            vm.confirmTip(`确认删除  ${couponName}  劵信息`, () => {
-              vm.deleteData({ couponId })
+            const { status, couponId, couponName } = row
+            let msgTip, applyType
+            switch (status) {
+              case 0:
+              case 4:
+                msgTip = '发布'
+                applyType = 5
+                break
+              case 7:
+                msgTip = '上架'
+                applyType = 5
+                break
+              case 5:
+              case 6:
+                msgTip = '下架'
+                applyType = 7
+                break
+            }
+            vm.confirmTip(`是否${msgTip}【${couponName}】优惠券`, () => {
+              vm.verifyData({ couponId, applyType, msgTip })  
             })
           }
         },
@@ -413,21 +430,16 @@ export default {
      * @param {string} [msgTip='删除成功']
      */
     deleteData(param, msgTip = '删除成功') {
-      // 主要修改接口
       this.$api.marketing.deleteCoupon(param).then(() => {
         this.$msgTip(msgTip)
-        this.delResetData()
+        this.fetchData()
       })
     },
     // 审核劵
     verifyData(params) {
       const { couponId, msgTip, applyType } = params
-      let data = {
-        couponId,
-        applyType
-      }
-      this.$api.marketing.applyCoupon(data).then(() => {
-        this.$msgTip(msgTip)
+      this.$api.marketing.applyCoupon({ couponId, applyType }).then(() => {
+        this.$msgTip(`${msgTip}成功`)
         this.fetchData()
       })
     },
