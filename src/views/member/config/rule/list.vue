@@ -78,6 +78,7 @@ export default {
               memberTypeName, // 会员名称
               memberTypeId, // 会员类型
               isEnable, // 状态
+              pointRatio, // 积分兑换比率
               pointGift, // 会员开通送积分
               val, // 会员有效天数
               unit, // 有效期单位
@@ -96,6 +97,7 @@ export default {
                 memberTypeName, // 会员名称
                 memberTypeId, // 会员类型
                 isEnable, // 状态
+                pointRatio, // 积分兑换比率
                 pointGift, // 会员开通送积分
                 val, // 会员有效天数
                 unit, // 有效期单位

@@ -67,11 +67,11 @@ import utils from 'utils'
 const sourceSelect = [
   {
     label: '自主开通',
-    value: 0
+    value: 1
   },
   {
     label: '店员开通',
-    value: 1
+    value: 2
   }
 ]
 const genderSelect = [{
@@ -274,7 +274,7 @@ export default {
           search: {
             label: '生日区间',
             type: 'dateTime',
-            prop: 'birDataTime'
+            prop: 'birDateTime'
           }
         },
         {
@@ -320,19 +320,19 @@ export default {
     },
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
-      const { areaCode, dataTime, ...other } = this.searchObj
+      const { areaCode, dataTime, birDateTime, ...other } = this.searchObj
       const curArea = { // 传省、市、区code给api
         provinceCode: areaCode[0] || '',
         cityCode: areaCode[1] || '',
         districtCode: areaCode[2] || ''
       }
-      const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
-      const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
+      const searchDate = this.getSearchDate(dataTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
+      const birthdayDate = this.getSearchDate(birDateTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.isLoading = true
       this.$api.member.getMember({
         ...curArea,
         ...searchDate,
-        ...birDateTime,
+        ...birthdayDate,
         ...other,
         ...page
       }).then(res => {
@@ -394,14 +394,14 @@ export default {
       }
     },
     exportFile() {
-      const { dataTime, ...other } = this.searchObj
+      const { dataTime, birDateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
-      const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
+      const searchDate = this.getSearchDate(dataTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
+      const birthdayDate = this.getSearchDate(birDateTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.exportLoading = true
       this.$api.member.exportMember({
         ...searchDate,
-        ...birDateTime,
+        ...birthdayDate,
         ...other,
         ...page,
         total: totalNum

@@ -46,6 +46,7 @@
                 class="rate-inp"
                 v-model="pointDialogObj.rate"
                 :size="size"
+                maxlength="5"
                 placeholder="输入整数"
                 clearable
               />倍积分
