@@ -21,7 +21,7 @@ export const mockList = params =>
  * @param {Array} params file
  */
 export const uploadFile = params => Http.fetch(`${context}/api/upload/file`, params, {
-  method: 'post'
+  contentType: 'upload'
 })
 
 /* ==================    ipx 服务接口      ==================== */

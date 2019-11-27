@@ -3,7 +3,7 @@ const pointTypeList = [{
   label: '订单消费',
   value: 1
 }, {
-  label: '订单折扣',
+  label: '订单抵扣',
   value: 2
 },
 {
@@ -46,6 +46,17 @@ const disStatus = [{
   value: 1
 }
 ]
+
+// 审核状态 0：未审核  1：已审核
+const auditStatus = [{
+  label: '未审核',
+  value: 0
+},
+{
+  label: '已审核',
+  value: 1
+}]
+
 // 标签分类类型
 const categoryTypeList = [{
   label: '属性类',
@@ -62,5 +73,6 @@ export default {
   pointTypeList,
   lobList,
   disStatus,
-  categoryTypeList
+  categoryTypeList,
+  auditStatus
 }

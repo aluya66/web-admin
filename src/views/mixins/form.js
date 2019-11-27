@@ -27,8 +27,17 @@ export default {
       const curRoute = Object.assign({}, copyRoute, { title: `${curTitle}-${params.id}` })
       this.$store.dispatch('tagsView/updateVisitedView', curRoute)
     },
+    /**
+     * 返回
+     */
     goBack() {
       this.$router.go(-1)
+    },
+    /**
+     * 关闭当前页面
+     */
+    closeCurrentTag() {
+      this.$store.dispatch('tagsView/delView', this.$route)
     }
   },
   components: {

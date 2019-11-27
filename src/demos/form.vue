@@ -76,7 +76,18 @@
         <el-input type="textarea" v-model="ruleForm.desc"></el-input>
       </el-form-item>
       <el-form-item label="活动形式" prop="desc">
-        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+        <c-upload
+          ref="upload"
+          :auto-upload="false"
+          action="/api/upload/file"
+          :http-request="uploadHandle"
+          :size="20"
+          :limit="5"
+          :file-list.sync="ruleForm.fileList"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+        >
+        </c-upload>
       </el-form-item>
       <el-form-item label="活动区域" prop="region">
         <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
@@ -114,7 +125,11 @@
 </template>
 
 <script>
+import CUpload from 'components/upload'
 export default {
+  components: {
+    CUpload
+  },
   data() {
     return {
       ruleForm: {
@@ -135,9 +150,11 @@ export default {
         delivery: false,
         type: [],
         resource: '',
-        desc: ''
+        desc: '',
+        fileList: []
       },
-      dialogFormVisible: true,
+      files: [],
+      dialogFormVisible: false,
       formLabelWidth: '120px',
       rules: {
         name: [
@@ -165,6 +182,14 @@ export default {
       }
     }
   },
+  computed: {
+    headers() {
+      const { token } = this.$store.getters.userInfo
+      return {
+        token
+      }
+    }
+  },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -178,6 +203,18 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
+    },
+    handlePreview() {
+
+    },
+    handleRemove() {
+
+    },
+    uploadHandle(file) {
+      this.$refs.upload.customUpload(file)
     }
   }
 }

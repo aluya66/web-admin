@@ -185,7 +185,8 @@ export default {
   },
   data() {
     return {
-      multipleSelection: []
+      multipleSelection: [], // 当前多选选中记录
+      scrollTop: null // table滚动位置
     }
   },
   computed: {
@@ -204,7 +205,27 @@ export default {
       }
     }
   },
+  activated() {
+    this.saveScroll()
+  },
+  mounted() {
+    // 监听滚动条的位置
+    this.$refs.multipleTable.bodyWrapper.addEventListener('scroll', res => {
+      this.scrollTop = res.target.scrollTop
+    }, false)
+  },
+  beforeDestroy() {
+    this.$refs.multipleTable.bodyWrapper.removeEventListener('scroll', res => {
+      this.scrollTop = res.target.scrollTop
+    }, false)
+  },
   methods: {
+    // 记录当前table滚动记录
+    saveScroll() {
+      this.$nextTick(() => {
+        this.$el.querySelector('.el-table__body-wrapper').scrollTop = this.scrollTop
+      })
+    },
     // 设置button的type、icon、name
     setBtnAttribute(btn, row, type) {
       const { toggle, name } = btn.prop || {}
@@ -268,6 +289,12 @@ export default {
     // 翻页和切换页码
     changePagination(pageInfo) {
       this.$emit('change-pagination', pageInfo)
+      this.resetScroll()
+    },
+    // 重置滚动位置
+    resetScroll() {
+      this.scrollTop = 0
+      this.saveScroll()
     }
   }
 }
@@ -277,17 +304,16 @@ export default {
 .c-table {
   position: relative;
   margin-top: 10px;
-  // min-height: calc(100vh - 150px);
-  .el-form-item {
-    margin-bottom: 10px;
-  }
   .search-form {
+    .el-form-item {
+      margin-bottom: 10px;
+    }
     margin-bottom: 10px;
     width: 100%;
     .search-item {
       width: 250px;
     }
-    .search-number{
+    .search-number {
       width: 114px;
     }
   }

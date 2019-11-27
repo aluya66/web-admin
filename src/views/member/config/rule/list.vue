@@ -8,9 +8,10 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
-        :max-height="685"
+        :max-height="maxHeight"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -20,43 +21,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="业务线">
-              <query-dict
-                :dict-list="businessList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.appCode"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="会员类型">
-              <query-dict
-                :dict-list="memberTypeList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.memberTypeId"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="状态">
-              <query-dict
-                :dict-list="disStatus"
-                class="search-item"
-                :size="size"
-                :value.sync="searchObj.isEnable"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -84,7 +54,6 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import PointAdd from './add'
-import utils from 'utils'
 import dictObj from '@/store/dictData'
 
 export default {
@@ -96,15 +65,7 @@ export default {
   },
   data(vm) {
     return {
-      disStatus: dictObj.disStatus, // 启用禁用集合
-      pickerOptions: utils.pickerOptions,
       dialogObj: {},
-      tableList: [],
-      searchObj: {
-        appCode: '', // 业务线
-        memberTypeId: '', // 会员类型
-        isEnable: '' // 状态
-      },
       tableInnerBtns: [
         {
           width: 100,
@@ -166,18 +127,27 @@ export default {
               case 'ysdp':
                 return '星鲜APP'
             }
+          },
+          search: {
+            type: 'dict',
+            optionsList: []
           }
         },
         {
           label: '会员类型',
-          prop: 'memberTypeName'
+          prop: 'memberTypeName',
+          search: {
+            prop: 'memberTypeId',
+            type: 'dict',
+            optionsList: []
+          }
         },
         {
           label: '标题信息',
           prop: 'title'
         },
         {
-          label: '消费金额兑换积分比率',
+          label: '积分兑换比率',
           prop: 'pointRatio'
         },
         {
@@ -208,6 +178,10 @@ export default {
           prop: 'isEnable',
           formatter(row) {
             return row.isEnable === 1 ? '启用' : '禁用'
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.disStatus
           }
         },
         {
@@ -240,6 +214,7 @@ export default {
         } else {
           this.businessList = res.map((item) => { return { value: item.appCode, label: item.appName } }) || []
         }
+        this.setSearchOptionsList('appCode', this.businessList)
       })
     },
     getMemberTypeList() {
@@ -247,6 +222,7 @@ export default {
         if (res) {
           this.memberTypeList = res.map((item) => { return { value: item.id, label: item.name } }) || []
         }
+        this.setSearchOptionsList('memberTypeId', this.memberTypeList)
       })
     },
     fetchData() {

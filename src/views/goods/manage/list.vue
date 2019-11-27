@@ -14,9 +14,10 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
-        :max-height="685"
+        :max-height="maxHeight"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -26,107 +27,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="商品名称">
-              <el-input
-                v-model="searchObj.goodsName"
-                class="search-item"
-                :size="size"
-                placeholder="商品名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="商品编码">
-              <el-input
-                v-model="searchObj.goodsBn"
-                class="search-item"
-                :size="size"
-                placeholder="商品编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="商品类目">
-              <el-input
-                v-model="searchObj.categoryCode"
-                class="search-item"
-                :size="size"
-                placeholder="商品类目"
-                clearable
-              />
-            </el-form-item>
-            <!-- <el-form-item label="经营类型">
-              <el-input
-                v-model="searchObj.businessValue"
-                class="search-item"
-                :size="size"
-                placeholder="请输入操作人"
-                clearable
-              />
-            </el-form-item>-->
-            <el-form-item label="品牌">
-              <el-input
-                v-model="searchObj.brandName"
-                class="search-item"
-                :size="size"
-                placeholder="品牌"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="上下架">
-              <el-select
-                v-model="searchObj.marketable"
-                :size="size"
-                class="search-item"
-                placeholder="请选择"
-                clearable
-              >
-                <el-option
-                  v-for="item in marketableSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="商品库存">
-              <el-input
-                v-model.number="searchObj.minStock"
-                class="search-number"
-                :size="size"
-                placeholder="最小值"
-                clearable
-              />
-              至
-              <el-input
-                v-model.number="searchObj.maxStock"
-                class="search-number"
-                :size="size"
-                placeholder="最大值"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="操作时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="daterange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -137,30 +43,20 @@
 import mixinTable from 'mixins/table'
 import utils from 'utils'
 
+const marketableSelect = [{
+  value: '1',
+  label: '上架'
+},
+{
+  value: '2',
+  label: '下架'
+}]
+
 export default {
-  name: 'goodsList',
+  name: 'goodsManage',
   mixins: [mixinTable],
   data(vm) {
     return {
-      searchObj: {
-        // businessValue: '',
-        categoryCode: '', // 商品类目
-        goodsBn: '', // 商品编码
-        goodsName: '', // 商品名称
-        marketable: '', // 上下架
-        brandName: '', // 品牌名称
-        dataTime: '', // 操作时间
-        minStock: '', // 库存最小值
-        maxStock: '' // 库存最大值
-      },
-      marketableSelect: [{
-        value: '1',
-        label: '上架'
-      },
-      {
-        value: '2',
-        label: '下架'
-      }],
       originList: [{
         label: '门店挂板',
         value: 1
@@ -171,7 +67,6 @@ export default {
         label: '自营商品',
         value: 3
       }],
-      pickerOptions: utils.pickerOptions,
       tableInnerBtns: [{
         width: 150,
         name: '详情',
@@ -187,16 +82,16 @@ export default {
           vm.routerLink(`/goods/manage/label/${row.id}`)
         }
       }
-      // {
-      //   name: '删除',
-      //   icon: 'el-icon-delete',
-      //   handle(row) {
-      //     const { goodsName, id } = row
-      //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
-      //       vm.deleteData({ id })
-      //     })
-      //   }
-      // }
+        // {
+        //   name: '删除',
+        //   icon: 'el-icon-delete',
+        //   handle(row) {
+        //     const { goodsName, id } = row
+        //     vm.confirmTip(`确认删除${goodsName}商品信息`, () => {
+        //       vm.deleteData({ id })
+        //     })
+        //   }
+        // }
       ],
       tableHeader: [
         {
@@ -207,12 +102,18 @@ export default {
         {
           label: '商品编码',
           prop: 'goodsBn',
-          width: 180
+          width: 180,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '商品名称',
           prop: 'goodsName',
-          width: 200
+          width: 200,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '商品图片',
@@ -223,12 +124,24 @@ export default {
         {
           label: '品牌',
           prop: 'brandName',
-          width: 150
+          search: {
+            type: 'dict',
+            optionsList: [],
+            allowCreate: true,
+            filterable: true
+          }
         },
         {
           label: '商品类目',
           prop: 'categoryName',
-          width: 150
+          search: {
+            prop: 'categoryCode',
+            type: 'cascader',
+            optionsList: [],
+            optionsProps: {
+              expandTrigger: 'hover'
+            }
+          }
         },
         {
           label: '商品来源',
@@ -237,8 +150,7 @@ export default {
           formatter(row) {
             return row.origin ? vm.originList[row.origin - 1].label : ''
           }
-        },
-        {
+        }, {
           label: '样衣成本价(元)',
           prop: 'sampleCostPrice',
           width: 115
@@ -276,6 +188,25 @@ export default {
         {
           label: '成衣库存(件)',
           prop: 'stock',
+          width: 100,
+          search: {
+            label: '库存',
+            type: 'min-max'
+          }
+        },
+        {
+          label: '成本价',
+          prop: 'marketable',
+          width: 100
+        },
+        {
+          label: '市场价',
+          prop: 'memberPrice',
+          width: 100
+        },
+        {
+          label: '销售价',
+          prop: 'mktPrice',
           width: 100
         },
         {
@@ -283,13 +214,21 @@ export default {
           prop: 'marketable',
           width: 100,
           formatter(row) {
-            return row.marketable ? vm.marketableSelect[row.marketable - 1].label : ''
+            return row.marketable ? marketableSelect[row.marketable - 1].label : ''
+          },
+          search: {
+            type: 'select',
+            optionsList: marketableSelect
           }
         },
         {
           label: '创建时间',
           prop: 'created',
-          width: 100
+          width: 100,
+          search: {
+            prop: 'dataTime',
+            type: 'dateTime'
+          }
         },
         {
           label: '更新时间',
@@ -300,20 +239,23 @@ export default {
     }
   },
   created() {
+    this.getCategoryList()
+    this.getBrandList()
     this.fetchData()
   },
   methods: {
     /**
      * 获取表格数据
-    */
+     */
     fetchData() {
-      const { dataTime, minStock, maxStock, ...other } = this.searchObj
+      const { dataTime, stock, categoryCode, ...other } = this.searchObj
+      const curCategoryCode = categoryCode.length ? categoryCode[categoryCode.length - 1] : []
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dataTime)
-      if (utils.isInteger(minStock) || utils.isInteger(maxStock)) {
+      if (utils.isInteger(stock[0]) || utils.isInteger(stock[1])) {
         return this.$msgTip('商品库存请输入正整数', 'warning')
       }
-      if (minStock > maxStock) {
+      if (stock[0] > stock[1]) {
         return this.$msgTip('库存最小值不能大于最大值', 'warning')
       }
       this.isLoading = true
@@ -322,17 +264,38 @@ export default {
           ...searchDate,
           ...other,
           ...page,
-          minStock,
-          maxStock
+          minStock: stock[0] || '',
+          maxStock: stock[1] || '',
+          categoryCode: curCategoryCode
         }
       ).then(res => {
         this.isLoading = false
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
-          this.tableList = data
+          this.tableList = data || []
         } else {
-          this.tableList = res
+          this.tableList = res || []
+        }
+      })
+    },
+    // 获取商品类目集合
+    getCategoryList() {
+      this.$api.basic.queryCategory().then(res => {
+        const categoryList = utils.formartLevelData(res || [])
+        this.setSearchOptionsList('categoryCode', categoryList)
+      })
+    },
+    // 获取品牌列表
+    getBrandList() {
+      this.$api.basic.brandList({
+        pageNo: 1,
+        pageSize: 100,
+        status: 1
+      }).then(res => {
+        if (res && res.totalCount) {
+          const brandList = res.data.map(res => ({ value: res.name, label: res.name })) || []
+          this.setSearchOptionsList('brandName', brandList)
         }
       })
     },

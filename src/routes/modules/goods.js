@@ -10,7 +10,7 @@ export default {
     icon: 'nested'
   },
   children: [{
-    path: '/goods/manage',
+    path: '/goods/manage/list',
     name: 'goodsManage',
     component: () => import('@/views/goods/manage/list'),
     meta: {

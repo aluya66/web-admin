@@ -5,6 +5,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :max-height="685"
@@ -17,48 +18,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="昵称">
-              <el-input
-                v-model="searchObj.nickName"
-                class="search-item"
-                :size="size"
-                placeholder="昵称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="手机号">
-              <el-input
-                v-model="searchObj.phoneNumber"
-                class="search-item"
-                :size="size"
-                placeholder="手机号码"
-                clearable
-              />
-            </el-form-item>
-            <!-- <el-form-item label="操作时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                format="yyyy-MM-dd HH:mm:ss"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item> -->
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -80,7 +45,6 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import WAdd from './add'
-import utils from 'utils'
 
 export default {
   name: 'memberWalletList',
@@ -91,13 +55,7 @@ export default {
   },
   data(vm) {
     return {
-      pickerOptions: utils.pickerOptions,
       dialogObj: {},
-      searchObj: {
-        nickName: '', // 昵称
-        phoneNumber: '', // 手机号
-        dataTime: ''
-      },
       tableInnerBtns: [
         {
           width: 100,
@@ -111,11 +69,17 @@ export default {
       tableHeader: [
         {
           label: '昵称',
-          prop: 'nickName'
+          prop: 'nickName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '手机号',
-          prop: 'phoneNumber'
+          prop: 'phoneNumber',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '充值总金额(元)',
@@ -148,6 +112,15 @@ export default {
         {
           label: '已消费赠送金额(元)',
           prop: 'consumptionGiftAmount'
+        },
+        {
+          label: '创建时间',
+          prop: 'created',
+          width: 100,
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         }
       ]
     }
