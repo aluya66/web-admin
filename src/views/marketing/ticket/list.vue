@@ -296,7 +296,7 @@ export default {
                 break
             }
             vm.confirmTip(`是否${msgTip}【${couponName}】优惠券`, () => {
-              vm.verifyData({ couponId, applyType, msgTip })  
+              vm.verifyData({ couponId, applyType, msgTip })
             })
           }
         },

@@ -34,7 +34,7 @@
           />
         </el-form-item>
         <el-form-item label="卡券类型:" prop="preferentialType">
-          <el-radio-group v-model="formModel.preferentialType">
+          <el-radio-group v-model="formModel.preferentialType" @change="changeTicketType">
             <el-radio
               v-for="item in ticketTypeArr"
               :key="item.value"
@@ -42,53 +42,102 @@
             >{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-
         <!-- 卡券类型：现金券 订单满减开始 -->
-        <el-form-item label="订单满减:" v-show="formModel.preferentialType === 0">
-          <el-input
-            class="discount-item"
-            v-model.trim="formModel.couponName"
-            size="medium"
-            placeholder="输入订单金额，0为不限制"
-            clearable
+        <template v-if="formModel.preferentialType === 0">
+          <el-form-item label="订单满减:"
+            v-for="(item, index) in formModel.couponPreferentialRules"
+            :key="index"
           >
-            <template slot="append">元</template>
-          </el-input>
-          <span class="discount-minus">减</span>
-          <el-input
-            class="discount-item"
-            v-model.trim="formModel.couponName"
-            size="medium"
-            placeholder="优惠的金额"
-            clearable
-          >
-            <template slot="append">元</template>
-          </el-input>
-        </el-form-item>
+            <el-col :span="8">
+              <el-form-item
+                inline
+                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+                :rules="{
+                  required: true, message: '请输入', trigger: 'blur'
+                }"
+              >
+                <el-input
+                  class="discount-item"
+                  v-model.trim="item.preferentialLevel"
+                  size="medium"
+                  placeholder="输入订单金额，0为不限制"
+                  clearable
+                  style="width: 100%"
+                >
+                  <template slot="append">元</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col class="discount-type" :span="2">减</el-col>
+            <el-col :span="8">
+              <el-form-item
+                :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+                :rules="{
+                  required: true, message: '请输入', trigger: 'blur'
+                }"
+              >
+                <el-input
+                  class="discount-item"
+                  v-model.trim="item.preferentialValue"
+                  size="medium"
+                  placeholder="优惠的金额"
+                  clearable
+                  style="width: 100%"
+                >
+                  <template slot="append">元</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+        </template>
         <!-- 订单满减结束 -->
 
         <!-- 卡券类型：折扣券 订单满折开始 -->
-        <el-form-item label="订单满折:" v-show="formModel.preferentialType === 1">
-          <el-input
-            class="discount-item"
-            v-model.trim="formModel.couponName"
-            size="medium"
-            placeholder="订单商品满的件数"
-            clearable
+        <template v-if="formModel.preferentialType === 1">
+          <el-form-item label="订单满折:"
+            v-for="(item, index) in formModel.couponPreferentialRules"
+            :key="index"
           >
-            <template slot="append">件</template>
-          </el-input>
-          <span class="discount-minus">享</span>
-          <el-input
-            class="discount-item"
-            v-model.trim="formModel.couponName"
-            size="medium"
-            placeholder="输入1-10的数字，如8.5"
-            clearable
-          >
-            <template slot="append">折</template>
-          </el-input>
-        </el-form-item>
+            <el-col :span="8">
+              <el-form-item
+                inline
+                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+                :rules="{
+                  required: true, message: '请输入', trigger: 'blur'
+                }"
+              >
+                <el-input
+                  class="discount-item"
+                  v-model.trim="formModel.couponName"
+                  size="medium"
+                  placeholder="订单商品满的件数"
+                  clearable
+                >
+                  <template slot="append">件</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col class="discount-type" :span="2">享</el-col>
+            <el-col :span="8">
+              <el-form-item
+                :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+                :rules="{
+                  required: true, message: '请输入', trigger: 'blur'
+                }"
+              >
+                <el-input
+                  class="discount-item"
+                  v-model.trim="formModel.couponName"
+                  size="medium"
+                  placeholder="输入1-10的数字，如8.5"
+                  clearable
+                >
+                  <template slot="append">折</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+        </template>
         <!-- 订单满折结束 -->
 
         <el-form-item label="卡券有效期:" prop="limitExpireDayType">
@@ -262,6 +311,7 @@ export default {
       btnLoading: false,
       rules: {
         platforms: [{ required: true, message: '请选择渠道', trigger: 'blur' }],
+        couponName: [{ required: true, message: '请输入优惠券名称', trigger: 'blur' }],
         limitReceive: [
           { required: true, message: '人均限领不能为空', trigger: 'blur' }
         ],
@@ -275,7 +325,15 @@ export default {
           { required: true, message: '请选择优惠规则', trigger: 'change' }
         ]
       },
-      formModel: {},
+      formModel: {
+        preferentialType: 0,
+        couponPreferentialRules: [{
+          preferentialLevel: '', // 优惠门槛
+          preferentialType: 0, // 优惠类型
+          preferentialValue: '', // 优惠值
+          unit: '' // 优惠类型单位
+        }]
+      },
       lobList: dictObj.lobList // 业务线集合
     }
   },
@@ -287,6 +345,28 @@ export default {
     // }
   },
   methods: {
+    changeTicketType(val) {
+      console.log(val)
+      // 过滤兑换券类型
+      if (val === 3) return
+      this.formModel.couponPreferentialRules = []
+      let obj = {
+        preferentialLevel: '', // 优惠门槛
+        preferentialType: val, // 优惠类型
+        preferentialValue: '', // 优惠值
+        unit: '' // 优惠类型单位
+      }
+      switch (val) {
+        case 0:
+          obj.unit = '元'
+          break
+        case 1:
+          obj.unit = '件'
+          break
+      }
+      this.formModel.couponPreferentialRules.push(obj)
+      console.log(this.formModel)
+    },
     fetchData(couponRuleId) {
       this.$api.marketing.getCouponRuleDetail({ couponRuleId }).then(res => {
         this.setTagsViewTitle()
@@ -366,11 +446,8 @@ export default {
   .select-item {
     width: 30%;
   }
-  .discount-item {
-    width: 300px;
-  }
-  .discount-minus {
-    padding: 0 15px;
+  .discount-type {
+    text-align: center;
   }
   .input-select {
     width: 80px;
