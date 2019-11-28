@@ -41,7 +41,7 @@
           status-icon
         >
           <el-form-item prop="rate">
-            <div>消费享
+            <div>消费享:
               <el-input
                 class="rate-inp"
                 v-model="pointDialogObj.rate"

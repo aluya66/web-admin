@@ -8,10 +8,10 @@
     label-position="right"
     status-icon
   >
-    <el-form-item label="字典名称" prop="dictName">
+    <el-form-item label="字典名称:" prop="dictName">
       <el-input v-model.trim="formModel.dictName" class="form-item" clearable></el-input>
     </el-form-item>
-    <el-form-item label="字典编码" prop="dictCode">
+    <el-form-item label="字典编码:" prop="dictCode">
       <el-input v-model.trim="formModel.dictCode" :disabled="isEdit" class="form-item" clearable></el-input>
     </el-form-item>
     <el-form-item label="业务线:" prop="dictLob">
