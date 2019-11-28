@@ -19,26 +19,22 @@
     </el-form-item>
     <el-form-item label="启用token验证:" prop="tokenStatus">
       <el-radio-group v-model="formModel.tokenStatus" :disabled="formModel.status === 0">
-        <el-radio :label="1">启用</el-radio>
-        <el-radio :label="0">禁用</el-radio>
+        <el-radio :label="item.value" v-for="(item, index) in statusList" :key="index">{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="是否启用签名:" prop="signStatus">
       <el-radio-group v-model="formModel.signStatus" :disabled="formModel.status === 0">
-        <el-radio :label="1">启用</el-radio>
-        <el-radio :label="0">禁用</el-radio>
+        <el-radio :label="item.value" v-for="(item, index) in statusList" :key="index">{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="是否启用加密:" prop="encryptStatus">
       <el-radio-group v-model="formModel.encryptStatus" :disabled="formModel.status === 0">
-        <el-radio :label="1">启用</el-radio>
-        <el-radio :label="0">禁用</el-radio>
+        <el-radio :label="item.value" v-for="(item, index) in statusList" :key="index">{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="是否启用:" prop="status">
       <el-radio-group v-model="formModel.status" @change="changeStatus">
-        <el-radio :label="1">启用</el-radio>
-        <el-radio :label="0">禁用</el-radio>
+        <el-radio :label="item.value" v-for="(item, index) in statusList" :key="index">{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
   </el-form>
@@ -47,6 +43,7 @@
 <script>
 import MixinForm from 'mixins/form'
 import utils from 'utils'
+import dictObj from '@/store/dictData'
 export default {
   mixins: [MixinForm],
   props: {
@@ -54,11 +51,11 @@ export default {
       type: Object,
       default() {
         return {
-          appKey: '',
-          tokenStatus: '',
-          signStatus: '',
-          encryptStatus: '',
-          status: ''
+          appKey: '', // appkey
+          tokenStatus: '', // token是否启用
+          signStatus: '', // 签名是否启用
+          encryptStatus: '', // 加密是否启用
+          status: '' // 是否启用
         }
       }
     }
@@ -78,21 +75,22 @@ export default {
       this.formModel.id ? callback() : this.checkAppkeyFun(callback) // 编辑不需要校验
     }
     return {
+      statusList: dictObj.disStatus, // 状态字典
       rules: {
         appKey: [
           { required: true, validator: checkAppkey, trigger: 'blur' }
         ],
         tokenStatus: [
-          { required: true, message: '请选择' }
+          { required: true, message: '请选择是否验证token' }
         ],
         signStatus: [
-          { required: true, message: '请选择' }
+          { required: true, message: '请选择是否启用签名' }
         ],
         encryptStatus: [
-          { required: true, message: '请选择' }
+          { required: true, message: '请选择是否启用加密' }
         ],
         status: [
-          { required: true, message: '请选择' }
+          { required: true, message: '请选择是否启用' }
         ]
       }
     }

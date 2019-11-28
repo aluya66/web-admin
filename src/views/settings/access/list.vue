@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :max-height="685"
@@ -125,7 +126,6 @@ export default {
             return row.tokenStatus === 0 ? '禁用' : '启用'
           },
           search: {
-            label: 'token验证',
             type: 'select',
             optionsList: dictObj.disStatus
           }
@@ -137,7 +137,6 @@ export default {
             return row.signStatus === 0 ? '禁用' : '启用'
           },
           search: {
-            label: '是否启用签名',
             type: 'select',
             optionsList: dictObj.disStatus
           }
@@ -149,7 +148,6 @@ export default {
             return row.encryptStatus === 0 ? '禁用' : '启用'
           },
           search: {
-            label: '是否启用加密',
             type: 'select',
             optionsList: dictObj.disStatus
           }
@@ -161,7 +159,6 @@ export default {
             return row.status === 0 ? '禁用' : '启用'
           },
           search: {
-            label: '是否启用',
             type: 'select',
             optionsList: dictObj.disStatus
           }
@@ -170,7 +167,6 @@ export default {
           label: '创建人名字',
           prop: 'opCreator',
           search: {
-            label: '创建人名字',
             type: 'input'
           }
         },
@@ -178,7 +174,6 @@ export default {
           label: '修改人名字',
           prop: 'opEditor',
           search: {
-            label: '修改人名字',
             type: 'input'
           }
         },
@@ -186,7 +181,7 @@ export default {
           label: '最后更新时间',
           prop: 'updated',
           search: {
-            prop: 'dataTime',
+            prop: 'dateTime',
             type: 'dateTime'
           }
         }
@@ -208,9 +203,7 @@ export default {
         if (valid) {
           const childFormModel = childRef.formModel
           const request = childFormModel.id ? requestMethods['edit'] : requestMethods['add']
-          request({
-            ...childFormModel
-          }).then(() => {
+          request(childFormModel).then(() => {
             this.responeHandle('操作成功')
           })
         } else {
@@ -235,16 +228,15 @@ export default {
       })
     },
     fetchData() {
-      const { pageSize, pageNo } = this.pageInfo
-      const { dataTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dataTime, 'dateTime', 'startTime', 'endTime')
+      const { totalNum, ...page } = this.pageInfo
+      const { dateTime, ...other } = this.searchObj
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.settings
         .getAccessList({
           ...searchDate,
           ...other,
-          pageSize,
-          pageNo
+          ...page
         })
         .then(res => {
           this.isLoading = false
@@ -260,20 +252,3 @@ export default {
   }
 }
 </script>
-
-<style lang='less' scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-.preview-dialog {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  > h3 {
-    padding: 15px;
-  }
-}
-</style>
