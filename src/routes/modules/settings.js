@@ -36,5 +36,33 @@ export default {
       icon: 'table',
       roles: ['admin']
     }
+  }, {
+    path: '/settings/access',
+    name: 'settingsAccess',
+    component: () => import('@/views/settings/access/list'),
+    redirect: '/settings/access/list',
+    meta: {
+      title: 'settingsAccess',
+      icon: 'table'
+    },
+    children: [{
+      path: '/settings/access/list',
+      name: 'settingsAccessList',
+      component: () => import('@/views/settings/access/list'),
+      meta: {
+        icon: 'table',
+        title: 'settingsAccessList',
+        roles: ['admin']
+      }
+    }, {
+      path: '/settings/access/log',
+      name: 'settingsAccessLog',
+      component: () => import('@/views/settings/access/log/list'),
+      meta: {
+        icon: 'table',
+        title: 'settingsAccessLog',
+        roles: ['admin']
+      }
+    }]
   }]
 }
