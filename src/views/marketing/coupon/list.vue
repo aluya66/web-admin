@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :max-height="685"
@@ -72,7 +73,7 @@
             <el-form-item label="创建时间">
               <el-date-picker
                 :size="size"
-                v-model="searchObj.dataTime"
+                v-model="searchObj.dateTime"
                 type="datetimerange"
                 :picker-options="pickerOptions"
                 range-separator="至"
@@ -131,7 +132,7 @@ export default {
         couponRuleType: '', // 劵规则类型
         couponRuleName: '', // 劵规则类型名称
         couponStatus: '', // 劵审核状态
-        dataTime: ''
+        dateTime: ''
       },
       pickerOptions: utils.pickerOptions,
       statusSelect: [
@@ -380,9 +381,9 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.marketing
         .getCoupon({

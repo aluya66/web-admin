@@ -189,7 +189,11 @@ export default {
         {
           label: '创建时间',
           prop: 'created',
-          width: 100
+          width: 100,
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         }
       ],
       memberTypeList: [], // 会员类型
@@ -228,9 +232,9 @@ export default {
       })
     },
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.member.getMemberRule({
         ...searchDate,

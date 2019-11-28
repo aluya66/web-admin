@@ -130,9 +130,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.member.getWallet({
         ...searchDate,

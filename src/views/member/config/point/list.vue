@@ -8,10 +8,10 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         noPage
         selection
         hasBorder
-        ref="cTable"
         :max-height="685"
         :size="size"
         :loading="isLoading"
@@ -191,8 +191,11 @@ export default {
     },
     fetchData() {
       this.isLoading = true
+      const { dateTime, ...other } = this.searchObj
+      const searchDate = this.getSearchDate(dateTime)
       this.$api.member.getPointRule({
-        ...this.searchObj
+        ...searchDate,
+        ...other
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {

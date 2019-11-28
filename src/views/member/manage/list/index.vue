@@ -286,9 +286,9 @@ export default {
         {
           label: '首次加入时间',
           prop: 'firstJoinTime',
-          width: 100,
+          width: 105,
           search: {
-            prop: 'dataTime',
+            prop: 'dateTime',
             type: 'dateTime'
           }
         }
@@ -326,13 +326,13 @@ export default {
     },
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
-      const { areaCode, dataTime, birDateTime, ...other } = this.searchObj
+      const { areaCode, dateTime, birDateTime, ...other } = this.searchObj
       const curArea = { // 传省、市、区code给api
         provinceCode: areaCode[0] || '',
         cityCode: areaCode[1] || '',
         districtCode: areaCode[2] || ''
       }
-      const searchDate = this.getSearchDate(dataTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
+      const searchDate = this.getSearchDate(dateTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
       const birthdayDate = this.getSearchDate(birDateTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.isLoading = true
       this.$api.member.getMember({
@@ -400,9 +400,9 @@ export default {
       }
     },
     exportFile() {
-      const { dataTime, birDateTime, ...other } = this.searchObj
+      const { dateTime, birDateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
+      const searchDate = this.getSearchDate(dateTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
       const birthdayDate = this.getSearchDate(birDateTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.exportLoading = true
       this.$api.member.exportMember({

@@ -82,7 +82,7 @@
             <el-form-item label="操作时间">
               <el-date-picker
                 :size="size"
-                v-model="searchObj.dataTime"
+                v-model="searchObj.dateTime"
                 type="daterange"
                 :picker-options="pickerOptions"
                 range-separator="至"
@@ -122,7 +122,7 @@ export default {
         goodsName: '',
         marketable: '',
         brandName: '',
-        dataTime: ''
+        dateTime: ''
       },
       marketableSelect: [{
         value: '1',
@@ -225,9 +225,9 @@ export default {
      * 获取表格数据
     */
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.goods.getList(
         {
