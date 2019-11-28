@@ -98,9 +98,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.member.getPoint({
         ...searchDate,
@@ -118,9 +118,9 @@ export default {
       })
     },
     exportFile() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.exportLoading = true
       this.$api.member.exportPoint({
         ...searchDate,
@@ -129,7 +129,12 @@ export default {
       }).then(res => {
         this.exportLoading = false
         if (res) {
-          utils.createBlobFile(res)
+          const { data, filename } = res
+          if (data && filename) {
+            utils.createBlobFile(data, filename)
+          } else {
+            this.$msgTip('导出数据异常', 'warning')
+          }
         } else {
           this.$msgTip('导出数据失败', 'warning')
         }

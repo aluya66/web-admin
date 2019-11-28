@@ -8,6 +8,7 @@
         clearable
         v-bind="$attrs"
         v-on="$listeners"
+        @change="changeQueryDict"
       >
         <el-option
           v-for="(dict, index) in dictList"
@@ -22,6 +23,7 @@
         v-model="dictValue"
         v-bind="$attrs"
         v-on="$listeners"
+        @change="changeQueryDict"
       >
         <el-checkbox
           v-for="dict in dictList"
@@ -35,6 +37,7 @@
         v-model="dictValue"
         v-bind="$attrs"
         v-on="$listeners"
+        @change="changeQueryDict"
       >
         <el-radio
           v-for="dict in dictList"
@@ -72,6 +75,12 @@ export default {
       default: 'select'
     },
     dictLob: String
+  },
+  methods: {
+    changeQueryDict(val) {
+      const selectedTarget = this.dictList.find((item) => item.value === val)
+      this.$emit('ChangeQueryDict', selectedTarget)
+    }
   },
   computed: {
     dictValue: {

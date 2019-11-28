@@ -2,13 +2,19 @@
   <c-view>
     <template v-slot:header>
       <div class="title">
-          {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-          <el-button type="primary" v-permission="$route.meta.roles" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
+        {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
+        <el-button
+          type="primary"
+          v-permission="$route.meta.roles"
+          :size="size"
+          icon="el-icon-plus"
+          @click="showDialog"
+        >新增</el-button>
       </div>
     </template>
-
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -21,58 +27,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="版本名称">
-              <el-input
-                v-model="searchObj.versionName"
-                class="search-item"
-                :size="size"
-                placeholder="请输入版本名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="平台">
-              <el-select
-                v-model="searchObj.platform"
-                :size="size"
-                class="search-item"
-                placeholder="请选择平台"
-                clearable
-              >
-                <el-option
-                  v-for="item in versionSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="强制更新">
-              <el-select
-                v-model="searchObj.isForce"
-                :size="size"
-                class="search-item"
-                placeholder="请选择更新"
-                clearable
-              >
-                <el-option
-                  v-for="item in updateSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -91,9 +51,26 @@
 </template>
 <script>
 import mixinTable from 'mixins/table'
-// import utils from 'utils'
 import CDialog from 'components/dialog'
 import VersionAdd from './versionAdd'
+
+const versionSelect = [
+  {
+    value: 0,
+    label: '安卓'
+  },
+  {
+    value: 1,
+    label: 'IOS'
+  }
+]
+const updateSelect = [{
+  value: 0,
+  label: '否'
+}, {
+  value: 1,
+  label: '是'
+}]
 
 export default {
   name: 'version',
@@ -105,29 +82,6 @@ export default {
   data(vm) {
     return {
       dialogObj: {}, // 对话框数据
-      searchObj: {
-        versionName: '',
-        platform: '',
-        isForce: '' // 是否强制更新
-      },
-      versionSelect: [
-        {
-          value: 0,
-          label: '安卓'
-        },
-        {
-          value: 1,
-          label: 'IOS'
-        }
-      ],
-      updateSelect: [{
-        value: 0,
-        label: '否'
-      }, {
-        value: 1,
-        label: '是'
-      }],
-      tableList: [],
       tableInnerBtns: [
         {
           width: 130,
@@ -146,7 +100,10 @@ export default {
           label: 'app版本',
           prop: 'versionName',
           width: 150,
-          fixed: true
+          fixed: true,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '平台',
@@ -154,6 +111,10 @@ export default {
           width: 150,
           formatter(row) {
             return row.platform === 0 ? '安卓' : 'IOS'
+          },
+          search: {
+            type: 'dict',
+            optionsList: versionSelect
           }
         },
         {
@@ -178,6 +139,11 @@ export default {
           width: 150,
           formatter(row) {
             return row.force === 0 ? '否' : '是'
+          },
+          search: {
+            type: 'dict',
+            prop: 'isForce',
+            optionsList: updateSelect
           }
         },
         {
@@ -212,9 +178,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.basic.queryAllVersion(
         {
@@ -279,7 +245,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.title{
+.title {
   width: 100%;
   display: flex;
   justify-content: space-between;

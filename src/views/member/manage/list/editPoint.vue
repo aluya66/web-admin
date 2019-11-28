@@ -15,7 +15,7 @@
         disabled
       ></el-input>
     </el-form-item>
-    <el-form-item label="积分变动:">
+    <el-form-item label="积分变动:" prop="point">
       <el-input
         v-model.trim="formModel.point"
         class="form-item"
@@ -34,11 +34,20 @@ export default {
     }
   },
   data() {
+    const checkPoint = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('积分不能为空'))
+      }
+      if (!Number(value)) {
+        return callback(new Error('请输入数字值'))
+      }
+      callback()
+    }
     return {
       formModel: {},
       rules: {
-        balance: [
-          { required: true, message: '请输入' }
+        point: [
+          { required: true, validator: checkPoint, trigger: 'blur' }
         ]
       }
     }

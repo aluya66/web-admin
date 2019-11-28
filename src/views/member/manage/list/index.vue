@@ -3,7 +3,13 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" :loading="exportLoading" icon="el-icon-download" @click="exportFile">导出</el-button>
+        <el-button
+          :size="size"
+          type="primary"
+          :loading="exportLoading"
+          icon="el-icon-download"
+          @click="exportFile"
+        >导出</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -67,11 +73,11 @@ import utils from 'utils'
 const sourceSelect = [
   {
     label: '自主开通',
-    value: 0
+    value: 1
   },
   {
     label: '店员开通',
-    value: 1
+    value: 2
   }
 ]
 const genderSelect = [{
@@ -274,15 +280,15 @@ export default {
           search: {
             label: '生日区间',
             type: 'dateTime',
-            prop: 'birDataTime'
+            prop: 'birDateTime'
           }
         },
         {
           label: '首次加入时间',
           prop: 'firstJoinTime',
-          width: 100,
+          width: 105,
           search: {
-            prop: 'dataTime',
+            prop: 'dateTime',
             type: 'dateTime'
           }
         }
@@ -320,19 +326,19 @@ export default {
     },
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
-      const { areaCode, dataTime, ...other } = this.searchObj
+      const { areaCode, dateTime, birDateTime, ...other } = this.searchObj
       const curArea = { // 传省、市、区code给api
         provinceCode: areaCode[0] || '',
         cityCode: areaCode[1] || '',
         districtCode: areaCode[2] || ''
       }
-      const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
-      const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
+      const searchDate = this.getSearchDate(dateTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
+      const birthdayDate = this.getSearchDate(birDateTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.isLoading = true
       this.$api.member.getMember({
         ...curArea,
         ...searchDate,
-        ...birDateTime,
+        ...birthdayDate,
         ...other,
         ...page
       }).then(res => {
@@ -394,21 +400,26 @@ export default {
       }
     },
     exportFile() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, birDateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
-      const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
+      const searchDate = this.getSearchDate(dateTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
+      const birthdayDate = this.getSearchDate(birDateTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.exportLoading = true
       this.$api.member.exportMember({
         ...searchDate,
-        ...birDateTime,
+        ...birthdayDate,
         ...other,
         ...page,
         total: totalNum
       }).then(res => {
         this.exportLoading = false
         if (res) {
-          utils.createBlobFile(res)
+          const { data, filename } = res
+          if (data && filename) {
+            utils.createBlobFile(data, filename)
+          } else {
+            this.$msgTip('导出数据异常', 'warning')
+          }
         } else {
           this.$msgTip('导出数据失败', 'warning')
         }

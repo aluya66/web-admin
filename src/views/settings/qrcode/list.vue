@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :max-height="685"
@@ -20,74 +21,15 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="二维码名称">
-              <el-input
-                v-model="searchObj.qrcodeName"
-                class="search-item"
-                :size="size"
-                placeholder="二维码名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="二维码编码">
-              <el-input
-                v-model="searchObj.qrcodeCode"
-                class="search-item"
-                :size="size"
-                placeholder="二维码编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="二维码生产者">
-              <query-dict
-                :dict-list="lobList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.producerCode"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="二维码使用者">
-              <query-dict
-                multiple
-                :dict-list="lobList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.userCode"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="审核状态">
-              <el-select
-                v-model="searchObj.status"
-                :size="size"
-                class="search-item"
-                placeholder="请选择"
-                clearable
-              >
-                <el-option
-                  v-for="item in statusList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
-
     <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
@@ -123,9 +65,6 @@ export default {
   data(vm) {
     return {
       dialogObj: {}, // 弹窗数据
-      lobList: dictObj.lobList, // 业务线集合
-      statusList: dictObj.auditStatus, // 状态
-      searchObj: {},
       tableInnerBtns: [
         {
           width: 150,
@@ -197,11 +136,17 @@ export default {
         },
         {
           label: '二维码名称',
-          prop: 'qrcodeName'
+          prop: 'qrcodeName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '二维码编码',
-          prop: 'qrcodeCode'
+          prop: 'qrcodeCode',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '二维码使用者',
@@ -210,10 +155,26 @@ export default {
             let userCodeList = row.userCode ? row.userCode.split(',') : []
             let arr = []
             return userCodeList.length && userCodeList.reduce((total, item) => {
-              let arrItem = vm.lobList.find((lobItem) => lobItem.value === item)
-              arr.push(arrItem.label)
+              let arrItem = dictObj.lobList.find(lobItem => lobItem.value === item)
+              arr.push(arrItem ? arrItem.label : item)
               return arr.join(',')
             }, '')
+          },
+          search: {
+            type: 'dict',
+            multiple: true,
+            optionsList: dictObj.lobList
+          }
+        },
+        {
+          label: '字段值',
+          prop: 'contextKey',
+          width: 200,
+          search: {
+            type: 'dict',
+            label: '二维码生产者',
+            prop: 'producerCode',
+            optionsList: dictObj.lobList
           }
         },
         {
@@ -221,12 +182,11 @@ export default {
           prop: 'status',
           formatter(row) {
             return row.status === 0 ? '未审核' : '已审核'
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.auditStatus
           }
-        },
-        {
-          label: '字段值',
-          prop: 'contextKey',
-          width: 200
         },
         {
           label: '创建人',
@@ -235,7 +195,11 @@ export default {
         {
           label: '创建时间',
           prop: 'created',
-          width: 100
+          width: 100,
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         },
         {
           label: '更新人',
@@ -314,37 +278,31 @@ export default {
       })
     },
     fetchData() {
-      const { pageSize, pageNo } = this.pageInfo
-      const userCode = this.searchObj.userCode ? this.searchObj.userCode.join(',') : '' // 使用者字段
       this.isLoading = true
-      this.$api.qrcode
-        .getQrcodeList({
-          ...this.searchObj,
-          pageSize,
-          pageNo,
-          userCode
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      const { totalNum, ...page } = this.pageInfo
+      const { dateTime, userCode, ...other } = this.searchObj
+      const searchDate = this.getSearchDate(dateTime)
+      this.$api.qrcode.getQrcodeList({
+        userCode: userCode ? userCode.join(',') : '', // 使用者字段
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang='less' scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
 .preview-dialog {
   display: flex;
   justify-content: center;

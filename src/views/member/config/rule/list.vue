@@ -78,6 +78,7 @@ export default {
               memberTypeName, // 会员名称
               memberTypeId, // 会员类型
               isEnable, // 状态
+              pointRatio, // 积分兑换比率
               pointGift, // 会员开通送积分
               val, // 会员有效天数
               unit, // 有效期单位
@@ -96,6 +97,7 @@ export default {
                 memberTypeName, // 会员名称
                 memberTypeId, // 会员类型
                 isEnable, // 状态
+                pointRatio, // 积分兑换比率
                 pointGift, // 会员开通送积分
                 val, // 会员有效天数
                 unit, // 有效期单位
@@ -187,7 +189,11 @@ export default {
         {
           label: '创建时间',
           prop: 'created',
-          width: 100
+          width: 100,
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         }
       ],
       memberTypeList: [], // 会员类型
@@ -226,9 +232,9 @@ export default {
       })
     },
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.member.getMemberRule({
         ...searchDate,
