@@ -137,6 +137,7 @@ export default {
           search: {
             prop: 'categoryCode',
             type: 'cascader',
+            showAllLevels: false,
             optionsList: [],
             optionsProps: {
               expandTrigger: 'hover'

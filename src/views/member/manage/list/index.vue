@@ -40,6 +40,7 @@
       <c-dialog
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
+        :no-btn="dialogObj.noBtn"
         close-btn
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
@@ -129,6 +130,7 @@ export default {
             vm.showDialog({
               title: '查看会员信息',
               type: 1,
+              noBtn: true,
               initData: {
                 userId,
                 appCode
@@ -396,7 +398,8 @@ export default {
         type: opts.type,
         isShow: true,
         title: opts.title,
-        initData: opts.initData
+        initData: opts.initData,
+        noBtn: opts.noBtn || false
       }
     },
     exportFile() {

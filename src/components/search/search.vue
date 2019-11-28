@@ -49,7 +49,7 @@
           class="search-item"
           :size="size"
           :props="item.optionsProps"
-          :show-all-levels="false"
+          :show-all-levels="item.showAllLevels"
           v-model="formModel[item.prop]"
           :placeholder="item.label"
           :options="item.optionsList"
