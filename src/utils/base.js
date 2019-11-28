@@ -1,3 +1,4 @@
+import fileDownload from 'js-file-download'
 /**
  * 是否开发标识
  */
@@ -46,11 +47,12 @@ export const openNewWin = (routerOpts) => {
  * 二进制流文件转换成xlsx文件
  * @param {file} file
  */
-export const createBlobFile = (file) => {
-  let blob = new Blob([file], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=ISO8859-1' })
-  let fileUrl = URL.createObjectURL(blob)
-  window.location.href = fileUrl
-}
+export const createBlobFile = fileDownload
+// export const createBlobFile = (file) => {
+// let blob = new Blob([file], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=ISO8859-1' })
+// let fileUrl = URL.createObjectURL(blob)
+// window.location.href = fileUrl
+// }
 
 /**
  *  统一跳转到登陆页面

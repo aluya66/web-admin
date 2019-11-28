@@ -1,5 +1,6 @@
 <template>
   <c-table
+    ref="cTable"
     selection
     hasBorder
     :size="size"
@@ -32,7 +33,7 @@ export default {
       searchObj: {
         amountType: '', // 类型
         amountTypeName: '', // 类型名称
-        dataTime: ''
+        dateTime: ''
       },
       tableInnerBtns: [],
       tableHeader: [
@@ -60,9 +61,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.member.getWalletList({
         walletId: this.walletId,

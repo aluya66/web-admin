@@ -46,6 +46,7 @@
                 class="rate-inp"
                 v-model="pointDialogObj.rate"
                 :size="size"
+                maxlength="5"
                 placeholder="输入整数"
                 clearable
               />倍积分
@@ -79,6 +80,7 @@
       >
         <div class="main__box">
           <c-table
+            ref="cTable"
             selection
             hasBorder
             :max-height="685"
@@ -293,9 +295,9 @@ export default {
     },
     // 商品列表获取
     fetchData() {
-      const { dataTime, minStock, maxStock, ...other } = this.searchObj
+      const { dateTime, minStock, maxStock, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       if (utils.isInteger(minStock) || utils.isInteger(maxStock)) {
         return this.$msgTip('商品库存请输入正整数', 'warning')
       }

@@ -42,14 +42,26 @@ instance.interceptors.request.use((config) => {
 }, err => Promise.reject(err))
 
 // 拦截返回的信息，做统一异常处理
-instance.interceptors.response.use((response) => {
-  const {
-    data
-  } = response
-  if (data.code === 0) {
-    // 正常返回数据，指返回data;
-    return response.data
+instance.interceptors.response.use(response => {
+  const { data, config, headers } = response
+  if (response.status === 200) {
+    if (data && config.responseType === 'arraybuffer') { // 下载
+      const contentDisposition = headers['content-disposition']
+      let filename = null
+      if (contentDisposition) {
+        filename = contentDisposition.split(';').find(res => res.indexOf('filename=') !== -1)
+      }
+      return {
+        data,
+        filename: filename ? decodeURIComponent(filename.split('=')[1]) : '下载文件.xlxs'
+      }
+    }
+    if (data.code === 0) {
+      // 正常返回数据，指返回data;
+      return data
+    }
   }
+
   // 异常返回数据，返回
   if (!promiseArr.isGlobalErr) {
     errFun && errFun(data)

@@ -19,7 +19,7 @@
       ></query-dict>
     </el-form-item>
     <el-form-item label="会员类型名称:" prop="memberTypeName">
-      <el-input v-model.trim="formModel.memberTypeName" class="form-item" clearable></el-input>
+      <el-input v-model.trim="formModel.memberTypeName" class="form-item" disabled></el-input>
     </el-form-item>
     <el-form-item label="会员类型:" prop="memberTypeId">
       <query-dict
@@ -28,6 +28,7 @@
         size="medium"
         placeholder="请选择"
         :value.sync="formModel.memberTypeId"
+        @ChangeQueryDict="changeMemberType"
       ></query-dict>
     </el-form-item>
     <el-form-item label="状态:" prop="isEnable">
@@ -45,8 +46,11 @@
         ></el-option>
       </el-select>
     </el-form-item>
+    <el-form-item label="积分兑换比率:" prop="pointRatio">
+      <el-input v-model.trim="formModel.pointRatio" class="form-item" @blur="changePointRatio" clearable></el-input>
+    </el-form-item>
     <el-form-item label="会员开通送积分:" prop="pointGift">
-      <el-input v-model.trim="formModel.pointGift" class="form-item" clearable></el-input>
+      <el-input v-model.trim.number="formModel.pointGift" class="form-item" clearable></el-input>
     </el-form-item>
     <el-form-item label="会员有效时间:" prop="val">
       <el-input v-model.number="formModel.val" class="select-item" clearable>
@@ -150,6 +154,15 @@ export default {
       }
       callback()
     }
+    const checkPointRatio = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('积分兑换比率不能为空'))
+      }
+      if (!Number(value)) {
+        return callback(new Error('请输入数字值'))
+      }
+      callback()
+    }
     return {
       validDayUnitList: [{ // 1.年  2.月 3.日
         label: '年',
@@ -173,10 +186,23 @@ export default {
       ],
       rules: {
         appCode: [{ required: true, message: '请选择业务线', trigger: 'change' }],
+        memberTypeName: [{ required: true, message: '请输入会员类型名称', trigger: 'blur' }],
         memberTypeId: [{ required: true, message: '请选择会员类型', trigger: 'change' }],
         isEnable: [{ required: true, message: '请选择状态', trigger: 'change' }],
-        val: [{ validator: checkVal, type: 'number', trigger: 'blur' }]
+        val: [{ required: true, validator: checkVal, type: 'number', trigger: 'blur' }],
+        pointRatio: [{ required: true, validator: checkPointRatio, type: 'number', trigger: 'blur' }],
+        pointGift: [{ required: false, type: 'number', message: '请输入数字', trigger: 'blur', transform(value) { return Number(value) } }],
+        currentPrice: [{ required: true, type: 'number', message: '请输入', trigger: 'blur', transform(value) { return Number(value) } }],
+        formerPrice: [{ type: 'number', message: '请输入数字', trigger: 'blur', transform(value) { return Number(value) } }]
       }
+    }
+  },
+  methods: {
+    changeMemberType(item) {
+      this.formModel.memberTypeName = item.label
+    },
+    changePointRatio() {
+      this.formModel.pointRatio = this.formModel.pointRatio ? Number(this.formModel.pointRatio).toFixed(2) : ''
     }
   },
   computed: {

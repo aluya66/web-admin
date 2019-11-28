@@ -226,7 +226,7 @@ export default {
           prop: 'created',
           width: 100,
           search: {
-            prop: 'dataTime',
+            prop: 'dateTime',
             type: 'dateTime'
           }
         },
@@ -248,10 +248,10 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { dataTime, stock, categoryCode, ...other } = this.searchObj
-      const curCategoryCode = categoryCode.length ? categoryCode[categoryCode.length - 1] : []
+      const { dateTime, stock, categoryCode, ...other } = this.searchObj
+      const curCategoryCode = categoryCode.length ? categoryCode[categoryCode.length - 1] : ''
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       if (utils.isInteger(stock[0]) || utils.isInteger(stock[1])) {
         return this.$msgTip('商品库存请输入正整数', 'warning')
       }

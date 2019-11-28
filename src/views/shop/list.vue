@@ -7,6 +7,7 @@
 		</template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -187,7 +188,7 @@ export default {
   },
   methods: {
     fetchData () {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
       this.$api.shop.getShopList({

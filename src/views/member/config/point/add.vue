@@ -19,11 +19,11 @@
       ></query-dict>
     </el-form-item>
     <el-form-item label="积分名称:" prop="pointName">
-      <el-input v-model.trim="formModel.pointName" class="form-item" clearable></el-input>
+      <el-input v-model.trim="formModel.pointName" class="form-item" maxlength="30" clearable></el-input>
     </el-form-item>
     <el-form-item label="积分汇率:" prop="moneyRatio">
       <el-input
-        v-model.trim="formModel.moneyRatio"
+        v-model.trim.number="formModel.moneyRatio"
         class="select-item"
         clearable
       ></el-input>
@@ -31,7 +31,7 @@
     </el-form-item>
     <el-form-item label="积分获取:" prop="pointRatio">
       <el-input
-        v-model.trim="formModel.pointRatio"
+        v-model.trim.number="formModel.pointRatio"
         class="select-item"
         clearable
       ></el-input>
@@ -110,8 +110,8 @@ export default {
       ],
       rules: {
         pointName: [{ required: true, message: '请填写积分名称', trigger: 'blur' }],
-        pointRatio: [{ required: true, message: '请填写积分获取', trigger: 'blur' }],
-        moneyRatio: [{ required: true, message: '请填写积分汇率', trigger: 'blur' }],
+        pointRatio: [{ required: true, type: 'number', message: '请填写积分获取', trigger: 'blur' }],
+        moneyRatio: [{ required: true, type: 'number', message: '请填写积分汇率', trigger: 'blur' }],
         type: [{ required: true, message: '请选择', trigger: 'change' }],
         appCode: [{ required: true, message: '请选择', trigger: 'blur' }]
       }

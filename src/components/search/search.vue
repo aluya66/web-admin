@@ -34,6 +34,7 @@
         <query-dict
           :allow-create="item.allowCreate"
           :filterable="item.filterable"
+          :multiple="item.multiple"
           :size="size"
           :value.sync="formModel[item.prop]"
           :dict-list="item.optionsList"
