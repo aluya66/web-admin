@@ -33,13 +33,12 @@
     <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
-        :noBtn="dialogObj.type === 'previewQrcode'"
         :title="dialogObj.title"
         close-btn
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <qrcode-add ref="childRef" :init-data.sync="dialogObj.initData"></qrcode-add>
+        <access-add ref="childRef" :init-data.sync="dialogObj.initData"></access-add>
       </c-dialog>
     </div>
   </c-view>
@@ -48,15 +47,14 @@
 <script>
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
-import QrcodeAdd from './add'
 import dictObj from '@/store/dictData'
-
+import AccessAdd from './add'
 export default {
   name: 'settingsQrcode',
   mixins: [mixinTable],
   components: {
     CDialog,
-    QrcodeAdd
+    AccessAdd
   },
   data(vm) {
     return {
@@ -67,21 +65,16 @@ export default {
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
-            const { id, contextKey, description, qrcodeCode, qrcodeName, producerCode, userCode } = row
-            let contextKeyList = contextKey.split(',').map((item) => {
-              return { value: item }
-            })
-            let userCodeList = userCode && userCode.split(',')
+            const { id, appKey, encryptStatus, signStatus, tokenStatus, status } = row
             vm.showDialog({
-              title: '编辑二维码',
+              title: '编辑',
               initData: {
                 id,
-                contextKey: contextKeyList,
-                qrcodeCode,
-                qrcodeName,
-                producerCode,
-                userCode: userCodeList,
-                description
+                appKey,
+                encryptStatus,
+                signStatus,
+                tokenStatus,
+                status
               }
             })
           }
@@ -103,7 +96,7 @@ export default {
           prop: 'appKey',
           fixed: true,
           search: {
-            label: 'APPKEY ',
+            label: 'APPKEY',
             type: 'input'
           }
         },
@@ -204,34 +197,19 @@ export default {
     this.fetchData()
   },
   methods: {
-    previewQrcode(qrcodeCode) {
-      this.$api.qrcode.previewQrcode({ qrcodeCode }).then((res) => {
-        this.showDialog({
-          title: '预览',
-          dialogType: 'previewQrcode',
-          initData: res
-        })
-      })
-    },
     // 新增、编辑提交
     dialogConfirm() {
       const childRef = this.$refs.childRef
       const requestMethods = {
-        'add': this.$api.qrcode.saveQrcode,
-        'edit': this.$api.qrcode.updateQrcode
+        'add': this.$api.settings.saveAccess,
+        'edit': this.$api.settings.updateAccess
       }
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
           const childFormModel = childRef.formModel
           const request = childFormModel.id ? requestMethods['edit'] : requestMethods['add']
-          let { userCode, contextKey, qrcodeCode, ...other } = childFormModel
-          let userCodeStr = userCode ? userCode.join(',') : '' // 使用者字段处理
-          let contextKeyStr = contextKey.length && contextKey.map((item) => item.value).join(',') // 字段值处理
           request({
-            ...other,
-            qrcodeCode,
-            userCode: userCodeStr,
-            contextKey: contextKeyStr
+            ...childFormModel
           }).then(() => {
             this.responeHandle('操作成功')
           })
@@ -245,7 +223,7 @@ export default {
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        title: opts.title || '新增二维码',
+        title: opts.title || '新增',
         initData: opts.initData
       }
     },
@@ -253,13 +231,6 @@ export default {
     deleteItem(id) {
       this.$api.settings.deleteAccess({ id }).then(() => {
         this.$msgTip('删除成功')
-        this.fetchData()
-      })
-    },
-    // 启用、禁用
-    changeStatus(params) {
-      this.$api.qrcode.changeStatus(params).then(() => {
-        this.$msgTip('更新成功')
         this.fetchData()
       })
     },

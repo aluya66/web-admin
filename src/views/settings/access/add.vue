@@ -18,19 +18,19 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="启用token验证:" prop="tokenStatus">
-      <el-radio-group v-model="formModel.tokenStatus" :disabled="formModel.status === '0'">
+      <el-radio-group v-model="formModel.tokenStatus" :disabled="formModel.status === 0">
         <el-radio :label="1">启用</el-radio>
         <el-radio :label="0">禁用</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="是否启用签名:" prop="signStatus">
-      <el-radio-group v-model="formModel.signStatus">
+      <el-radio-group v-model="formModel.signStatus" :disabled="formModel.status === 0">
         <el-radio :label="1">启用</el-radio>
         <el-radio :label="0">禁用</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="是否启用加密:" prop="encryptStatus">
-      <el-radio-group v-model="formModel.encryptStatus">
+      <el-radio-group v-model="formModel.encryptStatus" :disabled="formModel.status === 0">
         <el-radio :label="1">启用</el-radio>
         <el-radio :label="0">禁用</el-radio>
       </el-radio-group>
@@ -45,8 +45,8 @@
 </template>
 
 <script>
-import MixinForm from 'mixins/form';
-import utils from 'utils';
+import MixinForm from 'mixins/form'
+import utils from 'utils'
 export default {
   mixins: [MixinForm],
   props: {
@@ -59,7 +59,7 @@ export default {
           signStatus: '',
           encryptStatus: '',
           status: ''
-        };
+        }
       }
     }
   },
@@ -110,14 +110,13 @@ export default {
   methods: {
     // 状态总开关
     changeStatus(val) {
-      let formModel = {
-        tokenStatus: val,  
-        signStatus: val,  
-        encryptStatus: val,
-        status: val
+      const statusList = {
+        ...this.formModel,
+        tokenStatus: val,
+        signStatus: val,
+        encryptStatus: val
       }
-      this.$set(this.formModel, formModel)
-      console.log(this.formModel)
+      Object.assign(this.formModel, statusList)
     },
     // appkey校验
     checkAppkeyFun(callback) {
@@ -131,7 +130,7 @@ export default {
       })
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>

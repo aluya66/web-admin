@@ -39,11 +39,11 @@ export default {
   }, {
     path: '/settings/access',
     name: 'settingsAccess',
-    component: () => import('@/views/settings/access/list'),
+    component: () => import('@/views/common/index'),
     redirect: '/settings/access/list',
     meta: {
       title: 'settingsAccess',
-      icon: 'table'
+      icon: 'nested'
     },
     children: [{
       path: '/settings/access/list',

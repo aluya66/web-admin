@@ -143,7 +143,7 @@ export const checkAppkey = params =>
 
 // 接入方 日志列表
 export const getAccessLogList = params =>
-  Http.fetch(`${context}/api/opaoperatelog/querylogpage`, params, {
+  Http.fetch(`${context}/api/opaoperatelog/queryopaoperatelogpage`, params, {
     method: 'get'
   })
 
