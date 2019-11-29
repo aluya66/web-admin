@@ -36,8 +36,8 @@
           ></c-image>
           <el-popover trigger="hover" placement="top" v-else-if="item.isPopover">
             <p>{{scope.row[item.prop]}}</p>
-            <div slot="reference" class="name-wrapper">
-              <div class="text-multi-ellipsis">{{ scope.row[item.prop] }}</div>
+            <div slot="reference" class="name-wrapper text-multi-ellipsis">
+              {{ scope.row[item.prop] }}
             </div>
           </el-popover>
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
@@ -333,11 +333,19 @@ export default {
     }
   }
   .text-multi-ellipsis {
-    .multi-ellipsis(2);
+    .multi-ellipsis(1);
   }
   .title-active {
     color: @active;
     cursor: pointer;
   }
+  .el-table__fixed, .el-table__fixed-right{
+    .cell {
+      word-break: normal;
+    }
+  }
+}
+.el-popover {
+  max-width: 800px;
 }
 </style>

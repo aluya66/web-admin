@@ -109,3 +109,46 @@ export const getTagbrand = params =>
   Http.fetch(`${context}/api/tagbrand`, params, {
     method: 'get'
   })
+
+// 接入方列表
+export const getAccessList = params =>
+  Http.fetch(`${context}/api/opaconfig/queryopaconfigpage`, params, {
+    method: 'get'
+  })
+
+// 接入方新增
+export const saveAccess = params =>
+  Http.fetch(`${context}/api/opaconfig/save`, params, {
+    method: 'post'
+  })
+
+// 接入方编辑
+export const updateAccess = params =>
+  Http.fetch(`${context}/api/opaconfig/update`, params, {
+    method: 'put'
+  })
+
+// 接入方删除
+export const deleteAccess = params =>
+  Http.fetch(`${context}/api/opaconfig/delete`, params, {
+    method: 'delete'
+  })
+
+// 接入方 校验appKey是否可用接口
+export const checkAppkey = params =>
+  Http.fetch(`${context}/api/opaconfig/checkappkey`, params, {
+    method: 'get',
+    hasErrMsg: true
+  })
+
+// 接入方 日志列表
+export const getAccessLogList = params =>
+  Http.fetch(`${context}/api/opaoperatelog/queryopaoperatelogpage`, params, {
+    method: 'get'
+  })
+
+// 接入方 日志重发机制
+export const retryAccessLog = params =>
+  Http.fetch(`${context}/api/opaoperatelog/retry`, params, {
+    method: 'put'
+  })

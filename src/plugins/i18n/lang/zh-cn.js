@@ -52,7 +52,10 @@ export default {
     dictList: '字典管理',
     dictInfo: '字典信息',
     settingsLabel: '标签管理',
-    settingsQrcode: '二维码管理'
+    settingsQrcode: '二维码管理',
+    settingsAccess: '接入方管理',
+    settingsAccessList: '接入方列表',
+    settingsAccessLog: '接入方日志'
   },
   navbar: {
     logout: '退出',
