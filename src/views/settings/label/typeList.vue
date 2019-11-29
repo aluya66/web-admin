@@ -71,8 +71,7 @@ export default {
           label: '业务线',
           prop: 'categoryLob',
           formatter(row) {
-            const lobObj = row.categoryLob && dictObj.lobListAll.find(res => row.categoryLob === res.value)
-            return lobObj ? lobObj.label : ''
+            return row && vm.setTableColumnLabel(row.categoryLob, 'lobListAll')
           },
           search: {
             type: 'dict',
@@ -83,8 +82,7 @@ export default {
           label: '类型分类',
           prop: 'categoryType',
           formatter(row) {
-            const curVal = row.categoryType && dictObj.categoryTypeList.find(res => row.categoryType === res.value)
-            return curVal ? curVal.label : ''
+            return row && vm.setTableColumnLabel(row.categoryType, 'categoryTypeList')
           },
           search: {
             type: 'dict',

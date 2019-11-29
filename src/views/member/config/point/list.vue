@@ -110,8 +110,7 @@ export default {
           label: '业务线',
           prop: 'appCode',
           formatter(row) {
-            const curVal = row.appCode && dictObj.lobList.find(res => row.appCode === res.value)
-            return curVal ? curVal.label : ''
+            return row && vm.setTableColumnLabel(row.appCode, 'lobList')
           },
           search: {
             type: 'dict',
