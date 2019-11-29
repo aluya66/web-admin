@@ -95,7 +95,8 @@ export default {
           label: '状态',
           prop: 'isEnable',
           formatter(row) {
-            return row.isEnable === 1 ? '启用' : '禁用'
+            const curVal = row.isEnable && dictObj.disStatus.find(res => row.isEnable === res.value)
+            return curVal ? curVal.label : ''
           },
           search: {
             type: 'dict',

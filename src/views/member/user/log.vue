@@ -35,57 +35,34 @@ import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
 
 export default {
-  name: 'memberUserList',
+  name: 'memberUserLog',
   mixins: [mixinTable],
   data(vm) {
     return {
       tableInnerBtns: [],
       tableHeader: [
         {
-          label: '头像',
-          prop: 'avatar',
-          isImage: true
-        },
-        {
-          label: '昵称',
-          prop: 'nickname',
+          label: '用户id',
+          prop: 'userId',
           search: {
             type: 'input'
           }
         },
         {
-          label: '手机号码',
-          prop: 'phoneNumber',
-          search: {
-            type: 'input'
-          }
+          label: '登录地点',
+          prop: 'ip'
         },
         {
-          label: '性别',
-          prop: 'gender',
-          formatter(row) {
-            const curVal = row.gender && dictObj.genderSelect.find(res => row.gender === res.value)
-            return curVal ? curVal.label : ''
-          }
-        },
-        {
-          label: '生日',
-          prop: 'birthday'
-        },
-        {
-          label: '注册来源',
-          prop: 'appCode',
-          formatter(row) {
-            const curVal = row.appCode && dictObj.lobList.find(res => row.appCode === res.value)
-            return curVal ? curVal.label : ''
-          },
+          label: '业务线',
+          prop: 'channel',
           search: {
             type: 'dict',
+            prop: 'appCode',
             optionsList: dictObj.lobList
           }
         },
         {
-          label: '注册时间',
+          label: '登录时间',
           prop: 'created',
           search: {
             type: 'dateTime',
@@ -104,20 +81,22 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.member.getMemberUserInfo({
-        ...searchDate,
-        ...other,
-        ...page
-      }).then(res => {
-        this.isLoading = false
-        if (res && res.totalCount) {
-          const { data, totalCount } = res
-          this.pageInfo.totalNum = totalCount
-          this.tableList = data || []
-        } else {
-          this.tableList = res || []
-        }
-      })
+      this.$api.member
+        .getMemberLoginlog({
+          ...searchDate,
+          ...other,
+          ...page
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data || []
+          } else {
+            this.tableList = res || []
+          }
+        })
     }
   }
 }

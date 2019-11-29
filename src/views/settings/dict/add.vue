@@ -90,7 +90,7 @@ export default {
   },
   data() {
     return {
-      lobList: dictObj.lobList, // 业务线集合
+      lobList: dictObj.lobListAll, // 业务线集合
       delArr: [], // 删除id集合
       rules: {
         dictName: [

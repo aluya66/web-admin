@@ -65,6 +65,16 @@ export default {
         title: 'memberUserList',
         roles: ['edit']
       }
+    },
+    {
+      path: '/member/user/log',
+      name: 'memberUserLog',
+      component: () => import('@/views/member/user/log'),
+      meta: {
+        icon: 'table',
+        title: 'memberUserLog',
+        roles: ['edit']
+      }
     }]
   },
   {

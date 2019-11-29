@@ -112,12 +112,12 @@ export default {
           label: '业务线',
           prop: 'dictLob',
           formatter(row) {
-            const lobObj = row.dictLob && dictObj.lobList.find(res => row.dictLob === res.value)
+            const lobObj = row.dictLob && dictObj.lobListAll.find(res => row.dictLob === res.value)
             return lobObj ? lobObj.label : ''
           },
           search: {
             type: 'dict',
-            optionsList: dictObj.lobList
+            optionsList: dictObj.lobListAll
           }
         },
         {
@@ -140,8 +140,9 @@ export default {
           label: '状态',
           prop: 'status',
           width: 100,
-          formatter(row, index) {
-            return row.status || row.status === 0 ? dictObj.disStatus[row.status].label : ''
+          formatter(row) {
+            const curVal = row.status && dictObj.disStatus.find(res => row.status === res.value)
+            return curVal ? curVal.label : ''
           },
           search: {
             type: 'dict',

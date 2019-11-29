@@ -81,7 +81,7 @@
         </div>
         <div>
           <span class="label">最后一次消费时间:</span>
-          <span class="value">{{formModel.firstJoinTime}}</span>
+          <span class="value">{{formModel.lastExpenseTime}}</span>
         </div>
       </div>
     </div>

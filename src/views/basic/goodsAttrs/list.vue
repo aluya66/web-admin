@@ -171,7 +171,8 @@ export default {
           label: '属性状态',
           prop: 'tagStatus',
           formatter(row) {
-            return row.tagStatus || row.tagStatus === 0 ? dictObj.disStatus[row.tagStatus].label : ''
+            const curVal = row.tagStatus && dictObj.disStatus.find(res => row.tagStatus === res.value)
+            return curVal ? curVal.label : ''
           },
           search: {
             type: 'dict',
