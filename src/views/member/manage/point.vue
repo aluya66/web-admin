@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :max-height="685"
@@ -19,48 +20,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="手机号">
-              <el-input
-                v-model="searchObj.phoneNumber"
-                class="search-item"
-                :size="size"
-                placeholder="手机号"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="积分来源">
-              <query-dict
-                :dict-list="pointTypeList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.pointType"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="积分时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                format="yyyy-MM-dd HH:mm:ss"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -71,21 +36,18 @@
 import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
 import utils from 'utils'
+
 export default {
   name: 'memberManagePoint',
   mixins: [mixinTable],
   data() {
     return {
-      pickerOptions: utils.pickerOptions,
-      pointTypeList: dictObj.pointTypeList, // 积分来源下拉框选项
-      searchObj: {},
       exportLoading: false,
       tableHeader: [
         {
           label: '头像',
           prop: 'avatar',
-          isImage: true,
-          width: 100
+          isImage: true
         },
         {
           label: '姓名',
@@ -101,7 +63,10 @@ export default {
         },
         {
           label: '手机号',
-          prop: 'phoneNumber'
+          prop: 'phoneNumber',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '积分额',
@@ -109,11 +74,20 @@ export default {
         },
         {
           label: '积分来源',
-          prop: 'pointTypeName'
+          prop: 'pointTypeName',
+          search: {
+            type: 'dict',
+            prop: 'pointType',
+            optionsList: dictObj.pointTypeList
+          }
         },
         {
           label: '积分时间',
-          prop: 'created'
+          prop: 'created',
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         }
       ]
     }
@@ -123,9 +97,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.member.getPoint({
         ...searchDate,
@@ -143,9 +117,9 @@ export default {
       })
     },
     exportFile() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.exportLoading = true
       this.$api.member.exportPoint({
         ...searchDate,
@@ -154,18 +128,17 @@ export default {
       }).then(res => {
         this.exportLoading = false
         if (res) {
-          utils.createBlobFile(res)
+          const { data, filename } = res
+          if (data && filename) {
+            utils.createBlobFile(data, filename)
+          } else {
+            this.$msgTip('导出数据异常', 'warning')
+          }
         } else {
           this.$msgTip('导出数据失败', 'warning')
         }
       })
     }
-  },
-
-  components: {
   }
 }
 </script>
-
-<style lang='less' scoped>
-</style>

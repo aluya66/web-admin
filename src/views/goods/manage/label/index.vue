@@ -179,6 +179,7 @@ export default {
             tags
           }).then(res => {
             this.$msgTip('保存成功').then(() => {
+              this.closeCurrentTag()
               this.goBack()
             })
           })

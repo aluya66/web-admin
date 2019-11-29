@@ -3,7 +3,7 @@ const pointTypeList = [{
   label: '订单消费',
   value: 1
 }, {
-  label: '订单折扣',
+  label: '订单抵扣',
   value: 2
 },
 {
@@ -21,31 +21,46 @@ const pointTypeList = [{
 
 // 业务线
 const lobList = [{
-  label: '公共',
-  value: 'commons'
-}, {
-  label: 'ipx',
+  label: 'IPX',
   value: 'ysdp'
 },
 {
-  label: 'yoshop',
+  label: 'YOSHOP',
   value: 'yssp'
 },
 {
-  label: '星go',
+  label: '星GO',
   value: 'ysgo'
+},
+{
+  label: '星助手',
+  value: 'ysia'
 }]
+
+// 含公共的业务线
+const lobListAll = lobList.slice(0)
+lobListAll.unshift({
+  label: '公共',
+  value: 'commons'
+})
 
 // 启用禁用
 const disStatus = [{
-  label: '禁用',
-  value: 0
-},
-{
   label: '启用',
   value: 1
-}
-]
+}, {
+  label: '禁用',
+  value: 0
+}]
+
+// 男1，女2
+const genderSelect = [{
+  label: '男',
+  value: 1
+}, {
+  label: '女',
+  value: 2
+}]
 
 // 审核状态 0：未审核  1：已审核
 const auditStatus = [{
@@ -72,7 +87,9 @@ const categoryTypeList = [{
 export default {
   pointTypeList,
   lobList,
+  lobListAll,
   disStatus,
   categoryTypeList,
-  auditStatus
+  auditStatus,
+  genderSelect
 }

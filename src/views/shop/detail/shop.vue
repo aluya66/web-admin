@@ -89,16 +89,16 @@
       <c-upload
         ref="curUpload"
         class="pic"
-        :fileList="formModel.fileList"
-        is-auto
+        auto-upload
+        action="/api/upload/file"
+        list-type="picture-card"
         :size="20"
         :limit="5"
+        :fileList="formModel.fileList"
         :disabled="isView || isDisabled"
-        action-path="/auth/uploadFile"
-        upload-style="picture-card"
-        @upload-success="uploadSuccess"
-        @upload-remove="uploadRemove"
-        @upload-review="uploadReview"
+        :on-success="uploadSuccess"
+        :on-remove="uploadRemove"
+        :on-preview="uploadReview"
       >
         <i class="el-icon-plus"></i>
         <div class="info">上传图片/视频应小于20M</div>

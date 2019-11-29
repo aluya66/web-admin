@@ -13,6 +13,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -69,7 +70,7 @@
             <el-form-item label="创建时间">
               <el-date-picker
                 :size="size"
-                v-model="searchObj.dataTime"
+                v-model="searchObj.dateTime"
                 type="datetimerange"
                 :picker-options="pickerOptions"
                 range-separator="至"
@@ -123,7 +124,7 @@ export default {
         couponRuleType: '', // 劵类型
         couponRuleStatus: '', // 劵规则状态
         couponRuleName: '', // 劵类型名称
-        dataTime: '' // 时间
+        dateTime: '' // 时间
       },
       pickerOptions: utils.pickerOptions,
       dialogObj: {}, // 对话框数据
@@ -344,9 +345,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.marketing
         .getCouponRule({

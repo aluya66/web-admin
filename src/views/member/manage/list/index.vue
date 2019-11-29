@@ -3,14 +3,21 @@
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
-        <el-button :size="size" type="primary" icon="el-icon-download" @click="exportFile">导出</el-button>
+        <el-button
+          :size="size"
+          type="primary"
+          :loading="exportLoading"
+          icon="el-icon-download"
+          @click="exportFile"
+        >导出</el-button>
       </div>
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
-        :max-height="685"
+        :max-height="maxHeight"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -20,123 +27,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="姓名">
-              <el-input
-                v-model="searchObj.name"
-                class="search-item"
-                :size="size"
-                placeholder="姓名"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="手机号">
-              <el-input
-                v-model="searchObj.phoneNumber"
-                class="search-item"
-                :size="size"
-                placeholder="手机号"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="性别">
-              <el-select v-model="searchObj.gender" class="search-item" :size="size" clearable>
-                <el-option
-                  v-for="item in genderSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="会员类型">
-              <el-select
-                v-model="searchObj.memberTypeId"
-                class="search-item"
-                :size="size"
-                clearable
-              >
-                <el-option
-                  v-for="item in memberTypeSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="会员来源">
-              <el-select v-model="searchObj.type" class="search-item" :size="size" clearable>
-                <el-option
-                  v-for="item in sourceSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="所属店铺">
-              <el-input
-                v-model="searchObj.shopName"
-                class="search-item"
-                :size="size"
-                placeholder="所属店铺"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="所属店员">
-              <el-input
-                v-model="searchObj.memberName"
-                class="search-item"
-                :size="size"
-                placeholder="所属店员"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="所在地区">
-              <cascader
-                :value.sync="areaCode"
-                :options="areaOptions"
-                :props="areaProps"
-                class="search-item"
-              >
-              </cascader>
-            </el-form-item>
-            <el-form-item label="首次加入时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                format="yyyy-MM-dd HH:mm:ss"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="生日区间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.birDataTime"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                format="yyyy-MM-dd HH:mm:ss"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -144,6 +40,7 @@
       <c-dialog
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
+        :no-btn="dialogObj.noBtn"
         close-btn
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
@@ -173,7 +70,24 @@ import EditMember from './editMember'
 import EditBalance from './editBalance'
 import EditPoint from './editPoint'
 import utils from 'utils'
-import Cascader from 'components/cascader'
+// 会员来源
+const sourceSelect = [
+  {
+    label: '自主开通',
+    value: 1
+  },
+  {
+    label: '店员开通',
+    value: 2
+  }
+]
+const genderSelect = [{
+  label: '男',
+  value: 1
+}, {
+  label: '女',
+  value: 2
+}]
 
 export default {
   name: 'memberManageList',
@@ -183,58 +97,24 @@ export default {
     EditBalance,
     EditPoint,
     ReviewMember,
-    CDialog,
-    Cascader
+    CDialog
   },
   data(vm) {
     return {
-      areaCode: [], // 省市区code列表  [省，市，区]
       areaOptions: [], // 地区列表
       areaProps: {
+        expandTrigger: 'click',
         checkStrictly: true,
         lazy: true,
-        lazyLoad (node, resolve) {
+        lazyLoad(node, resolve) {
           vm.fetchAreaData(node, (data) => {
             // 通过调用resolve将子节点数据返回，通知组件数据加载完成
             resolve(data)
           })
         }
       },
-      pickerOptions: utils.pickerOptions,
       dialogObj: {},
-      options: [], // 地区
-      searchObj: {
-        name: '', // 姓名
-        gender: '', // 性别
-        phoneNumber: '', // 手机号
-        shopName: '', // 所属店铺
-        memberName: '', // 所属店员
-        type: '', // 会员来源
-        memberTypeId: '', // 会员类型
-        dataTime: '', // 首次加入时间区间
-        birDataTime: '', // 生日区间
-        provinceCode: '', // 省
-        cityCode: '', // 市
-        districtCode: '' // 区
-      },
-      // 会员来源
-      sourceSelect: [
-        {
-          label: '自主开通',
-          value: 1
-        },
-        {
-          label: '店员开通',
-          value: 2
-        }
-      ],
-      genderSelect: [{
-        label: '男',
-        value: 1
-      }, {
-        label: '女',
-        value: 2
-      }],
+      exportLoading: false,
       // 会员类型
       memberTypeSelect: [],
       tableInnerBtns: [
@@ -250,6 +130,7 @@ export default {
             vm.showDialog({
               title: '查看会员信息',
               type: 1,
+              noBtn: true,
               initData: {
                 userId,
                 appCode
@@ -316,12 +197,14 @@ export default {
         {
           label: '头像',
           prop: 'avatar',
-          isImage: true,
-          width: 100
+          isImage: true
         },
         {
           label: '用户',
-          prop: 'name'
+          prop: 'name',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '昵称',
@@ -329,45 +212,86 @@ export default {
         },
         {
           label: '性别',
-          prop: 'gender'
+          prop: 'gender',
+          search: {
+            type: 'select',
+            optionsList: genderSelect
+          }
         },
         {
           label: '手机号',
           prop: 'phoneNumber',
-          width: 110
+          width: 110,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '会员类型',
           prop: 'memberType',
-          width: 130
+          width: 130,
+          search: {
+            prop: 'memberTypeId',
+            type: 'dict',
+            optionsList: []
+          }
         },
         {
           label: '会员来源',
-          prop: 'source'
+          prop: 'source',
+          search: {
+            type: 'select',
+            optionsList: sourceSelect
+          }
         },
         {
           label: '会员归属',
           prop: 'shopName',
           formatter(row) {
             return row && `${row.shopName || ''}${row.memberName ? '（' + row.memberName + '）' : ''}`
+          },
+          search: {
+            label: '所属店铺',
+            type: 'input'
           }
         },
         {
           label: '可用积分',
-          prop: 'point'
+          prop: 'point',
+          search: {
+            type: 'input',
+            label: '所属店员',
+            prop: 'memberName'
+          }
         },
         {
           label: '可用优惠券',
-          prop: 'couponNum'
+          prop: 'couponNum',
+          search: {
+            type: 'cascader',
+            prop: 'areaCode',
+            label: '所属地区',
+            optionsProps: {},
+            optionsList: []
+          }
         },
         {
           label: '消费金额(元)',
-          prop: 'expenseAmount'
+          prop: 'expenseAmount',
+          search: {
+            label: '生日区间',
+            type: 'dateTime',
+            prop: 'birDateTime'
+          }
         },
         {
           label: '首次加入时间',
           prop: 'firstJoinTime',
-          width: 100
+          width: 105,
+          search: {
+            prop: 'dateTime',
+            type: 'dateTime'
+          }
         }
       ]
     }
@@ -376,6 +300,7 @@ export default {
   created() {
     this.getMemberType()
     this.fetchData()
+    this.setSearchOptionsList('areaCode', this.areaProps, 'optionsProps')
   },
 
   methods: {
@@ -401,17 +326,20 @@ export default {
       })
     },
     fetchData() {
-      this.searchObj.provinceCode = this.areaCode[0] || ''
-      this.searchObj.cityCode = this.areaCode[1] || ''
-      this.searchObj.districtCode = this.areaCode[2] || ''
-      const { dataTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
-      const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
+      const { areaCode, dateTime, birDateTime, ...other } = this.searchObj
+      const curArea = { // 传省、市、区code给api
+        provinceCode: areaCode[0] || '',
+        cityCode: areaCode[1] || '',
+        districtCode: areaCode[2] || ''
+      }
+      const searchDate = this.getSearchDate(dateTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
+      const birthdayDate = this.getSearchDate(birDateTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.isLoading = true
       this.$api.member.getMember({
+        ...curArea,
         ...searchDate,
-        ...birDateTime,
+        ...birthdayDate,
         ...other,
         ...page
       }).then(res => {
@@ -427,7 +355,8 @@ export default {
     },
     getMemberType() {
       this.$api.member.getMemberListType().then(res => {
-        this.memberTypeSelect = res.map(val => ({ label: val.name, value: val.id }))
+        this.memberTypeSelect = res && res.map(val => ({ label: val.name, value: val.id }))
+        this.setSearchOptionsList('memberTypeId', this.memberTypeSelect)
       })
     },
     dialogConfirm() {
@@ -468,24 +397,31 @@ export default {
         type: opts.type,
         isShow: true,
         title: opts.title,
-        initData: opts.initData
+        initData: opts.initData,
+        noBtn: opts.noBtn || false
       }
     },
     exportFile() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, birDateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime', 'firstJoinStartTime', 'firstJoinEndTime')
-      const birDateTime = this.getSearchDate(dataTime, '', 'birthdayStartTime', 'birthdayEndTime')
+      const searchDate = this.getSearchDate(dateTime, '', 'firstJoinStartTime', 'firstJoinEndTime')
+      const birthdayDate = this.getSearchDate(birDateTime, '', 'birthdayStartTime', 'birthdayEndTime')
       this.exportLoading = true
       this.$api.member.exportMember({
         ...searchDate,
-        ...birDateTime,
+        ...birthdayDate,
         ...other,
-        ...page
+        ...page,
+        total: totalNum
       }).then(res => {
         this.exportLoading = false
         if (res) {
-          utils.createBlobFile(res)
+          const { data, filename } = res
+          if (data && filename) {
+            utils.createBlobFile(data, filename)
+          } else {
+            this.$msgTip('导出数据异常', 'warning')
+          }
         } else {
           this.$msgTip('导出数据失败', 'warning')
         }

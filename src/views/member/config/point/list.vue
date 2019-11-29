@@ -8,10 +8,11 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         noPage
         selection
         hasBorder
-        :max-height="730"
+        :max-height="685"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -21,45 +22,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="业务线">
-              <query-dict
-                :dict-list="businessList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.appCode"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="积分名称">
-              <el-input
-                v-model="searchObj.pointName"
-                class="search-item"
-                :size="size"
-                placeholder="积分名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="类型">
-              <el-select v-model="searchObj.type" class="search-item" :size="size" clearable>
-                <el-option
-                  v-for="item in typeNameSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -86,7 +54,15 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import PointAdd from './add'
-import utils from 'utils'
+import dictObj from '@/store/dictData'
+
+const typeNameSelect = [{
+  label: '永久',
+  value: 1
+}, {
+  label: '有效天数',
+  value: 2
+}]
 
 export default {
   name: 'memberConfigPoint',
@@ -97,21 +73,7 @@ export default {
   },
   data(vm) {
     return {
-      pickerOptions: utils.pickerOptions,
       dialogObj: {},
-      tableList: [],
-      searchObj: {
-        appCode: '', // 业务线
-        pointName: '', // 积分名称
-        type: '' // 类型
-      },
-      typeNameSelect: [{
-        label: '永久',
-        value: 1
-      }, {
-        label: '有效天数',
-        value: 2
-      }],
       tableInnerBtns: [
         {
           width: 100,
@@ -148,21 +110,20 @@ export default {
           label: '业务线',
           prop: 'appCode',
           formatter(row) {
-            switch (row.appCode) {
-              case 'ysgo':
-                return '星GO'
-              case 'ysia':
-                return '星助手'
-              case 'yssp':
-                return 'YOSHOP'
-              case 'ysdp':
-                return '星鲜APP'
-            }
+            const curVal = row.appCode && dictObj.lobList.find(res => row.appCode === res.value)
+            return curVal ? curVal.label : ''
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.lobList
           }
         },
         {
           label: '积分名称',
-          prop: 'pointName'
+          prop: 'pointName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '积分获取',
@@ -177,6 +138,10 @@ export default {
           prop: 'type',
           formatter(row) {
             return row.type === 1 ? '永久' : '有效天数'
+          },
+          search: {
+            type: 'select',
+            optionsList: typeNameSelect
           }
         },
         {
@@ -185,7 +150,11 @@ export default {
         },
         {
           label: '创建时间',
-          prop: 'created'
+          prop: 'created',
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         }
       ],
       businessList: [] // 业务线
@@ -193,29 +162,15 @@ export default {
   },
   created() {
     this.fetchData()
-    this.getBaseBusinessList()
   },
   methods: {
-    getBaseBusinessList() {
-      this.$api.basic.businessList(
-        {
-          status: 1,
-          pageNo: 1,
-          pageSize: 100
-        }
-      ).then(res => {
-        if (res && res.totalCount) {
-          const { data } = res
-          this.businessList = data.map((item) => { return { value: item.appCode, label: item.appName } }) || []
-        } else {
-          this.businessList = res.map((item) => { return { value: item.appCode, label: item.appName } }) || []
-        }
-      })
-    },
     fetchData() {
       this.isLoading = true
+      const { dateTime, ...other } = this.searchObj
+      const searchDate = this.getSearchDate(dateTime)
       this.$api.member.getPointRule({
-        ...this.searchObj
+        ...searchDate,
+        ...other
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {

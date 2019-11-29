@@ -46,6 +46,15 @@ export const getMemberLoginlog = params =>
   })
 
 /**
+ * 获取用户列表信息
+ * @param {*} params
+ */
+export const getMemberUserInfo = params =>
+  Http.fetch(`${context}/api/user/info`, params, {
+    method: 'get'
+  })
+
+/**
  * @param {*} 会员钱包列表
  */
 export const getWallet = params =>

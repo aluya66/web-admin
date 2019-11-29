@@ -45,8 +45,12 @@
       <div class="item">
         <h3 class="title">基础信息</h3>
         <div>
-          <span class="label">会员等级:</span>
-          <span class="value">{{formModel.memberName}}</span>
+          <span class="label">生   日:</span>
+          <span class="value">{{formModel.birthday}}</span>
+        </div>
+        <div>
+          <span class="label">所在城市:</span>
+          <span class="value">{{formModel.provinceName}}-{{formModel.cityName}}-{{formModel.districtName}}</span>
         </div>
         <div>
           <span class="label">会员类型:</span>
@@ -58,11 +62,11 @@
         </div>
         <div>
           <span class="label">会员归属:</span>
-          <span class="value">{{formModel.shopName}}</span>
+          <span class="value">{{formModel.shopName}}[{{formModel.memberName}}]</span>
         </div>
       </div>
       <div class="item">
-        <h3 class="title">销售信息</h3>
+        <h3 class="title">消费信息</h3>
         <div>
           <span class="label">消费金额(元):</span>
           <span class="value">{{formModel.expenseAmount}}</span>
@@ -76,8 +80,8 @@
           <span class="value">{{formModel.customerPrice}}</span>
         </div>
         <div>
-          <span class="label">首次消费时间:</span>
-          <span class="value">{{formModel.firstJoinTime}}</span>
+          <span class="label">最后一次消费时间:</span>
+          <span class="value">{{formModel.lastExpenseTime}}</span>
         </div>
       </div>
     </div>
@@ -240,14 +244,15 @@ export default {
     }
     span {
       display: inline-block;
-      line-height: 26px;
+      line-height: 30px;
       &.label {
         font-weight: 700;
-        width: 100px;
+        width: 120px;
         text-align: right;
       }
       &.value {
         font-weight: 400;
+        margin-left: 10px;
       }
     }
   }

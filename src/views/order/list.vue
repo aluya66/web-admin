@@ -7,6 +7,7 @@
 		</template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -59,7 +60,7 @@
              <el-form-item label="操作时间">
               <el-date-picker
                 :size="size"
-                v-model="searchObj.dataTime"
+                v-model="searchObj.dateTime"
                 type="daterange"
                 :picker-options="pickerOptions"
                 range-separator="至"
@@ -115,7 +116,7 @@ export default {
         applyingDepartment: '', // 申请部门
         couponAmount: '', // 劵金额
         preferentialAmount: '', // 门槛金额
-        dataTime: '' // 时间
+        dateTime: '' // 时间
       },
       pickerOptions: utils.pickerOptions,
       dialogObj: {}, // 对话框数据
@@ -554,7 +555,7 @@ export default {
   },
   methods: {
     fetchData () {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
       this.$api.order.getOrder({

@@ -7,6 +7,7 @@
 		</template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -19,52 +20,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="商品名称">
-              <el-input
-                v-model="searchObj.goodsName"
-                class="search-item"
-                :size="size"
-                placeholder="请输入商品名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="商品编码">
-              <el-input
-                v-model="searchObj.goodsBn"
-                class="search-item"
-                :size="size"
-                placeholder="请输入商品编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="操作人">
-              <el-input
-                v-model="searchObj.operatorName"
-                class="search-item"
-                :size="size"
-                placeholder="请输入操作人"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="操作时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="daterange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >
-                align="right">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" class="search-btn" :size="size" icon="el-icon-search" @click="searchSubmit">查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -73,30 +34,27 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import utils from 'utils'
 
 export default {
   name: 'goodsLogs',
   mixins: [mixinTable],
   data (vm) {
     return {
-      searchObj: {
-        goodsName: '',
-        operatorName: '',
-        goodsBn: '',
-        dataTime: ''
-      },
-      pickerOptions: utils.pickerOptions,
-      tableList: [],
       tableInnerBtns: [],
       tableHeader: [
         {
           label: '商品名称',
-          prop: 'goodsName'
+          prop: 'goodsName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '商品编码',
-          prop: 'goodsBn'
+          prop: 'goodsBn',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '操作日志',
@@ -104,11 +62,18 @@ export default {
         },
         {
           label: '操作人',
-          prop: 'operatorName'
+          prop: 'operatorName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '创建时间',
-          prop: 'created'
+          prop: 'created',
+          search: {
+            prop: 'dateTime',
+            type: 'dateTime'
+          }
         }
       ]
     }
@@ -118,9 +83,9 @@ export default {
   },
   methods: {
     fetchData () {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.goods.getOperator(
         {

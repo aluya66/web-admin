@@ -71,15 +71,15 @@
                   v-if="!specification[specIndex].posterUrl[index/countSum(specIndex + 1)]"
                   :ref="'spec_'+index/countSum(specIndex + 1)"
                   class="pic"
-                  :fileList="specification[specIndex].fileList"
-                  is-auto
-                  :disabled="isView"
+                  auto-upload
+                  action="/api/upload/file"
                   :size="10"
                   :limit="1"
-                  action-path="/auth/uploadFile"
-                  @upload-success="uploadSuccess"
-                  @upload-remove="uploadRemove"
-                  @upload-review="uploadReview"
+                  :fileList="specification[specIndex].fileList"
+                  :disabled="isView"
+                  :on-success="uploadSuccess"
+                  :on-remove="uploadRemove"
+                  :on-preview="uploadReview"
                   @on-change="uploadIndex = specIndex"
                 >
                   <el-button size="small" type="primary">点击上传</el-button>

@@ -15,7 +15,7 @@
         disabled
       ></el-input>
     </el-form-item>
-    <el-form-item label="余额变动:">
+    <el-form-item label="余额变动:" prop="balance">
       <el-input
         v-model.trim="formModel.balance"
         class="form-item"
@@ -34,11 +34,20 @@ export default {
     }
   },
   data() {
+    const checkBalance = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('余额不能为空'))
+      }
+      if (!Number(value)) {
+        return callback(new Error('请输入数字值'))
+      }
+      callback()
+    }
     return {
       formModel: {},
       rules: {
         balance: [
-          { required: true, message: '请输入' }
+          { required: true, validator: checkBalance, trigger: 'blur' }
         ]
       }
     }

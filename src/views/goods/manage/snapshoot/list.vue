@@ -5,6 +5,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -17,65 +18,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="商品快照id">
-              <el-input
-                v-model="searchObj.id"
-                class="search-item"
-                :size="size"
-                placeholder="请输入快照id"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="商品名称">
-              <el-input
-                v-model="searchObj.goodsName"
-                class="search-item"
-                :size="size"
-                placeholder="请输入商品名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="商品spu码">
-              <el-input
-                v-model="searchObj.goodsBn"
-                class="search-item"
-                :size="size"
-                placeholder="请输入商品spu编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="商品sku编码">
-              <el-input
-                v-model="searchObj.goodsSkuSn"
-                class="search-item"
-                :size="size"
-                placeholder="请输入商品Sku编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="快照时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="daterange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -84,22 +32,12 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import utils from 'utils'
 
 export default {
   name: 'goodsSnapshoot',
   mixins: [mixinTable],
   data(vm) {
     return {
-      searchObj: {
-        id: '',
-        goodsName: '',
-        goodsBn: '',
-        goodsSkuSn: '',
-        dataTime: ''
-      },
-      pickerOptions: utils.pickerOptions,
-      tableList: [],
       tableInnerBtns: [{
         name: '详情',
         icon: 'el-icon-view',
@@ -110,27 +48,39 @@ export default {
       tableHeader: [
         {
           label: '商品快照id',
-          prop: 'id'
+          prop: 'id',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '商品名称',
-          prop: 'goodsName'
+          prop: 'goodsName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '商品spu编码',
-          prop: 'goodsBn'
+          prop: 'goodsBn',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '商品sku编码',
-          prop: 'goodsSkuSn'
+          prop: 'goodsSkuSn',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '创建时间',
-          prop: 'created'
-        },
-        {
-          label: '更新时间',
-          prop: 'updated'
+          prop: 'created',
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         }
       ]
     }
@@ -140,9 +90,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.goods.getSnapshot(
         {

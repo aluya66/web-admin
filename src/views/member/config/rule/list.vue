@@ -8,9 +8,10 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
-        :max-height="685"
+        :max-height="maxHeight"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
@@ -20,43 +21,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="业务线">
-              <query-dict
-                :dict-list="businessList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.appCode"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="会员类型">
-              <query-dict
-                :dict-list="memberTypeList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.memberTypeId"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="状态">
-              <query-dict
-                :dict-list="disStatus"
-                class="search-item"
-                :size="size"
-                :value.sync="searchObj.isEnable"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -84,7 +54,6 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import PointAdd from './add'
-import utils from 'utils'
 import dictObj from '@/store/dictData'
 
 export default {
@@ -96,15 +65,7 @@ export default {
   },
   data(vm) {
     return {
-      disStatus: dictObj.disStatus, // 启用禁用集合
-      pickerOptions: utils.pickerOptions,
       dialogObj: {},
-      tableList: [],
-      searchObj: {
-        appCode: '', // 业务线
-        memberTypeId: '', // 会员类型
-        isEnable: '' // 状态
-      },
       tableInnerBtns: [
         {
           width: 100,
@@ -117,6 +78,7 @@ export default {
               memberTypeName, // 会员名称
               memberTypeId, // 会员类型
               isEnable, // 状态
+              pointRatio, // 积分兑换比率
               pointGift, // 会员开通送积分
               val, // 会员有效天数
               unit, // 有效期单位
@@ -135,6 +97,7 @@ export default {
                 memberTypeName, // 会员名称
                 memberTypeId, // 会员类型
                 isEnable, // 状态
+                pointRatio, // 积分兑换比率
                 pointGift, // 会员开通送积分
                 val, // 会员有效天数
                 unit, // 有效期单位
@@ -156,28 +119,29 @@ export default {
           prop: 'appCode',
           fixed: true,
           formatter(row) {
-            switch (row.appCode) {
-              case 'ysgo':
-                return '星GO'
-              case 'ysia':
-                return '星助手'
-              case 'yssp':
-                return 'YOSHOP'
-              case 'ysdp':
-                return '星鲜APP'
-            }
+            const curVal = row.appCode && dictObj.lobList.find(res => row.appCode === res.value)
+            return curVal ? curVal.label : ''
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.lobList
           }
         },
         {
           label: '会员类型',
-          prop: 'memberTypeName'
+          prop: 'memberTypeName',
+          search: {
+            prop: 'memberTypeId',
+            type: 'dict',
+            optionsList: []
+          }
         },
         {
           label: '标题信息',
           prop: 'title'
         },
         {
-          label: '消费金额兑换积分比率',
+          label: '积分兑换比率',
           prop: 'pointRatio'
         },
         {
@@ -207,13 +171,22 @@ export default {
           label: '状态',
           prop: 'isEnable',
           formatter(row) {
-            return row.isEnable === 1 ? '启用' : '禁用'
+            const curVal = row.isEnable && dictObj.disStatus.find(res => row.isEnable === res.value)
+            return curVal ? curVal.label : ''
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.disStatus
           }
         },
         {
           label: '创建时间',
           prop: 'created',
-          width: 100
+          width: 100,
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         }
       ],
       memberTypeList: [], // 会员类型
@@ -223,36 +196,20 @@ export default {
   created() {
     this.fetchData()
     this.getMemberTypeList()
-    this.getBaseBusinessList()
   },
   methods: {
-    getBaseBusinessList() {
-      this.$api.basic.businessList(
-        {
-          status: 1,
-          pageNo: 1,
-          pageSize: 100
-        }
-      ).then(res => {
-        if (res && res.totalCount) {
-          const { data } = res
-          this.businessList = data.map((item) => { return { value: item.appCode, label: item.appName } }) || []
-        } else {
-          this.businessList = res.map((item) => { return { value: item.appCode, label: item.appName } }) || []
-        }
-      })
-    },
     getMemberTypeList() {
       this.$api.member.getMemberListType().then(res => {
         if (res) {
           this.memberTypeList = res.map((item) => { return { value: item.id, label: item.name } }) || []
         }
+        this.setSearchOptionsList('memberTypeId', this.memberTypeList)
       })
     },
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.member.getMemberRule({
         ...searchDate,
