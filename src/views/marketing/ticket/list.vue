@@ -218,45 +218,10 @@ export default {
           notBtn: 'status',
           icon: 'el-icon-edit',
           handle(row) {
-            const {
-              couponId,
-              couponName, // 劵名称
-              couponNumber, // 生成数量
-              limitActivateDayType, // 激活时间类型
-              limitActivateTimeStart, // 激活开始时间
-              limitActivateTimeEnd, // 激活结束时间
-              limitActivateDays, // 激活时间_天数
-              limitActivateMonths, // 激活时间_月份
-              limitExpireDayType, // 过期时间类型
-              limitExpireDay, // 有效期截止类型_天数
-              limitExpireTimeStart, // 有效期开始时间
-              limitExpireTimeEnd, // 有效期结束时间
-              submitStatus, // 提交状态
-              couponRuleId, // 劵规则ID
-              couponRemark // 备注
-            } = row
-            vm.showDialog({
-              title: '编辑劵',
-              initData: {
-                couponId,
-                couponName, // 劵名称
-                couponNumber, // 生成数量
-                limitActivateDayType, // 激活时间类型
-                limitActivateTimeStart, // 激活开始时间
-                limitActivateTimeEnd, // 激活结束时间
-                limitActivateDays, // 激活时间_天数
-                limitActivateMonths,
-                // 激活时间_月份
-                limitExpireDayType, // 过期时间类型
-                limitExpireDay, // 有效期截止类型_天数
-                limitExpireTimeStart, // 有效期开始时间
-                limitExpireTimeEnd, // 有效期结束时间
-                submitStatus, // 提交状态
-                couponRuleId, // 劵规则ID
-                couponRemark // 备注
-              },
-              isEdit: true
-            })
+            const { couponId, status } = row
+            // 未发布：可修改优惠券所有信息; 进行中、未开始、已下架：只可修改使用说明
+            if (status !== 4 && status !== 5 && status !== 6 && status !== 7) return this.$msgTip('该优惠券不支持编辑操作', 'warning')
+            vm.routerLink(`/marketing/ticket/ticketInfo/${couponId}`)
           }
         },
         { // 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
@@ -320,19 +285,9 @@ export default {
         },
         {
           label: '使用渠道',
-          prop: 'platforms',
+          prop: 'platformList',
           formatter(row) {
-            let arr = []
-            // 渠道1 IPX, 2星购, 4YOSHOP, 8YSIA
-            row.platforms && row.platforms.length && row.platforms.forEach((item) => {
-              switch (item) {
-                case 1: arr.push('IPX'); break
-                case 2: arr.push('星GO'); break
-                case 4: arr.push('YOSHOP'); break
-                case 8: arr.push('YSIA'); break
-              }
-            })
-            return arr.join(',')
+            return row && vm.setTableColumnLabel(row.platformList, 'lobList')
           }
         },
         {
@@ -341,10 +296,7 @@ export default {
         },
         {
           label: '卡券类型',
-          prop: 'couponRuleType',
-          formatter(row) {
-            return row.couponRuleType === 1 ? '现金券' : row.couponRuleType === 2 ? '折扣券' : '兑换券'
-          }
+          prop: 'typeName'
         },
         {
           label: '卡券内容',
@@ -381,7 +333,7 @@ export default {
         },
         {
           label: '创建人',
-          prop: ''
+          prop: 'opCreator'
         },
         {
           label: '已领取',
