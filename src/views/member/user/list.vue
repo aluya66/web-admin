@@ -64,8 +64,7 @@ export default {
           label: '性别',
           prop: 'gender',
           formatter(row) {
-            const curVal = row.gender && dictObj.genderSelect.find(res => row.gender === res.value)
-            return curVal ? curVal.label : ''
+            return row && vm.setTableColumnLabel(row.gender, 'genderSelect')
           }
         },
         {
@@ -76,8 +75,7 @@ export default {
           label: '注册来源',
           prop: 'appCode',
           formatter(row) {
-            const curVal = row.appCode && dictObj.lobList.find(res => row.appCode === res.value)
-            return curVal ? curVal.label : ''
+            return row && vm.setTableColumnLabel(row.appCode, 'lobList')
           },
           search: {
             type: 'dict',

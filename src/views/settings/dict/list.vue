@@ -112,8 +112,7 @@ export default {
           label: '业务线',
           prop: 'dictLob',
           formatter(row) {
-            const lobObj = row.dictLob && dictObj.lobListAll.find(res => row.dictLob === res.value)
-            return lobObj ? lobObj.label : ''
+            return row && vm.setTableColumnLabel(row.dictLob, 'lobListAll')
           },
           search: {
             type: 'dict',
@@ -141,8 +140,7 @@ export default {
           prop: 'status',
           width: 100,
           formatter(row) {
-            const curVal = row.status && dictObj.disStatus.find(res => row.status === res.value)
-            return curVal ? curVal.label : ''
+            return row && vm.setTableColumnLabel(row.status, 'disStatus')
           },
           search: {
             type: 'dict',

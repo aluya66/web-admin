@@ -119,8 +119,7 @@ export default {
           prop: 'appCode',
           fixed: true,
           formatter(row) {
-            const curVal = row.appCode && dictObj.lobList.find(res => row.appCode === res.value)
-            return curVal ? curVal.label : ''
+            return row && vm.setTableColumnLabel(row.appCode, 'lobList')
           },
           search: {
             type: 'dict',
@@ -171,8 +170,7 @@ export default {
           label: '状态',
           prop: 'isEnable',
           formatter(row) {
-            const curVal = row.isEnable && dictObj.disStatus.find(res => row.isEnable === res.value)
-            return curVal ? curVal.label : ''
+            return row && vm.setTableColumnLabel(row.isEnable, 'disStatus')
           },
           search: {
             type: 'dict',
