@@ -97,7 +97,7 @@
       </template>
     </el-form-item>
     <slot></slot>
-    <el-form-item>
+    <el-form-item v-if="$slots.default || formItems.length">
       <el-button
         type="primary"
         class="search-btn"

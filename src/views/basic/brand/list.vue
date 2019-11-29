@@ -19,7 +19,7 @@
         hasBorder
         :size="size"
         :loading="isLoading"
-        :max-height="maxHeight + 54"
+        :max-height="maxHeight"
         :table-header="tableHeader"
         :table-list="tableList"
         :page-info="pageInfo"

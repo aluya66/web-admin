@@ -2,6 +2,7 @@ import utils from 'utils'
 import CTable from 'components/table'
 import QueryDict from '../common/queryDict'
 import CSearch from 'components/search'
+import dictObj from '@/store/dictData'
 
 export default {
   data() {
@@ -121,6 +122,13 @@ export default {
       if (curIndex !== -1) {
         this.$set(this.searchItems[curIndex], optionType, value)
       }
+    },
+    /**
+     * 表格项获取字典数据label数据
+     */
+    setTableColumnLabel(value, dictKey) {
+      const curVal = dictObj[dictKey].find(res => value === res.value)
+      return curVal ? curVal.label : ''
     }
   },
   components: {
