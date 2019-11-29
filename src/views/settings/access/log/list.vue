@@ -79,7 +79,6 @@ export default {
         {
           label: 'appCode',
           prop: 'appCode',
-          fixed: true,
           search: {
             type: 'input'
           }
@@ -87,13 +86,15 @@ export default {
         {
           label: '请求地址',
           prop: 'requestUrl',
+          isPopover: true,
           search: {
             type: 'input'
           }
         },
         {
           label: '请求参数',
-          prop: 'requestParam'
+          prop: 'requestParam',
+          isPopover: true
         },
         // {
         //   label: '响应明细',
@@ -140,7 +141,7 @@ export default {
           }
         },
         {
-          label: '最后更新时间',
+          label: '更新时间',
           prop: 'updated'
         }
       ]

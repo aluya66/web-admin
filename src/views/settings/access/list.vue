@@ -104,7 +104,7 @@ export default {
         {
           label: '平台密钥',
           prop: 'secret',
-          width: 280
+          isPopover: true
         },
         {
           label: '公钥',
@@ -181,7 +181,6 @@ export default {
         {
           label: '创建时间',
           prop: 'created',
-          width: 100,
           search: {
             prop: 'dateTime',
             type: 'dateTime'
@@ -189,8 +188,7 @@ export default {
         },
         {
           label: '更新时间',
-          prop: 'updated',
-          width: 100
+          prop: 'updated'
         }
       ]
     }
