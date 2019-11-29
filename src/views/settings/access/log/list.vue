@@ -119,7 +119,7 @@ export default {
         },
         {
           label: '创建人',
-          prop: 'createdby',
+          prop: 'opCreator',
           search: {
             type: 'input'
           }
@@ -134,7 +134,7 @@ export default {
         },
         {
           label: '修改人',
-          prop: 'updatedby',
+          prop: 'opEditor',
           search: {
             type: 'input'
           }

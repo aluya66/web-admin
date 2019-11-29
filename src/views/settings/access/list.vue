@@ -166,14 +166,14 @@ export default {
         },
         {
           label: '创建人',
-          prop: 'createdby',
+          prop: 'opCreator',
           search: {
             type: 'input'
           }
         },
         {
           label: '更新人',
-          prop: 'updatedby',
+          prop: 'opEditor',
           search: {
             type: 'input'
           }
