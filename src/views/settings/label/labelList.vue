@@ -124,19 +124,20 @@ export default {
           label: '业务线',
           prop: 'categoryLob',
           formatter(row) {
-            const lobObj = row.categoryLob && dictObj.lobList.find(res => row.categoryLob === res.value)
+            const lobObj = row.categoryLob && dictObj.lobListAll.find(res => row.categoryLob === res.value)
             return lobObj ? lobObj.label : ''
           },
           search: {
             type: 'dict',
-            optionsList: dictObj.lobList
+            optionsList: dictObj.lobListAll
           }
         },
         {
           label: '标签状态',
           prop: 'tagStatus',
           formatter(row) {
-            return row.tagStatus || row.tagStatus === 0 ? dictObj.disStatus[row.tagStatus].label : ''
+            const curVal = row.tagStatus && dictObj.disStatus.find(res => row.tagStatus === res.value)
+            return curVal ? curVal.label : ''
           },
           search: {
             type: 'dict',

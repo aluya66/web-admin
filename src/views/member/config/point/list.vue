@@ -54,6 +54,7 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import PointAdd from './add'
+import dictObj from '@/store/dictData'
 
 const typeNameSelect = [{
   label: '永久',
@@ -109,20 +110,12 @@ export default {
           label: '业务线',
           prop: 'appCode',
           formatter(row) {
-            switch (row.appCode) {
-              case 'ysgo':
-                return '星GO'
-              case 'ysia':
-                return '星助手'
-              case 'yssp':
-                return 'YOSHOP'
-              case 'ysdp':
-                return '星鲜APP'
-            }
+            const curVal = row.appCode && dictObj.lobList.find(res => row.appCode === res.value)
+            return curVal ? curVal.label : ''
           },
           search: {
             type: 'dict',
-            optionsList: []
+            optionsList: dictObj.lobList
           }
         },
         {
@@ -169,26 +162,8 @@ export default {
   },
   created() {
     this.fetchData()
-    this.getBaseBusinessList()
   },
   methods: {
-    getBaseBusinessList() {
-      this.$api.basic.businessList(
-        {
-          status: 1,
-          pageNo: 1,
-          pageSize: 100
-        }
-      ).then(res => {
-        if (res && res.totalCount) {
-          const { data } = res
-          this.businessList = data.map((item) => { return { value: item.appCode, label: item.appName } }) || []
-        } else {
-          this.businessList = res.map((item) => { return { value: item.appCode, label: item.appName } }) || []
-        }
-        this.setSearchOptionsList('appCode', this.businessList)
-      })
-    },
     fetchData() {
       this.isLoading = true
       const { dateTime, ...other } = this.searchObj

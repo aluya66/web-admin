@@ -71,19 +71,20 @@ export default {
           label: '业务线',
           prop: 'categoryLob',
           formatter(row) {
-            const lobObj = row.categoryLob && dictObj.lobList.find(res => row.categoryLob === res.value)
+            const lobObj = row.categoryLob && dictObj.lobListAll.find(res => row.categoryLob === res.value)
             return lobObj ? lobObj.label : ''
           },
           search: {
             type: 'dict',
-            optionsList: dictObj.lobList
+            optionsList: dictObj.lobListAll
           }
         },
         {
           label: '类型分类',
           prop: 'categoryType',
           formatter(row) {
-            return row.categoryType || row.categoryType === 0 ? dictObj.categoryTypeList[row.categoryType].label : ''
+            const curVal = row.categoryType && dictObj.categoryTypeList.find(res => row.categoryType === res.value)
+            return curVal ? curVal.label : ''
           },
           search: {
             type: 'dict',

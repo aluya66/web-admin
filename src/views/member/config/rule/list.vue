@@ -119,20 +119,12 @@ export default {
           prop: 'appCode',
           fixed: true,
           formatter(row) {
-            switch (row.appCode) {
-              case 'ysgo':
-                return '星GO'
-              case 'ysia':
-                return '星助手'
-              case 'yssp':
-                return 'YOSHOP'
-              case 'ysdp':
-                return '星鲜APP'
-            }
+            const curVal = row.appCode && dictObj.lobList.find(res => row.appCode === res.value)
+            return curVal ? curVal.label : ''
           },
           search: {
             type: 'dict',
-            optionsList: []
+            optionsList: dictObj.lobList
           }
         },
         {
@@ -179,7 +171,8 @@ export default {
           label: '状态',
           prop: 'isEnable',
           formatter(row) {
-            return row.isEnable === 1 ? '启用' : '禁用'
+            const curVal = row.isEnable && dictObj.disStatus.find(res => row.isEnable === res.value)
+            return curVal ? curVal.label : ''
           },
           search: {
             type: 'dict',
@@ -203,26 +196,8 @@ export default {
   created() {
     this.fetchData()
     this.getMemberTypeList()
-    this.getBaseBusinessList()
   },
   methods: {
-    getBaseBusinessList() {
-      this.$api.basic.businessList(
-        {
-          status: 1,
-          pageNo: 1,
-          pageSize: 100
-        }
-      ).then(res => {
-        if (res && res.totalCount) {
-          const { data } = res
-          this.businessList = data.map((item) => { return { value: item.appCode, label: item.appName } }) || []
-        } else {
-          this.businessList = res.map((item) => { return { value: item.appCode, label: item.appName } }) || []
-        }
-        this.setSearchOptionsList('appCode', this.businessList)
-      })
-    },
     getMemberTypeList() {
       this.$api.member.getMemberListType().then(res => {
         if (res) {

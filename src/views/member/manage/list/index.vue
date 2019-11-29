@@ -197,8 +197,7 @@ export default {
         {
           label: '头像',
           prop: 'avatar',
-          isImage: true,
-          width: 100
+          isImage: true
         },
         {
           label: '用户',
