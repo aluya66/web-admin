@@ -176,9 +176,11 @@ export default {
             }
           })
           this.$api.settings.addTagrelate({
-            tags
+            tags,
+            goodsBn
           }).then(res => {
             this.$msgTip('保存成功').then(() => {
+              this.closeCurrentTag()
               this.goBack()
             })
           })
