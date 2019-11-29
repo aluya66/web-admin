@@ -124,7 +124,7 @@ export default {
           label: 'token验证状态',
           prop: 'tokenStatus',
           formatter(row) {
-            return row.tokenStatus === 0 ? '禁用' : '启用'
+            return row && vm.setTableColumnLabel(row.tokenStatus, 'disStatus')
           },
           search: {
             type: 'select',
@@ -135,7 +135,7 @@ export default {
           label: '签名状态',
           prop: 'signStatus',
           formatter(row) {
-            return row.signStatus === 0 ? '禁用' : '启用'
+            return row && vm.setTableColumnLabel(row.signStatus, 'disStatus')
           },
           search: {
             type: 'select',
@@ -146,7 +146,7 @@ export default {
           label: '加密状态',
           prop: 'encryptStatus',
           formatter(row) {
-            return row.encryptStatus === 0 ? '禁用' : '启用'
+            return row && vm.setTableColumnLabel(row.encryptStatus, 'disStatus')
           },
           search: {
             type: 'select',
@@ -157,7 +157,7 @@ export default {
           label: '启用状态',
           prop: 'status',
           formatter(row) {
-            return row.status === 0 ? '禁用' : '启用'
+            return row && vm.setTableColumnLabel(row.status, 'disStatus')
           },
           search: {
             type: 'select',
