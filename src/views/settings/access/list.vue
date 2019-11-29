@@ -22,6 +22,7 @@
       >
         <template v-slot:header>
           <c-search
+            label-width="120px"
             :form-model="searchObj"
             :form-items="searchItems"
             @submit-form="searchSubmit"
@@ -93,17 +94,17 @@ export default {
       ],
       tableHeader: [
         {
-          label: '开放平台APPKEY',
+          label: '平台APPKEY',
           prop: 'appKey',
           fixed: true,
           search: {
-            label: 'APPKEY',
             type: 'input'
           }
         },
         {
-          label: '开放平台密钥',
-          prop: 'secret'
+          label: '平台密钥',
+          prop: 'secret',
+          width: 280
         },
         {
           label: '公钥',
@@ -120,7 +121,7 @@ export default {
           }
         },
         {
-          label: '是否启用token验证',
+          label: 'token验证状态',
           prop: 'tokenStatus',
           formatter(row) {
             return row.tokenStatus === 0 ? '禁用' : '启用'
@@ -131,7 +132,7 @@ export default {
           }
         },
         {
-          label: '是否启用签名',
+          label: '签名状态',
           prop: 'signStatus',
           formatter(row) {
             return row.signStatus === 0 ? '禁用' : '启用'
@@ -142,7 +143,7 @@ export default {
           }
         },
         {
-          label: '是否启用加密',
+          label: '加密状态',
           prop: 'encryptStatus',
           formatter(row) {
             return row.encryptStatus === 0 ? '禁用' : '启用'
@@ -153,7 +154,7 @@ export default {
           }
         },
         {
-          label: '是否启用',
+          label: '启用状态',
           prop: 'status',
           formatter(row) {
             return row.status === 0 ? '禁用' : '启用'
@@ -164,26 +165,32 @@ export default {
           }
         },
         {
-          label: '创建人名字',
+          label: '创建人',
           prop: 'opCreator',
           search: {
             type: 'input'
           }
         },
         {
-          label: '修改人名字',
+          label: '更新人',
           prop: 'opEditor',
           search: {
             type: 'input'
           }
         },
         {
-          label: '最后更新时间',
-          prop: 'updated',
+          label: '创建时间',
+          prop: 'created',
+          width: 100,
           search: {
             prop: 'dateTime',
             type: 'dateTime'
           }
+        },
+        {
+          label: '更新时间',
+          prop: 'updated',
+          width: 100
         }
       ]
     }

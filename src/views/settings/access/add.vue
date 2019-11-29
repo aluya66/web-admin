@@ -8,7 +8,7 @@
     label-position="right"
     status-icon
   >
-    <el-form-item label="开放平台APPKEY:" prop="appKey">
+    <el-form-item label="平台APPKEY:" prop="appKey">
       <el-input
         v-model.trim="formModel.appKey"
         :disabled="!!formModel.id"
@@ -17,22 +17,22 @@
         clearable
       ></el-input>
     </el-form-item>
-    <el-form-item label="启用token验证:" prop="tokenStatus">
+    <el-form-item label="token验证状态:" prop="tokenStatus">
       <el-radio-group v-model="formModel.tokenStatus" :disabled="formModel.status === 0">
         <el-radio :label="item.value" v-for="(item, index) in statusList" :key="index">{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="是否启用签名:" prop="signStatus">
+    <el-form-item label="签名状态:" prop="signStatus">
       <el-radio-group v-model="formModel.signStatus" :disabled="formModel.status === 0">
         <el-radio :label="item.value" v-for="(item, index) in statusList" :key="index">{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="是否启用加密:" prop="encryptStatus">
+    <el-form-item label="加密状态:" prop="encryptStatus">
       <el-radio-group v-model="formModel.encryptStatus" :disabled="formModel.status === 0">
         <el-radio :label="item.value" v-for="(item, index) in statusList" :key="index">{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="是否启用:" prop="status">
+    <el-form-item label="启用状态:" prop="status">
       <el-radio-group v-model="formModel.status" @change="changeStatus">
         <el-radio :label="item.value" v-for="(item, index) in statusList" :key="index">{{item.label}}</el-radio>
       </el-radio-group>
@@ -81,16 +81,16 @@ export default {
           { required: true, validator: checkAppkey, trigger: 'blur' }
         ],
         tokenStatus: [
-          { required: true, message: '请选择是否验证token' }
+          { required: true, message: '请选择是否验证token状态' }
         ],
         signStatus: [
-          { required: true, message: '请选择是否启用签名' }
+          { required: true, message: '请选择是否启用签名状态' }
         ],
         encryptStatus: [
-          { required: true, message: '请选择是否启用加密' }
+          { required: true, message: '请选择是否启用加密状态' }
         ],
         status: [
-          { required: true, message: '请选择是否启用' }
+          { required: true, message: '请选择是否启用状态' }
         ]
       }
     }

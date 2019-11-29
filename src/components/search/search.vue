@@ -4,7 +4,7 @@
     :class="bem()"
     :inline="true"
     :model="formModel"
-    label-width="100px"
+    :label-width="labelWidth"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -12,6 +12,7 @@
       v-for="(item, index) in formItems"
       :key="index"
       :label="item.label"
+      :label-width="item.labelWidth"
       :prop="item.prop"
     >
       <template v-if="item.type === 'select'">
@@ -133,6 +134,10 @@ export default create({
     size: {
       type: String,
       default: 'medium'
+    },
+    labelWidth: {
+      type: String,
+      default: '100px'
     }
   },
   data() {
