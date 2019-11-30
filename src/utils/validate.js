@@ -110,7 +110,6 @@ export const validater = {
   validateAlphabets (str, num) {
     // const reg = /^[A-Za-z]+$/
     const reg = new RegExp('^[A-Za-z]' + (num || '+') + '$')
-    console.log(reg, reg.test(str))
     return reg.test(str)
   },
   /**
@@ -368,7 +367,6 @@ export const validater = {
       callback(new Error('只能填写正整数'))
     } else {
       const codeLen = value.toString().length
-      console.log(codeLen)
       if (codeLen > 0 && codeLen % 3 !== 0) {
         callback(new Error('输入的长度必须是3的倍数'))
       } else if (codeLen > 18) {
