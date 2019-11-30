@@ -10,14 +10,14 @@
   >
     <el-form-item label="积分余额:">
       <el-input
-        v-model.trim="formModel.curPoint"
+        v-model.number="formModel.curPoint"
         class="form-item"
         disabled
       ></el-input>
     </el-form-item>
     <el-form-item label="积分变动:" prop="point">
       <el-input
-        v-model.trim="formModel.point"
+        v-model.number="formModel.point"
         class="form-item"
       ></el-input>
     </el-form-item>
