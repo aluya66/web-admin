@@ -57,7 +57,7 @@
             <el-select
               v-model="formModel.brands"
               class="select-item"
-              filterable remote multiple value-key="id"
+              filterable remote multiple value-key="code"
               :remote-method="searchBrand">
               <el-option
                 v-for="item in brandList"
@@ -210,13 +210,13 @@ export default {
   methods: {
     getRuleDetails(id) {
       this.$api.channel.getRuleInfo({ id }).then((res) => {
-        const { 
-          ruleCode, 
-          ruleName, 
+        const {
+          ruleCode,
+          ruleName,
           ruleBrandResps
         } = res
-        let brands = ruleBrandResps.length ? 
-          ruleBrandResps.map((item) => {
+        let brands = ruleBrandResps.length
+          ? ruleBrandResps.map((item) => {
             return {
               name: item.brandName,
               code: item.brandCode,
@@ -245,7 +245,7 @@ export default {
     },
     // 品牌搜索
     searchBrand(query) {
-      this.$api.channel.searchBrandAjax({ key: query, pageSize: 100 }).then(({ data }) => {
+      this.$api.channel.searchBrandAjax({ key: query, pageSize: 100, isDelete: 0 }).then(({ data }) => {
         this.brandList = data
       })
     },
@@ -271,7 +271,7 @@ export default {
         return {
           brandCode: item.code,
           brandName: item.name,
-          ruleCode: this.formModel.ruleCode  
+          ruleCode: this.formModel.ruleCode
         }
       })
       console.log(params)
@@ -279,7 +279,7 @@ export default {
         const msg = requestType === 'edit' ? '编辑成功' : '新增成功'
         this.$msgTip(msg)
         this.fetchData()
-        this.channelDialogObj.isShow = false
+        this.dialogObj.isShow = false
       })
     },
     // 新增渠道规则
