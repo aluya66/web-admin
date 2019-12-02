@@ -259,12 +259,12 @@ export default {
         name: '删除',
         icon: 'el-icon-detail',
         handle (row) {
-          const { channelCode, channelName } = row
+          const { channelId, channelName } = row
           vm.confirmTip(
             `是否删除 ${channelName} 渠道`,
             {
               confirmHandle() {
-                vm.deleteData({ id: channelCode })
+                vm.deleteData({ id: channelId })
               }
             }
           )
