@@ -27,14 +27,14 @@
         title="基础信息"
         @show-image="reviewImage"
       ></g-basic>
-      <g-params
+      <!-- <g-params
         :is-view="isView"
         :is-disabled="isDisabled"
         v-if="formModel.id"
         :data-obj="formModel"
         ref="paramsRef"
         title="商品信息"
-      ></g-params>
+      ></g-params> -->
       <g-sales
         :is-view="isView"
         :is-disabled="isDisabled"

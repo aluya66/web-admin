@@ -1,5 +1,41 @@
 <template>
   <c-card :name="title" class="form-card" id="form-params">
+    <el-form-item label="识别图:">
+      <c-upload
+        ref="curUpload"
+        class="pic"
+        auto-upload
+        action="/api/upload/file"
+        list-type="picture-card"
+        :size="20"
+        :limit="5"
+        :fileList="formModel.fileList"
+        :disabled="isView || isDisabled"
+        :on-success="uploadSuccess"
+        :on-remove="uploadRemove"
+        :on-preview="uploadReview"
+      >
+      </c-upload>
+    </el-form-item>
+    <el-form-item label="商品图片:">
+      <c-upload
+        ref="curUpload"
+        class="pic"
+        auto-upload
+        action="/api/upload/file"
+        list-type="picture-card"
+        :size="20"
+        :limit="5"
+        :fileList="formModel.fileList"
+        :disabled="isView || isDisabled"
+        :on-success="uploadSuccess"
+        :on-remove="uploadRemove"
+        :on-preview="uploadReview"
+      >
+        <i class="el-icon-plus"></i>
+        <div class="info">提示：上传的图片尺寸为1200*1200,第一张图片为默认图，可拖动图片进行排序</div>
+      </c-upload>
+    </el-form-item>
     <el-form-item :label="item.label" v-for="(item, index) in curAttrs" :key="item.id">
       <el-checkbox-group
         v-if="item.paramType === '' || item.paramType === 'checkbox'"
@@ -86,6 +122,7 @@ export default {
   },
   created() {
     this.getAttrs()
+    this.formModel = this.dataObj
   },
   methods: {
     getAttrs() {
