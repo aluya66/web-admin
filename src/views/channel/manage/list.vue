@@ -212,12 +212,12 @@ export default {
           }]
         },
         handle (row) {
-          const { channelCode, channelName, status } = row
+          const { channelId, channelName, status } = row
           const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
           vm.confirmTip(
             `是否${handleStatus === 0 ? '关闭' : '开启'} ${channelName} 渠道`,
             () => {
-              vm.handleChannelStatus({ id: channelCode, status: handleStatus })
+              vm.handleChannelStatus({ id: channelId, status: handleStatus })
             }
           )
         }
