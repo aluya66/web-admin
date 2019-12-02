@@ -452,7 +452,7 @@ export default {
             ...other
           }
           if (limitExpireDayType === 1) { // 固定时间处理
-            const searchDate = this.getSearchDate(limitExpireTime, '', 'limitExpireTimeStart', 'limitExpireTimeEnd')
+            const searchDate = this.getSearchDate(limitExpireTime, 'dateTime', 'limitExpireTimeStart', 'limitExpireTimeEnd')
             Object.assign(params, { ...searchDate })
           }
           if (preferentialType === 0 || preferentialType === 1) { // 优惠券类型为现金券或折扣券， 优惠列表处理
@@ -471,6 +471,7 @@ export default {
           reqFun(params).then(() => {
             this.$msgTip('操作成功')
             this.routerLink('/marketing/ticket/list')
+            this.closeCurrentTag()
           })
         } else {
           console.log('error submit!!')
