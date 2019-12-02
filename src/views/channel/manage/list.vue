@@ -160,7 +160,7 @@ export default {
   },
   data(vm) {
     return {
-      currentChannelId: null, // 关联规则的渠道id
+      currentChannelCode: null, // 关联规则的渠道id
       ruleList: [], // 规则列表
       selectedRuleList: [], // 已选规则列表
       btnLoading: false,
@@ -212,12 +212,12 @@ export default {
           }]
         },
         handle (row) {
-          const { channelId, channelName, status } = row
+          const { channelCode, channelName, status } = row
           const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
           vm.confirmTip(
             `是否${handleStatus === 0 ? '关闭' : '开启'} ${channelName} 渠道`,
             () => {
-              vm.handleChannelStatus({ id: channelId, status: handleStatus })
+              vm.handleChannelStatus({ id: channelCode, status: handleStatus })
             }
           )
         }
@@ -232,22 +232,21 @@ export default {
               let ruleList = res && res.totalCount ? res.data : res
               vm.ruleList = ruleList.map((item) => {
                 return {
-                  key: item.ruleId,
+                  key: item.ruleCode,
                   label: item.ruleName
                 }
               })
-              vm.currentChannelId = row.channelId
-              vm.selectedRuleList = row.ruleInfos.map((item) => item.ruleId)
+              vm.currentChannelCode = row.channelCode
+              vm.selectedRuleList = row.ruleInfos.map((item) => item.ruleCode)
               vm.ruleDialogObj.isShow = true
-              console.log(row, vm.selectedRuleList, vm.ruleList)
             })
         }
       }, {
         name: '编辑',
         icon: 'el-icon-edit',
-        handle ({ channelId, channelName, channelType }) {
+        handle ({ channelCode, channelName, channelType }) {
           vm.formModel = {
-            channelId,
+            channelCode,
             channelName,
             channelType
           }
@@ -258,12 +257,12 @@ export default {
         name: '删除',
         icon: 'el-icon-detail',
         handle (row) {
-          const { channelId, channelName } = row
+          const { channelCode, channelName } = row
           vm.confirmTip(
             `是否删除 ${channelName} 渠道`,
             {
               confirmHandle() {
-                vm.deleteData({ id: channelId })
+                vm.deleteData({ id: channelCode })
               }
             }
           )
@@ -343,8 +342,8 @@ export default {
     relevanceRule() {
       if (!this.selectedRuleList.length) return this.$msgTip('已选规则不能为空')
       this.$api.channel.relevanceRuleAjax({
-        channelId: this.currentChannelId,
-        ruleIds: this.selectedRuleList
+        channelCode: this.currentChannelCode,
+        ruleCodes: this.selectedRuleList
       }).then(() => {
         this.fetchData()
         this.$msgTip('操作成功')
@@ -354,7 +353,7 @@ export default {
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          const requestType = this.formModel.channelId ? 'edit' : 'add' // 接口请求类型， add新增、edit编辑
+          const requestType = this.formModel.channelCode ? 'edit' : 'add' // 接口请求类型， add新增、edit编辑
           this.handleChannel(requestType)
         }
       })

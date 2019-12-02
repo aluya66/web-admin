@@ -61,7 +61,7 @@
               :remote-method="searchBrand">
               <el-option
                 v-for="item in brandList"
-                :key="item.id"
+                :key="item.code"
                 :label="item.name"
                 :value="item"
               ></el-option>
@@ -80,9 +80,9 @@
             </c-table>
             <!-- <el-button class="add-brand-btn" @click="addBrand">添加</el-button> -->
           </el-form-item>
-          <el-form-item label="价格设置:" prop="payment">
-            <el-checkbox-group v-model="formModel.priceSetting">
-              <el-checkbox v-for="(item, index) in priceSettingList" :key="index" checked :label="item" disabled="">{{ item }}</el-checkbox>
+          <el-form-item label="价格设置:">
+            <el-checkbox-group v-model="priceSettingList">
+              <el-checkbox v-for="(item, index) in priceSettingList" :key="index" :label="item" disabled>{{ item }}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="库存设置:" prop="store">
@@ -90,7 +90,7 @@
           </el-form-item>
           <el-form-item label="支付方式:" prop="payment">
              <el-radio-group v-model="formModel.payment">
-              <el-radio v-for="(item, index) in payTypeList" :key="index" :label="item.value" disabled="">{{ item.name }}</el-radio>
+              <el-radio v-for="(item, index) in payTypeList" :key="index" :label="item.value" disabled>{{ item.name }}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-form>
@@ -152,7 +152,8 @@ export default {
         name: '编辑',
         icon: 'el-icon-edit',
         handle(row) {
-          vm.routerLink(`/channel/rule/ruleInfo/${row.id}`)
+          const { ruleId } = row
+          vm.getRuleDetails(ruleId)
         }
       }, {
         name: '删除',
@@ -204,8 +205,40 @@ export default {
   },
   created() {
     this.fetchData()
+    this.searchBrand('')
   },
   methods: {
+    getRuleDetails(id) {
+      this.$api.channel.getRuleInfo({ id }).then((res) => {
+        const { 
+          ruleCode, 
+          ruleName, 
+          ruleBrandResps
+        } = res
+        let brands = ruleBrandResps.length ? 
+          ruleBrandResps.map((item) => {
+            return {
+              name: item.brandName,
+              code: item.brandCode,
+              id: item.id
+            }
+          }) : []
+        this.formModel = {
+          ruleCode,
+          ruleName,
+          brands,
+          payment: 2, // 支付方式：1-支付宝,2-微信,4-银行卡
+          costPrice: 1, // 成衣成本价
+          largeBatchPrice: 1, // 成衣大批价
+          memberPrice: 1, // 会员价
+          retailPrice: 1, // 零售价
+          supplyPrice: 1, // 成衣供货价
+          wholesalePrice: 1, // 成衣散批价
+          store: 0 // 库存设置:0-默认全部，其他待定
+        }
+        this.dialogObj.isShow = true
+      })
+    },
     deleteBrand(id) {
       let idx = this.formModel.brands.findIndex((item) => item.id === id)
       if (idx !== -1) this.formModel.brands.splice(idx, 1)
@@ -213,7 +246,6 @@ export default {
     // 品牌搜索
     searchBrand(query) {
       this.$api.channel.searchBrandAjax({ key: query, pageSize: 100 }).then(({ data }) => {
-        console.log(data)
         this.brandList = data
       })
     },
@@ -223,7 +255,7 @@ export default {
         console.log(this.formModel)
         if (valid) {
           if (!this.formModel.brands.length) return this.$message.info('请添加品牌')
-          const requestType = this.formModel.id ? 'edit' : 'add' // 接口请求类型， add新增、edit编辑
+          const requestType = this.formModel.ruleCode ? 'edit' : 'add' // 接口请求类型， add新增、edit编辑
           this.handleRule(requestType)
         }
       })
@@ -235,7 +267,13 @@ export default {
       }
       const request = requestObj[requestType]
       let params = JSON.parse(JSON.stringify(this.formModel))
-      params.brands = params.brands.map((item) => item.id)
+      params.brands = params.brands.map((item) => {
+        return {
+          brandCode: item.code,
+          brandName: item.name,
+          ruleCode: this.formModel.ruleCode  
+        }
+      })
       console.log(params)
       request({ ...params }).then(() => {
         const msg = requestType === 'edit' ? '编辑成功' : '新增成功'
@@ -249,6 +287,7 @@ export default {
       this.formModel = {
         brands: [],
         payment: 2, // 支付方式：1-支付宝,2-微信,4-银行卡
+        costPrice: 1, // 成衣成本价
         largeBatchPrice: 1, // 成衣大批价
         memberPrice: 1, // 会员价
         retailPrice: 1, // 零售价

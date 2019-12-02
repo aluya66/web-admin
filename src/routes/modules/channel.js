@@ -34,7 +34,8 @@ export default {
     component: () => import('@/views/channel/manage/list'),
     meta: {
       title: 'channelManage',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {
@@ -43,7 +44,8 @@ export default {
     component: () => import('@/views/channel/rule/list'),
     meta: {
       title: 'channelRule',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {

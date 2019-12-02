@@ -110,6 +110,15 @@ export const editRule = params =>
   })
 
 /**
+ * 渠道规则详情
+ * @param {*}
+ */
+export const getRuleInfo = params =>
+  Http.fetch(`${context}/api/rule/byid`, params, {
+    method: 'get'
+  })
+
+/**
  * 品牌查询
  * @param {*}
  */
