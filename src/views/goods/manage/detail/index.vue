@@ -6,6 +6,11 @@
         :content="$route.meta.name || $t(`route.${$route.meta.title}`)"
       ></el-page-header>
     </template>
+    <div class="point-wrapper">
+      <el-steps direction="vertical">
+        <el-step v-for="(item, index) in stepList" :key="index" :title="item.name" v-point="item.id"></el-step>
+      </el-steps>
+    </div>
     <el-form
       ref="formRef"
       :model="formModel"
@@ -82,6 +87,20 @@ export default {
   mixins: [MixinForm],
   data() {
     return {
+      currentStep: 1, // 媌点下标
+      stepList: [{
+        name: '基础信息',
+        id: '#form-base'
+      }, {
+        name: '商品信息',
+        id: '#form-params'
+      }, {
+        name: '销售信息',
+        id: '#form-sales'
+      }, {
+        name: '其他',
+        id: '#form-other'
+      }],
       formModel: {},
       isView: false,
       dialogObj: {
@@ -122,7 +141,7 @@ export default {
           }
         })
       } else {
-        this.isDisabled = true
+        this.isDisabled = false
         this.$api.goods.getDetail({ id: params.id }).then(res => {
           this.setTagsViewTitle()
           if (res) {
@@ -171,5 +190,13 @@ export default {
     margin-left: 20px;
     margin-top: 20px;
   }
+}
+.point-wrapper {
+  position: fixed;
+  right: 50px;
+  top: 200px;
+  z-index: 999999;
+  height: 300px;
+  cursor: pointer;
 }
 </style>

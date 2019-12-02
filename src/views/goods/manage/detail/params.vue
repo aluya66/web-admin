@@ -1,5 +1,5 @@
 <template>
-  <c-card :name="title" class="form-card">
+  <c-card :name="title" class="form-card" id="form-params">
     <el-form-item :label="item.label" v-for="(item, index) in curAttrs" :key="item.id">
       <el-checkbox-group
         v-if="item.paramType === '' || item.paramType === 'checkbox'"

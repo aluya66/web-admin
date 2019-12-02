@@ -12,6 +12,7 @@ import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 import store from './store'
 import importI18n from './plugins/i18n'
 import permission from './directive/permission'
+import point from './directive/point'
 
 // 加入公共的全局methods方法
 import mixin from './views/mixins'
@@ -41,6 +42,8 @@ const i18n = importI18n(Vue)
 
 // 全局注册角色权限，主要是控制菜单按钮
 Vue.use(permission)
+// 注册媌点自定义directive
+Vue.use(point)
 
 const globalVue = new Vue({
   el: '#app',

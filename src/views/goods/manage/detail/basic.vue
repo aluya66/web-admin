@@ -1,18 +1,17 @@
 <template>
-  <c-card :name="title" class="form-card">
+  <c-card :name="title" class="form-card" id="form-base">
     <el-form-item label="商品名称:" prop="goodsName">
       <el-input
         v-if="!isView"
         class="select-item"
         v-model.trim="formModel.goodsName"
         :size="size"
-        :disabled="isDisabled"
         placeholder="请输入商品名称"
         clearable
       />
       <span v-else>{{formModel.goodsName}}</span>
     </el-form-item>
-    <el-form-item label="商品短名称:">
+    <el-form-item label="商品运营名称:">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -37,6 +36,30 @@
       <span v-else>{{formModel.categoryName}}</span>
     </el-form-item>
     <el-form-item label="商品款号:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.goodsBn"
+        :size="size"
+        placeholder="请输入商品款号"
+        clearable
+      />
+      <span v-else>{{formModel.goodsBn}}</span>
+    </el-form-item>
+    <el-form-item label="供应商款号:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.goodsBn"
+        :size="size"
+        placeholder="请输入商品款号"
+        clearable
+      />
+      <span v-else>{{formModel.goodsBn}}</span>
+    </el-form-item>
+    <el-form-item label="供应商:">
       <el-input
         v-if="!isView"
         class="select-item"

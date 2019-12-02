@@ -1,5 +1,5 @@
 <template>
-  <c-card :name="title" class="form-card">
+  <c-card :name="title" class="form-card" id="form-sales">
     <el-form-item label="商品规格:">
       <sku-wrap
         :is-view="isView || isDisabled"
