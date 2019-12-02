@@ -136,14 +136,16 @@
         @before-close="ruleDialogObj.isShow = false"
         @on-submit="relevanceRule"
       >
-        <el-transfer
-          filterable
-          filter-placeholder="请输入规则名称"
-          :titles="['规则列表', '已关联规则']"
-          v-model="selectedRuleList"
-          @change="changeSelectedRuleList"
-          :data="ruleList">
-        </el-transfer>
+        <div class="transfer-wrapper">
+          <el-transfer
+            filterable
+            filter-placeholder="请输入规则名称"
+            :titles="['规则列表', '已关联规则']"
+            v-model="selectedRuleList"
+            @change="changeSelectedRuleList"
+            :data="ruleList">
+          </el-transfer>
+        </div>
       </c-dialog>
     </div>
   </c-view>
@@ -416,3 +418,10 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.transfer-wrapper {
+  display: flex;
+  justify-content: center;
+}
+</style>
