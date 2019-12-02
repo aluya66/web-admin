@@ -79,7 +79,7 @@
 import MixinForm from 'mixins/form'
 import GBasic from './basic'
 import GSales from './sales'
-import GParams from './params'
+// import GParams from './params'
 import GOther from './other'
 
 export default {
@@ -176,7 +176,7 @@ export default {
   components: {
     GBasic,
     GSales,
-    GParams,
+    // GParams,
     GOther
   }
 }
