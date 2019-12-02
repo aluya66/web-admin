@@ -4,46 +4,37 @@ const context = process.env.VUE_APP_CONSOLE_COMMON
 
 // 支付列表
 export const getPay = params =>
-  Http.fetch(`${context}/api/payrecode/querypayrecodepage`, params, {
+  Http.fetch(`${context}/api/pcs/recode/list`, params, {
     method: 'get',
     mockFile: 'pay-list'
   })
 
 // 账户列表
 export const getAccount = params =>
-  Http.fetch(`${context}/api/payaccount/querypayaccountpage`, params, {
+  Http.fetch(`${context}/api/pcs/account/list`, params, {
     method: 'get',
     mockFile: 'account-list'
   })
 
 // 账户列表启用
 export const startAccount = params =>
-  Http.fetch(`${context}/api/payaccount/effectpayaccount`, params, {
+  Http.fetch(`${context}/api/pcs/account/effect`, params, {
     method: 'put',
     mockFile: 'account-start'
   })
 
 // 账户禁用
 export const forbiddenAccount = params =>
-  Http.fetch(`${context}/api/payaccount/abatepayaccount`, params, {
+  Http.fetch(`${context}/api/pcs/account/abate`, params, {
     method: 'put',
     mockFile: 'account-forbidden'
-  })
-
-/**
- * 渠道类型枚举
-  */
-export const getFindchannelType = params =>
-  Http.fetch(`${context}/api/paychannel/findchannelcode`, params, {
-    method: 'get',
-    mockFile: 'paychannel-type'
   })
 
 /**
  * 渠道列表
  */
 export const getPaychannel = params =>
-  Http.fetch(`${context}/api/paychannel/querypaychannelpage`, params, {
+  Http.fetch(`${context}/api/pcs/channel/list`, params, {
     method: 'get',
     mockFile: 'paychannel-list'
   })
@@ -52,7 +43,7 @@ export const getPaychannel = params =>
  * 渠道启用
  */
 export const paychannelStart = params =>
-  Http.fetch(`${context}/api/paychannel/effectpaychannel`, params, {
+  Http.fetch(`${context}/api/pcs/channel/effect`, params, {
     method: 'put',
     mockFile: 'paychannel-start'
   })
@@ -61,7 +52,7 @@ export const paychannelStart = params =>
  * 渠道禁用
  */
 export const paychannelForbidden = params =>
-  Http.fetch(`${context}/api/paychannel/abatepaychannel`, params, {
+  Http.fetch(`${context}/api/pcs/channel/abate`, params, {
     method: 'put',
     mockFile: 'paychannel-forbidden'
   })

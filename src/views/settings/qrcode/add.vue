@@ -141,7 +141,7 @@ export default {
     checkQrcode(callback) {
       const qrcodeCode = this.formModel.qrcodeCode
       // 校验qrcode是否已存在
-      this.$api.qrcode.checkQrcode({ qrcodeCode }).then(({ code }) => {
+      this.$api.settings.checkQrcode({ qrcodeCode }).then(({ code }) => {
         if (code !== 0) {
           callback(new Error('该二维码编码已存在'))
         } else {

@@ -110,45 +110,88 @@ export const getTagbrand = params =>
     method: 'get'
   })
 
+// 二维码管理列表
+export const getQrcodeList = params =>
+  Http.fetch(`${context}/api/qrcode/list`, params, {
+    method: 'get'
+  })
+
+// 二维码启用/禁用, 或者说已审核, 未审核状态的修改
+export const changeStatus = params =>
+  Http.fetch(`${context}/api/qrcode/updatestatus`, params, {
+    method: 'put'
+  })
+
+// 新增, 异步校验是否存在相同的qrCode使用的接口
+export const checkQrcode = params =>
+  Http.fetch(`${context}/api/qrcode/checkqrcode`, params, {
+    method: 'get',
+    hasErrMsg: true
+  })
+
+// 新增二维码数据
+export const saveQrcode = params =>
+  Http.fetch(`${context}/api/qrcode/save`, params, {
+    method: 'post'
+  })
+
+// 根据ID逻辑删除二维码数据
+export const deleteQrcode = params =>
+  Http.fetch(`${context}/api/qrcode/delete`, params, {
+    method: 'delete'
+  })
+
+// 編輯二维码
+export const updateQrcode = params =>
+  Http.fetch(`${context}/api/qrcode/update`, params, {
+    method: 'put'
+  })
+
+// 预览二维码
+export const previewQrcode = params =>
+  Http.fetch(`${context}/api/qrcode/preview`, params, {
+    method: 'get'
+  })
+
 // 接入方列表
 export const getAccessList = params =>
-  Http.fetch(`${context}/api/opaconfig/queryopaconfigpage`, params, {
+  Http.fetch(`${context}/api/openapi/config/list`, params, {
     method: 'get'
   })
 
 // 接入方新增
 export const saveAccess = params =>
-  Http.fetch(`${context}/api/opaconfig/save`, params, {
+  Http.fetch(`${context}/api/openapi/config/save`, params, {
     method: 'post'
   })
 
 // 接入方编辑
 export const updateAccess = params =>
-  Http.fetch(`${context}/api/opaconfig/update`, params, {
+  Http.fetch(`${context}/api/openapi/config/update`, params, {
     method: 'put'
   })
 
 // 接入方删除
 export const deleteAccess = params =>
-  Http.fetch(`${context}/api/opaconfig/delete`, params, {
+  Http.fetch(`${context}/api/openapi/config/delete`, params, {
     method: 'delete'
   })
 
 // 接入方 校验appKey是否可用接口
 export const checkAppkey = params =>
-  Http.fetch(`${context}/api/opaconfig/checkappkey`, params, {
+  Http.fetch(`${context}/api/openapi/config/checkappkey`, params, {
     method: 'get',
     hasErrMsg: true
   })
 
 // 接入方 日志列表
 export const getAccessLogList = params =>
-  Http.fetch(`${context}/api/opaoperatelog/queryopaoperatelogpage`, params, {
+  Http.fetch(`${context}/api/openapi/log/list`, params, {
     method: 'get'
   })
 
 // 接入方 日志重发机制
 export const retryAccessLog = params =>
-  Http.fetch(`${context}/api/opaoperatelog/retry`, params, {
+  Http.fetch(`${context}/api/openapi/log/retry`, params, {
     method: 'put'
   })

@@ -218,7 +218,7 @@ export default {
   },
   methods: {
     previewQrcode(qrcodeCode) {
-      this.$api.qrcode.previewQrcode({ qrcodeCode }).then((res) => {
+      this.$api.settings.previewQrcode({ qrcodeCode }).then((res) => {
         this.showDialog({
           title: '预览',
           dialogType: 'previewQrcode',
@@ -230,8 +230,8 @@ export default {
     dialogConfirm() {
       const childRef = this.$refs.childRef
       const requestMethods = {
-        'add': this.$api.qrcode.saveQrcode,
-        'edit': this.$api.qrcode.updateQrcode
+        'add': this.$api.settings.saveQrcode,
+        'edit': this.$api.settings.updateQrcode
       }
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
@@ -265,14 +265,14 @@ export default {
     },
     // 删除二维码
     deleteQrcode(id) {
-      this.$api.qrcode.deleteQrcode({ id }).then(() => {
+      this.$api.settings.deleteQrcode({ id }).then(() => {
         this.$msgTip('删除成功')
         this.fetchData()
       })
     },
     // 启用、禁用
     changeStatus(params) {
-      this.$api.qrcode.changeStatus(params).then(() => {
+      this.$api.settings.changeStatus(params).then(() => {
         this.$msgTip('更新成功')
         this.fetchData()
       })
@@ -282,7 +282,7 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, userCode, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
-      this.$api.qrcode.getQrcodeList({
+      this.$api.settings.getQrcodeList({
         userCode: userCode ? userCode.join(',') : '', // 使用者字段
         ...searchDate,
         ...other,
