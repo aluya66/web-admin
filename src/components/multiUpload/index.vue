@@ -43,7 +43,7 @@ export default create({
   },
 
   methods: {
-    getFiles(fileList, status){
+    getFiles(fileList, status) {
       console.log(fileList, status)
       this.initFileList = fileList
       this.disabled = status
@@ -82,4 +82,3 @@ export default create({
   }
 }
 </style>
-

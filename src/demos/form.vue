@@ -213,7 +213,7 @@ export default {
   },
   methods: {
     dialogConfirm() {
-      const curList = this.$refs.multiUpload.submitHandle()
+      // const curList = this.$refs.multiUpload.submitHandle()
       this.dialogObj.isShow = false
     },
     showDialog(opts) {

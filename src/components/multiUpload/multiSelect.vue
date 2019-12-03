@@ -69,4 +69,3 @@ export default create({
   margin: 10px 40px;
 }
 </style>
-

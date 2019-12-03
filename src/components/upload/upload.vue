@@ -124,11 +124,11 @@ export default {
   },
   methods: {
     customUpload(fileObj) {
-      if(this.isUpload) { // 只调用一次上传
+      if (this.isUpload) { // 只调用一次上传
         return
       }
       const { uid } = fileObj.file
-      const hasFile = this.mutiFiles.getAll('files').find((res => res.uid === uid))
+      const hasFile = this.mutiFiles.getAll('files').find(res => res.uid === uid)
       if (hasFile) {
         this.isUpload = true
         this.$api.common.uploadFile(this.mutiFiles).then(res => {
@@ -152,13 +152,9 @@ export default {
       if (!this.autoUpload) {
         this.isUpload = false
         let formData = new FormData()
-        const curFileList = fileList.map(res => {
+        fileList.forEach(res => {
           if (res.raw) {
             formData.append('files', res.raw)
-          }
-          return {
-            name: res.name,
-            url: res.url
           }
         })
         this.mutiFiles = formData
@@ -167,7 +163,7 @@ export default {
     handleExceed(files, fileList) {
       this.$message.warning(
         `当前限制选择 ${this.limit} 个文件，本次选择了 ${
-        files.length
+          files.length
         } 个文件，共选择了 ${files.length + fileList.length} 个文件`
       )
       this.$emit('on-exceed', files, fileList)

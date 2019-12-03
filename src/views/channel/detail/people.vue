@@ -1,6 +1,5 @@
 <template>
   <c-card :name="title" class="form-card">
-
     <el-form-item label="联系人:" prop="contact">
       <el-input
         v-if="!isView"
@@ -23,11 +22,7 @@
       />
       <span v-else>{{formModel.contactTel}}</span>
     </el-form-item>
-
-    <el-form-item label="地区选择">
-      {{ formModel.areaName }}
-    </el-form-item>
-
+    <el-form-item label="地区选择">{{ formModel.areaName }}</el-form-item>
     <el-form-item label="详情地址:" prop="address">
       <el-input
         class="select-item"
@@ -83,7 +78,6 @@
       ></el-input>
       <span v-else>{{formModel.status}}</span>
     </el-form-item>
-
     <el-form-item label="状态:">
       <el-switch v-model="formModel.marketable" :disabled="isView || isDisabled"></el-switch>
     </el-form-item>

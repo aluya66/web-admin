@@ -1,10 +1,8 @@
 <template>
   <c-view>
     <template v-slot:header>
-			<div class="title">
-				{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
-			</div>
-		</template>
+      <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
+    </template>
     <div class="main__box">
       <c-table
         ref="cTable"
@@ -84,7 +82,7 @@ import mixinTable from 'mixins/table'
 export default {
   name: 'shopList',
   mixins: [mixinTable],
-  data (vm) {
+  data(vm) {
     return {
       searchObj: {
         shopName: '',
@@ -116,8 +114,8 @@ export default {
           width: 130,
           name: '详情',
           icon: 'el-icon-view',
-          handle (row) {
-            vm.routerLink(`/shop/detail/${row.shopId}`)
+          handle(row) {
+            vm.routerLink(`/channel/detail/${row.shopId}`)
           }
         }
       ],
@@ -183,15 +181,15 @@ export default {
       ]
     }
   },
-  created () {
+  created() {
     this.fetchData()
   },
   methods: {
-    fetchData () {
+    fetchData() {
       const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.shop.getShopList({
+      this.$api.channel.getShopList({
         ...this.searchObj,
         ...other,
         ...page
