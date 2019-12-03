@@ -304,6 +304,9 @@ export default {
 .c-table {
   position: relative;
   margin-top: 10px;
+  .el-table thead {
+    line-height: 0;
+  }
   .search-form {
     .el-form-item {
       margin-bottom: 10px;

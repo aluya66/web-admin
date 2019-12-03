@@ -117,12 +117,3 @@ export const getRuleInfo = params =>
   Http.fetch(`${context}/api/rule/byid`, params, {
     method: 'get'
   })
-
-/**
- * 品牌查询
- * @param {*}
- */
-export const searchBrandAjax = params =>
-  Http.fetch(`${context}/api/brand/querypage`, params, {
-    method: 'get'
-  })
