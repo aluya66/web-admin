@@ -4,7 +4,7 @@
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
         <div class="header-btn">
-          <el-button :size="size" type="primary" icon="el-icon-plus" @click="addChannel">新增</el-button>
+          <el-button :size="size" type="primary" icon="el-icon-plus" @click="showDialog">新增</el-button>
         </div>
       </div>
     </template>
@@ -22,116 +22,38 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
-            <el-form-item label="渠道名称">
-              <el-input
-                v-model="searchObj.channelName"
-                class="search-item"
-                size="medium"
-                placeholder="渠道名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="渠道号码">
-              <el-input
-                v-model="searchObj.channelCode"
-                class="search-item"
-                size="medium"
-                placeholder="渠道号码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="渠道类型">
-              <el-select
-                v-model="searchObj.channelType"
-                size="medium"
-                class="search-item"
-                clearable
-                placeholder="店铺类型"
-              >
-                <el-option
-                  v-for="(item, index) in channelTypeSelect"
-                  :key="index"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="渠道状态">
-              <el-select
-                v-model="searchObj.status"
-                size="medium"
-                class="search-item"
-                clearable
-                placeholder="渠道状态"
-              >
-                <el-option
-                  v-for="(item, index) in statusSelect"
-                  :key="index"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
-    <!-- 渠道新增、编辑弹窗 -->
-    <div v-if="channelDialogObj.isShow">
+    <div v-if="dialogObj.isShow">
       <c-dialog
-        :is-show="channelDialogObj.isShow"
-        :title="channelDialogObj.title"
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
         close-btn
-        @before-close="channelDialogObj.isShow = false"
+        @before-close="dialogObj.isShow = false"
         @on-submit="submitHandle"
       >
-        <el-form
-          ref="formRef"
-          :model="formModel"
-          label-width="120px"
-          class="form"
-          label-position="right"
-        >
-          <el-form-item label="所属层级:" prop="channelType">
-            <el-select v-model="formModel.channelType" class="select-item" clearable>
-              <el-option
-                v-for="item in channelTypeSelect"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            label="渠道名称:"
-            prop="channelName"
-            :rules="[{ required: true, message: '渠道名称不能为空'}]"
-          >
-            <el-input v-model.trim="formModel.channelName" class="form-item" placeholder="请输入渠道名称"/>
-          </el-form-item>
-        </el-form>
-      </c-dialog>
-    </div>
-    <!-- 渠道关联规则弹窗 -->
-    <div v-if="ruleDialogObj.isShow">
-      <c-dialog
-        :is-show="ruleDialogObj.isShow"
-        :title="ruleDialogObj.title"
-        close-btn
-        @before-close="ruleDialogObj.isShow = false"
-        @on-submit="relevanceRule"
-      >
-        <div class="transfer-wrapper">
+        <!-- 渠道新增、编辑弹窗 -->
+        <rule-handle
+          ref="childRef"
+          :init-data="dialogObj.initData"
+          :channel-type="channelType"
+          v-if="dialogObj.dialogType === 'channelHandle'"
+        ></rule-handle>
+        <!-- 新增渠道类型选择 -->
+        <div class="select-rule-type" v-if="dialogObj.dialogType === 'addChannel'">
+          <el-radio-group v-model="channelType">
+            <el-radio :label="item" v-for="(item, index) in channelTypeList" :key="index"></el-radio>
+          </el-radio-group>
+        </div>
+        <!-- 渠道关联规则弹窗 -->
+        <div class="transfer-wrapper" v-if="dialogObj.dialogType === 'transfer'">
           <el-transfer
             filterable
             filter-placeholder="请输入规则名称"
@@ -149,63 +71,50 @@
 <script>
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
+import ruleHandle from './handle'
+const channelTypeSelect = [ // 渠道类型
+  {
+    label: '主渠道',
+    value: 1
+  },
+  {
+    label: '子渠道',
+    value: 2
+  }
+]
+const statusSelect = [{
+  label: '关闭',
+  value: 0
+}, {
+  label: '开启 ',
+  value: 1
+}]
 export default {
   name: 'channelManage',
   mixins: [mixinTable],
   components: {
-    CDialog
+    CDialog,
+    ruleHandle
   },
   data(vm) {
     return {
+      channelType: '主渠道',
+      channelTypeList: ['主渠道', '子渠道'],
       currentChannelCode: null, // 关联规则的渠道id
       ruleList: [], // 规则列表
       selectedRuleList: [], // 已选规则列表
       btnLoading: false,
-      formModel: { // 渠道弹窗数据
-        channelType: 1,
-        channelName: ''
-      },
-      searchObj: {
-        channelName: '', // 渠道名称
-        channelCode: '', // 渠道号码
-        channelType: '', // 渠道类型
-        status: '' // 渠道状态
-      },
-      channelTypeSelect: [ // 渠道类型
-        {
-          label: '主渠道',
-          value: 1
-        },
-        {
-          label: '子渠道',
-          value: 2
-        }
-      ],
-      statusSelect: [{
-        label: '关闭',
-        value: 0
-      }, {
-        label: '开启 ',
-        value: 1
-      }],
-      ruleDialogObj: { // 关联规则弹窗
-        title: '关联规则',
-        isShow: false
-      },
-      channelDialogObj: { // 渠道弹窗
-        title: '新增渠道',
-        isShow: false
-      },
+      dialogObj: {},
       tableInnerBtns: [{
         width: 150,
         prop: {
           name: 'status', // 为0或1
           toggle: [{
-            icon: 'el-icon-close',
-            title: '关闭'
-          }, {
             icon: 'el-icon-open',
             title: '开启'
+          }, {
+            icon: 'el-icon-close',
+            title: '关闭'
           }]
         },
         handle(row) {
@@ -235,20 +144,29 @@ export default {
               })
               vm.currentChannelCode = row.channelCode
               vm.selectedRuleList = row.ruleInfos.map((item) => item.ruleCode)
-              vm.ruleDialogObj.isShow = true
+              vm.showDialog({
+                title: '关联规则',
+                dialogType: 'transfer'
+              })
             })
         }
       }, {
         name: '编辑',
         icon: 'el-icon-edit',
-        handle({ channelCode, channelName, channelType }) {
-          vm.formModel = {
+        handle({ channelId, channelCode, channelName, channelType, parentChannelId }) {
+          vm.channelType = parentChannelId ? '子渠道' : '主渠道'
+          let initData = {
+            channelId,
             channelCode,
-            channelName,
-            channelType
+            channelType,
+            channelName
           }
-          vm.channelDialogObj.isShow = true
-          vm.channelDialogObj.title = '编辑渠道'
+          if (parentChannelId) Object.assign(initData, { parentChannelId })
+          vm.showDialog({
+            title: '编辑渠道',
+            dialogType: 'channelHandle',
+            initData
+          })
         }
       }, {
         name: '删除',
@@ -256,7 +174,7 @@ export default {
         handle(row) {
           const { channelId, channelName } = row
           vm.confirmTip(
-            `是否删除 ${channelName} 渠道`,
+            `是否删除 ${channelName}渠道`,
             {
               confirmHandle() {
                 vm.deleteData({ id: channelId })
@@ -268,11 +186,17 @@ export default {
       tableHeader: [
         {
           label: '渠道名称',
-          prop: 'channelName'
+          prop: 'channelName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '渠道号码',
-          prop: 'channelCode'
+          prop: 'channelCode',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '渠道主图',
@@ -289,8 +213,22 @@ export default {
         {
           label: '渠道类型',
           prop: 'channelType',
+          search: {
+            type: 'select',
+            optionsList: channelTypeSelect
+          },
           formatter(row) {
             return row.channelType === 1 ? '主渠道' : '子渠道'
+          }
+        },
+        {
+          label: '关联规则',
+          prop: 'ruleInfos',
+          formatter(row) {
+            const list = row.ruleInfos && row.ruleInfos.length ? row.ruleInfos.map((item) => {
+              return item.ruleName
+            }) : []
+            return list.join(',')
           }
         },
         {
@@ -304,6 +242,10 @@ export default {
         {
           label: '渠道状态',
           prop: 'status',
+          search: {
+            type: 'select',
+            optionsList: statusSelect
+          },
           formatter(row) {
             return row.status === 0 ? '关闭' : '开启'
           }
@@ -323,11 +265,19 @@ export default {
     this.fetchData()
   },
   methods: {
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || '新增渠道',
+        dialogType: opts.dialogType || 'addChannel',
+        initData: opts.initData
+      }
+    },
     // 已选中关联规则
     changeSelectedRuleList(value, direction, movedKeys) {
-      console.log(value)
       this.selectedRuleList = value
     },
+    // 更新关联规则
     relevanceRule() {
       if (!this.selectedRuleList.length) return this.$msgTip('已选规则不能为空')
       this.$api.channel.relevanceRuleAjax({
@@ -336,37 +286,46 @@ export default {
       }).then(() => {
         this.fetchData()
         this.$msgTip('操作成功')
-        this.ruleDialogObj.isShow = false
+        this.dialogObj.isShow = false
       })
     },
     submitHandle() {
-      this.$refs.formRef.validate(valid => {
-        if (valid) {
-          const requestType = this.formModel.channelCode ? 'edit' : 'add' // 接口请求类型， add新增、edit编辑
-          this.handleChannel(requestType)
-        }
-      })
+      // 关联规则
+      if (this.dialogObj.dialogType === 'transfer') {
+        this.relevanceRule()
+      } else if (this.dialogObj.dialogType === 'addChannel') {
+        this.showDialog({
+          title: `新增${this.channelType}`,
+          dialogType: 'channelHandle',
+          initData: {
+            channelType: this.channelType === '主渠道' ? 1 : 2, // 渠道类型 1:主渠道 2:子渠道
+            channelName: ''
+          }
+        })
+      } else {
+        // 新增、编辑渠道
+        const childRef = this.$refs.childRef
+        childRef.$refs.formRef.validate(valid => {
+          if (valid) {
+            const childFormModel = childRef.formModel
+            const requestType = childFormModel.channelCode ? 'edit' : 'add' // 接口请求类型， add新增、edit编辑
+            this.handleChannel(requestType, childFormModel)
+          }
+        })
+      }
     },
-    handleChannel(requestType) {
+    handleChannel(requestType, childFormModel) {
       const requestObj = {
         add: this.$api.channel.addChannel,
         edit: this.$api.channel.editChannel
       }
       const request = requestObj[requestType]
-      request({ ...this.formModel }).then(() => {
+      request(childFormModel).then(() => {
         const msg = requestType === 'edit' ? '编辑成功' : '新增成功'
         this.$msgTip(msg)
         this.fetchData()
-        this.channelDialogObj.isShow = false
+        this.dialogObj.isShow = false
       })
-    },
-    // 新增渠道
-    addChannel() {
-      this.formModel = {
-        channelType: 1,
-        channelName: ''
-      }
-      this.channelDialogObj.isShow = true
     },
     // 开启、关闭渠道
     handleChannelStatus({ id, status }) {
@@ -405,10 +364,25 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
+<style lang="less">
 .transfer-wrapper {
   display: flex;
   justify-content: center;
+  .el-transfer {
+    .el-transfer-panel {
+      width: 300px;
+    }
+  }
+}
+</style>
+<style lang="less" scoped>
+.form {
+  width: 90%;
+  .form-item {
+    width: 100%;
+  }
+  .select-item {
+    width: 50%;
+  }
 }
 </style>

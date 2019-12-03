@@ -47,16 +47,5 @@ export default {
       icon: 'table',
       roles: ['admin']
     }
-  },
-  {
-    path: '/channel/rule/ruleInfo/:id?',
-    name: 'channelRuleDetail',
-    hidden: true,
-    component: () => import('@/views/channel/rule/detail/index'),
-    meta: {
-      title: 'channelRuleDetail',
-      icon: 'table',
-      activeMenu: '/channel/rule/detail'
-    }
   }]
 }

@@ -41,11 +41,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="submitHandle"
       >
-        <channel-add
-          ref="childRef"
-          :is-edit="dialogObj.isEdit"
-          :init-data="dialogObj.initData"
-        ></channel-add>
+        <channel-add ref="childRef" :is-edit="dialogObj.isEdit" :init-data="dialogObj.initData"></channel-add>
       </c-dialog>
     </div>
   </c-view>
@@ -108,7 +104,7 @@ export default {
           }, {
             icon: 'el-icon-close',
             title: '关闭'
-          } ]
+          }]
         },
         handle(row) {
           const { ruleId, ruleName, status } = row
