@@ -135,11 +135,11 @@ export default {
         prop: {
           name: 'status', // 为0或1
           toggle: [{
-            icon: 'el-icon-close',
-            title: '关闭'
-          }, {
             icon: 'el-icon-open',
             title: '开启'
+          }, {
+            icon: 'el-icon-close',
+            title: '关闭'
           }]
         },
         handle(row) {

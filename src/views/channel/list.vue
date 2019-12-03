@@ -18,58 +18,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search">
-            <el-form-item label="店铺名称">
-              <el-input
-                v-model="searchObj.shopName"
-                class="search-item"
-                size="medium"
-                placeholder="店铺名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="店铺类型">
-              <el-select
-                v-model="searchObj.shopType"
-                size="medium"
-                class="search-item"
-                clearable
-                placeholder="店铺类型"
-              >
-                <el-option
-                  v-for="(item, index) in shopTypeSelect"
-                  :key="index"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="店铺状态">
-              <el-select
-                v-model="searchObj.status"
-                size="medium"
-                class="search-item"
-                clearable
-                placeholder="店铺状态"
-              >
-                <el-option
-                  v-for="(item, index) in shopStatusSelect"
-                  :key="index"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -78,7 +32,23 @@
 
 <script>
 import mixinTable from 'mixins/table'
-
+const shopTypeSelect = [{
+  label: '自营',
+  value: 1
+}, {
+  label: '加盟',
+  value: 2
+}]
+const shopStatusSelect = [
+  {
+    value: 0,
+    label: '关闭'
+  },
+  {
+    value: 1,
+    label: '开启'
+  }
+]
 export default {
   name: 'shopList',
   mixins: [mixinTable],
@@ -90,23 +60,6 @@ export default {
         status: ''
       },
       dialogObj: {}, // 对话框数据
-      shopStatusSelect: [
-        {
-          value: 0,
-          label: '关闭'
-        },
-        {
-          value: 1,
-          label: '开启'
-        }
-      ],
-      shopTypeSelect: [{
-        label: '自营',
-        value: 1
-      }, {
-        label: '加盟',
-        value: 2
-      }],
       tableList: [],
       isLoading: false,
       tableInnerBtns: [
@@ -123,11 +76,19 @@ export default {
         {
           label: '店铺ID',
           prop: 'shopId',
-          fixed: true
+          fixed: true,
+          search: {
+            prop: 'status',
+            type: 'select',
+            optionsList: shopStatusSelect
+          }
         },
         {
           label: '店铺名称',
-          prop: 'shopName'
+          prop: 'shopName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '店铺风格',
@@ -136,8 +97,12 @@ export default {
         {
           label: '店铺类型',
           prop: 'shopType',
+          search: {
+            type: 'select',
+            optionsList: shopTypeSelect
+          },
           formatter(row) {
-            return row.shopType ? vm.shopTypeSelect[row.shopType - 1].label : ''
+            return row.shopType ? shopTypeSelect[row.shopType - 1].label : ''
           }
         },
         {
@@ -166,7 +131,7 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? vm.shopStatusSelect[row.status].label : '关闭'
+            return row.status ? shopStatusSelect[row.status].label : '关闭'
           }
         },
         {
