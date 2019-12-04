@@ -152,7 +152,15 @@ export default {
         const {
           ruleCode,
           ruleName,
-          ruleBrandResps
+          ruleBrandResps,
+          // payment,
+          costPrice,
+          largeBatchPrice,
+          memberPrice,
+          retailPrice,
+          supplyPrice,
+          wholesalePrice
+          // store
         } = res
         let brands = ruleBrandResps && ruleBrandResps.length ? ruleBrandResps.map(item => ({
           name: item.brandName,
@@ -162,17 +170,18 @@ export default {
         this.showDialog({
           title: '编辑渠道规则',
           initData: {
+            ruleId: id,
             ruleCode,
             ruleName,
             brands,
-            payment: 2, // 支付方式：1-支付宝, 2-微信, 4-银行卡
-            costPrice: 1, // 成衣成本价
-            largeBatchPrice: 1, // 成衣大批价
-            memberPrice: 1, // 会员价
-            retailPrice: 1, // 零售价
-            supplyPrice: 1, // 成衣供货价
-            wholesalePrice: 1, // 成衣散批价
-            store: 0 // 库存设置:0-默认全部，其他待定
+            // payment: [1, 2, 4],
+            costPrice,
+            largeBatchPrice,
+            memberPrice,
+            retailPrice,
+            supplyPrice,
+            wholesalePrice
+            // store
           },
           isEdit: true
         })
@@ -194,7 +203,7 @@ export default {
         add: this.$api.channel.addRule,
         edit: this.$api.channel.editRule
       }
-      const { brands, costPrice, largeBatchPrice, memberPrice, retailPrice, supplyPrice, wholesalePrice, store, ruleCode, ...other } = childFormModel
+      const { brands, submitPriceObj, priceList, ruleCode, ...other } = childFormModel
       const curBrands = childFormModel.brands.map(item => ({
         brandCode: item.code,
         brandName: item.name,
@@ -203,14 +212,8 @@ export default {
       requestObj[requestType]({
         ruleCode,
         brands: curBrands,
-        costPrice: Number(costPrice),
-        largeBatchPrice: Number(largeBatchPrice),
-        memberPrice: Number(memberPrice),
-        retailPrice: Number(retailPrice),
-        supplyPrice: Number(supplyPrice),
-        wholesalePrice: Number(wholesalePrice),
-        store: 0,
-        ...other
+        ...other,
+        ...submitPriceObj
       }).then(() => {
         const msg = requestType === 'edit' ? '编辑成功' : '新增成功'
         this.$msgTip(msg)

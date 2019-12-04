@@ -9,7 +9,7 @@
         selection
         hasBorder
         :size="size"
-        :max-height="730"
+        :max-height="685"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -74,14 +74,16 @@ export default {
       ],
       tableHeader: [
         {
-          label: '店铺ID',
-          prop: 'shopId',
-          fixed: true,
-          search: {
-            prop: 'status',
-            type: 'select',
-            optionsList: shopStatusSelect
-          }
+          label: 'LOGO',
+          prop: 'shopLogo',
+          isImage: true,
+          width: 100
+        },
+        {
+          label: '店招',
+          prop: 'shopImage',
+          isImage: true,
+          width: 100
         },
         {
           label: '店铺名称',
@@ -106,18 +108,9 @@ export default {
           }
         },
         {
-          label: 'LOGO',
-          prop: 'shopLogo',
-          isImage: true
-        },
-        {
-          label: '店招',
-          prop: 'shopImage',
-          isImage: true
-        },
-        {
           label: '店铺地址',
-          prop: 'address'
+          prop: 'address',
+          isPopover: true
         },
         {
           label: '联系人',
@@ -132,6 +125,10 @@ export default {
           prop: 'status',
           formatter(row) {
             return row.status ? shopStatusSelect[row.status].label : '关闭'
+          },
+          search: {
+            type: 'dict',
+            optionsList: shopTypeSelect
           }
         },
         {
@@ -140,8 +137,7 @@ export default {
         },
         {
           label: '添加时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         }
       ]
     }

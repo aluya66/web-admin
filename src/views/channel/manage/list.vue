@@ -43,6 +43,7 @@
         <rule-handle
           ref="childRef"
           :init-data="dialogObj.initData"
+          :is-edit="dialogObj.isEdit"
           :channel-type="channelType"
           v-if="dialogObj.dialogType === 'channelHandle'"
         ></rule-handle>
@@ -165,7 +166,8 @@ export default {
           vm.showDialog({
             title: '编辑渠道',
             dialogType: 'channelHandle',
-            initData
+            initData,
+            isEdit: true
           })
         }
       }, {
@@ -185,20 +187,6 @@ export default {
       }],
       tableHeader: [
         {
-          label: '渠道名称',
-          prop: 'channelName',
-          search: {
-            type: 'input'
-          }
-        },
-        {
-          label: '渠道号码',
-          prop: 'channelCode',
-          search: {
-            type: 'input'
-          }
-        },
-        {
           label: '渠道主图',
           prop: 'channelImage',
           width: 100,
@@ -209,6 +197,21 @@ export default {
           prop: 'channelLogo',
           width: 100,
           isImage: true
+        },
+        {
+          label: '渠道名称',
+          prop: 'channelName',
+          isPopover: true,
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '渠道号码',
+          prop: 'channelCode',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '渠道类型',
@@ -252,10 +255,12 @@ export default {
         },
         {
           label: '创建时间',
-          prop: 'created'
+          prop: 'created',
+          width: 100
         },
         {
           label: '更新时间',
+          width: 100,
           prop: 'updated'
         }
       ]
@@ -270,7 +275,8 @@ export default {
         isShow: true,
         title: opts.title || '新增渠道',
         dialogType: opts.dialogType || 'addChannel',
-        initData: opts.initData
+        initData: opts.initData,
+        isEdit: opts.isEdit || false
       }
     },
     // 已选中关联规则
