@@ -127,7 +127,12 @@ export default {
      * 表格项获取字典数据label数据
      */
     setTableColumnLabel(value, dictKey) {
-      const curVal = dictObj[dictKey].find(res => value === res.value)
+      let curVal = ''
+      if (typeof dictKey === 'string') {
+        curVal = dictObj[dictKey].find(res => value === res.value)
+      } else if (utils.isArray(dictKey)) {
+        curVal = dictKey.find(res => value === res.value)
+      }
       return curVal ? curVal.label : ''
     }
   },
