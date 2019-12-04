@@ -103,7 +103,7 @@
         <i class="el-icon-plus"></i>
         <div class="info">上传图片/视频应小于20M</div>
       </c-upload>
-    </el-form-item> -->
+    </el-form-item>-->
   </c-card>
 </template>
 
@@ -135,7 +135,7 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       shopSelect: [{
         label: '自营',
@@ -187,5 +187,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 </style>

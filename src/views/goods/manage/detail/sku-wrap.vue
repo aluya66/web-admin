@@ -46,7 +46,7 @@
       <table class="el-table sku-table content-box" cellspacing="0" cellpadding="0">
         <thead>
           <tr>
-            <th>主图</th>
+            <th style="width: 80px;">主图</th>
             <th v-for="(item, index) in specification" :key="index">{{item.name}}</th>
             <th style="width: 150px;">sku款号</th>
             <th

@@ -19,6 +19,7 @@
       <el-input
         v-model.trim="formModel.balance"
         class="form-item"
+        :maxlength="7"
       ></el-input>
     </el-form-item>
   </el-form>

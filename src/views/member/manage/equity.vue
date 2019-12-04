@@ -12,10 +12,10 @@
                 <el-button
                   class="btn"
                   size="small"
-                  v-if="item.activityId === 6"
+                  v-if="subItem.unit === 3"
                   @click="edit(item.activityId, subItem)"
                 >编辑</el-button>
-                <!-- item.activityId === 6 || item.activityId === 7" 积分、商品有编辑功能 -->
+                <!-- unit 优惠单位 0.金额 1.数量 2.特价 3.积分倍率，目前开放积分编辑功能 -->
               </div>
             </div>
           </el-card>

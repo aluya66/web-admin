@@ -313,7 +313,8 @@ export default {
     getbrandList() {
       this.$api.basic.brandList({
         pageNo: 1,
-        pageSize: 100
+        pageSize: 100,
+        status: 1
       }).then(res => {
         const { data, totalCount } = res
         if (totalCount) {
