@@ -38,6 +38,7 @@
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
         close-btn
+        :no-btn="dialogObj.noBtn"
         @before-close="dialogObj.isShow = false"
         @on-submit="submitHandle"
       >
@@ -96,43 +97,51 @@ export default {
         prop: 'updated'
       }],
       tableInnerBtns: [{
-        prop: {
-          name: 'status', // 为0或1
-          toggle: [{
-            icon: 'el-icon-open',
-            title: '开启'
-          }, {
-            icon: 'el-icon-close',
-            title: '关闭'
-          }]
-        },
-        handle(row) {
-          const { ruleId, ruleName, status } = row
-          const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
-          vm.confirmTip(
-            `是否${handleStatus === 0 ? '关闭' : '开启'} ${ruleName} 渠道规则`,
-            () => {
-              vm.handleRuleStatus({ id: ruleId, status: handleStatus })
-            }
-          )
-        }
-      }, {
-        name: '编辑',
-        icon: 'el-icon-edit',
+        name: '查看',
+        icon: 'el-icon-view',
         handle(row) {
           const { ruleId } = row
           vm.getRuleDetails(ruleId)
         }
-      }, {
-        name: '删除',
-        icon: 'el-icon-detail',
-        handle(row) {
-          const { ruleId, ruleName } = row
-          vm.confirmTip(`是否删除 ${ruleName} 渠道规则`, () => {
-            vm.deleteRule({ id: ruleId })
-          })
-        }
       }]
+      // tableInnerBtns: [{
+      //   prop: {
+      //     name: 'status', // 为0或1
+      //     toggle: [{
+      //       icon: 'el-icon-open',
+      //       title: '开启'
+      //     }, {
+      //       icon: 'el-icon-close',
+      //       title: '关闭'
+      //     }]
+      //   },
+      //   handle(row) {
+      //     const { ruleId, ruleName, status } = row
+      //     const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
+      //     vm.confirmTip(
+      //       `是否${handleStatus === 0 ? '关闭' : '开启'} ${ruleName} 渠道规则`,
+      //       () => {
+      //         vm.handleRuleStatus({ id: ruleId, status: handleStatus })
+      //       }
+      //     )
+      //   }
+      // }, {
+      //   name: '编辑',
+      //   icon: 'el-icon-edit',
+      //   handle(row) {
+      //     const { ruleId } = row
+      //     vm.getRuleDetails(ruleId)
+      //   }
+      // }, {
+      //   name: '删除',
+      //   icon: 'el-icon-detail',
+      //   handle(row) {
+      //     const { ruleId, ruleName } = row
+      //     vm.confirmTip(`是否删除 ${ruleName} 渠道规则`, () => {
+      //       vm.deleteRule({ id: ruleId })
+      //     })
+      //   }
+      // }]
     }
   },
   created() {
@@ -144,6 +153,7 @@ export default {
         isShow: true,
         title: opts.title || '新增渠道规则',
         isEdit: opts.isEdit || false,
+        noBtn: opts.noBtn || false,
         initData: opts.initData
       }
     },
@@ -168,7 +178,7 @@ export default {
           code: item.brandCode
         })) : ''
         this.showDialog({
-          title: '编辑渠道规则',
+          title: '查看渠道规则',
           initData: {
             ruleId: id,
             ruleCode,
@@ -183,6 +193,7 @@ export default {
             wholesalePrice
             // store
           },
+          noBtn: true,
           isEdit: true
         })
       })

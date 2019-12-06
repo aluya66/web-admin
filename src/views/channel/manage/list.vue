@@ -106,35 +106,34 @@ export default {
       selectedRuleList: [], // 已选规则列表
       btnLoading: false,
       dialogObj: {},
-      tableInnerBtns: [{
-        width: 150,
-        prop: {
-          name: 'status', // 为0或1
-          toggle: [{
-            icon: 'el-icon-open',
-            title: '开启'
-          }, {
-            icon: 'el-icon-close',
-            title: '关闭'
-          }]
-        },
-        handle(row) {
-          const { channelId, channelName, status } = row
-          const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
-          vm.confirmTip(
-            `是否${handleStatus === 0 ? '关闭' : '开启'} ${channelName} 渠道`,
-            () => {
-              vm.handleChannelStatus({ id: channelId, status: handleStatus })
+      tableInnerBtns: [
+        {
+          width: 150,
+          name: '编辑',
+          icon: 'el-icon-edit',
+          handle({ channelId, channelCode, channelName, channelType, parentChannelId }) {
+            vm.channelType = parentChannelId ? '子渠道' : '主渠道'
+            let initData = {
+              channelId,
+              channelCode,
+              channelType,
+              channelName
             }
-          )
-        }
-      }, {
-        name: '关联规则',
-        icon: 'el-icon-postcard',
-        handle(row) {
-          vm.$api.channel
-            .getChannelRule()
-            .then(res => {
+            if (parentChannelId) Object.assign(initData, { parentChannelId })
+            vm.showDialog({
+              title: '编辑渠道',
+              dialogType: 'channelHandle',
+              initData,
+              isEdit: true
+            })
+          }
+        },
+        {
+          name: '关联规则',
+          icon: 'el-icon-connection',
+          notBtn: 'ruleInfos',
+          handle(row) {
+            vm.$api.channel.getChannelRule().then(res => {
               vm.isLoading = false
               let ruleList = res && res.totalCount ? res.data : res
               vm.ruleList = ruleList.map((item) => {
@@ -150,41 +149,46 @@ export default {
                 dialogType: 'transfer'
               })
             })
-        }
-      }, {
-        name: '编辑',
-        icon: 'el-icon-edit',
-        handle({ channelId, channelCode, channelName, channelType, parentChannelId }) {
-          vm.channelType = parentChannelId ? '子渠道' : '主渠道'
-          let initData = {
-            channelId,
-            channelCode,
-            channelType,
-            channelName
           }
-          if (parentChannelId) Object.assign(initData, { parentChannelId })
-          vm.showDialog({
-            title: '编辑渠道',
-            dialogType: 'channelHandle',
-            initData,
-            isEdit: true
-          })
         }
-      }, {
-        name: '删除',
-        icon: 'el-icon-detail',
-        handle(row) {
-          const { channelId, channelName } = row
-          vm.confirmTip(
-            `是否删除 ${channelName}渠道`,
-            {
-              confirmHandle() {
-                vm.deleteData({ id: channelId })
-              }
-            }
-          )
-        }
-      }],
+        //   {
+        //   prop: {
+        //     name: 'status', // 为0或1
+        //     toggle: [{
+        //       icon: 'el-icon-open',
+        //       title: '开启'
+        //     }, {
+        //       icon: 'el-icon-close',
+        //       title: '关闭'
+        //     }]
+        //   },
+        //   handle(row) {
+        //     const { channelId, channelName, status } = row
+        //     const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
+        //     vm.confirmTip(
+        //       `是否${handleStatus === 0 ? '关闭' : '开启'} ${channelName} 渠道`,
+        //       () => {
+        //         vm.handleChannelStatus({ id: channelId, status: handleStatus })
+        //       }
+        //     )
+        //   }
+        // },
+        // {
+        //   name: '删除',
+        //   icon: 'el-icon-detail',
+        //   handle(row) {
+        //     const { channelId, channelName } = row
+        //     vm.confirmTip(
+        //       `是否删除 ${channelName}渠道`,
+        //       {
+        //         confirmHandle() {
+        //           vm.deleteData({ id: channelId })
+        //         }
+        //       }
+        //     )
+        //   }
+        // }
+      ],
       tableHeader: [
         {
           label: '渠道主图',
@@ -212,6 +216,10 @@ export default {
           search: {
             type: 'input'
           }
+        },
+        {
+          label: '所属渠道',
+          prop: 'parentChannelName'
         },
         {
           label: '渠道类型',
@@ -344,21 +352,19 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.channel
-        .getChannel({
-          ...this.searchObj,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.channel.getChannel({
+        ...this.searchObj,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     },
     // 删除渠道
     deleteData(params, msgTip = '删除成功') {

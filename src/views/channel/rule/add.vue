@@ -8,10 +8,10 @@
     label-position="right"
   >
     <el-form-item label="规则名称:" prop="ruleName">
-      <el-input v-model.trim="formModel.ruleName" class="form-item" placeholder="请输入规则名称"/>
+      <el-input v-model.trim="formModel.ruleName" class="form-item" :disabled="isEdit" placeholder="请输入规则名称"/>
     </el-form-item>
     <el-form-item label="商品品牌:" prop="brands">
-      <el-select v-model="formModel.brands" class="form-item" filterable value-key="code" multiple>
+      <el-select v-model="formModel.brands" class="form-item" filterable value-key="code" multiple :disabled="isEdit">
         <el-option v-for="item in brandList" :key="item.id" :label="item.name" :value="item"></el-option>
       </el-select>
       <c-table
@@ -22,7 +22,7 @@
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
-        :table-inner-btns="tableInnerBtns"
+        :table-inner-btns="!isEdit ? tableInnerBtns : []"
       ></c-table>
     </el-form-item>
     <el-form-item label="价格设置:">
@@ -30,6 +30,7 @@
         <el-checkbox
           v-for="(item, index) in priceSettingList"
           :key="index"
+          :disabled="isEdit"
           :label="item.value"
         >{{ item.label }}</el-checkbox>
       </el-checkbox-group>
@@ -72,6 +73,10 @@ export default {
           // store: 0 // 库存设置:0-默认全部，其他待定
         }
       }
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
