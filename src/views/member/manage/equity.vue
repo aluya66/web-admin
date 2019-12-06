@@ -179,7 +179,7 @@ export default {
     let checkInt = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('积分倍数不能为空'))
-      } else if (!Number(value) || Number.isInteger(value) || Number(value) <= 0) {
+      } else if (!Number(value) || !Number.isInteger(Number(value)) || Number(value) <= 0) {
         return callback(new Error('请输入整数'))
       }
       callback()

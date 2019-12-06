@@ -48,17 +48,23 @@ export const getCoupon = params =>
   })
 
 // // 劵列表详情
-// export const couponDetail = params =>
-//   Http.fetch(`${context}/api/mks/coupon/detail`, params, {
-//     method: 'get',
-//     mockFile: 'coupon-list'
-//   })
+export const couponDetail = params =>
+  Http.fetch(`${context}/api/mks/coupon/detail`, params, {
+    method: 'get',
+    mockFile: 'coupon-list'
+  })
 
 // 劵新增
 export const addCoupon = params =>
   Http.fetch(`${context}/api/mks/coupon`, params, {
     method: 'post',
     mockFile: 'coupon-add'
+  })
+
+// 劵编辑
+export const updateCoupon = params =>
+  Http.fetch(`${context}/api/mks/coupon`, params, {
+    method: 'put'
   })
 
 // 劵列表 删除劵
