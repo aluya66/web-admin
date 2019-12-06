@@ -128,7 +128,7 @@ export default {
         return
       }
       const { uid } = fileObj.file
-      const hasFile = this.mutiFiles.getAll('files').find(res => res.uid === uid)
+      const hasFile = this.limit > 1 ? this.mutiFiles.getAll('files').find(res => res.uid === uid) : true
       if (hasFile) {
         this.isUpload = true
         this.$api.common.uploadFile(this.mutiFiles).then(res => {
@@ -149,16 +149,18 @@ export default {
       }
     },
     handleChange(file, fileList) {
+      this.isUpload = false
+      let formData = new FormData()
       if (!this.autoUpload) {
-        this.isUpload = false
-        let formData = new FormData()
         fileList.forEach(res => {
           if (res.raw) {
             formData.append('files', res.raw)
           }
         })
-        this.mutiFiles = formData
+      }else {
+        formData.append('files', file.raw)
       }
+      this.mutiFiles = formData
     },
     handleExceed(files, fileList) {
       this.$message.warning(

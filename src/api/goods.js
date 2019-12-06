@@ -1,7 +1,7 @@
 import Http from '../utils/request'
 
-const context = process.env.VUE_APP_CONSOLE_COMMON
-
+const context = process.env.VUE_APP_LOCALHOST
+// VUE_APP_LOCALHOST
 // 添加商品
 export const add = params =>
   Http.fetch(`${context}/api/goods`, params)
@@ -9,6 +9,12 @@ export const add = params =>
 // 商品中心
 export const getList = params =>
   Http.fetch(`${context}/api/goods/list`, params, {
+    method: 'get'
+  })
+
+// 未完善商品列表 接口
+export const getGoodsList = params =>
+  Http.fetch(`${context}/api/samplegoods/list`, params, {
     method: 'get'
   })
 

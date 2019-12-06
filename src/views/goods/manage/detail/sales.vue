@@ -5,8 +5,10 @@
         :is-view="isView || isDisabled"
         v-if="curAttrs.length"
         :sku-attrs="curAttrs"
+        :rate-obj="rateValueObj"
         :sku-list="formModel.skus"
         :spu-bn="formModel.goodsBn"
+        @set-min-price="setMinPrice"
       ></sku-wrap>
     </el-form-item>
     <el-form-item label="样衣成本价(元):">
@@ -26,36 +28,36 @@
         v-if="!isView"
         class="select-item"
         :disabled="isDisabled"
-        v-model.trim="formModel.costprice"
+        v-model.trim="formModel.costPrice"
         :size="size"
         placeholder="请输入成衣成本价"
         clearable
       />
-      <span v-else>{{formModel.costprice}}</span>
+      <span v-else>{{formModel.costPrice}}</span>
     </el-form-item>
     <el-form-item label="成衣供货价(元):">
       <el-input
         v-if="!isView"
         class="select-item"
         :disabled="isDisabled"
-        v-model.trim="formModel.supplyprice"
+        v-model.trim="formModel.supplyPrice"
         :size="size"
         placeholder="请输入成衣供货价"
         clearable
       />
-      <span v-else>{{formModel.supplyprice}}</span>
+      <span v-else>{{formModel.supplyPrice}}</span>
     </el-form-item>
     <el-form-item label="成衣散批价(元):">
       <el-input
         v-if="!isView"
         class="select-item"
         :disabled="isDisabled"
-        v-model.trim="formModel.wholesaleprice"
+        v-model.trim="formModel.wholesalePrice"
         :size="size"
         placeholder="请输入成衣散批价"
         clearable
       />
-      <span v-else>{{formModel.wholesaleprice}}</span>
+      <span v-else>{{formModel.wholesalePrice}}</span>
     </el-form-item>
     <el-form-item label="成衣大批价(元):">
       <el-input
@@ -103,6 +105,7 @@ import utils from 'utils'
 export default {
   data() {
     return {
+      rateValueObj: {},
       curAttrs: [], // 全部商品属性
       paramsData: {}, // sku 规格值
       formModel: {}
@@ -144,6 +147,13 @@ export default {
     this.getAttrs()
   },
   methods: {
+    setMinPrice(val) {
+      this.formModel = {
+        ...this.formModel,
+        ...val
+      }
+      console.log(this.formModel)
+    },
     getAttrs() {
       this.$api.basic.getGoodsattrval({
         pageNo: 1,
@@ -152,7 +162,7 @@ export default {
       }).then(res => {
         const { totalCount, data } = res
         if (totalCount) {
-          const { skus } = this.dataObj
+          const { skus, largeBatchRate, memberPriceRate, retailPriceRate, wholesalePriceRate, supplyRate } = this.dataObj
           data.forEach((val, index) => {
             let colorPosters = [] // sku列表 颜色对应图片, 存在curAttrs第一个值中
             const checkedAttr = []
@@ -161,7 +171,7 @@ export default {
                 skus.some(sku => {
                   if (sku.attrColorId === val.id && sku.attributeColorId === item.id) {
                     checkedAttr.push(sku.attributeColorValue)
-                    colorPosters.push(sku.imageUrl)
+                    colorPosters.push(sku.imageUrl || '')
                     return true
                   }
                   if (sku.attrSpecId === val.id && sku.attributeSpecId === item.id) {
@@ -176,6 +186,13 @@ export default {
               }
             })
             // console.log(colorPosters)
+            this.rateValueObj = {
+              supplyRate,
+              largeBatchRate,
+              memberPriceRate,
+              retailPriceRate,
+              wholesalePriceRate
+            }
             this.curAttrs.push({ attrs, name: val.name, label: `${val.name}:`, id: val.id, checkedAttr: utils.uniqueArr(checkedAttr), posterUrl: colorPosters })
           })
         }
