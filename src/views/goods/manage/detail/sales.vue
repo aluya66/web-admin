@@ -23,12 +23,11 @@
       />
       <span v-else>{{formModel.sampleCostPrice}}</span>
     </el-form-item>
-    <el-form-item label="样衣成本价(元):">
+    <el-form-item label="样衣成本价(元):" prop="sampleCostPrice">
       <el-input
         v-if="!isView"
         class="select-item"
         :disabled="isDisabled"
-        :rule="{ message: '请输入样衣成本价', validator: checkNumber, trigger: 'blur' }"
         v-model.trim="formModel.sampleCostPrice"
         :size="size"
         placeholder="请输入样衣成本价"
@@ -36,7 +35,7 @@
       />
       <span v-else>{{formModel.sampleCostPrice}}</span>
     </el-form-item>
-    <el-form-item label="成衣成本价(元):">
+    <el-form-item label="成衣成本价(元):" prop="costPrice">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -48,7 +47,7 @@
       />
       <span v-else>{{formModel.costPrice}}</span>
     </el-form-item>
-    <el-form-item label="成衣供货价(元):">
+    <el-form-item label="成衣供货价(元):" prop="supplyPrice">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -60,7 +59,7 @@
       />
       <span v-else>{{formModel.supplyPrice}}</span>
     </el-form-item>
-    <el-form-item label="成衣散批价(元):">
+    <el-form-item label="成衣散批价(元):" prop="wholesalePrice">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -72,7 +71,7 @@
       />
       <span v-else>{{formModel.wholesalePrice}}</span>
     </el-form-item>
-    <el-form-item label="成衣大批价(元):">
+    <el-form-item label="成衣大批价(元):" prop="largeBatchPrice">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -84,7 +83,7 @@
       />
       <span v-else>{{formModel.largeBatchPrice}}</span>
     </el-form-item>
-    <el-form-item label="成衣会员价(元):">
+    <el-form-item label="成衣会员价(元):" prop="memberPrice">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -96,7 +95,7 @@
       />
       <span v-else>{{formModel.memberPrice}}</span>
     </el-form-item>
-    <el-form-item label="零售价(元):">
+    <el-form-item label="零售价(元):" prop="retailPrice">
       <el-input
         v-if="!isView"
         class="select-item"

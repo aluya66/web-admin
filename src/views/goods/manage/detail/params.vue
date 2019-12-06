@@ -9,20 +9,20 @@
       ></c-image>
     </el-form-item>
     <el-form-item label="商品图片:">
-      <el-button type="primary" @click="showDialog('goodsImg')">上传图片</el-button>
+      <el-button type="primary" @click="showDialog('goodsImg')" :disabled="isDisabled">上传图片</el-button>
       <div class="resource-wrapper">
         <div class="image-item" v-for="(item, index) in formModel.goodsImageList" :key="index">
           <c-image class="image" :url="item.url" fit="contain" :preview-src-list="[item.url]"></c-image>
           <div class="btn-item">
-            <el-button size="small" class="btn" @click="deleteImg('goodsImageList', index)">删除</el-button>
+            <el-button size="small" class="btn" @click="deleteImg('goodsImageList', index)" :disabled="isDisabled">删除</el-button>
             <el-button size="small" class="btn" @click="setMainImage(index)">设为主图</el-button>
           </div>
         </div>
       </div>
     </el-form-item>
     <el-form-item label="商品视频:">
-      <el-button type="primary" @click="showDialog('video')">上传视频</el-button>
-      <el-button type="primary" @click="deleteImg('videoList', 0)">删除</el-button>
+      <el-button type="primary" @click="showDialog('video')" :disabled="isDisabled">上传视频</el-button>
+      <el-button type="primary" @click="deleteImg('videoList', 0)" :disabled="isDisabled">删除</el-button>
       <div class="resource-wrapper" v-if="formModel.videoList && formModel.videoList.length">
         <c-image
           class="coverImg"

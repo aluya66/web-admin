@@ -21,9 +21,6 @@ export default create({
       type: String,
       default: ''
     }
-  },
-  created() {
-    console.log(this.url)
   }
 })
 </script>

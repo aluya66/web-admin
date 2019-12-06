@@ -64,7 +64,7 @@
         ref="otherRef"
         title="其他信息"
       ></g-other>-->
-      <el-form-item class="form-btn" v-if="!isView">
+      <el-form-item class="form-btn" v-if="isView">
         <el-button
           :loading="btnLoading"
           v-permission="$route.meta.roles"
@@ -104,6 +104,11 @@ export default {
   name: 'goodsDetail',
   mixins: [MixinForm],
   data() {
+    const checkNumber = (rule, value, callback) => {
+      console.log(value)
+      if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
+      callback()
+    }
     return {
       currentPoint: 0, // 媌点下标
       stepList: [{
@@ -128,28 +133,28 @@ export default {
       rules: {
         goodsName: [
           { required: true, message: '请输入商品名称', trigger: 'blur' }
+        ],
+        sampleCostPrice: [
+          { message: '请输入样衣成本价', validator: checkNumber, trigger: 'blur' }
+        ],
+        costPrice: [
+          { message: '请输入成衣成本价', validator: checkNumber, trigger: 'blur' }
+        ],
+        supplyPrice: [
+          { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
+        ],
+        wholesalePrice: [
+          { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
+        ],
+        largeBatchPrice: [
+          { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
+        ],
+        memberPrice: [
+          { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
+        ],
+        retailPrice: [
+          { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
         ]
-        // sampleCostPrice: [
-        //   { message: '请输入样衣成本价', validator: checkNumber, trigger: 'blur' }
-        // ],
-        // costPrice: [
-        //   { message: '请输入成衣成本价', validator: checkNumber, trigger: 'blur' }
-        // ],
-        // supplyPrice: [
-        //   { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
-        // ],
-        // wholesalePrice: [
-        //   { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
-        // ],
-        // largeBatchPrice: [
-        //   { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
-        // ],
-        // memberPrice: [
-        //   { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
-        // ],
-        // retailPrice: [
-        //   { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
-        // ]
       }
     }
   },
@@ -180,7 +185,8 @@ export default {
           }
         })
       } else {
-        this.isDisabled = false
+        console.log(params.type)
+        this.isDisabled = params.type === 'view' ? true : false
         // this.formModel = {
         //   brandId: 38,
         //   brandName: 'Mika Mika',
@@ -347,6 +353,7 @@ export default {
         line-height: 50px;
         border-radius: 50%;
         border: 1px solid @border-default;
+        background-color: #fff;
       }
       .line {
         width: 3px;

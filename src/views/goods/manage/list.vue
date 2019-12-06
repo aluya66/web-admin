@@ -93,7 +93,14 @@ export default {
         name: '详情',
         icon: 'el-icon-view',
         handle(row) {
-          vm.routerLink(`/goods/manage/detail/${row.id}`)
+          vm.routerLink(`/goods/manage/detail/${row.id}/view`)
+        }
+      },
+      {
+        name: '编辑',
+        icon: 'el-icon-edit',
+        handle(row) {
+          vm.routerLink(`/goods/manage/detail/${row.id}/edit`)
         }
       },
       {
