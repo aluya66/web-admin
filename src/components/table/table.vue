@@ -15,8 +15,14 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @current-change="handleSingleChange"
+      @expand-change="handleExpandChange"
     >
       <el-table-column v-if="selection" :align="align" type="selection" width="55"/>
+      <el-table-column v-if="expand" :align="align" type="expand" width="55">
+        <template slot-scope="scope">
+          <slot name="expand" :props="scope.row"/>
+        </template>
+      </el-table-column>
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
@@ -147,6 +153,11 @@ export default {
         return []
       }
     },
+    // 是否要扩展行
+    expand: {
+      type: Boolean,
+      default: false
+    },
     selection: {
       type: Boolean,
       default: false
@@ -230,18 +241,26 @@ export default {
     setBtnAttribute(btn, row, type) {
       const { toggle, name } = btn.prop || {}
       if (name && toggle && type) {
+        if (toggle.every((item) => item.value)) { // toggle是否都有value属性, typeof value === array value为状态支持显示的按钮
+          let item = toggle.find(item => item.value.includes(row[name]))
+          return item ? item[type] : ''
+        }
         return toggle[row[name]][type]
       }
       return btn[type]
     },
     curBtns(row) {
-      return this.tableInnerBtns.filter(res => {
+      this.tableInnerBtns.filter(res => {
+        if (res.prop && res.prop.toggle && res.prop.toggle.every((item) => item.value)) {
+          return res.prop.toggle.some(val => val.value.includes(row[res.prop.name]))
+        }
         if (res.notBtn) {
           return !!row[res.notBtn]
         } else {
           return true
         }
       })
+      return this.tableInnerBtns
     },
     // 选中取消
     toggleSelection(rows) {
@@ -289,6 +308,10 @@ export default {
     // 翻页和切换页码
     changePagination(pageInfo) {
       this.$emit('change-pagination', pageInfo)
+    },
+    // 展开一行
+    handleExpandChange(row) {
+      this.$emit('expand-change', row)
       this.resetScroll()
     },
     // 重置滚动位置

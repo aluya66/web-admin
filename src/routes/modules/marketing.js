@@ -4,7 +4,6 @@ export default {
   path: '/marketing',
   name: 'marketing',
   component: Layout,
-  redirect: '/marketing/coupon/ruleList',
   meta: {
     title: 'marketing',
     icon: 'nested'
@@ -13,7 +12,6 @@ export default {
     path: '/marketing/coupon',
     name: 'coupon',
     component: () => import('@/views/common/index'),
-    redirect: '/marketing/coupon/ruleList',
     meta: {
       title: 'coupon',
       icon: 'nested'
@@ -58,6 +56,36 @@ export default {
       meta: {
         title: 'couponList',
         icon: 'table',
+        roles: ['admin']
+      }
+    }]
+  }, {
+    path: '/marketing/ticket',
+    name: 'ticket',
+    component: () => import('@/views/common/index'),
+    meta: {
+      title: 'ticket',
+      icon: 'nested'
+    },
+    children: [{
+      path: '/marketing/ticket/list',
+      name: 'ticketList',
+      component: () => import('@/views/marketing/ticket/list'),
+      meta: {
+        title: 'ticketList',
+        icon: 'table',
+        roles: ['admin']
+      }
+    }, {
+      path: '/marketing/ticket/ticketInfo/:id?',
+      name: 'ticketInfo',
+      component: () => import('@/views/marketing/ticket/detail/index'),
+      hidden: true,
+      meta: {
+        icon: 'table',
+        noCache: true,
+        title: 'ticketInfo',
+        activeMenu: '/marketing/ticket/list',
         roles: ['admin']
       }
     }]
