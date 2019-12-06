@@ -183,32 +183,32 @@ export default {
         },
         {
           label: '成衣成本价(元)',
-          prop: 'costPrice',
+          prop: 'costprice',
           width: 115
         },
         {
           label: '成衣供货价(元)',
-          prop: 'supplyPrice',
+          prop: 'supplyprice',
           width: 115
         },
         {
           label: '成衣散批价(元)',
-          prop: 'wholesalePrice',
+          prop: 'wholesaleprice',
           width: 115
         },
         {
           label: '成衣大批价(元)',
-          prop: 'largeBatchPrice',
+          prop: 'largeBatchprice',
           width: 115
         },
         {
           label: '成衣会员价(元)',
-          prop: 'memberPrice',
+          prop: 'memberprice',
           width: 115
         },
         {
           label: '零售价(元)',
-          prop: 'retailPrice',
+          prop: 'retailprice',
           width: 90
         },
         {

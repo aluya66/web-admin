@@ -131,6 +131,7 @@
                 type="text"
                 v-model.number="childProductArray[index][tdItem.name]"
                 :placeholder="'请输入' + tdItem.label"
+                @change="setMinPrice"
                 :disabled="isView || !childProductArray[index].isUse || tdItem.name === 'stock'"
               ></el-input>
             </td>
@@ -567,6 +568,7 @@ export default {
           item[target] = (value * this.rateList[this.rateIndex].value).toFixed(2)
         }
       })
+      this.setMinPrice()
       // this.rateList[this.rateIndex].value = this.rateList[this.rateIndex].value.toFixed(2)
     },
     // 批量参数设置

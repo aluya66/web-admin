@@ -2,6 +2,18 @@ import QueryDict from '../common/queryDict'
 
 export default {
   data() {
+    const checkInt = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('字段不能为空'))
+      } else if (!Number(value) || !Number.isInteger(Number(value)) || Number(value) <= 0) {
+        return callback(new Error('请输入整数'))
+      }
+      callback()
+    }
+    const checkNumber = (rule, value, callback) => {
+      if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
+      callback()
+    }
     return {
       dictData: {} // 字典数据
     }

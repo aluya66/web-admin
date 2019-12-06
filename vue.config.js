@@ -207,6 +207,20 @@ module.exports = {
         pathRewrite: {
           '^/api-ipx': '/'
         }
+      },
+      [process.env.VUE_APP_LOCALHOST]: {
+        target: process.env.VUE_APP_CONSOLE_LOCALHOST,
+        ws: false,
+        pathRewrite: {
+          '^/local-api': '/'
+        }
+      },
+      [process.env.VUE_APP_UPLOAD]: {
+        target: process.env.VUE_APP_SERVERPATH_UPLOAD,
+        ws: false,
+        pathRewrite: {
+          '^/api-upload': '/'
+        }
       }
     },
     // dev模拟数据

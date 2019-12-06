@@ -122,6 +122,27 @@ export default {
       rules: {
         goodsName: [
           { required: true, message: '请输入商品名称', trigger: 'blur' }
+        ],
+        sampleCostPrice: [
+          { message: '请输入样衣成本价', validator: checkNumber, trigger: 'blur' }
+        ],
+        costPrice: [
+          { message: '请输入成衣成本价', validator: checkNumber, trigger: 'blur' }
+        ],
+        supplyPrice: [
+          { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
+        ],
+        wholesalePrice: [
+          { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
+        ],
+        largeBatchPrice: [
+          { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
+        ],
+        memberPrice: [
+          { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
+        ],
+        retailPrice: [
+          { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
         ]
       }
     }
@@ -271,7 +292,7 @@ export default {
 </script>
 <style lang="less">
 .w-e-menu {
-  z-index: 1001!important;
+  z-index: 1001 !important;
 }
 .w-e-text-container {
   z-index: 1001 !important;
