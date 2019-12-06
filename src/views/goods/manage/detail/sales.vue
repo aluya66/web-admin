@@ -11,11 +11,24 @@
         @set-min-price="setMinPrice"
       ></sku-wrap>
     </el-form-item>
+     <el-form-item label="起订量:">
+      <el-input
+        v-if="!isView"
+        class="select-item"
+        :disabled="isDisabled"
+        v-model.trim="formModel.sampleCostPrice"
+        :size="size"
+        placeholder="请输入起订量"
+        clearable
+      />
+      <span v-else>{{formModel.sampleCostPrice}}</span>
+    </el-form-item>
     <el-form-item label="样衣成本价(元):">
       <el-input
         v-if="!isView"
         class="select-item"
         :disabled="isDisabled"
+        :rule="{ message: '请输入样衣成本价', validator: checkNumber, trigger: 'blur' }"
         v-model.trim="formModel.sampleCostPrice"
         :size="size"
         placeholder="请输入样衣成本价"

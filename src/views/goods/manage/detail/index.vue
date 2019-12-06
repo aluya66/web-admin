@@ -7,14 +7,20 @@
       ></el-page-header>
     </template>
     <div class="point-wrapper">
-      <el-steps direction="vertical">
-        <el-step
-          v-for="(item, index) in stepList"
-          :key="index"
-          :title="item.name"
-          v-point="item.id"
-        ></el-step>
-      </el-steps>
+      <div
+        class="point-item"
+        v-for="(item, index) in stepList"
+        :key="index"
+        v-point="item.id"
+        :class="{'current-point': currentPoint === index}"
+        @click="selectPoint(index)"
+      >
+        <div class="point-box">
+          <div class="circle">{{index + 1}}</div>
+          <div class="line" v-show="index !== stepList.length-1"></div>
+        </div>
+        <div class="point-name">{{item.name}}</div>
+      </div>
     </div>
     <el-form
       ref="formRef"
@@ -99,7 +105,7 @@ export default {
   mixins: [MixinForm],
   data() {
     return {
-      currentStep: 1, // 媌点下标
+      currentPoint: 0, // 媌点下标
       stepList: [{
         name: '基础信息',
         id: '#form-base'
@@ -122,28 +128,28 @@ export default {
       rules: {
         goodsName: [
           { required: true, message: '请输入商品名称', trigger: 'blur' }
-        ],
-        sampleCostPrice: [
-          { message: '请输入样衣成本价', validator: checkNumber, trigger: 'blur' }
-        ],
-        costPrice: [
-          { message: '请输入成衣成本价', validator: checkNumber, trigger: 'blur' }
-        ],
-        supplyPrice: [
-          { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
-        ],
-        wholesalePrice: [
-          { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
-        ],
-        largeBatchPrice: [
-          { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
-        ],
-        memberPrice: [
-          { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
-        ],
-        retailPrice: [
-          { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
         ]
+        // sampleCostPrice: [
+        //   { message: '请输入样衣成本价', validator: checkNumber, trigger: 'blur' }
+        // ],
+        // costPrice: [
+        //   { message: '请输入成衣成本价', validator: checkNumber, trigger: 'blur' }
+        // ],
+        // supplyPrice: [
+        //   { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
+        // ],
+        // wholesalePrice: [
+        //   { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
+        // ],
+        // largeBatchPrice: [
+        //   { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
+        // ],
+        // memberPrice: [
+        //   { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
+        // ],
+        // retailPrice: [
+        //   { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
+        // ]
       }
     }
   },
@@ -153,6 +159,9 @@ export default {
   },
 
   methods: {
+    selectPoint(index) {
+      this.currentPoint = index
+    },
     fetchData() {
       const { params, name } = this.$route
       if (name === 'goodsSnapshootDetail') { // 快照详情数据
@@ -314,6 +323,41 @@ export default {
   z-index: 1005;
   height: 300px;
   cursor: pointer;
+  .point-item {
+    display: flex;
+    font-size: @f18;
+    color: @info;
+    &.current-point {
+      color: @active;
+      .point-box {
+        .circle {
+          border: 1px solid @active;
+        }
+      }
+    }
+    .point-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 15px;
+      .circle {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        border-radius: 50%;
+        border: 1px solid @border-default;
+      }
+      .line {
+        width: 3px;
+        height: 30px;
+        background-color: @border-default;
+      }
+    }
+    .point-name {
+      line-height: 50px;
+    }
+  }
 }
 .video {
   max-height: 500px;

@@ -1,7 +1,7 @@
 import Http from '../utils/request'
 
-const context = process.env.VUE_APP_CONSOLE_COMMON
-// VUE_APP_LOCALHOST
+const context = process.env.VUE_APP_LOCALHOST
+// VUE_APP_LOCALHOST VUE_APP_CONSOLE_COMMON
 // 添加商品
 export const add = params =>
   Http.fetch(`${context}/api/goods`, params)

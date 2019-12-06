@@ -15,6 +15,8 @@ export default {
       callback()
     }
     return {
+      checkNumber,
+      checkInt,
       dictData: {} // 字典数据
     }
   },
