@@ -29,7 +29,7 @@
         disabled
       ></el-input>
     </el-form-item>
-    <el-form-item label="生日:" prop="birthday">
+    <el-form-item label="生日:">
       <el-date-picker
         v-model="formModel.birthday"
         value-format="yyyy-MM-dd"
@@ -101,9 +101,6 @@ export default {
         }
       ],
       rules: {
-        birthday: [
-          { required: true, message: '请输入生日', trigger: 'blur' }
-        ],
         isEnable: [
           { required: true, message: '请选择会员状态', trigger: 'change' }
         ],
