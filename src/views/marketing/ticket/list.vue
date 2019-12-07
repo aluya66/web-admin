@@ -220,7 +220,7 @@ export default {
           handle(row) {
             const { couponId, status } = row
             // 未发布：可修改优惠券所有信息; 进行中、未开始、已下架：只可修改使用说明
-            if (status !== 4 && status !== 5 && status !== 6 && status !== 7) return this.$msgTip('该优惠券不支持编辑操作', 'warning')
+            if (status !== 4 && status !== 5 && status !== 6 && status !== 7) return vm.$msgTip('该优惠券不支持编辑操作', 'warning')
             vm.routerLink(`/marketing/ticket/ticketInfo/${couponId}`)
           }
         },
