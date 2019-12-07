@@ -8,9 +8,9 @@
         :preview-src-list="[formModel.coverImg]"
       ></c-image>
     </el-form-item>
-    <el-form-item label="商品图片:">
+    <el-form-item class="img-form-item" label="商品图片:" prop="goodsImageList" :rules="rules.goodsImageList">
       <el-button type="primary" @click="showDialog('goodsImg')" :disabled="isDisabled">上传图片</el-button>
-      <div class="resource-wrapper">
+      <div class="resource-wrapper" v-if="formModel.goodsImageList && formModel.goodsImageList.length">
         <div class="image-item" v-for="(item, index) in formModel.goodsImageList" :key="index">
           <c-image class="image" :url="item.url" fit="contain" :preview-src-list="[item.url]"></c-image>
           <div class="btn-item">
@@ -20,7 +20,7 @@
         </div>
       </div>
     </el-form-item>
-    <el-form-item label="商品视频:">
+    <el-form-item label="商品视频:" prop="videoList">
       <el-button type="primary" @click="showDialog('video')" :disabled="isDisabled">上传视频</el-button>
       <el-button type="primary" @click="deleteImg('videoList', 0)" :disabled="isDisabled">删除</el-button>
       <div class="resource-wrapper" v-if="formModel.videoList && formModel.videoList.length">
@@ -111,9 +111,13 @@ export default {
       dialogObj: false,
       curAttrs: [], // 全部商品参数
       curIndex: 0, // 一类商品参数下标
-      checkAttrs: [] // 选中商品参数值[{1010:[212,3133]}]
-      // formModel: {
-      // }
+      checkAttrs: [], // 选中商品参数值[{1010:[212,3133]}]
+      formModel: {},
+      rules: {
+        goodsImageList: [
+          { required: true, message: '请选择商品图片', trigger: 'change' }
+        ]
+      }
     }
   },
   props: {
@@ -219,7 +223,7 @@ export default {
 .form-card {
   .el-form-item {
     width: 98%;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
   }
   .select-item {
     width: 30%;

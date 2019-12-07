@@ -25,7 +25,6 @@
     <el-form
       ref="formRef"
       :model="formModel"
-      :rules="rules"
       label-width="120px"
       class="form"
       label-position="right"
@@ -64,13 +63,8 @@
         ref="otherRef"
         title="其他信息"
       ></g-other>-->
-      <el-form-item class="form-btn" v-if="isView">
-        <el-button
-          :loading="btnLoading"
-          v-permission="$route.meta.roles"
-          type="primary"
-          @click.native.prevent="submitHandle"
-        >保存</el-button>
+      <el-form-item class="form-btn">
+        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
       </el-form-item>
     </el-form>
     <div v-if="dialogObj.isShow">
@@ -105,7 +99,7 @@ export default {
   mixins: [MixinForm],
   data() {
     const checkNumber = (rule, value, callback) => {
-      console.log(value)
+      console.log(rule, value)
       if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
       callback()
     }
@@ -115,11 +109,11 @@ export default {
         name: '基础信息',
         id: '#form-base'
       }, {
-        name: '商品信息',
-        id: '#form-params'
-      }, {
         name: '销售信息',
         id: '#form-sales'
+      }, {
+        name: '商品信息',
+        id: '#form-params'
       }],
       formModel: {},
       isView: false,
@@ -129,33 +123,7 @@ export default {
         curData: {}
       },
       isDisabled: true,
-      btnLoading: false,
-      rules: {
-        goodsName: [
-          { required: true, message: '请输入商品名称', trigger: 'blur' }
-        ],
-        sampleCostPrice: [
-          { message: '请输入样衣成本价', validator: checkNumber, trigger: 'blur' }
-        ],
-        costPrice: [
-          { message: '请输入成衣成本价', validator: checkNumber, trigger: 'blur' }
-        ],
-        supplyPrice: [
-          { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
-        ],
-        wholesalePrice: [
-          { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
-        ],
-        largeBatchPrice: [
-          { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
-        ],
-        memberPrice: [
-          { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
-        ],
-        retailPrice: [
-          { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
-        ]
-      }
+      btnLoading: false
     }
   },
 
@@ -280,7 +248,45 @@ export default {
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          console.log(this.$refs.formModel)
+          console.log(this.$refs.basicRef.formModel, this.$refs.salesRef.formModel, this.$refs.paramsRef.formModel)
+          const { id, goodsBn } = this.formModel
+          const { operationName, marketable } = this.$refs.basicRef.formModel
+          const { mustQuantity, sampleCostPrice, costPrice, supplyPrice, wholesalePrice, largeBatchPrice, memberPrice, retailPrice, goodsSkus } = this.$refs.salesRef.formModel
+          const { videoList, goodsImageList, intro } = this.$refs.paramsRef.formModel
+          const goodsStaticFiles = goodsImageList.map((item) => { return { imageUrl: item.url } })
+          if (videoList.length) goodsStaticFiles.push(videoList.map((item) => { return { videoUrl: item.url } }))
+          const skuList = goodsSkus.map((item) => {
+            return {
+              goodsSkuSn: item.goodsSkuSn, // 商品SKU码
+              memberPrice: item.memberPrice, // 会员价
+              retailPrice: item.retailPrice, // 零售价
+              costPrice: item.costPrice, // 商品成本价
+              sampleCostPrice: item.sampleCostPrice, // 样衣成本价
+              supplyPrice: item.supplyPrice, // 供货价
+              wholesalePrice: item.wholesalePrice, // 批发价
+              largeBatchPrice: item.largeBatchPrice, // 大批发价
+              isDefalut: item.isDefalut // 是否默认货品
+            }
+          })
+          this.$api.goods.updateGoodsDetail({
+            goodsBn, // 商品编码SPU码
+            operationName, // 运营名称
+            marketable, // 是否可售
+            mustQuantity, // 起订量
+            minGarmentCostPrice: sampleCostPrice, // 成衣成本价
+            costprice: costPrice, // 样衣成本价
+            minGarmentSupplyPrice: supplyPrice, // 供货价,
+            minGarmentWholesalePrice: wholesalePrice, // 散批价
+            minGarmentLargePrice: largeBatchPrice, // 大批价
+            minGarmentRetailPrice: retailPrice, // 零售价
+            goodsStaticFiles, // 商品资源文件集合 【视频、商品图片】
+            intro, // 富文本
+            price: memberPrice, // 会员价
+            goodsSkus: skuList // sku列表
+          }).then(() => {
+            this.$msgTip('编辑成功')
+            this.closeCurrentTag()
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -331,7 +337,7 @@ export default {
   cursor: pointer;
   .point-item {
     display: flex;
-    font-size: @f18;
+    font-size: @f16;
     color: @info;
     &.current-point {
       color: @active;
@@ -347,10 +353,10 @@ export default {
       align-items: center;
       margin-right: 15px;
       .circle {
-        width: 50px;
-        height: 50px;
+        width: 25px;
+        height: 25px;
         text-align: center;
-        line-height: 50px;
+        line-height: 25px;
         border-radius: 50%;
         border: 1px solid @border-default;
         background-color: #fff;
@@ -362,7 +368,7 @@ export default {
       }
     }
     .point-name {
-      line-height: 50px;
+      line-height: 25px;
     }
   }
 }

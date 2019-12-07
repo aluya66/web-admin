@@ -2,6 +2,7 @@
   <c-card :name="title" class="form-card" id="form-sales">
     <el-form-item label="商品规格:">
       <sku-wrap
+        ref="skuWrapRef"
         :is-view="isView || isDisabled"
         v-if="curAttrs.length"
         :sku-attrs="curAttrs"
@@ -11,15 +12,15 @@
         @set-min-price="setMinPrice"
       ></sku-wrap>
     </el-form-item>
-     <el-form-item label="起订量:">
+    <el-form-item label="起订量:" prop="mustQuantity">
       <el-input
         v-if="!isView"
         class="select-item"
         :disabled="isDisabled"
-        v-model.trim="formModel.sampleCostPrice"
         :size="size"
         placeholder="请输入起订量"
         clearable
+        v-model.trim="formModel.mustQuantity"
       />
       <span v-else>{{formModel.sampleCostPrice}}</span>
     </el-form-item>
@@ -31,6 +32,7 @@
         v-model.trim="formModel.sampleCostPrice"
         :size="size"
         placeholder="请输入样衣成本价"
+        @blur="getsampleCostPrice"
         clearable
       />
       <span v-else>{{formModel.sampleCostPrice}}</span>
@@ -116,11 +118,42 @@ import utils from 'utils'
 
 export default {
   data() {
+    const checkNumber = (rule, value, callback) => {
+      console.log(rule, value)
+      if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
+      callback()
+    }
     return {
       rateValueObj: {},
       curAttrs: [], // 全部商品属性
       paramsData: {}, // sku 规格值
-      formModel: {}
+      formModel: {
+        sampleCostPrice: '',
+        costPrice: ''  
+      },
+      rules: {
+        sampleCostPrice: [
+          { required: true, message: '请输入样衣成本价', trigger: 'blur' }
+        ],
+        costPrice: [
+          { validator: checkNumber, trigger: 'change' }
+        ],
+        supplyPrice: [
+          { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
+        ],
+        wholesalePrice: [
+          { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
+        ],
+        largeBatchPrice: [
+          { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
+        ],
+        memberPrice: [
+          { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
+        ],
+        retailPrice: [
+          { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
+        ]
+      }
     }
   },
   props: {
@@ -143,28 +176,35 @@ export default {
     }
   },
   mounted() {
-    const { goodsBn, skus, sampleCostPrice, supplyprice, largeBatchPrice, costprice, memberPrice, retailPrice } = this.dataObj
+    const { goodsBn, skus, mustQuantity, sampleCostprice, supplyprice, largePrice, costprice, mktprice, price, wholesaleprice } = this.dataObj
     this.formModel = {
       goodsBn,
       skus,
-      sampleCostPrice,
-      supplyprice,
-      largeBatchPrice,
-      costprice,
-      memberPrice,
-      retailPrice
+      mustQuantity,
+      sampleCostPrice: sampleCostprice,
+      supplyPrice: supplyprice,
+      largeBatchPrice: largePrice,
+      costPrice: costprice,
+      memberPrice: mktprice,
+      retailPrice: price,
+      wholesalePrice: wholesaleprice
     }
+
   },
   created() {
     this.getAttrs()
   },
   methods: {
+    getsampleCostPrice(val) {
+      console.log(this.formModel.sampleCostPrice)
+    },
     setMinPrice(val) {
+      let goodsSkus = this.$refs.skuWrapRef.childProductArray
       this.formModel = {
         ...this.formModel,
+        goodsSkus,
         ...val
       }
-      console.log(this.formModel)
     },
     getAttrs() {
       this.$api.basic.getGoodsattrval({

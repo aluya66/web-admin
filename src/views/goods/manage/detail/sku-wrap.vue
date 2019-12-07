@@ -80,7 +80,7 @@
               :key="'th_'+index"
               :title="item.name"
             >{{item.name !== 'stock' ? item.label + '(元)': item.label}}</th>
-            <th>是否启用</th>
+            <!-- <th>是否启用</th> -->
             <th>是否主sku</th>
           </tr>
         </thead>
@@ -135,13 +135,13 @@
                 :disabled="isView || !childProductArray[index].isUse || tdItem.name === 'stock'"
               ></el-input>
             </td>
-            <td>
+            <!-- <td>
               <el-switch
                 v-model="childProductArray[index].isUse"
                 :disabled="isView"
                 @change="(val) => {handleUserChange(index, val)}"
               ></el-switch>
-            </td>
+            </td> -->
             <td>
               <el-switch
                 v-model="childProductArray[index].isDefalut"
@@ -340,16 +340,13 @@ export default {
       Object.keys(this.rateObj).forEach((item, index) => {
         this.rateList.forEach((rateItem) => {
           if (rateItem.name === item) {
-            console.log(this.rateObj[item])
             rateItem.value = this.rateObj[item]
           }
         })
       })
-      console.log(this.rateList)
     },
     // 上传图片成功
     uploadSuccess(response, file, fileList) {
-      console.log(fileList, file)
       this.specification[this.uploadIndex].fileList = [fileList[fileList.length - 1]] // 获取最后一张覆盖原图
       this.specification[0].posterUrl[this.uploadIndex] = fileList[fileList.length - 1].url
       this.specification = JSON.parse(JSON.stringify(this.specification))

@@ -165,7 +165,7 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="商品是否可售:" prop="marketable" required>
-      <el-radio-group v-model="formModel.marketable">
+      <el-radio-group v-model="formModel.marketable" :disabled="isDisabled">
         <el-radio :label=0>否</el-radio>
         <el-radio :label=1>是</el-radio>
       </el-radio-group>
