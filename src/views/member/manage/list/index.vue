@@ -89,9 +89,6 @@ const isVipSelect = [{
 }, {
   value: 0,
   label: '否'
-}, {
-  value: 2,
-  label: '过期'
 }]
 
 const genderSelect = [{
