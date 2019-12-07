@@ -153,37 +153,37 @@ export default {
           }
         }, {
           label: '样衣成本价(元)',
-          prop: 'sampleCostPrice',
+          prop: 'sampleCostprice',
           width: 115
         },
         {
           label: '成衣成本价(元)',
-          prop: 'costPrice',
+          prop: 'costprice',
           width: 115
         },
         {
           label: '成衣供货价(元)',
-          prop: 'supplyPrice',
+          prop: 'supplyprice',
           width: 115
         },
         {
           label: '成衣散批价(元)',
-          prop: 'wholesalePrice',
+          prop: 'wholesaleprice',
           width: 115
         },
         {
           label: '成衣大批价(元)',
-          prop: 'largeBatchPrice',
+          prop: 'largePrice',
           width: 115
         },
         {
           label: '成衣会员价(元)',
-          prop: 'memberPrice',
+          prop: 'price',
           width: 115
         },
         {
           label: '零售价(元)',
-          prop: 'retailPrice',
+          prop: 'tagprice',
           width: 90
         },
         {
@@ -194,21 +194,6 @@ export default {
             label: '库存',
             type: 'min-max'
           }
-        },
-        {
-          label: '成本价',
-          prop: 'marketable',
-          width: 100
-        },
-        {
-          label: '市场价',
-          prop: 'memberPrice',
-          width: 100
-        },
-        {
-          label: '销售价',
-          prop: 'mktPrice',
-          width: 100
         },
         {
           label: '上架状态',
