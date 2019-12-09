@@ -5,6 +5,7 @@
     multiple
     :size="size"
     :limit="limit"
+    :file-type="fileType"
     :auto-upload="false"
     action="/api/upload/file"
     list-type="picture-card"
@@ -22,6 +23,10 @@ import CUpload from '../upload'
 export default create({
   name: 'multiUpload',
   props: {
+    fileType: {
+      type: String,
+      default: 'image'
+    },
     size: {
       type: Number,
       default: 5

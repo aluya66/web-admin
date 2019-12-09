@@ -9,7 +9,7 @@
       ></c-image>
     </el-form-item>
     <el-form-item class="img-form-item" label="商品图片:" prop="goodsImageList" :rules="rules.goodsImageList">
-      <el-button type="primary" @click="showDialog('goodsImg')" :disabled="isDisabled">上传图片</el-button>
+      <el-button type="primary" @click="showDialog('image')" :disabled="isDisabled">上传图片</el-button>
       <div class="resource-wrapper" v-if="formModel.goodsImageList && formModel.goodsImageList.length">
         <div class="image-item" v-for="(item, index) in formModel.goodsImageList" :key="index">
           <c-image class="image" :url="item.url" fit="contain" :preview-src-list="[item.url]"></c-image>
@@ -90,7 +90,7 @@
         @on-submit="dialogConfirm"
       >
         <template v-slot:header>
-          <c-multi-upload ref="multiUpload" @upload="getFileList"></c-multi-upload>
+          <c-multi-upload ref="multiUpload" @upload="getFileList" :limit="uploadLimit" :file-type="uploadType"></c-multi-upload>
         </template>
       </c-dialog>
     </div>
@@ -107,7 +107,8 @@ import CDialog from 'components/dialog'
 export default {
   data() {
     return {
-      uploadType: 'goodsImg', // 上传图片的类型  商品图片、视频
+      uploadLimit: 9, // 上传数量
+      uploadType: 'image', // 上传图片的类型  商品图片、视频
       dialogObj: false,
       curAttrs: [], // 全部商品参数
       curIndex: 0, // 一类商品参数下标
@@ -159,6 +160,7 @@ export default {
         isShow: true,
         title: '上传图片'
       }
+      this.uploadLimit = type === 'image' ? 9 : 1
       this.uploadType = type
     },
     getAttrs() {
@@ -193,17 +195,11 @@ export default {
     handleCheckedChange(value) {
       this.checkAttrs[this.curIndex] = { [this.curAttrs[this.curIndex].id]: value }
     },
-    uploadSuccess(response, file, fileList) {
-      // this.fileList = fileList
-    },
-    uploadRemove(file, fileList) {
-      // this.fileList = fileList
-    },
     uploadReview() {
       this.$emit('show-image', { videoUrl: this.formModel.videoList[0].url, fileType: 2 })
     },
     getFileList(list) {
-      if (this.uploadType === 'goodsImg') this.formModel.goodsImageList = this.formModel.goodsImageList.concat(list)
+      if (this.uploadType === 'image') this.formModel.goodsImageList = this.formModel.goodsImageList.concat(list)
       if (this.uploadType === 'video') this.formModel.videoList = this.formModel.videoList = list
     },
     dialogConfirm() {

@@ -528,7 +528,8 @@ export default {
     },
     // 倍率设置
     setRate() {
-      if (!Number(this.rateList[this.rateIndex].value) && Number(this.rateList[this.rateIndex].value) <= 0) {
+      console.log(this.rateList[this.rateIndex].value)
+      if (!Number(this.rateList[this.rateIndex].value) || Number(this.rateList[this.rateIndex].value) <= 0) {
         this.$message({
           type: 'warning',
           message: '请输入正确的值'
@@ -561,6 +562,7 @@ export default {
           break
       }
       this.childProductArray.forEach(item => {
+        console.log(item[target], (value * this.rateList[this.rateIndex].value).toFixed(2))
         if (item.isUse && value) {
           item[target] = (value * this.rateList[this.rateIndex].value).toFixed(2)
         }
@@ -579,7 +581,7 @@ export default {
       // 在样衣库管理新增/编辑商品，提交后，若有新增的sku，均以上述的规则计算各个价格，填充到对应的值中，同时按照现有规则，在生成sku价格后，针对spu价格按照现有规则自动填充；
 
       // typeof this.batchList[this.batchIndex].value === 'string' && this.batchList[this.batchIndex].value !== ''
-      if (!Number(this.batchList[this.batchIndex].value) && Number(this.batchList[this.batchIndex].value) <= 0) {
+      if (!Number(this.batchList[this.batchIndex].value) || Number(this.batchList[this.batchIndex].value) <= 0) {
         this.$message({
           type: 'warning',
           message: '请输入正确的值'

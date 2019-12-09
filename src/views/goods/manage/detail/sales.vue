@@ -32,7 +32,6 @@
         v-model.trim="formModel.sampleCostPrice"
         :size="size"
         placeholder="请输入样衣成本价"
-        @blur="getsampleCostPrice"
         clearable
       />
       <span v-else>{{formModel.sampleCostPrice}}</span>
@@ -49,7 +48,7 @@
       />
       <span v-else>{{formModel.costPrice}}</span>
     </el-form-item>
-    <el-form-item label="成衣供货价(元):" prop="supplyPrice" :rules="rules.supplyPrice">
+    <el-form-item label="成衣供货价(元):" prop="supplyPrice">
       <el-input
         v-if="!isView"
         class="select-item"
@@ -118,11 +117,6 @@ import utils from 'utils'
 
 export default {
   data() {
-    const checkNumber = (rule, value, callback) => {
-      console.log(rule, value)
-      if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
-      callback()
-    }
     return {
       rateValueObj: {},
       curAttrs: [], // 全部商品属性
@@ -130,29 +124,6 @@ export default {
       formModel: {
         sampleCostPrice: '',
         costPrice: ''
-      },
-      rules: {
-        sampleCostPrice: [
-          { required: true, message: '请输入样衣成本价', trigger: 'blur' }
-        ],
-        costPrice: [
-          { validator: checkNumber, trigger: 'change' }
-        ],
-        supplyPrice: [
-          { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
-        ],
-        wholesalePrice: [
-          { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
-        ],
-        largeBatchPrice: [
-          { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
-        ],
-        memberPrice: [
-          { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
-        ],
-        retailPrice: [
-          { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
-        ]
       }
     }
   },
@@ -194,9 +165,15 @@ export default {
     this.getAttrs()
   },
   methods: {
-    getsampleCostPrice(val) {
-      console.log(this.formModel.sampleCostPrice)
-    },
+    validateSku(rule, value, callback){
+      console.log(value)
+            var text = /，/g;
+            if (text.test(value)) {
+                callback(new Error("输入不可以包含“,”"))
+            } else {
+                callback();
+            }
+        },
     setMinPrice(val) {
       let goodsSkus = this.$refs.skuWrapRef.childProductArray
       this.formModel = {

@@ -27,6 +27,7 @@
       :model="formModel"
       label-width="120px"
       class="form"
+      :rules="rules"
       label-position="right"
     >
       <g-basic
@@ -98,6 +99,15 @@ export default {
   name: 'goodsDetail',
   mixins: [MixinForm],
   data() {
+    const checkNumber = (rule, value, callback) => {
+      // if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
+      console.log(this.formModel.sampleCostPrice)
+      if (!this.formModel.sampleCostPrice || !Number(this.formModel.sampleCostPrice) || Number(this.formModel.sampleCostPrice) < 0) {
+        this.$refs.formRef.validateField('sampleCostPrice')
+        return
+      }
+      callback()
+    }
     return {
       currentPoint: 0, // 媌点下标
       stepList: [{
@@ -118,7 +128,30 @@ export default {
         curData: {}
       },
       isDisabled: true,
-      btnLoading: false
+      btnLoading: false,
+      rules: {
+        sampleCostPrice: [
+          { required: true, message: '请输入样衣成本价', trigger: 'blur' }
+        ],
+        costPrice: [
+          { validator: checkNumber, trigger: 'change' }
+        ],
+        supplyPrice: [
+          { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
+        ],
+        wholesalePrice: [
+          { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
+        ],
+        largeBatchPrice: [
+          { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
+        ],
+        memberPrice: [
+          { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
+        ],
+        retailPrice: [
+          { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
+        ]
+      }
     }
   },
 
@@ -253,13 +286,13 @@ export default {
           const skuList = goodsSkus.map((item) => {
             return {
               goodsSkuSn: item.goodsSkuSn, // 商品SKU码
-              memberPrice: item.memberPrice, // 会员价
-              retailPrice: item.retailPrice, // 零售价
-              costPrice: item.costPrice, // 商品成本价
+              garmentRetailPrice: item.memberPrice, // 会员价
+              garmentMarketPrice: item.retailPrice, // 零售价
+              garmentCostPrice: item.costPrice, // 成衣成本价
               sampleCostPrice: item.sampleCostPrice, // 样衣成本价
-              supplyPrice: item.supplyPrice, // 供货价
-              wholesalePrice: item.wholesalePrice, // 批发价
-              largeBatchPrice: item.largeBatchPrice, // 大批发价
+              garmentSupplyPrice: item.supplyPrice, // 供货价
+              garmentWholesalePrice: item.wholesalePrice, // 散批价
+              garmentLargePrice: item.largeBatchPrice, // 大批发价
               isDefalut: item.isDefalut // 是否默认货品
             }
           })

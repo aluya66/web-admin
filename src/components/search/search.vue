@@ -74,7 +74,7 @@
           clearable
         />
       </template>
-      <template v-else-if="item.type === 'dateTime'">
+      <template v-else-if="item.type === 'dateTime' && !item.isHidden">
         <el-date-picker
           v-model="formModel[item.prop]"
           :type="item.dateType || 'daterange'"

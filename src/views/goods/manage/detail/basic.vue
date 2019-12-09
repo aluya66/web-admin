@@ -445,7 +445,7 @@ export default {
         season: seasonCN, // 季节
         sourceSupplierName, // 货源商
         coverImg, // 识别图/封面图
-        marketable, // 是否可售
+        marketable: marketable || 0, // 是否可售
         updatebyName,
         skus,
         updated,
