@@ -87,3 +87,9 @@ export const userCoupon = params =>
     method: 'get',
     mockFile: 'coupon-user'
   })
+
+// 商品活动列表
+export const getGoodsActivityList = params =>
+  Http.fetch(`${context}/api/mks/activity/product`, params, {
+    method: 'get'
+  })

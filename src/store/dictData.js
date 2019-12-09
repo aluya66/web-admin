@@ -84,6 +84,30 @@ const categoryTypeList = [{
   value: 2
 }]
 
+// 活动类型  1 满减 2 折扣 3 一口价
+const activityTypeList = [{
+  label: '满减',
+  value: 1
+}, {
+  label: '折扣',
+  value: 2
+}, {
+  label: '一口价',
+  value: 3
+}]
+
+// 活动状态 1待开始 2活动中 3已结束
+const activityStatusList = [{
+  label: '待开始',
+  value: 1
+}, {
+  label: '活动中',
+  value: 2
+}, {
+  label: '已结束',
+  value: 3
+}]
+
 export default {
   pointTypeList,
   lobList,
@@ -91,5 +115,7 @@ export default {
   disStatus,
   categoryTypeList,
   auditStatus,
-  genderSelect
+  genderSelect,
+  activityTypeList,
+  activityStatusList
 }

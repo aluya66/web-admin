@@ -6,22 +6,6 @@
         :content="$route.meta.name || $t(`route.${$route.meta.title}`)"
       ></el-page-header>
     </template>
-    <div class="point-wrapper">
-      <div
-        class="point-item"
-        v-for="(item, index) in stepList"
-        :key="index"
-        v-point="item.id"
-        :class="{'current-point': currentPoint === index}"
-        @click="selectPoint(index)"
-      >
-        <div class="point-box">
-          <div class="circle">{{index + 1}}</div>
-          <div class="line" v-show="index !== stepList.length-1"></div>
-        </div>
-        <div class="point-name">{{item.name}}</div>
-      </div>
-    </div>
     <el-form
       ref="formRef"
       :model="formModel"

@@ -50,6 +50,7 @@
 import mixinTable from 'mixins/table'
 // import utils from 'utils'
 import CDialog from 'components/dialog'
+import dictObj from '@/store/dictData'
 
 export default {
   name: 'couponList',
@@ -205,55 +206,70 @@ export default {
       tableHeader: [
         {
           label: '活动名称',
-          prop: 'couponId',
+          prop: 'activityName',
           width: 100,
-          fixed: true
+          fixed: true,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '活动类型',
-          prop: 'couponId',
+          prop: 'activityType',
           width: 100,
-          fixed: true
+          fixed: true,
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.activityType, 'activityTypeList')
+          },
+          search: {
+            type: 'select',
+            optionsList: dictObj.activityTypeList
+          }
         },
         {
           label: '使用渠道',
           prop: 'platformList',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.platformList, 'lobList')
+          },
+          search: {
+            type: 'select',
+            optionsList: dictObj.lobList
           }
         },
         {
           label: '折扣条件',
-          prop: 'couponName'
+          prop: 'activityTypeName'
         },
         {
           label: '活动开始时间',
-          prop: 'typeName'
+          prop: 'activityTime',
+          search: {
+            prop: 'dateTime',
+            type: 'dateTime'
+          }
         },
         {
           label: '活动结束时间',
-          prop: 'couponRemark'
+          prop: 'activityEndTime'
         },
         {
-          label: '活动状态', // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
-          prop: 'status',
-          formatter(row) {
-            switch (row.status) {
-              case 0: return '草稿'
-              case 1: return '审核中'
-              case 2: return '审核不通过'
-              case 3: return '审核通过'
-              case 4: return '未发布'
-              case 5: return '进行中'
-              case 6: return '未开始'
-              case 7: return '已下架'
-              case 8: return '已结束(失效)'
-            }
+          label: '活动状态',
+          prop: 'activityStatus',
+          formatter(row) { // 1待开始 2活动中 3已结束
+            return row && vm.setTableColumnLabel(row.activityStatus, 'activityStatusList')
+          },
+          search: {
+            type: 'select',
+            optionsList: dictObj.activityStatusList
           }
         },
         {
           label: '申请人',
-          prop: 'created'
+          prop: 'applicants',
+          search: {
+            type: 'input'
+          }
         }
       ]
     }
@@ -271,7 +287,7 @@ export default {
       const searchDate = this.getSearchDate(dataTime, 'dateTime')
       this.isLoading = true
       this.$api.marketing
-        .getCoupon({
+        .getGoodsActivityList({
           ...searchDate,
           ...other,
           ...page
