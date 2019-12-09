@@ -280,7 +280,7 @@ export default {
           label: '是否会员',
           prop: 'isVip',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.appCode, isVipSelect)
+            return row && vm.setTableColumnLabel(row.isVip, isVipSelect)
           },
           search: {
             type: 'dict',

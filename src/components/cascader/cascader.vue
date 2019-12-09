@@ -1,5 +1,6 @@
 <template>
   <el-cascader
+    :class="bem()"
     v-model="data"
     :options="options"
     :props="props"
@@ -9,8 +10,8 @@
   ></el-cascader>
 </template>
 <script>
-
-export default {
+import create from 'utils/create'
+export default create({
   name: 'cascader',
   props: {
     options: { // 源数据集合
@@ -32,5 +33,5 @@ export default {
       }
     }
   }
-}
+})
 </script>

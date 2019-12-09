@@ -15,8 +15,8 @@ export default {
       callback()
     }
     return {
-      checkNumber,
       checkInt,
+      checkNumber,
       dictData: {} // 字典数据
     }
   },

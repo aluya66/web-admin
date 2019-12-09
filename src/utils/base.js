@@ -44,6 +44,16 @@ export const openNewWin = (routerOpts) => {
 }
 
 /**
+ * 日期处理，回显到日期组件中
+ * @param {*} startDate 起始日期
+ * @param {*} endDate 结束日期
+ * return [startDate, endDate] 返回一个数组， [起始时间，结束时间]
+ */
+export const handleDate = (startDate, endDate) => {
+  return [Date(startDate), Date(endDate)]
+}
+
+/**
  * 二进制流文件转换成xlsx文件
  * @param {file} file
  */
@@ -405,5 +415,6 @@ export default {
   isExternal,
   getUrlParam,
   openNewWin,
-  goToLogin
+  goToLogin,
+  handleDate
 }
