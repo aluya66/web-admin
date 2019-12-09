@@ -157,7 +157,7 @@ export default {
             formData.append('files', res.raw)
           }
         })
-      }else {
+      } else {
         formData.append('files', file.raw)
       }
       this.mutiFiles = formData

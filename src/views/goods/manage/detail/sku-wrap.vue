@@ -106,7 +106,7 @@
                   @on-success="uploadSuccess"
                   :on-remove="uploadRemove"
                   :on-preview="uploadReview"
-                  @on-change="uploadIndex = specIndex"
+                  @on-change="uploadIndex=specIndex"
                 >
                   <el-button size="small" type="primary" @click="changeSku(index, specIndex)">点击上传</el-button>
                   <div slot="tip" class="el-upload__tip">只能上传图片png/jepg后缀文件，且不超过10M</div>
@@ -538,7 +538,7 @@ export default {
       const name = this.rateList[this.rateIndex].name // 当前设置得倍率
       let value // 倍率对应得价格
       let target // sku列表得input
-      switch (name) { // 供货倍率、大批价格倍率、 散批价倍率、 会员价倍率、零售倍率 
+      switch (name) { // 供货倍率、大批价格倍率、 散批价倍率、 会员价倍率、零售倍率
         case 'supplyRate':
           value = this.batchList[2].value
           target = 'supplyPrice'
@@ -606,27 +606,27 @@ export default {
                 childitem.sampleCostPrice = item.value
               })
               break
-            case 'supplyPrice':  // 成衣供货价     
+            case 'supplyPrice': // 成衣供货价
               rate = this.rateList[0].value // 供货价倍率
               this.batchList[2].value = this.getPrice(curPrice, rate)
               this.batchSameTypePrice('supplyPrice', curPrice, rate)
               break
-            case 'wholesalePrice':  // 成衣散批价
+            case 'wholesalePrice': // 成衣散批价
               rate = this.rateList[2].value // 成衣散批价倍率
               this.batchList[3].value = this.getPrice(curPrice, rate)
               this.batchSameTypePrice('wholesalePrice', curPrice, rate)
               break
-            case 'largeBatchPrice':  // 成衣大批价    
+            case 'largeBatchPrice': // 成衣大批价
               rate = this.rateList[1].value // 成衣大批价倍率
               this.batchList[4].value = this.getPrice(curPrice, rate)
               this.batchSameTypePrice('largeBatchPrice', curPrice, rate)
               break
-            case 'memberPrice':  // 成衣会员价  
+            case 'memberPrice': // 成衣会员价
               rate = this.rateList[3].value // 成衣会员价倍率
               this.batchList[5].value = this.getPrice(curPrice, rate, 'handlePrice')
               this.batchSameTypePrice('memberPrice', curPrice, rate, 'handlePrice')
               break
-            case 'retailPrice':  // 零售价      
+            case 'retailPrice': // 零售价
               rate = this.rateList[4].value // 零售价倍率
               this.batchList[6].value = this.getPrice(curPrice, rate, 'handlePrice')
               this.batchSameTypePrice('retailPrice', curPrice, rate, 'handlePrice')
@@ -651,7 +651,7 @@ export default {
         let list = this.childProductArray.map((skuItem) => {
           return Number(skuItem[item])
         })
-        minObj[item] = Math.min.apply(Math, list).toFixed(2);
+        minObj[item] = Math.min.apply(Math, list).toFixed(2)
       })
       this.$emit('set-min-price', minObj)
     },

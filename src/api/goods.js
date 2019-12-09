@@ -35,7 +35,6 @@ export const updateGoodsDetail = params =>
   Http.fetch(`${context}api/updatecloth`, params, {
     method: 'put'
   })
- 
 // 查询商品sku列表
 export const getSku = params =>
   Http.fetch(`${context}/api/sku/list`, params, {

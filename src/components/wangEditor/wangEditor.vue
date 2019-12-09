@@ -6,7 +6,6 @@
 <script>
 import create from 'utils/create/basic'
 import E from 'wangeditor'
-import utils from 'utils'
 
 export default create({
   name: 'wangEditor',
@@ -30,7 +29,6 @@ export default create({
     }
   },
   mounted() {
-    const token = utils.getStore('SET_USERINFO') ? utils.getStore('SET_USERINFO').token : ''
     // 初始化编辑器
     this.editor = new E(this.$refs[this.editorRef])
     // 编辑富文本内容时
@@ -38,7 +36,7 @@ export default create({
     this.editor.customConfig = {
       uploadImgShowBase64: true,
       // uploadImgServer: 'http://pillar-admin.yosar.develop/api/upload/file', // 配置服务器端地址
-      uploadImgMaxSize: 2 * 1024 * 1024, // 将图片大小限制为 2M 
+      uploadImgMaxSize: 2 * 1024 * 1024, // 将图片大小限制为 2M
       // uploadImgParams: {
       //   token
       // }
