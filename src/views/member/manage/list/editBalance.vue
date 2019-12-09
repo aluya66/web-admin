@@ -3,19 +3,19 @@
     ref="formRef"
     :model="formModel"
     :rules="rules"
-    label-width="120px"
+    label-width="130px"
     class="form"
     label-position="right"
     status-icon
   >
-    <el-form-item label="账号余额:">
+    <el-form-item label="账号可用余额(元):">
       <el-input
         v-model.trim="formModel.curBalance"
         class="form-item"
         disabled
       ></el-input>
     </el-form-item>
-    <el-form-item label="余额变动:" prop="balance">
+    <el-form-item label="余额变动(元):" prop="balance">
       <el-input
         v-model.trim="formModel.balance"
         class="form-item"

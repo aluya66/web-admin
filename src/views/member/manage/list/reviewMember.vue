@@ -32,7 +32,7 @@
           <span class="value">{{formModel.couponNum}}</span>
         </div>
         <div>
-          <span class="label">钱包余额(元):</span>
+          <span class="label">钱包可用余额(元):</span>
           <span class="value">{{formModel.balance}}</span>
         </div>
         <div>
