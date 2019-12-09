@@ -129,7 +129,7 @@ export default {
       paramsData: {}, // sku 规格值
       formModel: {
         sampleCostPrice: '',
-        costPrice: ''  
+        costPrice: ''
       },
       rules: {
         sampleCostPrice: [
@@ -189,7 +189,6 @@ export default {
       retailPrice: price,
       wholesalePrice: wholesaleprice
     }
-
   },
   created() {
     this.getAttrs()

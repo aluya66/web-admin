@@ -98,11 +98,6 @@ export default {
   name: 'goodsDetail',
   mixins: [MixinForm],
   data() {
-    const checkNumber = (rule, value, callback) => {
-      console.log(rule, value)
-      if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
-      callback()
-    }
     return {
       currentPoint: 0, // 媌点下标
       stepList: [{
@@ -154,7 +149,7 @@ export default {
         })
       } else {
         console.log(params.type)
-        this.isDisabled = params.type === 'view' ? true : false
+        this.isDisabled = params.type === 'view'
         // this.formModel = {
         //   brandId: 38,
         //   brandName: 'Mika Mika',
@@ -249,7 +244,7 @@ export default {
       this.$refs.formRef.validate(valid => {
         if (valid) {
           console.log(this.$refs.basicRef.formModel, this.$refs.salesRef.formModel, this.$refs.paramsRef.formModel)
-          const { id, goodsBn } = this.formModel
+          const { goodsBn } = this.formModel
           const { operationName, marketable } = this.$refs.basicRef.formModel
           const { mustQuantity, sampleCostPrice, costPrice, supplyPrice, wholesalePrice, largeBatchPrice, memberPrice, retailPrice, goodsSkus } = this.$refs.salesRef.formModel
           const { videoList, goodsImageList, intro } = this.$refs.paramsRef.formModel
