@@ -39,6 +39,9 @@ export default {
     payManageList: '支付记录',
     payManageAccount: '账户管理',
     payManageChannel: '渠道管理',
+    channelManage: '渠道管理',
+    channelRule: '渠道规则',
+    channelDetail: '渠道详情',
     memberCenter: '会员中心',
     memberManage: '会员管理',
     memberManageList: '会员列表',
@@ -57,7 +60,10 @@ export default {
     dictList: '字典管理',
     dictInfo: '字典信息',
     settingsLabel: '标签管理',
-    settingsQrcode: '二维码管理'
+    settingsQrcode: '二维码管理',
+    settingsAccess: '接入方管理',
+    settingsAccessList: '接入方列表',
+    settingsAccessLog: '接入方日志'
   },
   navbar: {
     logout: '退出',

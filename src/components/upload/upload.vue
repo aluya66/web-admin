@@ -18,9 +18,8 @@
   >
     <slot></slot>
     <template v-if="!autoUpload && !$slots.default">
-      <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+      <i slot="trigger" class="el-icon-plus"></i>
+      <div slot="tip" class="el-upload__tip">{{tip}}</div>
     </template>
     <template v-if="autoUpload && !$slots.default">
       <i class="el-icon-upload"></i>
@@ -28,7 +27,7 @@
         将文件拖到此处，或
         <em>点击上传</em>
       </div>
-      <div class="el-upload__tip" slot="tip">只能上传excel格式文件，且不超过2M</div>
+      <div class="el-upload__tip" slot="tip">{{tip}}</div>
     </template>
   </el-upload>
 </template>
@@ -78,11 +77,20 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    drag: {
+      type: Boolean,
+      default: false
+    },
+    tip: {
+      type: String,
+      default: '* 只能上传jpg/png文件，且不超过5M'
     }
   },
   data() {
     return {
-      mutiFiles: []
+      mutiFiles: [],
+      isUpload: false
     }
   },
   computed: {
@@ -116,27 +124,43 @@ export default {
   },
   methods: {
     customUpload(fileObj) {
+      if (this.isUpload) { // 只调用一次上传
+        return
+      }
       const { uid } = fileObj.file
-      if (uid === this.mutiFiles.get('files').uid) {
+      const hasFile = this.limit > 1 ? this.mutiFiles.getAll('files').find(res => res.uid === uid) : true
+      if (hasFile) {
+        this.isUpload = true
         this.$api.common.uploadFile(this.mutiFiles).then(res => {
-          const fileList = res.map(res => ({
-            name: fileObj.file.name,
-            id: res.id,
-            url: res.imageUrl
-          }))
-          this.$emit('update:fileList', fileList)
-          this.$emit('on-success', '', fileObj.file, fileList)
+          if (res) {
+            let fileList = []
+            fileList = res.map(res => ({
+              name: fileObj.file.name,
+              id: res.id,
+              url: res.url
+            }))
+            if (this.fileList.length) {
+              fileList = this.fileList.concat(fileList)
+            }
+            this.$emit('update:file-list', fileList)
+            this.$emit('on-success', '', fileObj.file, fileList)
+          }
         })
       }
     },
     handleChange(file, fileList) {
+      this.isUpload = false
+      let formData = new FormData()
       if (!this.autoUpload) {
-        let formData = new FormData()
         fileList.forEach(res => {
-          formData.append('files', res.raw)
+          if (res.raw) {
+            formData.append('files', res.raw)
+          }
         })
-        this.mutiFiles = formData
+      }else {
+        formData.append('files', file.raw)
       }
+      this.mutiFiles = formData
     },
     handleExceed(files, fileList) {
       this.$message.warning(
@@ -161,12 +185,12 @@ export default {
                 : ''
           }))
         }
-        this.$emit('update:fileList', curFileList)
+        this.$emit('update:file-list', curFileList)
         this.$emit('on-success', response, file, curFileList)
         this.uploadList = curFileList
       } else {
         fileList.splice(fileList.length - 1, 1)
-        this.$emit('update:fileList', fileList)
+        this.$emit('update:file-list', fileList)
         this.$emit('on-success', response, file, fileList)
         this.$msgTip(`${response.code}【${response.message}】`, 'warning')
       }
@@ -187,10 +211,10 @@ export default {
             }
           ).then(() => {
             this.$emit('before-remove')
-            this.$emit('update:fileList', fileList)
+            this.$emit('update:file-list', fileList)
           })
         }
-        this.$emit('update:fileList', fileList)
+        this.$emit('update:file-list', fileList)
         this.$emit('before-remove', file, fileList)
       }
     },
@@ -227,6 +251,7 @@ export default {
       this.$emit('before-upload')
       return false
     },
+    // 上传提醒
     showTip(file) {
       const isLimit = file.size / 1024 / 1024 < this.size
       if (!isLimit) {
@@ -235,8 +260,9 @@ export default {
       }
       return isLimit
     },
+    // 手动上传事件
     submitUpload() {
-      this.$refs.upload.submit()
+      this.$refs[this.uploadRef].submit()
     }
   }
 }

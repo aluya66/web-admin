@@ -127,15 +127,19 @@ export default {
      * 表格项获取字典数据label数据
      */
     setTableColumnLabel(value, dictKey) {
-      const list = Array.isArray(value)
-        ? value : typeof value === 'string'
-          ? value.split(',') : [value] // 字符串、数组、数字处理
-      let arr = []
-      list.forEach((item) => {
-        let curVal = dictObj[dictKey].find(res => item === res.value)
-        curVal && arr.push(curVal.label)
-      })
-      return arr.join(',')
+      if (Array.isArray(value)) { // value 为数组
+        let arr = []
+        let curArr = utils.isArray(dictKey) ? dictKey : dictObj[dictKey]
+        value.forEach((item) => {
+          let curVal = curArr.find(res => item === res.value)
+          curVal && arr.push(curVal.label)
+        })
+        return arr.join(',')
+      } else { // value 字符串和数字
+        let curArr = utils.isArray(dictKey) ? dictKey : dictObj[dictKey]
+        let curVal = curArr.find(res => value === res.value)
+        return curVal ? curVal.label : ''
+      }
     }
   },
   components: {

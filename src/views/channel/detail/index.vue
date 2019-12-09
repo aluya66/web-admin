@@ -13,7 +13,7 @@
       class="form"
       label-position="right"
     >
-    <s-shop
+      <s-shop
         :is-view="isView"
         :is-disabled="isDisabled"
         :data-obj="formModel"
@@ -46,7 +46,7 @@ export default {
     SShop,
     SPeople
   },
-  data () {
+  data() {
     return {
       formModel: {},
       isView: true,
@@ -54,14 +54,14 @@ export default {
       btnLoading: false
     }
   },
-  created () {
+  created() {
     this.fetchData()
   },
   methods: {
     fetchData() {
       const { params } = this.$route
       this.isDisabled = true
-      this.$api.shop.getShopDetail({ id: params.shopId }).then(res => {
+      this.$api.channel.getShopDetail({ id: params.shopId }).then(res => {
         if (res) {
           this.formModel = res
         } else {

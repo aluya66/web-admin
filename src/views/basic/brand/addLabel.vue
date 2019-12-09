@@ -200,7 +200,8 @@ export default {
             }
           })
           this.$api.settings.addTagbrand({
-            tags
+            tags,
+            brandCode: code
           }).then(res => {
             this.$msgTip('保存成功').then(() => {
               this.goBack()

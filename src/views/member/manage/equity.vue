@@ -12,10 +12,10 @@
                 <el-button
                   class="btn"
                   size="small"
-                  v-if="item.activityId === 6 || item.activityId === 7"
-                  @click="edit(item.activityId, subItem)"
+                  v-if="subItem.unit === 3"
+                  @click="edit(item.activityId, subItem.unit, subItem)"
                 >编辑</el-button>
-                <!-- item.activityId === 6 || item.activityId === 7" 积分、商品有编辑功能 -->
+                <!-- unit 优惠单位 0.金额 1.数量 2.特价 3.积分倍率，目前开放积分编辑功能 -->
               </div>
             </div>
           </el-card>
@@ -47,7 +47,7 @@
                 v-model="pointDialogObj.rate"
                 :size="size"
                 maxlength="5"
-                placeholder="输入整数"
+                placeholder="请输入积分倍数"
                 clearable
               />倍积分
             </div>
@@ -353,25 +353,26 @@ export default {
       })
     },
     // 积分/商品编辑
-    edit(activityId, item) {
+    edit(activityId, unit, item) {
       const { activityDetailId, memberTypeId } = item
-      if (activityId === 6) { // 积分倍数编辑
+      if (unit === 3) { // 积分倍数编辑
         this.pointDialogObj = {
           isShow: true,
           activityDetailId,
           userLevel: memberTypeId,
           activityId
         }
-      } else if (activityId === 7) {
-        this.fetchData()
-        this.pageInfo.pageNo = 1
-        this.goodsDialogObj = {
-          isShow: true,
-          activityDetailId,
-          userLevel: memberTypeId,
-          activityId
-        }
       }
+      // else if (unit === 1) {
+      //   this.fetchData()
+      //   this.pageInfo.pageNo = 1
+      //   this.goodsDialogObj = {
+      //     isShow: true,
+      //     activityDetailId,
+      //     userLevel: memberTypeId,
+      //     activityId
+      //   }
+      // }
     },
     // 会员权益列表
     fetchEquityData() {

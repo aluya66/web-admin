@@ -2,7 +2,7 @@ import Http from '../utils/request'
 // ipx服务相关接口
 const ipxContext = process.env.VUE_APP_IPX
 // 中台服务相关接口
-const context = process.env.VUE_APP_CONSOLE_COMMON
+const context = process.env.VUE_APP_UPLOAD
 
 /**
  * mock模拟数据 示例

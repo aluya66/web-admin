@@ -42,8 +42,8 @@
           ></c-image>
           <el-popover trigger="hover" placement="top" v-else-if="item.isPopover">
             <p>{{scope.row[item.prop]}}</p>
-            <div slot="reference" class="name-wrapper">
-              <div class="text-multi-ellipsis">{{ scope.row[item.prop] }}</div>
+            <div slot="reference" class="name-wrapper text-multi-ellipsis">
+              {{ scope.row[item.prop] }}
             </div>
           </el-popover>
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
@@ -250,17 +250,17 @@ export default {
       return btn[type]
     },
     curBtns(row) {
-      this.tableInnerBtns.filter(res => {
+      const tableInnerBtns = this.tableInnerBtns.filter(res => {
         if (res.prop && res.prop.toggle && res.prop.toggle.every((item) => item.value)) {
           return res.prop.toggle.some(val => val.value.includes(row[res.prop.name]))
         }
-        if (res.notBtn) {
-          return !!row[res.notBtn]
+        if (res.notBtn) { // 渠道关联关联后，屏蔽关联按钮 !row[res.notBtn].length
+          return Array.isArray(row[res.notBtn]) ? !row[res.notBtn].length : !!row[res.notBtn]
         } else {
           return true
         }
       })
-      return this.tableInnerBtns
+      return tableInnerBtns
     },
     // 选中取消
     toggleSelection(rows) {
@@ -327,6 +327,9 @@ export default {
 .c-table {
   position: relative;
   margin-top: 10px;
+  .el-table thead {
+    line-height: 0;
+  }
   .search-form {
     .el-form-item {
       margin-bottom: 10px;
@@ -356,11 +359,19 @@ export default {
     }
   }
   .text-multi-ellipsis {
-    .multi-ellipsis(2);
+    .multi-ellipsis(1);
   }
   .title-active {
     color: @active;
     cursor: pointer;
   }
+  .el-table__fixed, .el-table__fixed-right{
+    .cell {
+      word-break: normal;
+    }
+  }
+}
+.el-popover {
+  max-width: 800px;
 }
 </style>

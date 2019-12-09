@@ -7,6 +7,9 @@
 		:close-on-click-modal="closeModal"
 		:show-close="closeBtn"
 	>
+    <div slot="title" v-if="$slots.header">
+      <slot name="header"></slot>
+    </div>
 		<div class="dialog-content">
 			<slot />
 		</div>

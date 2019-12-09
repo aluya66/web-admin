@@ -69,7 +69,9 @@ import ReviewMember from './reviewMember'
 import EditMember from './editMember'
 import EditBalance from './editBalance'
 import EditPoint from './editPoint'
+import dictObj from '@/store/dictData'
 import utils from 'utils'
+
 // 会员来源
 const sourceSelect = [
   {
@@ -81,6 +83,14 @@ const sourceSelect = [
     value: 2
   }
 ]
+const isVipSelect = [{
+  value: 1,
+  label: '是'
+}, {
+  value: 0,
+  label: '否'
+}]
+
 const genderSelect = [{
   label: '男',
   value: 1
@@ -253,6 +263,28 @@ export default {
           search: {
             label: '所属店铺',
             type: 'input'
+          }
+        },
+        {
+          label: '业务线',
+          prop: 'appCode',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.appCode, 'lobList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.lobList
+          }
+        },
+        {
+          label: '是否会员',
+          prop: 'isVip',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.isVip, isVipSelect)
+          },
+          search: {
+            type: 'dict',
+            optionsList: isVipSelect
           }
         },
         {

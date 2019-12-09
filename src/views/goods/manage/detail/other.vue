@@ -1,5 +1,5 @@
 <template>
-  <c-card :name="title" class="form-card">
+  <c-card :name="title" class="form-card" id="form-other">
     <el-form-item label="渠道名称:" prop="goodsChannelValue">
       <el-input
         v-if="!isView"

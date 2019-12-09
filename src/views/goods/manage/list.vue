@@ -1,5 +1,15 @@
 <template>
   <c-view>
+    <template v-slot:headerTab>
+      <el-tabs type="card" v-model="currentType" @tab-click="changeTab">
+        <el-tab-pane
+          v-for="(item, index) in tabTitle"
+          :key="index"
+          :label="item.label"
+          :name="item.value"
+        ></el-tab-pane>
+      </el-tabs>
+    </template>
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
       <div class="header-btn">
@@ -57,6 +67,17 @@ export default {
   mixins: [mixinTable],
   data(vm) {
     return {
+      currentType: '1', // 1：已完善   0：未完善
+      tabTitle: [
+        {
+          value: '1',
+          label: '已完善'
+        },
+        {
+          value: '0',
+          label: '未完善'
+        }
+      ],
       originList: [{
         label: '门店挂板',
         value: 1
@@ -72,7 +93,14 @@ export default {
         name: '详情',
         icon: 'el-icon-view',
         handle(row) {
-          vm.routerLink(`/goods/manage/detail/${row.id}`)
+          vm.routerLink(`/goods/manage/detail/${row.id}/view`)
+        }
+      },
+      {
+        name: '编辑',
+        icon: 'el-icon-edit',
+        handle(row) {
+          vm.routerLink(`/goods/manage/detail/${row.id}/edit`)
         }
       },
       {
@@ -145,6 +173,10 @@ export default {
           }
         },
         {
+          label: '内容完善状态',
+          prop: 'isReadableCN'
+        },
+        {
           label: '商品来源',
           prop: 'origin',
           width: 120,
@@ -153,37 +185,37 @@ export default {
           }
         }, {
           label: '样衣成本价(元)',
-          prop: 'sampleCostPrice',
+          prop: 'sampleCostprice',
           width: 115
         },
         {
           label: '成衣成本价(元)',
-          prop: 'costPrice',
+          prop: 'costprice',
           width: 115
         },
         {
           label: '成衣供货价(元)',
-          prop: 'supplyPrice',
+          prop: 'supplyprice',
           width: 115
         },
         {
           label: '成衣散批价(元)',
-          prop: 'wholesalePrice',
+          prop: 'wholesaleprice',
           width: 115
         },
         {
           label: '成衣大批价(元)',
-          prop: 'largeBatchPrice',
+          prop: 'largePrice',
           width: 115
         },
         {
           label: '成衣会员价(元)',
-          prop: 'memberPrice',
+          prop: 'price',
           width: 115
         },
         {
           label: '零售价(元)',
-          prop: 'retailPrice',
+          prop: 'tagprice',
           width: 90
         },
         {
@@ -194,21 +226,6 @@ export default {
             label: '库存',
             type: 'min-max'
           }
-        },
-        {
-          label: '成本价',
-          prop: 'marketable',
-          width: 100
-        },
-        {
-          label: '市场价',
-          prop: 'memberPrice',
-          width: 100
-        },
-        {
-          label: '销售价',
-          prop: 'mktPrice',
-          width: 100
         },
         {
           label: '上架状态',
@@ -245,6 +262,17 @@ export default {
     this.fetchData()
   },
   methods: {
+    // tab切换 已完善、未完善
+    changeTab() {
+      this.searchObj.isReadable = this.currentType
+      // 切换未完善tab，多传一个字段【商品类型 1：样衣 2：成衣】
+      if (this.currentType === '0') {
+        Object.assign(this.searchObj, { commodityType: 1 })
+      } else {
+        Reflect.deleteProperty(this.searchObj, 'commodityType')
+      }
+      this.fetchData()
+    },
     /**
      * 获取表格数据
      */
@@ -267,7 +295,8 @@ export default {
           ...page,
           minStock: stock[0] || '',
           maxStock: stock[1] || '',
-          categoryCode: curCategoryCode
+          categoryCode: curCategoryCode,
+          isReadable: this.currentType
         }
       ).then(res => {
         this.isLoading = false
