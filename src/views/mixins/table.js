@@ -109,13 +109,13 @@ export default {
           const { judgeShouldShow, ...searchOther } = search
           const opts = { label, prop, ...searchOther }
           searchObj[opts.prop] = opts.type && (opts.type === 'cascader' || opts.type === 'min-max') ? [] : ''
-          if (judgeShouldShow) { 
+          if (judgeShouldShow) {
             // 根据列表字段判断是否显示隐藏列表筛选条件
             // judgeShouldShow: { // 判断是否显示 key为列表字段，值为value时需要显示
             //        key: 'commodityType',
             //        value: '1'
-            // } 
-            opts.isHidden = this.tableList[judgeShouldShow['key']] !== judgeShouldShow['value']  
+            // }
+            opts.isHidden = this.tableList[judgeShouldShow['key']] !== judgeShouldShow['value']
           }
           this.searchItems.push(opts)
         }

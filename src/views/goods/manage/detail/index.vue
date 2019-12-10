@@ -22,52 +22,48 @@
         <div class="point-name">{{item.name}}</div>
       </div>
     </div>
-    <el-form
-      ref="formRef"
-      :model="formModel"
-      label-width="120px"
-      class="form"
-      :rules="rules"
-      label-position="right"
-    >
-      <g-basic
-        :is-view="isView"
-        :is-disabled="isDisabled"
-        :data-obj="formModel"
-        v-if="formModel.id"
-        ref="basicRef"
-        title="基础信息"
-        @show-image="reviewImage"
-      ></g-basic>
-      <g-sales
-        :is-view="isView"
-        :is-disabled="isDisabled"
-        v-if="formModel.id"
-        :data-obj="formModel"
-        ref="salesRef"
-        title="销售信息"
-      ></g-sales>
-      <g-params
-        :is-view="isView"
-        :is-disabled="isDisabled"
-        v-if="formModel.id"
-        :data-obj="formModel"
-        @show-image="reviewImage"
-        ref="paramsRef"
-        title="商品信息"
-      ></g-params>
-      <!-- <g-other
+    <g-basic
+      :is-view="isView"
+      :is-disabled="isDisabled"
+      :data-obj="formModel"
+      v-if="formModel.id"
+      ref="basicRef"
+      title="基础信息"
+      @show-image="reviewImage"
+    ></g-basic>
+    <g-sales
+      :is-view="isView"
+      :is-disabled="isDisabled"
+      v-if="formModel.id"
+      :data-obj="formModel"
+      ref="salesRef"
+      title="销售信息"
+    ></g-sales>
+    <g-params
+      :is-view="isView"
+      :is-disabled="isDisabled"
+      v-if="formModel.id"
+      :data-obj="formModel"
+      @show-image="reviewImage"
+      ref="paramsRef"
+      title="商品信息"
+    ></g-params>
+    <!-- <g-other
         :is-view="isView"
         :is-disabled="isDisabled"
         v-if="formModel.id"
         :data-obj="formModel"
         ref="otherRef"
         title="其他信息"
-      ></g-other>-->
-      <el-form-item class="form-btn">
-        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
-      </el-form-item>
-    </el-form>
+    ></g-other>-->
+    <div class="btn-wrapper">
+      <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">部分完善</el-button>
+      <el-button
+        :loading="btnLoading"
+        type="primary"
+        @click.native.prevent="submitHandle('confirmFinish')"
+      >确认完成</el-button>
+    </div>
     <div v-if="dialogObj.isShow">
       <el-dialog :visible.sync="dialogObj.isShow" v-if="dialogObj.imageUrl || dialogObj.videoUrl">
         <img
@@ -94,20 +90,10 @@ import MixinForm from 'mixins/form'
 import GBasic from './basic'
 import GSales from './sales'
 import GParams from './params'
-
 export default {
   name: 'goodsDetail',
   mixins: [MixinForm],
-  data() {
-    const checkNumber = (rule, value, callback) => {
-      // if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
-      console.log(this.formModel.sampleCostPrice)
-      if (!this.formModel.sampleCostPrice || !Number(this.formModel.sampleCostPrice) || Number(this.formModel.sampleCostPrice) < 0) {
-        this.$refs.formRef.validateField('sampleCostPrice')
-        return
-      }
-      callback()
-    }
+  data(vm) {
     return {
       currentPoint: 0, // 媌点下标
       stepList: [{
@@ -129,29 +115,6 @@ export default {
       },
       isDisabled: true,
       btnLoading: false,
-      rules: {
-        sampleCostPrice: [
-          { required: true, message: '请输入样衣成本价', trigger: 'blur' }
-        ],
-        costPrice: [
-          { validator: checkNumber, trigger: 'change' }
-        ],
-        supplyPrice: [
-          { message: '请输入成衣供货价', validator: checkNumber, trigger: 'blur' }
-        ],
-        wholesalePrice: [
-          { message: '请输入成衣散批价', validator: checkNumber, trigger: 'blur' }
-        ],
-        largeBatchPrice: [
-          { message: '请输入成衣大批价', validator: checkNumber, trigger: 'blur' }
-        ],
-        memberPrice: [
-          { message: '请输入成衣会员价', validator: checkNumber, trigger: 'blur' }
-        ],
-        retailPrice: [
-          { message: '请输入零售价', validator: checkNumber, trigger: 'blur' }
-        ]
-      }
     }
   },
 
@@ -181,79 +144,7 @@ export default {
           }
         })
       } else {
-        console.log(params.type)
-        this.isDisabled = params.type === 'view'
-        // this.formModel = {
-        //   brandId: 38,
-        //   brandName: 'Mika Mika',
-        //   businessValue: '自营',
-        //   buyCount: 0,
-        //   categoryCode: '052500',
-        //   categoryName: '牛仔外套',
-        //   commentsCount: 0,
-        //   commodityType: 2,
-        //   costprice: 12960,
-        //   coverImg: 'https://starimg.yosar.com/19/138/7c5d0285fc029866cd86e22d3b5d1042.JPG',
-        //   created: '2019-11-28 03:36:06',
-        //   downtime: '2019-11-28 11:36:06',
-        //   goodsAttrs: [],
-        //   goodsBn: '1K1BK31CY0006',
-        //   goodsBrief: '',
-        //   goodsName: '洗水毛边牛仔外套',
-        //   goodsShortName: '洗水毛边牛仔外套',
-        //   goodsStaticFiles: [
-        //     {
-        //       fileType: 1,
-        //       imageUrl: 'https://starimg.yosar.com/19/138/7c5d0285fc029866cd86e22d3b5d1042.JPG'
-        //     },
-        //     {
-        //       fileType: 2,
-        //       videoUrl: 'https://starimg.yosar.com/19/138/7c5d0285fc029866cd86e22d3b5d1042.JPG'
-        //     }
-        //   ],
-        //   id: 1792,
-        //   intro: "<p><img src='https://starimg.yosar.com/19/220/e655111c6a5656161becce099521cddd.jpg'/></p>",
-        //   isHot: 2,
-        //   isNew: 2,
-        //   isNomalVirtual: 1,
-        //   isReadable: 1,
-        //   isRecommend: 2,
-        //   largePrice: 15800,
-        //   marketable: 1,
-        //   mktprice: 0,
-        //   mustQuantity: 0,
-        //   place: '420104',
-        //   price: 31800,
-        //   purchUrl: '',
-        //   saleYear: '2019',
-        //   salesTotal: 0,
-        //   sampleCostprice: 130,
-        //   season: 3,
-        //   skus: [{ goodsBn: '1K1BK31CY0006', goodsId: 1792, goodsSkuSn: '1K1BK31CY0006-1', commodityType: 2 }],
-        //   sort: 100,
-        //   stargoGoodsId: 886,
-        //   stock: 0,
-        //   supplyprice: 12960,
-        //   tagprice: 62800,
-        //   unit: '',
-        //   updated: '2019-11-28 11:36:06',
-        //   uptime: '2019-11-28 11:36:06',
-        //   videoUrl: '',
-        //   viewCount: 0,
-        //   weight: 0,
-        //   weightUnit: '',
-        //   wholesaleprice: 16800
-        // }
-        // let videoList = []; let goodsImageList = []
-        // this.formModel.goodsStaticFiles.forEach(item => {
-        //   // 1.图片  2.视频
-        //   if (item.fileType === 1) {
-        //     goodsImageList.push({ url: item.imageUrl })
-        //   } else {
-        //     videoList.push({ url: item.videoUrl })
-        //   }
-        // }) // 图片、视频资源
-        // this.formModel = { ...this.formModel, goodsImageList, videoList }
+        this.isDisabled = params.type === 'view' ? true : false
         this.$api.goods.getDetail({ id: params.id }).then(res => {
           this.setTagsViewTitle()
           if (res) {
@@ -273,53 +164,63 @@ export default {
         })
       }
     },
-    submitHandle() {
-      this.$refs.formRef.validate(valid => {
-        if (valid) {
-          console.log(this.$refs.basicRef.formModel, this.$refs.salesRef.formModel, this.$refs.paramsRef.formModel)
-          const { goodsBn } = this.formModel
-          const { operationName, marketable } = this.$refs.basicRef.formModel
-          const { mustQuantity, sampleCostPrice, costPrice, supplyPrice, wholesalePrice, largeBatchPrice, memberPrice, retailPrice, goodsSkus } = this.$refs.salesRef.formModel
-          const { videoList, goodsImageList, intro } = this.$refs.paramsRef.formModel
-          const goodsStaticFiles = goodsImageList.map((item) => { return { imageUrl: item.url } })
-          if (videoList.length) goodsStaticFiles.push(videoList.map((item) => { return { videoUrl: item.url } }))
-          const skuList = goodsSkus.map((item) => {
-            return {
-              goodsSkuSn: item.goodsSkuSn, // 商品SKU码
-              garmentRetailPrice: item.memberPrice, // 会员价
-              garmentMarketPrice: item.retailPrice, // 零售价
-              garmentCostPrice: item.costPrice, // 成衣成本价
-              sampleCostPrice: item.sampleCostPrice, // 样衣成本价
-              garmentSupplyPrice: item.supplyPrice, // 供货价
-              garmentWholesalePrice: item.wholesalePrice, // 散批价
-              garmentLargePrice: item.largeBatchPrice, // 大批发价
-              isDefalut: item.isDefalut // 是否默认货品
-            }
-          })
-          this.$api.goods.updateGoodsDetail({
-            goodsBn, // 商品编码SPU码
-            operationName, // 运营名称
-            marketable, // 是否可售
-            mustQuantity, // 起订量
-            minGarmentCostPrice: sampleCostPrice, // 成衣成本价
-            costprice: costPrice, // 样衣成本价
-            minGarmentSupplyPrice: supplyPrice, // 供货价,
-            minGarmentWholesalePrice: wholesalePrice, // 散批价
-            minGarmentLargePrice: largeBatchPrice, // 大批价
-            minGarmentRetailPrice: retailPrice, // 零售价
-            goodsStaticFiles, // 商品资源文件集合 【视频、商品图片】
-            intro, // 富文本
-            price: memberPrice, // 会员价
-            goodsSkus: skuList // sku列表
-          }).then(() => {
-            this.$msgTip('编辑成功')
-            this.closeCurrentTag()
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+    handleData() {
+      const { goodsBn } = this.formModel
+      const { operationName, marketable } = this.$refs.basicRef.formModel
+      const { mustQuantity, sampleCostPrice, costPrice, supplyPrice, wholesalePrice, largeBatchPrice, memberPrice, retailPrice, goodsSkus } = this.$refs.salesRef.formModel
+      const { videoList, goodsImageList, intro } = this.$refs.paramsRef.formModel
+      const goodsStaticFiles = goodsImageList.map((item) => { return { imageUrl: item.url } })
+      if (videoList.length) goodsStaticFiles.push(videoList.map((item) => { return { videoUrl: item.url } }))
+      const skuList = goodsSkus && goodsSkus.length ? goodsSkus.map((item) => {
+        return {
+          goodsSkuSn: item.goodsSkuSn, // 商品SKU码
+          garmentRetailPrice: item.memberPrice, // 会员价
+          garmentMarketPrice: item.retailPrice, // 零售价
+          garmentCostPrice: item.costPrice, // 成衣成本价
+          sampleCostPrice: item.sampleCostPrice, // 样衣成本价
+          garmentSupplyPrice: item.supplyPrice, // 供货价
+          garmentWholesalePrice: item.wholesalePrice, // 散批价
+          garmentLargePrice: item.largeBatchPrice, // 大批发价
+          isDefalut: item.isDefalut // 是否默认货品
         }
+      }) : []
+      this.$api.goods.updateGoodsDetail({
+        goodsBn, // 商品编码SPU码
+        operationName, // 运营名称
+        marketable, // 是否可售
+        mustQuantity, // 起订量
+        minGarmentCostPrice: sampleCostPrice, // 成衣成本价
+        costprice: costPrice, // 样衣成本价
+        minGarmentSupplyPrice: supplyPrice, // 供货价,
+        minGarmentWholesalePrice: wholesalePrice, // 散批价
+        minGarmentLargePrice: largeBatchPrice, // 大批价
+        minGarmentRetailPrice: retailPrice, // 零售价
+        goodsStaticFiles, // 商品资源文件集合 【视频、商品图片】
+        intro, // 富文本
+        price: memberPrice, // 会员价
+        goodsSkus: skuList // sku列表
+      }).then(() => {
+        this.$msgTip('编辑成功')
+        this.closeCurrentTag()
       })
+    },
+    submitHandle(type = '') {
+      // 确认完成按钮，需要做必填项校验
+      if (type === 'confirmFinish') {
+        const salesForm = this.$refs.salesRef.$refs.salesFormRef
+        const paramsForm = this.$refs.paramsRef.$refs.paramsFormRef
+        Promise.all([salesForm, paramsForm].map(this.getFormPromise)).then(res => {
+          // 所有子表单是否校验通过
+          const validateResult = res.every(item => !!item);
+          if (validateResult) {
+            this.handleData()
+          } else {
+            console.log('未校验通过')
+          }
+        })
+      } else {
+        this.handleData()  
+      }
     },
     reviewImage(file) {
       this.dialogObj = {
@@ -399,6 +300,10 @@ export default {
       line-height: 25px;
     }
   }
+}
+.btn-wrapper {
+  display: flex;
+  justify-content: center;
 }
 .video {
   max-height: 500px;

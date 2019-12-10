@@ -397,6 +397,17 @@ export const validater = {
     } else {
       callback()
     }
+  },
+
+  /**
+   * 数字【不能为空、大于0 支持小数】
+   */
+  checkNumber (rule, value, callback) {
+    if (!value || !Number(value) || Number(value) < 0) {
+      callback(new Error('请输入大于0的数字'))
+    } else {
+      callback()
+    }
   }
 }
 

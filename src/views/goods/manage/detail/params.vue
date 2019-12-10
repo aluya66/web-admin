@@ -1,5 +1,13 @@
 <template>
   <c-card :name="title" class="form-card" id="form-params">
+    <el-form
+      ref="paramsFormRef"
+      :model="formModel"
+      label-width="120px"
+      class="form"
+      :rules="paramsForm"
+      label-position="right"
+    >
     <el-form-item label="识别图:">
       <c-image
         class="coverImg"
@@ -8,7 +16,7 @@
         :preview-src-list="[formModel.coverImg]"
       ></c-image>
     </el-form-item>
-    <el-form-item class="img-form-item" label="商品图片:" prop="goodsImageList" :rules="rules.goodsImageList">
+    <el-form-item class="img-form-item" label="商品图片:" prop="goodsImageList">
       <el-button type="primary" @click="showDialog('image')" :disabled="isDisabled">上传图片</el-button>
       <div class="resource-wrapper" v-if="formModel.goodsImageList && formModel.goodsImageList.length">
         <div class="image-item" v-for="(item, index) in formModel.goodsImageList" :key="index">
@@ -94,6 +102,7 @@
         </template>
       </c-dialog>
     </div>
+    </el-form>
   </c-card>
 </template>
 <script>
@@ -107,6 +116,9 @@ import CDialog from 'components/dialog'
 export default {
   data() {
     return {
+      paramsForm: {
+        goodsImageList: [{ required: true, trigger: 'change' }]
+      },
       uploadLimit: 9, // 上传数量
       uploadType: 'image', // 上传图片的类型  商品图片、视频
       dialogObj: false,

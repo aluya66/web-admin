@@ -30,7 +30,7 @@
             :disabled="isView"
             v-model.number="item.value"
             @focus="rateIndex = index"
-            @change="setRate"
+            @blur="setRate"
             clearable
             :placeholder="item.label"
           >
@@ -496,6 +496,7 @@ export default {
             return false
           }
         })
+        console.log(origin, childProduct)
         this.childProductArray.push(origin || childProduct)
       }
     },
@@ -530,6 +531,7 @@ export default {
     setRate() {
       console.log(this.rateList[this.rateIndex].value)
       if (!Number(this.rateList[this.rateIndex].value) || Number(this.rateList[this.rateIndex].value) <= 0) {
+        this.rateList[this.rateIndex].value = 1
         this.$message({
           type: 'warning',
           message: '请输入正确的值'
@@ -562,7 +564,6 @@ export default {
           break
       }
       this.childProductArray.forEach(item => {
-        console.log(item[target], (value * this.rateList[this.rateIndex].value).toFixed(2))
         if (item.isUse && value) {
           item[target] = (value * this.rateList[this.rateIndex].value).toFixed(2)
         }
@@ -650,12 +651,10 @@ export default {
       const minDataList = ['sampleCostPrice', 'costPrice', 'supplyPrice', 'wholesalePrice', 'largeBatchPrice', 'memberPrice', 'retailPrice']
       let minObj = {}
       minDataList.forEach((item) => {
-        let list = this.childProductArray.map((skuItem) => {
-          return Number(skuItem[item])
-        })
-        minObj[item] = Math.min.apply(Math, list).toFixed(2)
+        let list = this.childProductArray.length ? this.childProductArray.map((skuItem) => Number(skuItem[item])) : []
+        if (list.length > 1) minObj[item] = Math.min.apply(Math, list).toFixed(2)
       })
-      this.$emit('set-min-price', minObj)
+      if (Object.keys(minObj).length > 1) this.$emit('set-min-price', minObj)
     },
     // 设置成衣成本价，同时批量设置sku相关价格
     batchSameTypePrice(target, curPrice, rate, handlePrice = '') {
