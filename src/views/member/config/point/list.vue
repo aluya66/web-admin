@@ -43,7 +43,6 @@
           ref="childRef"
           :is-edit="dialogObj.isEdit"
           :init-data="dialogObj.initData"
-          :businessList="businessList"
         ></point-add>
       </c-dialog>
     </div>
@@ -155,8 +154,7 @@ export default {
             prop: 'dateTime'
           }
         }
-      ],
-      businessList: [] // 业务线
+      ]
     }
   },
   created() {

@@ -11,10 +11,9 @@
     <el-form-item label="业务线:" prop="appCode">
       <query-dict
         :disabled="isEdit"
-        :dict-list="businessList"
-        class="search-item"
-        size="medium"
-        placeholder="请选择"
+        :dict-list="lobList"
+        class="select-item"
+        placeholder="请选择业务线"
         :value.sync="formModel.appCode"
       ></query-dict>
     </el-form-item>
@@ -70,6 +69,8 @@
 
 <script>
 import QueryDict from '../../../common/queryDict'
+import dictObj from '@/store/dictData'
+
 export default {
   components: {
     QueryDict
@@ -88,9 +89,6 @@ export default {
         }
       }
     },
-    businessList: {
-      type: Array
-    },
     isEdit: {
       type: Boolean,
       default: false
@@ -98,6 +96,7 @@ export default {
   },
   data() {
     return {
+      lobList: dictObj.lobList,
       typeSelect: [
         {
           value: 1,

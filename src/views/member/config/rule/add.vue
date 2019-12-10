@@ -11,10 +11,9 @@
     <el-form-item label="业务线:" prop="appCode">
       <query-dict
         :disabled="isEdit"
-        :dict-list="businessList"
-        class="search-item"
-        size="medium"
-        placeholder="请选择"
+        :dict-list="lobList"
+        class="select-item"
+        placeholder="请选择业务线"
         :value.sync="formModel.appCode"
       ></query-dict>
     </el-form-item>
@@ -24,9 +23,8 @@
     <el-form-item label="会员类型:" prop="memberTypeId">
       <query-dict
         :dict-list="memberTypeList"
-        class="search-item"
-        size="medium"
-        placeholder="请选择"
+        class="select-item"
+        placeholder="请选择会员类型"
         :value.sync="formModel.memberTypeId"
         @ChangeQueryDict="changeMemberType"
       ></query-dict>
@@ -96,15 +94,14 @@
 
 <script>
 import QueryDict from '../../../common/queryDict'
+import dictObj from '@/store/dictData'
+
 export default {
   components: {
     QueryDict
   },
   props: {
     memberTypeList: {
-      type: Array
-    },
-    businessList: {
       type: Array
     },
     initData: {
@@ -164,6 +161,7 @@ export default {
       callback()
     }
     return {
+      lobList: dictObj.lobList,
       validDayUnitList: [{ // 1.年  2.月 3.日
         label: '年',
         value: 1

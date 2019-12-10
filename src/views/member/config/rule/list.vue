@@ -43,7 +43,6 @@
           :is-edit="dialogObj.isEdit"
           :init-data="dialogObj.initData"
           :memberTypeList="memberTypeList"
-          :businessList="businessList"
         ></point-add>
       </c-dialog>
     </div>
@@ -188,7 +187,6 @@ export default {
         }
       ],
       memberTypeList: [], // 会员类型
-      businessList: [] // 业务线
     }
   },
   created() {
