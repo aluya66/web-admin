@@ -6,38 +6,41 @@
         :content="$route.meta.name || $t(`route.${$route.meta.title}`)"
       ></el-page-header>
     </template>
-    <el-form
-      ref="formRef"
-      :model="formModel"
-      label-width="120px"
-      class="form"
-      label-position="right"
-    >
-      <g-basic
-        :is-view="isView"
-        :is-disabled="isDisabled"
-        :data-obj="formModel"
-        v-if="formModel.id"
-        ref="basicRef"
-        title="基础信息"
-        @show-image="reviewImage"
-      ></g-basic>
-      <el-form-item class="form-btn">
-        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
-      </el-form-item>
-    </el-form>
+    <g-basic
+      :is-view="isView"
+      :is-disabled="isDisabled"
+      :data-obj="formModel"
+      ref="basicRef"
+      title="基础信息"
+    ></g-basic>
+    <g-apply
+      :is-view="isView"
+      :is-disabled="isDisabled"
+      :data-obj="formModel"
+      ref="basicRef"
+      title="申请信息"
+    ></g-apply>
+    <div class="btn-wrapper">
+      <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+    </div>
   </c-view>
 </template>
 
 <script>
 import MixinForm from 'mixins/form'
 import GBasic from './basic'
+import GApply from './apply'
 
 export default {
   name: 'discountDetail',
   mixins: [MixinForm],
   data() {
-    return {}
+    return {
+      isDisabled: false,
+      isView: true,
+      btnLoading: false,
+      formModel: {}
+    }
   },
 
   created() {
@@ -48,7 +51,8 @@ export default {
   },
 
   components: {
-    GBasic
+    GBasic,
+    GApply
   }
 }
 </script>
@@ -60,5 +64,9 @@ export default {
     margin-left: 20px;
     margin-top: 20px;
   }
+}
+.btn-wrapper {
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -86,13 +86,13 @@ const categoryTypeList = [{
 
 // 活动类型  1 满减 2 折扣 3 一口价
 const activityTypeList = [{
-  label: '满减',
+  label: '满件折(商品满**件，享**折)',
   value: 1
 }, {
-  label: '折扣',
+  label: '满额减(商品满**元，减**元)',
   value: 2
 }, {
-  label: '一口价',
+  label: '一口价(一口价**元)',
   value: 3
 }]
 
