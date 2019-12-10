@@ -81,6 +81,10 @@ const sourceSelect = [
   {
     label: '店员开通',
     value: 2
+  },
+  {
+    label: '赠送',
+    value: 3
   }
 ]
 const isVipSelect = [{
