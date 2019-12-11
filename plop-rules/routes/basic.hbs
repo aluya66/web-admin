@@ -1,0 +1,32 @@
+import Layout from '@/views/layout'
+
+export default {
+  path: '/{{pathCase name}}',
+  name: '{{camelCase name}}',
+  component: Layout,
+  redirect: '/{{pathCase name}}/list',
+  meta: {
+    title: '{{camelCase name}}',
+    icon: 'nested'
+  },
+  children: [{
+    path: '/{{pathCase name}}/list',
+    name: '{{camelCase name}}List',
+    component: () => import('@/views/{{camelCase name}}/list'),
+    meta: {
+      title: '{{camelCase name}}List',
+      icon: 'table'
+    }
+  },
+  {
+    path: '/{{pathCase name}}/detail/:id?',
+    name: '{{camelCase name}}Detail',
+    hidden: true,
+    component: () => import('@/views/{{camelCase name}}/detail/index'),
+    meta: {
+      title: '{{camelCase name}}Detail',
+      noCache: true,
+      activeMenu: '/{{pathCase name}}/list'
+    }
+  }]
+}

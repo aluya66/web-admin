@@ -237,20 +237,6 @@ export default {
       })
     },
     /**
-     * 删除表格单条数据
-     *
-     * @param {*} curPromise
-     * @param {string} [msgTip='删除成功']
-     */
-    deleteData(param, msgTip = '删除成功') {
-      console.log(param, msgTip)
-      // 主要修改接口
-      this.$api.basic.deleteBrand(param).then(() => {
-        this.$msgTip(msgTip)
-        this.delResetData()
-      })
-    },
-    /**
      * 对话框确认按钮，集成了表单提交功能
      */
     dialogConfirm() {
