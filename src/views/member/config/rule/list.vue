@@ -186,7 +186,7 @@ export default {
           }
         }
       ],
-      memberTypeList: [], // 会员类型
+      memberTypeList: [] // 会员类型
     }
   },
   created() {
