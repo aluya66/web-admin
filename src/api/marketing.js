@@ -42,12 +42,12 @@ export const unableCoupon = params =>
 
 // 劵列表
 export const getCoupon = params =>
-  Http.fetch(`${context}/api/mks/coupon`, params, {
+  Http.fetch(`${context}/api/mks/coupon/rule/list`, params, {
     method: 'get',
     mockFile: 'coupon-list'
   })
 
-// // 劵列表详情
+// 劵列表详情
 export const couponDetail = params =>
   Http.fetch(`${context}/api/mks/coupon/detail`, params, {
     method: 'get',

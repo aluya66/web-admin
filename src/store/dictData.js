@@ -108,6 +108,50 @@ const activityStatusList = [{
   value: 3
 }]
 
+// 卡券类型
+const ticketTypeList = [ 
+  {
+    value: 1,
+    label: '现金券'
+  },
+  {
+    value: 2,
+    label: '折扣券'
+  },
+  {
+    value: 3,
+    label: '兑换券'
+  }
+]
+
+// 价格类型  0 非会员零售价 1 会员价 2 供货价 3 散批价 4 大批价 5 成本价
+const priceTypeList = [
+  {
+    value: 0,
+    label: '非会员零售价'
+  },
+  {
+    value: 1,
+    label: '会员价'
+  },
+  {
+    value: 2,
+    label: '供货价'
+  },
+  {
+    value: 3,
+    label: '散批价'
+  },
+  {
+    value: 4,
+    label: '大批价'
+  },
+  {
+    value: 5,
+    label: '成本价'
+  }    
+]
+
 export default {
   pointTypeList,
   lobList,
@@ -117,5 +161,7 @@ export default {
   auditStatus,
   genderSelect,
   activityTypeList,
-  activityStatusList
+  activityStatusList,
+  ticketTypeList,
+  priceTypeList
 }

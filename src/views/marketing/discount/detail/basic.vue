@@ -5,6 +5,7 @@
       :model="formModel"
       label-width="120px"
       class="form"
+      :rules="rules"
       label-position="right"
     >
       <el-form-item label="活动名称:" prop="activityName">
@@ -23,6 +24,7 @@
           class="search-item"
           placeholder="请选择活动类型"
           :value.sync="formModel.activityType"
+          @ChangeQueryDict="changeActivityType"
         ></query-dict>
       </el-form-item>
       <el-form-item label="使用渠道:" prop="platformList">
@@ -33,15 +35,15 @@
           :value.sync="formModel.platformList"
         ></query-dict>
       </el-form-item>
-      <!-- 活动类型：满件折 开始 -->
-      <!-- <el-form-item label="折扣条件:"
-            v-for="(item, index) in formModel.marketPreferentialRules"
-            :key="index"
-          >
-            <el-col :span="8">
+
+      <!-- 活动类型：满件折扣活动 开始 -->
+      <template v-if="formModel.activityType === 1">
+        <el-form-item label="折扣条件:">
+          <el-row v-for="(item, index) in formModel.couponPreferentialRules" :key="index">
+            <el-col :span="3">
               <el-form-item
                 inline
-                :prop="'marketPreferentialRules.' + index + '.preferentialLevel'"
+                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
                 :rules="{
                   required: true, validator: checkNumber, trigger: 'blur'
                 }"
@@ -50,36 +52,108 @@
                   class="discount-item"
                   v-model.trim="item.preferentialLevel"
                   size="medium"
-                  placeholder="输入订单金额，0为不限制"
+                  placeholder
                   clearable
                   style="width: 100%"
                 >
+                  <template slot="prepend">满</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col class="discount-type" :span="0.5">-</el-col>
+            <el-col :span="3">
+              <el-form-item
+                :prop="'couponPreferentialRules.' + index + '.preferentiaMaxlLevel'"
+                :rules="{
+                  required: true, validator: checkNumber, trigger: 'blur'
+                }"
+              >
+                <el-input
+                  class="discount-item"
+                  v-model.trim="item.preferentiaMaxlLevel"
+                  size="medium"
+                  placeholder
+                  clearable
+                  style="width: 100%"
+                >
+                  <template slot="append">件</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col class="discount-text-r" :span="1">享受</el-col>
+            <el-col :span="3">
+              <el-form-item
+                inline
+                :prop="'couponPreferentialRules.' + index + '.priceType'"
+                :rules="{
+                  required: true, validator: checkNumber, trigger: 'blur'
+                }"
+              >
+                <query-dict
+                  :dict-list="priceTypeList"
+                  class="search-item"
+                  placeholder="请选择价格类型"
+                  :value.sync="item.priceType"
+                ></query-dict>
+              </el-form-item>
+            </el-col>
+            <el-col :span="3">
+              <el-form-item
+                :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+                :rules="{
+                  required: true, validator: checkNumber, trigger: 'blur'
+                }"
+              >
+                <el-input
+                  class="discount-item"
+                  v-model.trim="item.preferentialValue"
+                  size="medium"
+                  placeholder
+                  clearable
+                  style="width: 100%"
+                >
+                  <template slot="append">折</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-button @click="deleteRule(index)" v-if="index !== 0">删除</el-button>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-button @click="addRules">添加</el-button>
+          </el-row>
+        </el-form-item>
+      </template>
+      <!-- 活动类型：满件折扣活动 结束 -->
+
+      <!-- 活动类型：满额减 开始 -->
+      <template v-if="formModel.activityType === 2">
+        <el-form-item label="折扣条件:">
+          <el-row v-for="(item, index) in formModel.couponPreferentialRules" :key="index">
+            <el-col :span="6">
+              <el-form-item
+                inline
+                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+                :rules="{
+                  required: true, validator: checkNumber, trigger: 'blur'
+                }"
+              >
+                <el-input
+                  class="discount-item"
+                  v-model.trim="item.preferentialLevel"
+                  size="medium"
+                  placeholder
+                  clearable
+                  style="width: 100%"
+                >
+                  <template slot="prepend">满</template>
                   <template slot="append">元</template>
                 </el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item
-                inline
-                :prop="'marketPreferentialRules.' + index + '.preferentiaMaxlLevel'"
-                :rules="{
-                  required: true, validator: checkNumber, trigger: 'blur'
-                }"
-              >
-                <el-input
-                  class="discount-item"
-                  v-model.trim="item.preferentialLevel"
-                  size="medium"
-                  placeholder="输入订单金额，0为不限制"
-                  clearable
-                  style="width: 100%"
-                >
-                  <template slot="append">件，</template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col class="discount-type" :span="2">享受</el-col>
-            <el-col :span="8">
+            <el-col class="discount-type" :span="2">减</el-col>
+            <el-col :span="6">
               <el-form-item
                 :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
                 :rules="{
@@ -94,13 +168,56 @@
                   clearable
                   style="width: 100%"
                 >
-                  <template slot="append">折</template>
+                  <template slot="append">元</template>
                 </el-input>
               </el-form-item>
             </el-col>
-      </el-form-item>-->
+            <el-col :span="4">
+              <el-button @click="deleteRule(index)" v-if="index !== 0">删除</el-button>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-button @click="addRules">添加</el-button>
+          </el-row>
+        </el-form-item>
+      </template>
+      <!-- 活动类型：满额减 结束 -->
 
-      <!-- 活动类型：满件折 结束 -->
+      <!-- 活动类型：一口价 开始 -->
+      <template v-if="formModel.activityType === 3">
+        <el-form-item label="折扣条件:">
+          <el-row v-for="(item, index) in formModel.couponPreferentialRules" :key="index">
+            <el-col :span="6">
+              <el-form-item
+                inline
+                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+                :rules="{
+                  required: true, validator: checkNumber, trigger: 'blur'
+                }"
+              >
+                <el-input
+                  class="discount-item"
+                  v-model.trim="item.preferentialLevel"
+                  size="medium"
+                  placeholder
+                  clearable
+                  style="width: 100%"
+                >
+                  <template slot="prepend">一口价</template>
+                  <template slot="append">元</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-button @click="deleteRule(index)" v-if="index !== 0">删除</el-button>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-button @click="addRules">添加</el-button>
+          </el-row>
+        </el-form-item>
+      </template>
+      <!-- 活动类型：一口价 结束 -->
       <el-form-item label="活动时间类型:" prop="activateDayType">
         <query-dict
           :dict-list="activateDayTypeList"
@@ -109,22 +226,22 @@
           :value.sync="formModel.activateDayType"
         ></query-dict>
       </el-form-item>
-      <el-form-item label="设置固定周期:" prop="activateTime">
+      <el-form-item label="设置固定周期:" prop="activateTime" v-if="formModel.activateDayType === 0">
         <el-date-picker
           size="medium"
           v-model="formModel.activateTime"
-          type="datetimerange"
+          type="daterange"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
-          format="yyyy-MM-dd HH:mm:ss"
+          format="yyyy-MM-dd"
           end-placeholder="截止日期"
-          :default-time="['00:00:00', '23:59:59']"
           align="right"
+          :disabled="!!formModel.activateMonths.length && !!formModel.activateDays.length"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="设置固定月份:" prop="activateMonths">
-        <el-checkbox-group v-model="formModel.activateMonths">
+      <el-form-item label="设置固定月份:" prop="activateMonths" v-if="formModel.activateDayType === 0">
+        <el-checkbox-group v-model="formModel.activateMonths" :disabled="!!formModel.activateTime">
           <el-checkbox
             class="checkbox-item"
             :label="item"
@@ -133,8 +250,8 @@
           >{{ item + '月' }}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="设置固定日期:" prop="activateDays">
-        <el-checkbox-group v-model="formModel.activateDays">
+      <el-form-item label="设置固定日期:" prop="activateDays" v-if="formModel.activateDayType === 0">
+        <el-checkbox-group v-model="formModel.activateDays" :disabled="!!formModel.activateTime">
           <el-checkbox
             class="checkbox-item"
             :label="item"
@@ -156,12 +273,27 @@ export default {
   mixins: [MixinForm],
   data() {
     return {
+      rules: {
+        activityName: [
+          { required: true, message: '请输入活动名称', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        activityType: [
+          { required: true, message: '请选择活动类型', trigger: 'blur' }
+        ],
+        platformList: [
+          { required: true, message: '请选择使用渠道', trigger: 'blur' }
+        ],
+        activateDayType: [
+          { required: true, message: '请选择活动时间类型', trigger: 'blur' }
+        ],
+      },
       pickerOptions: utils.pickerOptions,
       activateDayTypeList: [{ // 活动时间类型
-        label: '固定时间可领取',
+        label: '固定时间',
         value: 0
       }, {
-        label: '所有时间可领取',
+        label: '所有时间',
         value: 1
       }],
       monthList: [ // 月份
@@ -180,7 +312,9 @@ export default {
       ],
       activityTypeList: dictObj.activityTypeList, // 活动类型
       lobList: dictObj.lobList, // 渠道
+      priceTypeList: dictObj.priceTypeList, // 价格类型
       formModel: {
+        couponPreferentialRules: [],
         activateMonths: [],
         activateDays: [],
         activateTime: ''
@@ -218,6 +352,28 @@ export default {
     }
   },
   methods: {
+    deleteRule(index) {
+      this.formModel.couponPreferentialRules.splice(index, 1)
+    },
+    addRules() {
+      this.formModel.couponPreferentialRules.push({
+        preferentialLevel: '',
+        preferentiaMaxlLevel: '',
+        preferentialType: '',
+        preferentialValue: '',
+        unit: ''
+      })
+    },
+    changeActivityType({ value }) {
+      this.formModel.activityType = value
+      this.formModel.couponPreferentialRules = [{
+        preferentialLevel: '',
+        preferentiaMaxlLevel: '',
+        preferentialType: '',
+        preferentialValue: '',
+        unit: ''
+      }]
+    },
     initData() {
       const {
         goodsName, // 商品图片
@@ -350,6 +506,14 @@ export default {
   }
   .select-item {
     width: 30%;
+  }
+  .discount-type {
+    text-align: center;
+    margin: 0 5px;
+  }
+  .discount-text-r {
+    text-align: right;
+    margin-right: 5px;
   }
 }
 </style>

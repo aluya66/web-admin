@@ -282,9 +282,10 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
+      console.log(searchDate)
       this.isLoading = true
       this.$api.marketing
         .getGoodsActivityList({

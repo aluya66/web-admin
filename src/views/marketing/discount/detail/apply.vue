@@ -234,24 +234,5 @@ export default {
   .select-item {
     width: 30%;
   }
-  .pic {
-    padding-bottom: 25px;
-    span {
-      display: inline-block;
-      margin-bottom: 10px;
-    }
-    .info {
-      line-height: 20px;
-      height: 20px;
-      margin-top: 5px;
-      font-size: @f12;
-    }
-  }
-  .coverImg {
-    width: 200px;
-    height: 200px;
-    display: inline-block;
-    margin-right: 5px;
-  }
 }
 </style>

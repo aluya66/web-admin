@@ -5,6 +5,7 @@
         v-if="showType === '' || showType === 'select'"
         v-model="dictValue"
         :disabled="disabled"
+        size="medium"
         clearable
         v-bind="$attrs"
         v-on="$listeners"
