@@ -29,7 +29,7 @@ export const uploadFile = params => Http.fetch(`${context}/api/upload/file`, par
  * 登录
  * @param {*} params
  */
-export const login = params => Http.fetch(`${ipxContext}/login`, params)
+export const login = params => Http.fetch(`${ipxContext}/login`, params, { hasErrMsg: true })
 
 /**
  *  登出
