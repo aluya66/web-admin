@@ -1,0 +1,501 @@
+<template>
+  <c-view>
+    <template v-slot:header>
+      <el-page-header
+        @back="goBack"
+        :content="$route.meta.name || $t(`route.${$route.meta.title}`)"
+      ></el-page-header>
+    </template>
+    <el-form
+      ref="formRef"
+      :model="formModel"
+      :rules="rules"
+      label-width="120px"
+      class="form"
+      label-position="right"
+    >
+      <c-card name="优惠券信息" class="form-card">
+        <el-form-item label="使用渠道:" prop="platformList">
+          <query-dict
+            :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
+            multiple
+            :dict-list="lobList"
+            class="search-item"
+            placeholder="请选择"
+            :value.sync="formModel.platformList"
+          ></query-dict>
+        </el-form-item>
+        <el-form-item label="卡券名称:" prop="couponName">
+          <el-input
+            :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
+            class="select-item"
+            v-model.trim="formModel.couponName"
+            size="medium"
+            placeholder="请输入卡券名称"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="卡券类型:" prop="preferentialType">
+          <el-radio-group
+            v-model="formModel.preferentialType"
+            @change="changeTicketType"
+            :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7">
+            <el-radio
+              v-for="item in ticketTypeArr"
+              :key="item.value"
+              :label="item.value"
+            >{{item.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <!-- 卡券类型：现金券 订单满减开始 -->
+        <template v-if="formModel.preferentialType === 0">
+          <el-form-item label="订单满减:"
+            v-for="(item, index) in formModel.couponPreferentialRules"
+            :key="index"
+          >
+            <el-col :span="8">
+              <el-form-item
+                inline
+                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+                :rules="{
+                  required: true, validator: checkNumber, trigger: 'blur'
+                }"
+              >
+                <el-input
+                  :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
+                  class="discount-item"
+                  v-model.trim="item.preferentialLevel"
+                  size="medium"
+                  placeholder="输入订单金额，0为不限制"
+                  clearable
+                  style="width: 100%"
+                >
+                  <template slot="append">元</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col class="discount-type" :span="2">减</el-col>
+            <el-col :span="8">
+              <el-form-item
+                :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+                :rules="{
+                  required: true, validator: checkNumber, trigger: 'blur'
+                }"
+              >
+                <el-input
+                  :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
+                  class="discount-item"
+                  v-model.trim="item.preferentialValue"
+                  size="medium"
+                  placeholder="优惠的金额"
+                  clearable
+                  style="width: 100%"
+                >
+                  <template slot="append">元</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+        </template>
+        <!-- 订单满减结束 -->
+
+        <!-- 卡券类型：折扣券 订单满折开始 -->
+        <template v-if="formModel.preferentialType === 1">
+          <el-form-item label="订单满折:"
+            v-for="(item, index) in formModel.couponPreferentialRules"
+            :key="index"
+          >
+            <el-col :span="8">
+              <el-form-item
+                inline
+                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+                :rules="{
+                  required: true, validator: checkInt, trigger: 'blur'
+                }"
+              >
+                <el-input
+                  :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
+                  class="discount-item"
+                  v-model.trim="item.preferentialLevel"
+                  size="medium"
+                  placeholder="订单商品满的件数"
+                  clearable
+                >
+                  <template slot="append">件</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col class="discount-type" :span="2">享</el-col>
+            <el-col :span="8">
+              <el-form-item
+                :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+                :rules="{
+                  required: true, validator: checkDiscount, trigger: 'blur'
+                }"
+              >
+                <el-input
+                  :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
+                  class="discount-item"
+                  v-model.trim="item.preferentialValue"
+                  size="medium"
+                  placeholder="输入1-10的数字，如8.5"
+                  clearable
+                >
+                  <template slot="append">折</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+        </template>
+        <!-- 订单满折结束 -->
+
+        <el-form-item label="卡券有效期:" prop="limitExpireDayType">
+          <el-radio-group
+            v-model="formModel.limitExpireDayType"
+            :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
+            @change="changeExpireType">
+            <el-radio
+              v-for="item in ticketValidTypeArr"
+              :key="item.value"
+              :label="item.value"
+            >{{item.label}}</el-radio>
+          </el-radio-group>
+          <!-- 卡券有效期类型：指定日期 -->
+          <el-form-item prop="limitExpireTime" v-if="formModel.limitExpireDayType === 1">
+            <el-date-picker
+              :disabled="ticketType === 5 ||  ticketType === 6 || ticketType === 7"
+              size="medium"
+              v-model="formModel.limitExpireTime"
+              type="datetimerange"
+              :picker-options="pickerOptions"
+              range-separator="至"
+              start-placeholder="开始日期"
+              format="yyyy-MM-dd HH:mm:ss"
+              end-placeholder="截止日期"
+              :default-time="['00:00:00', '23:59:59']"
+              align="right"
+            ></el-date-picker>
+          </el-form-item>
+
+          <!-- 卡券有效期类型：自领券N日内有效 -->
+          <el-form-item
+            prop="limitExpireDay"
+            v-if="formModel.limitExpireDayType === 2"
+            :rules="{
+              required: true, validator: checkInt, trigger: 'blur'
+            }"
+          >
+            <el-input
+              :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
+              class="discount-time-item"
+              v-model.trim="formModel.limitExpireDay"
+              size="medium"
+              placeholder="请输入优惠券有效的天数"
+              clearable
+            >
+              <template slot="append">天</template>
+            </el-input>
+          </el-form-item>
+        </el-form-item>
+        <!-- 订单满折结束 -->
+
+        <el-form-item label="使用说明:">
+          <el-input
+            type="textarea"
+            :rows="6"
+            v-model.trim="formModel.couponRemark"
+            size="medium"
+            maxlength="300"
+            show-word-limit
+            placeholder="请输入使用说明"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="适用商品:">
+          <el-radio-group v-model="formModel.fitGoodsType" :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7">
+            <el-radio
+              v-for="item in fitGoodsTypeArr"
+              :key="item.value"
+              :label="item.value"
+            >{{item.label}}</el-radio>
+          </el-radio-group>
+
+          <!-- 指定商品开始 -->
+          <goodsSelect :sourceList="sourceList" v-show="formModel.fitGoodsType === 1"/>
+          <!-- 指定商品结束 -->
+        </el-form-item>
+        <el-form-item class="form-btn">
+          <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">提交</el-button>
+        </el-form-item>
+      </c-card>
+    </el-form>
+  </c-view>
+</template>
+
+<script>
+import dictObj from '@/store/dictData'
+import mixinTable from 'mixins/table'
+import MixinForm from 'mixins/form'
+import CCard from 'components/card'
+import utils from 'utils'
+import goodsSelect from '../../../common/goodsSelect'
+export default {
+  name: 'ticketInfo',
+  mixins: [MixinForm, mixinTable],
+  components: {
+    CCard,
+    goodsSelect
+  },
+  data() {
+    const checkDiscount = (rule, value, callback) => {
+      if (!value) return callback(new Error('请输入1-10的数字'))
+      if (!Number(value) || Number(value) < 1 || Number(value) > 10) return callback(new Error('请输入1-10的数字'))
+      callback()
+    }
+    return {
+      checkDiscount, // 验证折扣
+      ticketType: undefined, // 卡券状态 编辑使用
+      sourceList: [
+        {
+          id: '12987122',
+          name: '好滋好味鸡蛋仔',
+          category: '江浙小吃、小吃零食',
+          desc: '荷兰优质淡奶，奶香浓而不腻',
+          address: '上海市普陀区真北路',
+          shop: '王小虎夫妻店',
+          shopId: '10333'
+        },
+        {
+          id: '12987123',
+          name: '好滋好味鸡蛋仔',
+          category: '江浙小吃、小吃零食',
+          desc: '荷兰优质淡奶，奶香浓而不腻',
+          address: '上海市普陀区真北路',
+          shop: '王小虎夫妻店',
+          shopId: '10333'
+        },
+        {
+          id: '12987125',
+          name: '好滋好味鸡蛋仔',
+          category: '江浙小吃、小吃零食',
+          desc: '荷兰优质淡奶，奶香浓而不腻',
+          address: '上海市普陀区真北路',
+          shop: '王小虎夫妻店',
+          shopId: '10333'
+        },
+        {
+          id: '12987126',
+          name: '好滋好味鸡蛋仔',
+          category: '江浙小吃、小吃零食',
+          desc: '荷兰优质淡奶，奶香浓而不腻',
+          address: '上海市普陀区真北路',
+          shop: '王小虎夫妻店',
+          shopId: '10333'
+        }
+      ],
+      fitGoodsTypeArr: [
+        {
+          label: '所有商品',
+          value: 0
+        },
+        {
+          label: '指定商品',
+          value: 1
+        }
+      ],
+      pickerOptions: utils.pickerOptions,
+      ticketValidTypeArr: [
+        {
+          label: '指定日期',
+          value: 1
+        },
+        {
+          label: '自领券N日内有效',
+          value: 2
+        },
+        {
+          label: '自领券日当月有效',
+          value: 3
+        }
+      ],
+      ticketTypeArr: [
+        {
+          label: '现金券',
+          value: 0
+        },
+        {
+          label: '折扣券',
+          value: 1
+        },
+        // {
+        //   label: '积分',
+        //   value: 2
+        // },
+        {
+          label: '兑换券',
+          value: 3
+        }
+      ],
+      btnLoading: false,
+      rules: {
+        platformList: [{ required: true, message: '请选择渠道' }],
+        couponName: [{ required: true, message: '请输入优惠券名称', trigger: 'blur' }],
+        limitExpireTime: [
+          { required: true, message: '请选择卡券有效期', trigger: 'blur' }
+        ]
+      },
+      formModel: {
+        fitGoodsType: 0, // 适用商品 默认全部
+        couponRuleType: 0, // 卡券类型 0为券 目前写死
+        platformList: [], // 使用渠道
+        preferentialType: 0, // 卡券类型 默认现金券
+        limitExpireDayType: 2, // 卡券有效期 默认当月有效 0 无时间限制 1 固定时间 2 领取时间 3领取时间当月
+        couponPreferentialRules: [{
+          preferentialLevel: '', // 优惠门槛
+          preferentialType: 0, // 优惠类型
+          preferentialValue: '' // 优惠值
+        }]
+      },
+      lobList: dictObj.lobList // 业务线集合
+    }
+  },
+
+  created() {
+    const { params } = this.$route
+    if (params.id) {
+      this.fetchData(params.id)
+    }
+  },
+  methods: {
+    // 切换卡券有效期类型
+    changeExpireType(val) {
+      Reflect.deleteProperty(this.formModel, 'limitExpireTime')
+      Reflect.deleteProperty(this.formModel, 'limitExpireDay')
+    },
+    // 切换卡券类型
+    changeTicketType(val) {
+      // 过滤兑换券类型
+      if (val === 3) return
+      this.formModel.couponPreferentialRules = []
+      let obj = {
+        preferentialLevel: undefined, // 优惠门槛
+        preferentialType: val, // 优惠类型
+        preferentialValue: undefined // 优惠值
+      }
+      this.formModel.couponPreferentialRules.push(obj)
+    },
+    fetchData(couponId) {
+      this.$api.marketing.couponDetail({ couponId }).then(res => {
+        this.setTagsViewTitle()
+        const {
+          platformList,
+          couponRuleId,
+          couponId,
+          couponRuleType,
+          couponName,
+          limitExpireDayType,
+          preferentialType,
+          couponPreferentialRules,
+          limitExpireTimeStart,
+          limitExpireTimeEnd,
+          limitExpireDay,
+          couponRemark,
+          status
+        } = res
+        this.ticketType = status // 编辑 缓存卡券状态
+        let params = { // 基础字段
+          platformList,
+          couponRuleId,
+          couponRuleType,
+          couponId,
+          couponName,
+          limitExpireDayType,
+          preferentialType,
+          couponRemark,
+          status
+        }
+        if (preferentialType === 0 || preferentialType === 1) { // 卡券类型 【现金券、折扣券】
+          const couponRules = couponPreferentialRules.map((item) => {
+            const { cached, ...rules } = item
+            return { ...rules }
+          })
+          Object.assign(params, { couponPreferentialRules: couponRules })
+        }
+        if (limitExpireDayType === 1) {
+          const limitExpireTime = utils.handleDate(limitExpireTimeStart, limitExpireTimeEnd)
+          Object.assign(params, { limitExpireTime })
+        }
+        if (limitExpireDayType === 2) Object.assign(params, { limitExpireDay })
+        this.formModel = params
+      })
+    },
+    submitHandle() {
+      this.$refs.formRef.validate(valid => {
+        if (valid) {
+          const requestMethods = {
+            'add': this.$api.marketing.addCoupon,
+            'edit': this.$api.marketing.updateCoupon
+          }
+          const {
+            fitGoodsType, // 商品类型 0全部 1指定商品
+            couponId, // 优惠券id 编辑时存在
+            couponPreferentialRules, // 优惠列表
+            couponUseProductRule, // 指定商品列表
+            limitExpireTime, // 有效期 固定时间
+            preferentialType, // 优惠券类型
+            limitExpireDayType, // 有效期类型
+            ...other
+          } = this.formModel
+          const params = { // 基础参数
+            limitExpireDayType,
+            preferentialType,
+            ...other
+          }
+          if (limitExpireDayType === 1) { // 固定时间处理
+            const searchDate = this.getSearchDate(limitExpireTime, 'dateTime', 'limitExpireTimeStart', 'limitExpireTimeEnd')
+            Object.assign(params, { ...searchDate })
+          }
+          if (preferentialType === 0 || preferentialType === 1) { // 优惠券类型为现金券或折扣券， 优惠列表处理
+            let ruleList = couponPreferentialRules.map((item) => {
+              return {
+                ...item,
+                preferentialLevel: Number(item.preferentialLevel),
+                preferentialValue: Number(item.preferentialValue),
+                unit: item.preferentialType === 0 ? 0 : 1 // 金额 0 折扣 1
+              }
+            })
+            Object.assign(params, { couponPreferentialRules: ruleList })
+          }
+          if (couponId) Object.assign(params, { couponId }) // 编辑操作 添加id字段
+          const reqFun = couponId ? requestMethods['edit'] : requestMethods['add']
+          reqFun(params).then(() => {
+            this.$msgTip('操作成功')
+            this.routerLink('/marketing/ticket/list')
+            this.closeCurrentTag()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang='less' scoped>
+.form-card {
+  .select-item {
+    width: 30%;
+  }
+  .discount-type {
+    text-align: center;
+  }
+  .discount-time-item {
+    width: 300px;
+  }
+  .input-select {
+    width: 80px;
+  }
+}
+</style>

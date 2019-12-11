@@ -121,5 +121,35 @@ export default {
           roles: ['admin']
         }
       }]
+    }, {
+      path: '/marketing/rule',
+      name: 'rule',
+      component: () => import('@/views/common/index'),
+      meta: {
+        title: 'rule',
+        icon: 'nested'
+      },
+      children: [{
+        path: '/marketing/rule/list',
+        name: 'ruleList',
+        component: () => import('@/views/marketing/rule/list'),
+        meta: {
+          title: 'ruleList',
+          icon: 'table',
+          roles: ['admin']
+        }
+      }, {
+        path: '/marketing/rule/ruleInfo/:id?',
+        name: 'ruleInfo',
+        component: () => import('@/views/marketing/rule/detail/index'),
+        hidden: true,
+        meta: {
+          icon: 'table',
+          noCache: true,
+          title: 'ruleInfo',
+          activeMenu: '/marketing/rule/list',
+          roles: ['admin']
+        }
+      }]
     }]
 }

@@ -7,7 +7,7 @@
           type="primary"
           :size="size"
           icon="el-icon-plus"
-          @click="routerLink('/marketing/ticket/ticketInfo')"
+          @click="routerLink('/marketing/rule/ruleInfo')"
         >新增</el-button>
       </div>
     </template>
@@ -48,65 +48,9 @@
 
 <script>
 import mixinTable from 'mixins/table'
-// import utils from 'utils'
 import CDialog from 'components/dialog'
 import dictObj from '@/store/dictData'
-// const platformList = [ // 渠道1 IPX, 2星购, 4YOSHOP, 8YSIA
-//   {
-//     value: 1,
-//     label: 'ipx'
-//   },
-//   {
-//     value: 2,
-//     label: '星GO'
-//   },
-//   {
-//     value: 4,
-//     label: 'YOSHOP'
-//   },
-//   {
-//     value: 8,
-//     label: 'YSIA'
-//   }
-// ]
-const couponStatusList = [ // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
-  {
-    value: 0,
-    label: '草稿'
-  },
-  {
-    value: 1,
-    label: '审核中'
-  },
-  {
-    value: 2,
-    label: '审核不通过'
-  },
-  {
-    value: 3,
-    label: '审核通过'
-  },
-  {
-    value: 4,
-    label: '未发布'
-  },
-  {
-    value: 5,
-    label: '进行中'
-  },
-  {
-    value: 6,
-    label: '未开始'
-  },
-  {
-    value: 7,
-    label: '已下架'
-  },
-  {
-    value: 8,
-    label: '已结束(失效)'
-  }
-]
+
 export default {
   name: 'couponList',
   mixins: [mixinTable],
@@ -183,81 +127,36 @@ export default {
       ],
       tableHeader: [
         {
-          label: 'ID',
-          prop: 'couponId',
+          label: '规则ID',
+          prop: 'couponRuleId',
           width: 100,
           fixed: true,
+        },
+        {
+          label: '规则名称',
+          prop: 'couponRuleName',
           search: {
             type: 'input'
           }
         },
         {
-          label: '使用渠道',
-          prop: 'platformList',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.platformList, 'lobList')
-          }
+          label: '领取方式',
+          prop: 'couponName'
         },
         {
-          label: '卡券名称',
-          prop: 'couponName',
-          search: {
-            type: 'input'
-          }
+          label: '已发送',
+          prop: 'typeName'
         },
         {
-          label: '卡券类型',
-          prop: 'typeName',
-          search: {
-            type: 'select',
-            optionsList: dictObj.ticketTypeList
-          }
-        },
-        {
-          label: '卡券内容',
+          label: '创建人',
           prop: 'couponRemark',
           search: {
-            type: 'select',
-            optionsList: dictObj.lobList
-          }
-        },
-        {
-          label: '卡券有效期开始时间',
-          prop: 'limitExpireTimeStart'
-        },
-        {
-          label: '卡券有效期结束时间',
-          prop: 'limitExpireTimeEnd'
-        },
-        {
-          label: '状态', // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
-          prop: 'status',
-          search: {
-            optionsList: dictObj.couponStatusList
-          },
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.status, 'couponStatusList')
+            type: 'input'
           }
         },
         {
           label: '创建时间',
-          prop: 'created'
-        },
-        {
-          label: '创建人',
-          prop: 'opCreator',
-          search: {
-            prop: 'createBy',
-            type: 'input'
-          }
-        },
-        {
-          label: '已领取',
-          prop: ''
-        },
-        {
-          label: '已使用',
-          prop: ''
+          prop: 'limitExpireTimeStart'
         }
       ]
     }
@@ -270,14 +169,11 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.marketing
-        .getCoupon({
-          ...searchDate,
-          ...other,
+        .getCouponRule({
+          ...this.searchObj,
           ...page
         })
         .then(res => {
@@ -300,14 +196,6 @@ export default {
     deleteData(param, msgTip = '删除成功') {
       this.$api.marketing.deleteCoupon(param).then(() => {
         this.$msgTip(msgTip)
-        this.fetchData()
-      })
-    },
-    // 审核劵
-    verifyData(params) {
-      const { couponId, msgTip, applyType } = params
-      this.$api.marketing.applyCoupon({ couponId, applyType }).then(() => {
-        this.$msgTip(`${msgTip}成功`)
         this.fetchData()
       })
     },
@@ -352,7 +240,7 @@ export default {
      * 确认修改操作
      */
     editHandle(formModel) {
-      this.$api.marketing.updateCoupon(formModel).then(res => {
+      this.$api.marketing.addCoupon(formModel).then(res => {
         this.$msgTip('修改成功')
         this.fetchData()
         this.dialogObj.isShow = false
