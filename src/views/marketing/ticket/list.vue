@@ -51,62 +51,7 @@ import mixinTable from 'mixins/table'
 // import utils from 'utils'
 import CDialog from 'components/dialog'
 import dictObj from '@/store/dictData'
-// const platformList = [ // 渠道1 IPX, 2星购, 4YOSHOP, 8YSIA
-//   {
-//     value: 1,
-//     label: 'ipx'
-//   },
-//   {
-//     value: 2,
-//     label: '星GO'
-//   },
-//   {
-//     value: 4,
-//     label: 'YOSHOP'
-//   },
-//   {
-//     value: 8,
-//     label: 'YSIA'
-//   }
-// ]
-const couponStatusList = [ // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
-  {
-    value: 0,
-    label: '草稿'
-  },
-  {
-    value: 1,
-    label: '审核中'
-  },
-  {
-    value: 2,
-    label: '审核不通过'
-  },
-  {
-    value: 3,
-    label: '审核通过'
-  },
-  {
-    value: 4,
-    label: '未发布'
-  },
-  {
-    value: 5,
-    label: '进行中'
-  },
-  {
-    value: 6,
-    label: '未开始'
-  },
-  {
-    value: 7,
-    label: '已下架'
-  },
-  {
-    value: 8,
-    label: '已结束(失效)'
-  }
-]
+
 export default {
   name: 'couponList',
   mixins: [mixinTable],

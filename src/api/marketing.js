@@ -42,7 +42,7 @@ export const unableCoupon = params =>
 
 // 劵列表
 export const getCoupon = params =>
-  Http.fetch(`${context}/api/mks/coupon/rule/list`, params, {
+  Http.fetch(`${context}/api/mks/coupon`, params, {
     method: 'get',
     mockFile: 'coupon-list'
   })
@@ -93,3 +93,33 @@ export const getGoodsActivityList = params =>
   Http.fetch(`${context}/api/mks/activity/product`, params, {
     method: 'get'
   })
+
+// 商品活动新增
+export const addGoodsActivity = params =>
+  Http.fetch(`${context}/api/mks/activity/product`, params, {
+    method: 'post'
+  })
+
+// 商品活动编辑
+export const updateGoodsActivity = params =>
+  Http.fetch(`${context}/api/mks/activity/product`, params, {
+    method: 'put'
+  })
+
+// 商品活动 删除
+export const deleteGoodsActivity = params =>
+  Http.fetch(`${context}/api/mks/activity/delete`, params, {
+    method: 'put'
+  })
+
+// 商品活动 详情
+export const getGoodsActivityDetail = params =>
+  Http.fetch(`${context}/api/mks/activity/product/detail`, params, {
+    method: 'get'
+  })
+
+// 商品活动 状态 禁用启用
+export const changeGoodsActivityStatus = params =>
+Http.fetch(`${context}/api/mks/activity/deatil/effect`, params, {
+  method: 'put'
+})

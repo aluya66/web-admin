@@ -140,65 +140,41 @@ export default {
       },
       tableInnerBtns: [
         {
-          width: 180,
-          name: '编辑',
-          notBtn: 'status',
-          icon: 'el-icon-edit',
-          handle(row) {
-            const { couponId, status } = row
-            // 未发布：可修改优惠券所有信息; 进行中、未开始、已下架：只可修改使用说明
-            if (status !== 4 && status !== 5 && status !== 6 && status !== 7) return vm.$msgTip('该优惠券不支持编辑操作', 'warning')
-            vm.routerLink(`/marketing/ticket/ticketInfo/${couponId}`)
-          }
-        },
-        { // 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
-          prop: {
-            name: 'status',
+          width: 100,
+          prop: { // 1待开始 2活动中 3已结束
+            name: 'activityStatus', // 为0或1
             toggle: [{
-              title: '发布',
-              icon: 'el-icon-s-tools',
-              value: [0, 4]
+              icon: 'el-icon-check',
+              title: '启用'
             }, {
-              title: '上架',
-              icon: 'el-icon-s-tools',
-              value: [7]
-            }, {
-              title: '下架',
-              icon: 'el-icon-s-tools',
-              value: [5, 6]
+              icon: 'el-icon-close',
+              title: '禁用'
             }]
           },
           handle(row) {
-            const { status, couponId, couponName } = row
-            let msgTip, applyType
-            switch (status) {
-              case 0:
-              case 4:
-                msgTip = '发布'
-                applyType = 5
-                break
-              case 7:
-                msgTip = '上架'
-                applyType = 5
-                break
-              case 5:
-              case 6:
-                msgTip = '下架'
-                applyType = 7
-                break
-            }
-            vm.confirmTip(`是否${msgTip}【${couponName}】优惠券`, () => {
-              vm.verifyData({ couponId, applyType, msgTip })
+            const { activityId, activityStatus, activityName } = row
+            const tip = activityStatus === 1 ? '禁用' : '启用'
+            vm.confirmTip(`确认${tip}【${activityName}】 折扣活动`, () => {
+              vm.changeStatus({ activityId, status: activityStatus })
             })
+          }
+        },
+        {
+          width: 180,
+          name: '编辑',
+          icon: 'el-icon-edit',
+          handle(row) {
+            const { activityId } = row
+            vm.routerLink(`/marketing/discount/discountInfo/${activityId}`)
           }
         },
         {
           name: '删除',
           icon: 'el-icon-delete',
           handle(row) {
-            const { couponName, couponId } = row
-            vm.confirmTip(`确认删除  ${couponName}  劵信息`, () => {
-              vm.deleteData({ couponId })
+            const { activityId, activityName } = row
+            vm.confirmTip(`确认删除  ${activityName}  折扣活动`, () => {
+              vm.deleteData({ activityId })
             })
           }
         }
@@ -278,6 +254,13 @@ export default {
     this.fetchData()
   },
   methods: {
+    // 启用、禁用
+    changeStatus(params) {
+      this.$api.marketing.changeGoodsActivityStatus(params).then(() => {
+        this.$msgTip('更新成功')
+        this.fetchData()
+      })
+    },
     /**
      * 获取表格数据
      */
@@ -285,7 +268,6 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dateTime)
-      console.log(searchDate)
       this.isLoading = true
       this.$api.marketing
         .getGoodsActivityList({
@@ -311,16 +293,8 @@ export default {
      * @param {string} [msgTip='删除成功']
      */
     deleteData(param, msgTip = '删除成功') {
-      this.$api.marketing.deleteCoupon(param).then(() => {
+      this.$api.marketing.deleteGoodsActivity(param).then(() => {
         this.$msgTip(msgTip)
-        this.fetchData()
-      })
-    },
-    // 审核劵
-    verifyData(params) {
-      const { couponId, msgTip, applyType } = params
-      this.$api.marketing.applyCoupon({ couponId, applyType }).then(() => {
-        this.$msgTip(`${msgTip}成功`)
         this.fetchData()
       })
     },

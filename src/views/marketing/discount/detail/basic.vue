@@ -10,7 +10,6 @@
     >
       <el-form-item label="活动名称:" prop="activityName">
         <el-input
-          disabled
           class="select-item"
           v-model.trim="formModel.activityName"
           :size="size"
@@ -39,11 +38,11 @@
       <!-- 活动类型：满件折扣活动 开始 -->
       <template v-if="formModel.activityType === 1">
         <el-form-item label="折扣条件:">
-          <el-row v-for="(item, index) in formModel.couponPreferentialRules" :key="index">
+          <el-row v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
             <el-col :span="3">
               <el-form-item
                 inline
-                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+                :prop="'marketPreferentialRules.' + index + '.preferentialLevel'"
                 :rules="{
                   required: true, validator: checkNumber, trigger: 'blur'
                 }"
@@ -63,7 +62,7 @@
             <el-col class="discount-type" :span="0.5">-</el-col>
             <el-col :span="3">
               <el-form-item
-                :prop="'couponPreferentialRules.' + index + '.preferentiaMaxlLevel'"
+                :prop="'marketPreferentialRules.' + index + '.preferentiaMaxlLevel'"
                 :rules="{
                   required: true, validator: checkNumber, trigger: 'blur'
                 }"
@@ -84,22 +83,23 @@
             <el-col :span="3">
               <el-form-item
                 inline
-                :prop="'couponPreferentialRules.' + index + '.priceType'"
+                :prop="'marketPreferentialRules.' + index + '.priceType'"
                 :rules="{
-                  required: true, validator: checkNumber, trigger: 'blur'
+                  required: true, trigger: 'blur', message: '请选择'
                 }"
               >
                 <query-dict
+                  disabled
                   :dict-list="priceTypeList"
                   class="search-item"
-                  placeholder="请选择价格类型"
+                  placeholder="请选择"
                   :value.sync="item.priceType"
                 ></query-dict>
               </el-form-item>
             </el-col>
             <el-col :span="3">
               <el-form-item
-                :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+                :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
                 :rules="{
                   required: true, validator: checkNumber, trigger: 'blur'
                 }"
@@ -117,7 +117,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-button @click="deleteRule(index)" v-if="index !== 0">删除</el-button>
+              <el-button @click="deleteRule(index)" v-if="index !== 0" size="medium">删除</el-button>
             </el-col>
           </el-row>
           <el-row>
@@ -130,11 +130,11 @@
       <!-- 活动类型：满额减 开始 -->
       <template v-if="formModel.activityType === 2">
         <el-form-item label="折扣条件:">
-          <el-row v-for="(item, index) in formModel.couponPreferentialRules" :key="index">
+          <el-row v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
             <el-col :span="6">
               <el-form-item
                 inline
-                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+                :prop="'marketPreferentialRules.' + index + '.preferentialLevel'"
                 :rules="{
                   required: true, validator: checkNumber, trigger: 'blur'
                 }"
@@ -155,7 +155,7 @@
             <el-col class="discount-type" :span="2">减</el-col>
             <el-col :span="6">
               <el-form-item
-                :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+                :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
                 :rules="{
                   required: true, validator: checkNumber, trigger: 'blur'
                 }"
@@ -186,18 +186,18 @@
       <!-- 活动类型：一口价 开始 -->
       <template v-if="formModel.activityType === 3">
         <el-form-item label="折扣条件:">
-          <el-row v-for="(item, index) in formModel.couponPreferentialRules" :key="index">
+          <el-row v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
             <el-col :span="6">
               <el-form-item
                 inline
-                :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+                :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
                 :rules="{
                   required: true, validator: checkNumber, trigger: 'blur'
                 }"
               >
                 <el-input
                   class="discount-item"
-                  v-model.trim="item.preferentialLevel"
+                  v-model.trim="item.preferentialValue"
                   size="medium"
                   placeholder
                   clearable
@@ -226,22 +226,23 @@
           :value.sync="formModel.activateDayType"
         ></query-dict>
       </el-form-item>
-      <el-form-item label="设置固定周期:" prop="activateTime" v-if="formModel.activateDayType === 0">
+      <el-form-item label="设置固定周期:" prop="activateDate" v-if="formModel.activateDayType === 1">
         <el-date-picker
           size="medium"
-          v-model="formModel.activateTime"
-          type="daterange"
+          v-model="formModel.activateDate"
+          type="datetimerange"
+          value-format="yyyy-MM-dd HH:mm:ss"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
-          format="yyyy-MM-dd"
           end-placeholder="截止日期"
+          :default-time="['00:00:00', '23:59:59']"
           align="right"
           :disabled="!!formModel.activateMonths.length && !!formModel.activateDays.length"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="设置固定月份:" prop="activateMonths" v-if="formModel.activateDayType === 0">
-        <el-checkbox-group v-model="formModel.activateMonths" :disabled="!!formModel.activateTime">
+      <el-form-item label="设置固定月份:" prop="activateMonths" v-if="formModel.activateDayType === 1">
+        <el-checkbox-group v-model="formModel.activateMonths" :disabled="!!formModel.activateDate">
           <el-checkbox
             class="checkbox-item"
             :label="item"
@@ -250,8 +251,8 @@
           >{{ item + '月' }}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="设置固定日期:" prop="activateDays" v-if="formModel.activateDayType === 0">
-        <el-checkbox-group v-model="formModel.activateDays" :disabled="!!formModel.activateTime">
+      <el-form-item label="设置固定日期:" prop="activateDays" v-if="formModel.activateDayType === 1">
+        <el-checkbox-group v-model="formModel.activateDays" :disabled="!!formModel.activateDate">
           <el-checkbox
             class="checkbox-item"
             :label="item"
@@ -286,15 +287,15 @@ export default {
         ],
         activateDayType: [
           { required: true, message: '请选择活动时间类型', trigger: 'blur' }
-        ],
+        ]
       },
       pickerOptions: utils.pickerOptions,
       activateDayTypeList: [{ // 活动时间类型
         label: '固定时间',
-        value: 0
+        value: 1
       }, {
         label: '所有时间',
-        value: 1
+        value: 2
       }],
       monthList: [ // 月份
         '1月',
@@ -313,12 +314,7 @@ export default {
       activityTypeList: dictObj.activityTypeList, // 活动类型
       lobList: dictObj.lobList, // 渠道
       priceTypeList: dictObj.priceTypeList, // 价格类型
-      formModel: {
-        couponPreferentialRules: [],
-        activateMonths: [],
-        activateDays: [],
-        activateTime: ''
-      }
+      formModel: {}
     }
   },
   props: {
@@ -345,152 +341,35 @@ export default {
     }
   },
   created() {
-    this.getCategoryList()
-    // this.initData()
-    if (!this.isTag) {
-      this.getbrandList()
-    }
+    this.formModel = this.dataObj
+    console.log(this.formModel, 'basic')
   },
   methods: {
     deleteRule(index) {
-      this.formModel.couponPreferentialRules.splice(index, 1)
+      this.formModel.marketPreferentialRules.splice(index, 1)
     },
     addRules() {
-      this.formModel.couponPreferentialRules.push({
+      let obj = {
         preferentialLevel: '',
         preferentiaMaxlLevel: '',
         preferentialType: '',
         preferentialValue: '',
         unit: ''
-      })
+      }
+      if (this.formModel.activityType === 1) Object.assign(obj, { priceType: 6 })
+      this.formModel.marketPreferentialRules.push(obj)
     },
     changeActivityType({ value }) {
       this.formModel.activityType = value
-      this.formModel.couponPreferentialRules = [{
+      let obj = {
         preferentialLevel: '',
         preferentiaMaxlLevel: '',
         preferentialType: '',
         preferentialValue: '',
         unit: ''
-      }]
-    },
-    initData() {
-      const {
-        goodsName, // 商品图片
-        operationName, // 运营名称
-        categoryCode, // 分类code
-        categoryName, // 分类名称
-        goodsBn, // 商品款号
-        supplierCode, // 供应商款号
-        supplierName, // 供应商
-        brandName, // 商品品牌
-        goodsStyleName, // 款式来源
-        saleYear, // 年份
-        season, // 季节
-        sourceSupplierName, // 货源商
-        coverImg, // 识别图/封面图
-        marketable, // 是否可售
-        updatebyName, // 上货人
-        skus,
-        updated,
-        created
-        // categoryCode,
-        // businessValue,
-        // goodsTypeId,
-        // brandName,
-        // brandId,
-        // goodsName,
-        // goodsShortName,
-        // goodsStaticFiles,
-        // goodsBrief,
-        // goodsBn,
-        // origin,
-        // categoryName,
-        // skus,
-        // updated,
-        // created
-      } = this.dataObj
-      let seasonCN = ''
-      switch (season) {
-        case 1:
-          seasonCN = '春'
-          break
-        case 2:
-          seasonCN = '夏'
-          break
-        case 3:
-          seasonCN = '秋'
-          break
-        case 4:
-          seasonCN = '冬'
-          break
       }
-      let skuList = [] // 商品打标签下 sku 图片列表
-      if (this.isTag) {
-        skus && skus.forEach(({ imageUrl }) => {
-          skuList.push(imageUrl)
-        })
-        skuList = utils.uniqueArr(skuList) // 去重sku图片
-      }
-
-      const curCategoryCode = []
-      if (categoryCode) {
-        const codeLen = categoryCode.split('')
-        codeLen.forEach((res, index) => {
-          if (index % 2 === 0 && index + 2 <= codeLen.length) {
-            curCategoryCode.push(categoryCode.substr(0, index + 2))
-          }
-        })
-      }
-      this.formModel = {
-        goodsName, // 商品图片
-        operationName, // 运营名称
-        categoryCode, // 分类code
-        categoryName, // 分类名称
-        goodsBn, // 商品款号
-        supplierCode, // 供应商款号
-        supplierName, // 供应商
-        brandName, // 商品品牌
-        goodsStyleName, // 款式来源
-        saleYear, // 年份
-        season: seasonCN, // 季节
-        sourceSupplierName, // 货源商
-        coverImg, // 识别图/封面图
-        marketable, // 是否可售
-        updatebyName,
-        skus,
-        updated,
-        created
-      }
-    },
-    getCategoryList() {
-      this.$api.basic.queryCategoryAll().then(res => {
-        this.categoryList = utils.formartLevelData(res)
-      })
-    },
-    getbrandList() {
-      this.$api.basic.brandList({
-        pageNo: 1,
-        pageSize: 100,
-        status: 1
-      }).then(res => {
-        const { data, totalCount } = res
-        if (totalCount) {
-          this.brandList = data.map(val => ({
-            label: val.name,
-            value: val.id
-          }))
-        }
-      })
-    },
-    uploadSuccess(response, file, fileList) {
-      this.fileList = fileList
-    },
-    uploadRemove(file, fileList) {
-      this.fileList = fileList
-    },
-    uploadReview(file) {
-      this.$emit('show-image', file)
+      if (this.formModel.activityType === 1) Object.assign(obj, { priceType: 6 })
+      this.formModel.marketPreferentialRules = [obj]
     }
   },
   components: {

@@ -34,6 +34,14 @@ export default {
     }
   },
   methods: {
+    // 多个form子表单处理
+    getFormPromise(form) {
+      return new Promise(resolve => {
+        form.validate(res => {
+          resolve(res)
+        })
+      })
+    },
     setTagsViewTitle() {
       const copyRoute = Object.assign({}, this.$route)
       const { meta, params } = this.$route

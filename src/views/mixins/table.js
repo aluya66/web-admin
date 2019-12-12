@@ -127,16 +127,15 @@ export default {
      * 表格项获取字典数据label数据
      */
     setTableColumnLabel(value, dictKey) {
+      let curArr = utils.isArray(dictKey) ? dictKey : dictObj[dictKey]
       if (Array.isArray(value)) { // value 为数组
         let arr = []
-        let curArr = utils.isArray(dictKey) ? dictKey : dictObj[dictKey]
         value.forEach((item) => {
           let curVal = curArr.find(res => item === res.value)
           curVal && arr.push(curVal.label)
         })
         return arr.join(',')
       } else { // value 字符串和数字
-        let curArr = utils.isArray(dictKey) ? dictKey : dictObj[dictKey]
         let curVal = curArr.find(res => value === res.value)
         return curVal ? curVal.label : ''
       }

@@ -34,8 +34,8 @@ export default {
         return []
       }
     }
-	},
-	mounted() {
+  },
+  mounted() {
     this.checkedAttr = JSON.parse(JSON.stringify(this.initChecked))
   },
   data() {
@@ -44,10 +44,10 @@ export default {
     }
   },
   methods: {
-		cancelSelect(index) {
-			this.checkedAttr.splice(index, 1)
-		}
-  },
+    cancelSelect(index) {
+      this.checkedAttr.splice(index, 1)
+    }
+  }
 }
 </script>
 

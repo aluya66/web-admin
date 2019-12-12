@@ -49,7 +49,7 @@
 <script>
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
-import dictObj from '@/store/dictData'
+// import dictObj from '@/store/dictData'
 
 export default {
   name: 'couponList',
@@ -130,7 +130,7 @@ export default {
           label: '规则ID',
           prop: 'couponRuleId',
           width: 100,
-          fixed: true,
+          fixed: true
         },
         {
           label: '规则名称',

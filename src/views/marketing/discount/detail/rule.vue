@@ -7,7 +7,7 @@
       class="form"
       label-position="right"
     >
-      <el-form-item label="门店:">
+      <!-- <el-form-item label="门店:">
         <el-select
           v-model="formModel.brands"
           class="form-item"
@@ -17,30 +17,28 @@
         >
           <el-option v-for="item in brandList" :key="item.id" :label="item.name" :value="item"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="商品品牌:">
         <el-select
-          v-model="formModel.brands"
+          v-model="formModel.marketUseProductRule.useBrandCodes"
           class="form-item"
-          filterable
-          value-key="code"
           multiple
         >
-          <el-option v-for="item in brandList" :key="item.id" :label="item.name" :value="item"></el-option>
+          <el-option v-for="item in brandList" :key="item.id" :label="item.name" :value="item.code"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="商品类目:">
         <el-cascader
           class="select-item"
           placeholder="搜索商品类目名称"
-          v-model="formModel.categoryCode"
+          v-model="formModel.marketUseProductRule.useCategoryCodes"
           :options="categoryList"
           filterable
           :props="cascaderProp"
           collapse-tags
         ></el-cascader>
       </el-form-item>
-      <el-form-item label="用户类型:">
+      <!-- <el-form-item label="用户类型:">
         <el-checkbox-group v-model="formModel.customerType">
           <el-checkbox
             v-for="(item, index) in customerTypeList"
@@ -49,8 +47,8 @@
             :value="item.label"
           >{{ item.label }}</el-checkbox>
         </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="指定用户:">
+      </el-form-item> -->
+      <!-- <el-form-item label="指定用户:">
         <el-button size="small" @click="showDialog">选择用户</el-button>
         <div>
           <el-tag
@@ -61,7 +59,7 @@
             @close="cancelSelect(index)"
           >{{tag.name + '【' +tag.phone + '】'}}</el-tag>
         </div>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </c-card>
 </template>
@@ -69,12 +67,13 @@
 import MixinForm from 'mixins/form'
 import CCard from 'components/card'
 import utils from 'utils'
-import dictObj from '@/store/dictData'
+// import dictObj from '@/store/dictData'
 
 export default {
   mixins: [MixinForm],
   data() {
     return {
+      brands: [],
       cascaderProp: { multiple: true },
       customerTypeList: [{
         label: '全部用户'
@@ -88,15 +87,12 @@ export default {
         label: '非会员'
       }],
       categoryList: [],
-      brandList: []
+      brandList: [],
+      formModel: {}
     }
   },
   props: {
     title: String,
-    isTag: {
-      type: Boolean,
-      default: false
-    },
     dataObj: {
       type: Object,
       required: true
@@ -114,14 +110,10 @@ export default {
       default: false
     }
   },
-  created() {
+  beforeMount() {
     this.getCategoryList()
     this.getbrandList()
-  },
-  computed: {
-    formModel() {
-      return { ...this.dataObj, customerType: [] }
-    }
+    this.formModel = this.dataObj
   },
   methods: {
     cancelSelect(index) {
@@ -129,9 +121,6 @@ export default {
     },
     showDialog() {
       this.$emit('show-dialog')
-    },
-    initData() {
-
     },
     getCategoryList() {
       this.$api.basic.queryCategoryAll().then(res => {
