@@ -46,7 +46,7 @@ export default {
 				icon: 'el-icon-edit',
 				handle(row) {
 				// TODO...
-					vm.routerLink(`/{{pathCase name}}/detail/${id}`)
+					vm.routerLink(`/{{pathCase name}}/detail/${row.id}`)
 				}
 			},
 			{
@@ -59,7 +59,7 @@ export default {
 					})
 				}
 			}],
-	    // 表格内操作按钮
+			// 表格内操作按钮
       tableHeader: [
         {
           label: '创建人',
@@ -88,14 +88,14 @@ export default {
     this.fetchData()
   },
   methods: {
-	 /*
-	  * 查询表格列表数据
-	  */
+		/*
+	   * 查询表格列表数据
+	   */
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
-	  	this.isLoading = true
+			this.isLoading = true
       this.$api.{{camelCase apiFile}}.query{{properCase name}}List({
         ...searchDate,
         ...other,
