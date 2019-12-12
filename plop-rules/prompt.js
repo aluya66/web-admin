@@ -11,6 +11,12 @@ module.exports = {
     },
     {
       type: 'input',
+      name: 'context',
+      message: 'What\'s your context path of this service?',
+      default: 'CONSOLE_COMMON'
+    },
+    {
+      type: 'input',
       name: 'apiFile',
       message: 'What\'s your name of api file import view page?',
       validate: utils.notEmpty('apiFile')
