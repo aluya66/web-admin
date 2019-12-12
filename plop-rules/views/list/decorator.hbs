@@ -38,7 +38,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-	  		<{{dashCase name}}-add ref="childRef" :init-data.sync="dialogObj.initData" :is-edit="dialogObj.isEdit"></{{dashCase name}}-add>
+				<{{dashCase name}}-add ref="childRef" :init-data.sync="dialogObj.initData" :is-edit="dialogObj.isEdit"></{{dashCase name}}-add>
       </c-dialog>
     </div>
   </c-view>
@@ -127,7 +127,7 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
-	  	this.isLoading = true
+			this.isLoading = true
       this.$api.{{camelCase apiFile}}.query{{properCase name}}List({
         ...searchDate,
         ...other,
@@ -165,7 +165,7 @@ export default {
         'edit': this.$api.{{camelCase apiFile}}.edit{{properCase name}}
       }
       childRef.$refs.formRef.validate(valid => {
-      	if (valid) {
+				if (valid) {
 					const childFormModel = childRef.formModel
 					const request = childFormModel.id ? requestMethods['edit'] : requestMethods['add']
 					// TODO...

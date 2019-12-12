@@ -13,12 +13,12 @@
       label-width="120px"
       class="form"
       label-position="right"
-	  	status-icon
+			status-icon
     >
 			<el-form-item label="输入框:" prop="">
 				<!-- <el-input v-model.trim="formModel." class="form-item" clearable></el-input> -->
 			</el-form-item>
-	  	<el-form-item label="下拉选择:" prop="">
+			<el-form-item label="下拉选择:" prop="">
 				<!-- <query-dict
 					:disabled="isEdit"
 					:dict-list="lobList"
@@ -55,7 +55,6 @@
 <script>
 import MixinForm from 'mixins/form'
 import CDialog from 'components/dialog'
-import utils from 'utils'
 
 export default {
   name: '{{camelCase name}}',
@@ -98,10 +97,13 @@ export default {
 						'add': this.$api.{{camelCase apiFile}}.add{{properCase name}},
 						'edit': this.$api.{{camelCase apiFile}}.edit{{properCase name}}
 					}
+					const { id } = this.$route.params
+					const request = id ? requestMethods['edit'] : requestMethods['add']
+
 					const params = {
 						// TODO...
 					}
-					const { id } = this.$route.params
+
 					request(params).then(() => {
             this.$msgTip(id ? '更新成功' : '新增成功').then(() => {
               this.closeCurrentTag()

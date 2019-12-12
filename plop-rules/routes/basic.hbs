@@ -17,8 +17,9 @@ export default {
       title: '{{camelCase name}}List',
       icon: 'table'
     }
-  },
-  {
+  }
+	{{#unless pageType}}
+  ,{
     path: '/{{pathCase name}}/detail/:id?',
     name: '{{camelCase name}}Detail',
     hidden: true,
@@ -28,5 +29,7 @@ export default {
       noCache: true,
       activeMenu: '/{{pathCase name}}/list'
     }
-  }]
+  }
+	{{/unless}}
+	]
 }
