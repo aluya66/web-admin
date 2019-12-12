@@ -57,7 +57,7 @@ import MixinForm from 'mixins/form'
 import CDialog from 'components/dialog'
 
 export default {
-  name: 'shop',
+  name: 'finance',
   mixins: [MixinForm],
   components: {
     CDialog
@@ -80,7 +80,7 @@ export default {
   methods: {
     fetchData() {
       const { id } = this.$route.params
-      this.$api.shop.queryShopDetail({ id }).then(res => {
+      this.$api.finance.queryFinanceDetail({ id }).then(res => {
         this.setTagsViewTitle()
         if (res) {
           this.formModel = res
@@ -94,8 +94,8 @@ export default {
       this.$refs.formRef.validate(valid => {
         if (valid) {
           const requestMethods = {
-            'add': this.$api.shop.addShop,
-            'edit': this.$api.shop.editShop
+            'add': this.$api.finance.addFinance,
+            'edit': this.$api.finance.editFinance
           }
           const { id } = this.$route.params
           const request = id ? requestMethods['edit'] : requestMethods['add']

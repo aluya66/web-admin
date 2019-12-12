@@ -1,0 +1,48 @@
+import Http from '../utils/request'
+
+const context = process.env.VUE_APP_CONSOLE_COMMON
+
+/**
+ * 查询列表
+ * @param {*}
+ */
+export const queryFinanceList = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'get'
+  })
+
+/**
+ * 新增
+ * @param {*}
+ */
+export const addFinance = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'post'
+  })
+
+/**
+ * 编辑
+ * @param {*}
+ */
+export const editFinance = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'put'
+  })
+
+/**
+ * 删除
+ * @param {*}
+ */
+export const deleteFinance = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'delete'
+  })
+
+/**
+ * 查看详情
+ * @param {*}
+ */
+export const queryFinanceDetail = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'get'
+  })
