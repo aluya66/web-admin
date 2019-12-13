@@ -11,6 +11,11 @@ module.exports = {
     },
     {
       type: 'input',
+      name: 'pathName',
+      message: 'What\'s your view page add path?'
+    },
+    {
+      type: 'input',
       name: 'apiFile',
       message: 'What\'s your apiFile name?',
       validate: utils.notEmpty('apiFile')
@@ -35,7 +40,7 @@ module.exports = {
     const actions = [
       {
         type: 'add',
-        path: `${utils.path.views}${name}/${data.type.indexOf('list') !== -1 ? 'list' : data.type.indexOf('form-dialog') !== -1 ? 'add' : 'detail/index'}.vue`,
+        path: `${utils.path.views}${name}/${data.pathName ? data.pathName + '/' : ''}${data.type.indexOf('list') !== -1 ? 'list' : data.type.indexOf('form-dialog') !== -1 ? 'add' : 'detail/index'}.vue`,
         templateFile: templateFileAdapter[data.type] || templateFileAdapter.default
       }
     ]
