@@ -2,7 +2,7 @@
   <c-view>
     <template v-slot:header>
       <div class="title">
-				<!-- $route.meta.name || $t(`route.${$route.meta.title}`) -->
+				{{$route.meta.name || $t(`route.${$route.meta.title}`)}}
       </div>
     </template>
     <div class="main__box">
@@ -34,52 +34,65 @@
 
 <script>
 import mixinTable from 'mixins/table'
-// import dictObj from '@/store/dictData'
+import dictObj from '@/store/dictData'
 
 export default {
-  name: 'finance',
+  name: 'financeAccount',
   mixins: [mixinTable],
   data(vm) {
     return {
       tableInnerBtns: [{
-        name: '编辑',
-        icon: 'el-icon-edit',
+        name: '账户明细',
+        icon: 'el-icon-tickets',
         handle(row) {
-          // TODO...
-          vm.routerLink(`/finance/detail/${row.id}`)
-        }
-      },
-      {
-        name: '删除',
-        icon: 'el-icon-delete',
-        handle(row) {
-          const { name, id } = row
-          vm.confirmTip(`是否删除【${name}】`, () => {
-            vm.deleteHandle(id)
-          })
+          vm.routerLink(`/finance/accountDetail/${row.id}`)
         }
       }],
       // 表格内操作按钮
       tableHeader: [
         {
-          label: '创建人',
-          prop: 'opCreator'
-        },
-        {
-          label: '创建时间',
-          prop: 'created',
+          label: '店铺id',
+          prop: 'shopId',
           search: {
-            type: 'dateTime',
-            prop: 'dateTime'
+            type: 'input'
           }
         },
         {
-          label: '更新人',
-          prop: 'opEditor'
+          label: '店铺名称',
+          prop: 'shopName',
+          search: {
+            type: 'input'
+          }
         },
         {
-          label: '更新时间',
-          prop: 'updated'
+          label: '店铺类型',
+          prop: 'shopType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.shopType, 'shopTypeList')
+          }
+        },
+        {
+          label: '所属合作商',
+          prop: 'partners',
+          search: {
+            prop: 'businessName',
+            type: 'input'
+          }
+        },
+        {
+          label: '预存款余额(元)',
+          prop: 'balance'
+        },
+        {
+          label: '店铺状态',
+          prop: 'shopStatus',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.shopStatus, 'disStatus')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.disStatus
+          }
         }
       ]
     }
@@ -96,7 +109,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.finance.queryFinanceList({
+      this.$api.finance.queryShopList({
         ...searchDate,
         ...other,
         ...page

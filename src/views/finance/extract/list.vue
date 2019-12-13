@@ -34,68 +34,98 @@
 
 <script>
 import mixinTable from 'mixins/table'
-// import dictObj from '@/store/dictData'
+import dictObj from '@/store/dictData'
 
 export default {
-  name: 'shop',
+  name: 'financeExtract',
   mixins: [mixinTable],
   data(vm) {
     return {
       tableInnerBtns: [{
-        name: '编辑',
-        icon: 'el-icon-edit',
+        // 审核状态： 0：未审核 1：提现成功 2：提现驳回
+        prop: {
+          name: 'checkStatus',
+          toggle: [{
+            title: '审核',
+            icon: 'el-icon-check',
+            value: [0]
+          }]
+        },
         handle(row) {
-          // TODO...
-          vm.routerLink(`/shop/merchant/detail/${row.id}`)
+          const { checkStatus, phone } = row
+          vm.confirmTip(
+            `是否确认审核通过【${phone}】提现请求`,
+            {
+              confirmHandle() {
+                vm.checkExtract({ msgTip: '审核通过' })
+              },
+              cancalHandle() {
+                vm.checkExtract({
+                  checkStatus,
+                  msgTip: '审核不通过'
+                })
+              },
+              confirmButtonText: '审核通过',
+              cancelButtonText: '审核不通过'
+            }
+          )
         }
       },
       {
-        name: '删除',
-        icon: 'el-icon-delete',
+        name: '详情',
+        icon: 'el-icon-view',
         handle(row) {
-          const { name, id } = row
-          vm.confirmTip(`是否删除【${name}】`, () => {
-            vm.deleteHandle(id)
-          })
+          // TODO...
+          vm.routerLink(`/finance/extractDetail/${row.id}`)
         }
       }],
       // 表格内操作按钮
       tableHeader: [
         {
-          label: '店铺Id',
-          prop: 'opCreator'
+          label: '用户手机',
+          prop: 'phone',
+          search: {
+            type: 'input'
+          }
         },
         {
-          label: '门店名称',
-          prop: 'opCreator'
+          label: '提现金额',
+          prop: 'extractAmount'
         },
         {
-          label: '门店类型',
-          prop: 'opCreator'
+          label: '手续费',
+          prop: 'checkServiceFee'
         },
         {
-          label: '联系人',
-          prop: 'opCreator'
+          label: '持卡人',
+          prop: 'cardholder'
         },
         {
-          label: '联系手机',
-          prop: 'opCreator'
+          label: '开户行',
+          prop: 'bankName'
         },
         {
-          label: '经营方式',
-          prop: 'opCreator'
+          label: '银行卡号',
+          prop: 'bankCardNo'
         },
         {
-          label: '关联商户',
-          prop: 'opCreator'
+          label: '开户支行',
+          prop: 'branchBankName'
         },
         {
-          label: '状态',
-          prop: 'opCreator'
+          label: '审核状态',
+          prop: 'checkStatus',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.checkStatus, 'extractStatusList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.extractStatusList
+          }
         },
         {
-          label: '更新人',
-          prop: 'opEditor'
+          label: '创建时间',
+          prop: 'created'
         },
         {
           label: '更新时间',
@@ -116,7 +146,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.shop.queryShopList({
+      this.$api.finance.queryUserExtractList({
         ...searchDate,
         ...other,
         ...page
@@ -132,12 +162,12 @@ export default {
       })
     },
     /**
-		 * 删除单条表格数据
-		 * @id {Number}
-		 */
-    deleteHandle(id) {
-      this.$api.shop.deleteShop({ id }).then(() => {
-        this.$msgTip('删除成功')
+     * 审核操作
+    */
+    checkExtract(params) {
+      const { msgTip, ...other } = params
+      this.$api.finance.checkExtract(other).then(() => {
+        this.$msgTip(msgTip)
         this.fetchData()
       })
     }

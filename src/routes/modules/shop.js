@@ -39,7 +39,7 @@ export default {
     }
   },
   {
-    path: '/shop/merchant/info/:id?',
+    path: '/shop/merchant/detail/:id?',
     name: 'shopMerchantInfo',
     hidden: true,
     component: () => import('@/views/shop/merchant/add'),

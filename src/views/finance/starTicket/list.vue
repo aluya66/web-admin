@@ -37,7 +37,7 @@ import mixinTable from 'mixins/table'
 // import dictObj from '@/store/dictData'
 
 export default {
-  name: 'shop',
+  name: 'finance',
   mixins: [mixinTable],
   data(vm) {
     return {
@@ -46,7 +46,7 @@ export default {
         icon: 'el-icon-edit',
         handle(row) {
           // TODO...
-          vm.routerLink(`/shop/merchant/detail/${row.id}`)
+          vm.routerLink(`/finance/detail/${row.id}`)
         }
       },
       {
@@ -62,36 +62,16 @@ export default {
       // 表格内操作按钮
       tableHeader: [
         {
-          label: '店铺Id',
+          label: '创建人',
           prop: 'opCreator'
         },
         {
-          label: '门店名称',
-          prop: 'opCreator'
-        },
-        {
-          label: '门店类型',
-          prop: 'opCreator'
-        },
-        {
-          label: '联系人',
-          prop: 'opCreator'
-        },
-        {
-          label: '联系手机',
-          prop: 'opCreator'
-        },
-        {
-          label: '经营方式',
-          prop: 'opCreator'
-        },
-        {
-          label: '关联商户',
-          prop: 'opCreator'
-        },
-        {
-          label: '状态',
-          prop: 'opCreator'
+          label: '创建时间',
+          prop: 'created',
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         },
         {
           label: '更新人',
@@ -116,7 +96,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.shop.queryShopList({
+      this.$api.finance.queryFinanceList({
         ...searchDate,
         ...other,
         ...page
@@ -136,7 +116,7 @@ export default {
 		 * @id {Number}
 		 */
     deleteHandle(id) {
-      this.$api.shop.deleteShop({ id }).then(() => {
+      this.$api.finance.deleteFinance({ id }).then(() => {
         this.$msgTip('删除成功')
         this.fetchData()
       })

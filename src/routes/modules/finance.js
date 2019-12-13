@@ -10,24 +10,44 @@ export default {
     icon: 'nested'
   },
   children: [{
-    path: '/finance/list',
-    name: 'financeList',
-    component: () => import('@/views/finance/list'),
+    path: '/finance/account',
+    name: 'financeAccount',
+    component: () => import('@/views/finance/account/list'),
     meta: {
-      title: 'financeList',
-      icon: 'table'
+      title: 'financeAccount',
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {
-    path: '/finance/detail/:id?',
-    name: 'financeDetail',
+    path: '/finance/accountDetail/:id?',
+    name: 'financeAccountDetail',
     hidden: true,
-    component: () => import('@/views/finance/detail/index'),
+    component: () => import('@/views/finance/account/detail/index'),
     meta: {
-      title: 'financeDetail',
+      title: 'financeAccountDetail',
       noCache: true,
-      activeMenu: '/finance/list'
+      activeMenu: '/finance/account'
     }
-  }
-  ]
+  },
+  {
+    path: '/finance/extract',
+    name: 'financeExtract',
+    component: () => import('@/views/finance/extract/list'),
+    meta: {
+      title: 'financeExtract',
+      icon: 'table',
+      roles: ['admin']
+    }
+  },
+  {
+    path: '/finance/settlement',
+    name: 'financeSettlement',
+    component: () => import('@/views/finance/settlement/list'),
+    meta: {
+      title: 'financeSettlement',
+      icon: 'table',
+      roles: ['admin']
+    }
+  }]
 }
