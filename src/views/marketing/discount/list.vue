@@ -141,8 +141,8 @@ export default {
       tableInnerBtns: [
         {
           width: 100,
-          prop: { // 1待开始 2活动中 3已结束
-            name: 'activityStatus', // 为0或1
+          prop: {
+            name: 'status', // 为0或1
             toggle: [{
               icon: 'el-icon-check',
               title: '启用'
@@ -151,11 +151,14 @@ export default {
               title: '禁用'
             }]
           },
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.status, 'disStatus')
+          },
           handle(row) {
-            const { activityId, activityStatus, activityName } = row
-            const tip = activityStatus === 1 ? '禁用' : '启用'
+            const { activityId, status, activityName } = row
+            const tip = status === 1 ? '禁用' : '启用'
             vm.confirmTip(`确认${tip}【${activityName}】 折扣活动`, () => {
-              vm.changeStatus({ activityId, status: activityStatus })
+              vm.changeStatus({ activityId, status })
             })
           }
         },

@@ -189,6 +189,20 @@ const couponStatusList = [ // 卡劵状态 0草稿 1审核中 2审核不通过 3
     label: '已结束(失效)'
   }
 ]
+const ticketValidTypeArr = [
+  {
+    label: '指定日期',
+    value: 1
+  },
+  {
+    label: '自领券N日内有效',
+    value: 2
+  },
+  {
+    label: '自领券日当月有效',
+    value: 3
+  }
+]
 export default {
   pointTypeList,
   lobList,
@@ -201,5 +215,6 @@ export default {
   activityStatusList,
   ticketTypeList,
   priceTypeList,
-  couponStatusList
+  couponStatusList,
+  ticketValidTypeArr
 }

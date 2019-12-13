@@ -102,9 +102,13 @@ export default {
             if (res.activityTime && res.activityEndTime) {
               res.activateDate = [res.activityTime, res.activityEndTime]
             }
-            if (!res.activateMonths && !res.activateDays) {
+            if (!res.activateMonths && !res.activateDays) { // 初始化月份、天数
               res.activateMonths = []
               res.activateDays = []
+            }
+            // 处理分类code [["02", "0202", "020200"]]
+            if (res.marketUseProductRule.useCategoryCodes && res.marketUseProductRule.useAllCategoryCodes) {
+              res.marketUseProductRule.useCategoryCodes = res.marketUseProductRule.useAllCategoryCodes
             }
             this.formModel = res
           } else {

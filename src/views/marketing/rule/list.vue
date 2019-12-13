@@ -52,7 +52,7 @@ import CDialog from 'components/dialog'
 // import dictObj from '@/store/dictData'
 
 export default {
-  name: 'couponList',
+  name: 'ruleList',
   mixins: [mixinTable],
   components: {
     CDialog
@@ -73,47 +73,6 @@ export default {
             vm.routerLink(`/marketing/ticket/ticketInfo/${couponId}`)
           }
         },
-        { // 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
-          prop: {
-            name: 'status',
-            toggle: [{
-              title: '发布',
-              icon: 'el-icon-s-tools',
-              value: [0, 4]
-            }, {
-              title: '上架',
-              icon: 'el-icon-s-tools',
-              value: [7]
-            }, {
-              title: '下架',
-              icon: 'el-icon-s-tools',
-              value: [5, 6]
-            }]
-          },
-          handle(row) {
-            const { status, couponId, couponName } = row
-            let msgTip, applyType
-            switch (status) {
-              case 0:
-              case 4:
-                msgTip = '发布'
-                applyType = 5
-                break
-              case 7:
-                msgTip = '上架'
-                applyType = 5
-                break
-              case 5:
-              case 6:
-                msgTip = '下架'
-                applyType = 7
-                break
-            }
-            vm.confirmTip(`是否${msgTip}【${couponName}】优惠券`, () => {
-              vm.verifyData({ couponId, applyType, msgTip })
-            })
-          }
-        },
         {
           name: '删除',
           icon: 'el-icon-delete',
@@ -128,13 +87,13 @@ export default {
       tableHeader: [
         {
           label: '规则ID',
-          prop: 'couponRuleId',
+          prop: 'couponId',
           width: 100,
           fixed: true
         },
         {
           label: '规则名称',
-          prop: 'couponRuleName',
+          prop: 'couponName',
           search: {
             type: 'input'
           }
@@ -156,7 +115,7 @@ export default {
         },
         {
           label: '创建时间',
-          prop: 'limitExpireTimeStart'
+          prop: 'created'
         }
       ]
     }
@@ -172,7 +131,7 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
       this.$api.marketing
-        .getCouponRule({
+        .getCouponRuleList({
           ...this.searchObj,
           ...page
         })

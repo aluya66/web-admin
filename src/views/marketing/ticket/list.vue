@@ -154,6 +154,7 @@ export default {
           label: '卡券类型',
           prop: 'typeName',
           search: {
+            prop: 'type',
             type: 'select',
             optionsList: dictObj.ticketTypeList
           }

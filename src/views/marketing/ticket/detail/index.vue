@@ -253,6 +253,7 @@ export default {
       callback()
     }
     return {
+      ticketValidTypeArr: dictObj.ticketValidTypeArr,
       checkDiscount, // 验证折扣
       ticketType: undefined, // 卡券状态 编辑使用
       sourceList: [
@@ -304,38 +305,7 @@ export default {
         }
       ],
       pickerOptions: utils.pickerOptions,
-      ticketValidTypeArr: [
-        {
-          label: '指定日期',
-          value: 1
-        },
-        {
-          label: '自领券N日内有效',
-          value: 2
-        },
-        {
-          label: '自领券日当月有效',
-          value: 3
-        }
-      ],
-      ticketTypeArr: [
-        {
-          label: '现金券',
-          value: 0
-        },
-        {
-          label: '折扣券',
-          value: 1
-        },
-        // {
-        //   label: '积分',
-        //   value: 2
-        // },
-        {
-          label: '兑换券',
-          value: 3
-        }
-      ],
+      ticketTypeArr: dictObj.ticketTypeList,
       btnLoading: false,
       rules: {
         platformList: [{ required: true, message: '请选择渠道' }],

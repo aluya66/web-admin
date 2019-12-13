@@ -151,5 +151,45 @@ export default {
           roles: ['admin']
         }
       }]
+    }, {
+      path: '/marketing/starGoCard',
+      name: 'starGoCard',
+      component: () => import('@/views/common/index'),
+      meta: {
+        title: 'starGoCard',
+        icon: 'nested'
+      },
+      children: [{
+        path: '/marketing/starGoCard/list',
+        name: 'starGoCardList',
+        component: () => import('@/views/marketing/starGoCard/list'),
+        meta: {
+          title: 'starGoCardList',
+          icon: 'table',
+          roles: ['admin']
+        }
+      }, {
+        path: '/marketing/starGoCard/export/list',
+        name: 'starGoCardExportList',
+        component: () => import('@/views/marketing/starGoCard/export/list'),
+        meta: {
+          icon: 'table',
+          noCache: true,
+          title: 'starGoCardExportList',
+          activeMenu: '/marketing/starGoCard/export/list',
+          roles: ['admin']
+        }
+      }, {
+        path: '/marketing/starGoCard/redeemCode/list',
+        name: 'starGoCardRedeemCodeList',
+        component: () => import('@/views/marketing/starGoCard/redeemCode/list'),
+        meta: {
+          icon: 'table',
+          noCache: true,
+          title: 'starGoCardRedeemCodeList',
+          activeMenu: '/marketing/starGoCard/redeemCode/list',
+          roles: ['admin']
+        }
+      }]
     }]
 }
