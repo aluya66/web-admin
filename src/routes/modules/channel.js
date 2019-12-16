@@ -2,29 +2,29 @@ import Layout from '@/views/layout'
 
 export default {
   path: '/channel',
-  name: 'shop',
+  name: 'channel',
   component: Layout,
   redirect: '/channel/list',
   meta: {
-    title: 'shop',
+    title: 'channel',
     icon: 'nested'
   },
   children: [{
     path: '/channel/list',
-    name: 'shopList',
+    name: 'channelList',
     component: () => import('@/views/channel/list'),
     meta: {
-      title: 'shopList',
+      title: 'channelList',
       icon: 'table'
     }
   },
   {
     path: '/channel/detail/:shopId',
-    name: 'shopDetail',
+    name: 'channelDetail',
     hidden: true,
     component: () => import('@/views/channel/detail/index'),
     meta: {
-      title: 'shopDetail',
+      title: 'channelDetail',
       icon: 'table'
     }
   },

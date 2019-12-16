@@ -42,7 +42,7 @@
         maxlength="300"
         show-word-limit
         placeholder="请输入标签描述"
-        v-model="formModel.tagDesc"
+        v-model.trim="formModel.tagDesc"
       ></el-input>
     </el-form-item>
     <el-form-item

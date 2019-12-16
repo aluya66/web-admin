@@ -44,7 +44,7 @@
         maxlength="100"
         show-word-limit
         placeholder="请输入"
-        v-model="formModel.description"
+        v-model.trim="formModel.description"
       ></el-input>
     </el-form-item>
     <el-form-item

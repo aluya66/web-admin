@@ -35,7 +35,7 @@
         maxlength="100"
         show-word-limit
         placeholder="请输入备注"
-        v-model="formModel.remark"
+        v-model.trim="formModel.remark"
       ></el-input>
     </el-form-item>
     <el-form-item

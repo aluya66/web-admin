@@ -66,7 +66,7 @@
         @on-submit="goodsDialogConfirm('goodsRef')"
       >
         <h3 class="tip">输入商品SPU，一行一个商品SPU</h3>
-        <el-input type="textarea" v-model="goodsDialogObj.productCodes" rows="20"/>
+        <el-input type="textarea" v-model.trim="goodsDialogObj.productCodes" rows="20"/>
       </c-dialog>
     </div>
     <!-- <div v-if="goodsDialogObj.isShow">
