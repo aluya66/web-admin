@@ -101,7 +101,7 @@ export default {
           label: '提现金额(元)',
           prop: 'extractAmount'
         },
-         {
+        {
           label: '审核金额(元)',
           prop: 'checkAmount'
         },

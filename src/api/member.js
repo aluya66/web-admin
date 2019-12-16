@@ -169,6 +169,15 @@ export const getMemberEquityList = params =>
   })
 
 /**
+ * 查询会员权益列表 2期
+ * @param {*} params
+ */
+export const queryActivityList = params =>
+  Http.fetch(`${context}/api/member/activity/query`, params, {
+    method: 'get'
+  })
+
+/**
  * 会员权益编辑
  * @param {*} params
  */

@@ -39,7 +39,7 @@ export default {
     }, {
       path: '/member/manage/equity',
       name: 'memberManageEquity',
-      component: () => import('@/views/member/manage/equity'),
+      component: () => import('@/views/member/manage/equity/index'),
       meta: {
         icon: 'table',
         title: 'memberManageEquity',

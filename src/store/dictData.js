@@ -138,6 +138,21 @@ const earningsStatusList = [{
   value: 20
 }]
 
+// 权益类型  1.商品折扣 2.送券 3.积分 4.营销活动
+const equityTypeList = [{
+  label: '商品折扣',
+  value: 1
+}, {
+  label: '送券',
+  value: 2
+}, {
+  label: '积分',
+  value: 3
+}, {
+  label: '营销活动',
+  value: 4
+}]
+
 export default {
   pointTypeList,
   lobList,
@@ -150,5 +165,6 @@ export default {
   extractStatusList,
   shopTypeList,
   earningsTypeList,
-  earningsStatusList
+  earningsStatusList,
+  equityTypeList
 }
