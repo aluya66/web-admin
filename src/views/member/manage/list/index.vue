@@ -251,6 +251,10 @@ export default {
           }
         },
         {
+          label: '收益(元)',
+          prop: 'earnings'
+        },
+        {
           label: '会员来源',
           prop: 'source',
           search: {
