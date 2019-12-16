@@ -151,14 +151,12 @@ export default {
               title: '禁用'
             }]
           },
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.status, 'disStatus')
-          },
           handle(row) {
             const { activityId, status, activityName } = row
             const tip = status === 1 ? '禁用' : '启用'
+            const updateStatus = status === 1 ? 0 : 1
             vm.confirmTip(`确认${tip}【${activityName}】 折扣活动`, () => {
-              vm.changeStatus({ activityId, status })
+              vm.changeStatus({ activityId, status: updateStatus })
             })
           }
         },
@@ -195,7 +193,6 @@ export default {
         {
           label: '活动类型',
           prop: 'activityType',
-          width: 100,
           fixed: true,
           formatter(row) {
             return row && vm.setTableColumnLabel(row.activityType, 'activityTypeList')
@@ -231,6 +228,13 @@ export default {
         {
           label: '活动结束时间',
           prop: 'activityEndTime'
+        },
+        {
+          label: '状态',
+          prop: 'status',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.status, 'disStatus')
+          }
         },
         {
           label: '活动状态',

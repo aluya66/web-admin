@@ -108,7 +108,7 @@ export default {
         },
         {
           label: '创建人',
-          prop: 'couponRemark',
+          prop: 'createBy',
           search: {
             type: 'input'
           }

@@ -1,18 +1,18 @@
 <template>
   <div class="customer-select">
     <div class="left-wrapper">
-      <el-select v-model="checkedAttr" filterable value-key="code" multiple>
+      <el-select v-model="checkedAttr" filterable value-key="id" multiple>
         <el-option
           v-for="(item, index) in sourceList"
           :key="index"
-          :label="item.name"
+          :label="item.nickname"
           :value="item"
         ></el-option>
       </el-select>
     </div>
     <div class="right-wrapper">
       <el-tag class="tag-item" v-for="(tag, index) in checkedAttr" :key="index" closable @close="cancelSelect(index)">
-				{{tag.name + '【' +tag.phone + '】'}}
+				{{tag.nickname + '【' +tag.phoneNumber + '】'}}
 			</el-tag>
     </div>
   </div>

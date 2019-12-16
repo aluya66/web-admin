@@ -111,11 +111,11 @@ const activityStatusList = [{
 // 卡券类型
 const ticketTypeList = [
   {
-    value: 1,
+    value: 0,
     label: '现金券'
   },
   {
-    value: 2,
+    value: 1,
     label: '折扣券'
   },
   {

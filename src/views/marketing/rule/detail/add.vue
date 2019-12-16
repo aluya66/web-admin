@@ -3,13 +3,12 @@
     ref="cTable"
     selection
     hasBorder
-		noPage
+    noPage
     :size="size"
     :max-height="300"
     :loading="isLoading"
     :table-header="tableHeader"
-		@selection-handle="handleSelection"
-		
+    @selection-handle="handleSelection"
     :table-list="tableList"
   >
     <template v-slot:header>
@@ -31,7 +30,7 @@ export default {
   mixins: [mixinTable],
   data(vm) {
     return {
-			selectedCouponList: [],
+      selectedCouponList: [],
       tableList: [],
       tableHeader: [
         {
@@ -51,16 +50,16 @@ export default {
         },
         {
           label: '有效期类型',
-					prop: 'limitExpireDayType',
-					formatter(row) {
+          prop: 'limitExpireDayType',
+          formatter(row) {
             return row && vm.setTableColumnLabel(row.limitExpireDayType, 'ticketValidTypeArr')
           },
           search: {
-						label: '优惠券类型',
-						prop: 'type',
+            label: '优惠券类型',
+            prop: 'type',
             type: 'select',
             optionsList: dictObj.ticketTypeList
-					}
+          }
         }
       ]
     }
@@ -69,9 +68,26 @@ export default {
     this.fetchData()
   },
   methods: {
-		handleSelection(val) {
-			this.selectedCouponList = val
-		},
+    handleSelection(val) {
+      console.log(val)
+      if (val)
+        this.selectedCouponList = val.map((item) => {
+          let info = ''
+          if (item.type) {
+            switch (item.type) {
+              case 0:
+                info = `${item.preferentialLevel}元减${item.preferentialValue}元`
+                break
+              case 1:
+                info = `${item.preferentialLevel}件享${item.preferentialValue}元`
+            }
+          }
+          return {
+            ...item,
+            info
+          }
+        })
+    },
     fetchData() {
       this.isLoading = true
       this.$api.marketing.getCoupon({
