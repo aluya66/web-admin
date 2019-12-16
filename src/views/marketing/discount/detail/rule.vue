@@ -38,6 +38,9 @@
           collapse-tags
         ></el-cascader>
       </el-form-item>
+      <el-form-item label="指定商品:">
+        <el-button size="small" @click="showDialog('goods')">选择商品</el-button>
+      </el-form-item>
       <!-- <el-form-item label="用户类型:">
         <el-checkbox-group v-model="formModel.customerType">
           <el-checkbox
@@ -47,9 +50,9 @@
             :value="item.label"
           >{{ item.label }}</el-checkbox>
         </el-checkbox-group>
-      </el-form-item> -->
-      <!-- <el-form-item label="指定用户:">
-        <el-button size="small" @click="showDialog">选择用户</el-button>
+      </el-form-item>
+      <el-form-item label="指定用户:">
+        <el-button size="small" @click="showDialog('customer')">选择用户</el-button>
         <div>
           <el-tag
             class="tag-item"
@@ -119,8 +122,8 @@ export default {
     cancelSelect(index) {
       this.formModel.selectedCustomerList.splice(index, 1)
     },
-    showDialog() {
-      this.$emit('show-dialog')
+    showDialog(type) {
+      this.$emit('show-dialog', type)
     },
     getCategoryList() {
       this.$api.basic.queryCategoryAll().then(res => {

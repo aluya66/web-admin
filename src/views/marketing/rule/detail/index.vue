@@ -25,7 +25,7 @@
           ></query-dict>
         </el-form-item>
         <el-form-item label="领取方式:" prop="receiveType">
-          <el-radio-group v-model="formModel.receiveType" @change="changeTicketType">
+          <el-radio-group v-model="formModel.receiveType">
             <el-radio
               v-for="item in receiveTypeList"
               :key="item.value"
@@ -40,6 +40,7 @@
             :size="size"
             placeholder="请输入规则名称"
             clearable
+            maxlength="20"
           />
         </el-form-item>
         <el-form-item label="选择卡券:">
@@ -62,29 +63,20 @@
               inline
               :prop="'couponDetails.' + index + '.couponNumber'"
               :rules="{
-                required: true, validator: checkInt, trigger: 'blur'
+                type: 'number', trigger: 'blur',  transform (value) {
+                  return Number(value)
+                }
               }"
             >
               <el-input
+                type="number"
                 v-model.trim="item.couponNumber"
                 size="medium"
-                placeholder="输入数字，留空则不限制"
+                placeholder="设置可领数量，留空则不限制"
                 clearable
               ></el-input>
             </el-form-item>
           </el-form-item>
-          <!-- <div class="coupon-wrapper">
-            <div class="coupon-item" v-for="(item, index) in selectedCouponList" :key="index">
-              <div class="coupon-box">
-                <div class="top-wrapper">
-                  <div class="left">{{ item.info }}</div>
-                  <div class="right">{{ item.couponName }}</div>
-                </div>
-                <div class="bottom-wrapper">{{ item.created }}</div>
-              </div>
-              <div class="num-box">123</div>
-            </div>
-          </div>-->
         </el-form-item>
         <el-form-item :label="formModel.receiveType === 1 ? '发券对象:' : '领券对象:'" prop="memberType">
           <el-checkbox-group v-model="formModel.memberType">
@@ -101,7 +93,7 @@
           <div>
             <el-tag
               class="tag-item"
-              v-for="(tag, index) in selectedCustomerList"
+              v-for="(tag, index) in formModel.selectedCustomerList"
               :key="index"
               closable
               @close="cancelSelect(index)"
@@ -109,8 +101,8 @@
           </div>
         </el-form-item>
         <!-- 系统领券 -->
-        <el-form-item label="发券时间" prop="limitReceiveTimeType" v-if="formModel.receiveType === 1">
-          <el-radio-group v-model="formModel.limitReceiveTimeType">
+        <el-form-item label="发券时间" prop="issueTimeType" v-if="formModel.receiveType === 1">
+          <el-radio-group v-model="formModel.issueTimeType">
             <el-radio
               v-for="item in limitReceiveTimeTypeList"
               :key="item.value"
@@ -118,10 +110,10 @@
             >{{item.label}}</el-radio>
           </el-radio-group>
           <!-- 发券时间类型：指定日期 -->
-          <el-form-item prop="limitExpireTime" v-if="formModel.limitReceiveTimeType === 4">
+          <el-form-item prop="issueTime" v-if="formModel.issueTimeType === 32">
             <el-date-picker
               size="medium"
-              v-model="formModel.limitExpireTime"
+              v-model="formModel.issueTime"
               type="datetimerange"
               :picker-options="pickerOptions"
               range-separator="至"
@@ -135,12 +127,12 @@
 
           <!-- 发券时间类型：每月 -->
           <el-form-item
-            prop="limitReceiveTimeValues"
-            v-if="formModel.limitReceiveTimeType === 2 || formModel.limitReceiveTimeType === 3"
+            prop="issueTimeValues"
+            v-if="formModel.issueTimeType === 8 || formModel.issueTimeType === 16"
           >
             <el-checkbox-group
-              v-model="formModel.limitReceiveTimeValues"
-              v-if="formModel.limitReceiveTimeType === 2"
+              v-model="formModel.issueTimeValues"
+              v-if="formModel.issueTimeType === 16"
             >
               <el-checkbox
                 class="checkbox-item"
@@ -151,8 +143,8 @@
             </el-checkbox-group>
 
             <el-checkbox-group
-              v-model="formModel.limitReceiveTimeValues"
-              v-if="formModel.limitReceiveTimeType === 3"
+              v-model="formModel.issueTimeValues"
+              v-if="formModel.issueTimeType === 8"
             >
               <el-checkbox
                 class="checkbox-item"
@@ -173,8 +165,13 @@
               :label="item.value"
             >{{item.label}}</el-radio>
           </el-radio-group>
-          <!-- 发券时间类型：每月 -->
-          <el-form-item prop="limitReceive">
+          <!-- 每人可领类型：次数 -->
+          <el-form-item
+            prop="limitReceive"
+            :rules="{
+              validator: checkInt, trigger: 'blur'
+            }"
+          >
             <el-input
               class="inp-item"
               v-model.trim="formModel.limitReceive"
@@ -204,7 +201,8 @@
           ref="childRef"
           v-if="dialogObj.type === 'customer'"
           :sourceList="memberList"
-          :initChecked="selectedCustomerList"
+          :initChecked="formModel.selectedCustomerList"
+          @RemoteMethod="getMember"
         ></customer-select>
       </c-dialog>
     </div>
@@ -232,14 +230,9 @@ export default {
     CustomerSelect
   },
   data() {
-    const checkDiscount = (rule, value, callback) => {
-      if (!value) return callback(new Error('请输入1-10的数字'))
-      if (!Number(value) || Number(value) < 1 || Number(value) > 10) return callback(new Error('请输入1-10的数字'))
-      callback()
-    }
     return {
       memberList: [], // 用户列表
-      memberTypeList: [ // 1 全部用户 2 全部会员 3 会员等级 4 非会员
+      memberTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
           label: '全部用户',
           type: 1
@@ -250,11 +243,10 @@ export default {
         },
         {
           label: '非会员',
-          type: 4
+          type: 8
         }
       ],
       dialogObj: {},
-      checkDiscount, // 验证折扣
       ticketType: undefined, // 卡券状态 编辑使用
       receiveTypeList: [ // 领券方式
         {
@@ -274,7 +266,7 @@ export default {
         },
         {
           label: '每月',
-          value: 2
+          value: 16
         },
         {
           label: '每周',
@@ -282,10 +274,10 @@ export default {
         },
         {
           label: '指定日期',
-          value: 4
+          value: 32
         }
       ],
-      receiveTimeTypeList: [
+      receiveTimeTypeList: [ // 领取时间限制  32 总计 1 年 2 月 3 周 4 日 16 无限制
         {
           label: '总计可领',
           value: 32
@@ -312,35 +304,36 @@ export default {
         ]
       },
       formModel: {
+        receiveTimeType: 32, // 每人可领
+        issueTimeType: 1, // 发券时间 类型
+        selectedCustomerList: [], // 指定用户
         receiveType: 2,
         platformList: 'yssp',
-        limitReceiveTimeValues: [],
+        issueTimeValues: [],
         memberType: [],
         couponDetails: [] // 已选择的优惠券
       },
       lobList: dictObj.lobList, // 业务线集合
-      selectedCustomerList: [], // 指定用户列表
     }
   },
 
   created() {
     const { params } = this.$route
-    if (params.id) {
-      this.fetchData(params.id)
-    }
-    this.getMemberType()
+    if (params.id) this.fetchData(params.id)
     this.getMember()
+    this.getMemberType()
   },
   methods: {
     cancelSelect(index) {
-      this.selectedCustomerList.splice(index, 1)
+      this.formModel.selectedCustomerList.splice(index, 1)
     },
-    getMember() {
+    getMember(val = '') {
       // 发券渠道暂只能选择YOSHOP，其他平台后续业务再对接
       this.$api.member.getMember({
         pageNo: 1,
         pageSize: 100,
-        appCode: 'yssp'
+        appCode: 'yssp',
+        name: val
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {
@@ -351,11 +344,12 @@ export default {
         }
       })
     },
+    // 拼接会员等级到会员分类列表 类型有 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
+    // 类型4为接口请求获得， 16为指定用户选中后保存时候添加
     getMemberType() {
       this.$api.member.getMemberListType().then(res => {
-        const membertTypeArr = res && res.map(val => ({ label: val.name, value: val.id, type: 3 }))
+        const membertTypeArr = res && res.map(val => ({ label: val.name, value: val.id, type: 4 }))
         this.memberTypeList = this.memberTypeList.concat(membertTypeArr)
-        console.log(this.memberTypeList)
       })
     },
     dialogConfirm() {
@@ -364,7 +358,7 @@ export default {
         this.formModel.couponDetails = this.$refs.childRef.selectedCouponList
       } else {
         // 选择用户
-        this.selectedCustomerList = this.$refs.childRef.checkedAttr
+        this.formModel.selectedCustomerList = this.$refs.childRef.checkedAttr
       }
       this.dialogObj.isShow = false
     },
@@ -375,110 +369,135 @@ export default {
         title: '选择卡券'
       }
     },
-    // 切换卡券有效期类型
-    changeExpireType(val) {
-      Reflect.deleteProperty(this.formModel, 'limitExpireTime')
-      Reflect.deleteProperty(this.formModel, 'limitExpireDay')
-    },
-    // 切换卡券类型
-    changeTicketType(val) {
-      // 过滤兑换券类型
-      if (val === 3) return
-      this.formModel.couponPreferentialRules = []
-      let obj = {
-        preferentialLevel: undefined, // 优惠门槛
-        preferentialType: val, // 优惠类型
-        preferentialValue: undefined // 优惠值
-      }
-      this.formModel.couponPreferentialRules.push(obj)
-    },
     fetchData(couponId) {
-      this.$api.marketing.couponDetail({ couponId }).then(res => {
+      this.$api.marketing.getCouponRuleDetail({ couponId }).then(res => {
         this.setTagsViewTitle()
         const {
           platformList,
-          couponRuleId,
           couponId,
-          couponRuleType,
           couponName,
-          limitExpireDayType,
-          preferentialType,
-          couponPreferentialRules,
+          issueTimeType,
+          issueTimeValues,
           limitExpireTimeStart,
           limitExpireTimeEnd,
-          limitExpireDay,
-          couponRemark,
-          status
+          limitReceive,
+          receiveTimeType,
+          receiveType,
+          couponDetails,
+          issueTimeStart,
+          issueTimeEnd,
+          marketLimitUser
         } = res
-        this.ticketType = status // 编辑 缓存卡券状态
         let params = { // 基础字段
-          platformList,
-          couponRuleId,
-          couponRuleType,
-          couponId,
-          couponName,
-          limitExpireDayType,
-          preferentialType,
-          couponRemark,
-          status
+          platformList: platformList[0], // 渠道
+          receiveType, // 领券方式
+          couponId, // id
+          couponName, // 券规则名称
+          couponDetails: couponDetails.map((item) => ({ ...item, ...item.marketPreferentialRules[0] })), // 优惠券列表
+          memberType: []
         }
-        if (preferentialType === 0 || preferentialType === 1) { // 卡券类型 【现金券、折扣券】
-          const couponRules = couponPreferentialRules.map((item) => {
-            const { cached, ...rules } = item
-            return { ...rules }
-          })
-          Object.assign(params, { couponPreferentialRules: couponRules })
+        if (receiveType === 1) { // 系统发券
+          // 发券时间 类型 1 立即  2 年  4 月 8 周 16 日 32 固定时间区间
+          Object.assign(params, { issueTimeType })
+          switch (issueTimeType) {
+            case 4:
+            case 16:
+              Object.assign(params, { issueTimeValues })
+              break
+            case 32:
+              const issueTime = [issueTimeStart, issueTimeEnd]
+              Object.assign(params, { issueTime })
+          }
         }
-        if (limitExpireDayType === 1) {
-          const limitExpireTime = utils.handleDate(limitExpireTimeStart, limitExpireTimeEnd)
-          Object.assign(params, { limitExpireTime })
+        if (receiveType === 2) { // 手动领券
+          Object.assign(params, { receiveTimeType, limitReceive })
         }
-        if (limitExpireDayType === 2) Object.assign(params, { limitExpireDay })
+        if (marketLimitUser.members && marketLimitUser.members.length) {
+          Object.assign(params, { selectedCustomerList: marketLimitUser.members })
+        }
         this.formModel = params
+        console.log(this.formModel)
       })
     },
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
           const requestMethods = {
-            'add': this.$api.marketing.addCoupon,
-            'edit': this.$api.marketing.updateCoupon
+            'add': this.$api.marketing.addCouponRule,
+            'edit': this.$api.marketing.updateCouponRule
           }
           const {
-            fitGoodsType, // 商品类型 0全部 1指定商品
-            couponId, // 优惠券id 编辑时存在
-            couponPreferentialRules, // 优惠列表
-            couponUseProductRule, // 指定商品列表
-            limitExpireTime, // 有效期 固定时间
-            preferentialType, // 优惠券类型
-            limitExpireDayType, // 有效期类型
-            ...other
+            couponId, // 券规则id
+            platformList, // 渠道
+            receiveType, // 领取方式 1 系统发券 2 手动领券 
+            couponName, // 券规则名称
+            couponDetails, // 优惠券列表
+            memberType, // 发券对象
+            selectedCustomerList, // 指定用户
+            limitReceiveTimeType, // 发券时间类型
+            receiveTimeType, // 每人可领类型 
+            limitReceive, // 每人可领类型 次数
+            issueTimeType, // 发券时间 类型 1 立即  2 年  4 月 8 周 16 日 32 固定时间区间
+            issueTimeValues, // 发券时间类型为 16月 8周时， 天数、周列表数据
+            issueTime // 发券时间类型为 32 固定日期时间
           } = this.formModel
-          const params = { // 基础参数
-            limitExpireDayType,
-            preferentialType,
-            ...other
+          // 处理优惠券列表数据
+          let couponDetailsArr = couponDetails.map((item) => {
+            return {
+              couponRuleId: item.couponId,
+              couponNumber: item.couponNumber ? item.couponNumber : ''
+            }
+          })
+          let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
+          memberType.forEach((item) => {
+            // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
+            if (item.type === 4) {
+              userLeveIds.push(item.value)
+            }
+          })
+          // 发券对象, 会员等级type有重复，过滤
+          let userLimitTypes = Array.from(new Set(memberType.map((item) => item.type)))
+          let userIds = [] // 指定用户
+          if (selectedCustomerList.length) {
+            userIds = selectedCustomerList.map((item) => item.userId)
+            // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
+            userLimitTypes.push(16)
           }
-          if (limitExpireDayType === 1) { // 固定时间处理
-            const searchDate = this.getSearchDate(limitExpireTime, 'dateTime', 'limitExpireTimeStart', 'limitExpireTimeEnd')
-            Object.assign(params, { ...searchDate })
+          // 处理领券对象、指定用户数据
+          let marketLimitUser = {
+            userLimitTypes, // 可领券会员列表
+            userLeveIds, // 指定领券对象 （会员）
+            userIds // 指定用户
           }
-          if (preferentialType === 0 || preferentialType === 1) { // 优惠券类型为现金券或折扣券， 优惠列表处理
-            let ruleList = couponPreferentialRules.map((item) => {
-              return {
-                ...item,
-                preferentialLevel: Number(item.preferentialLevel),
-                preferentialValue: Number(item.preferentialValue),
-                unit: item.preferentialType === 0 ? 0 : 1 // 金额 0 折扣 1
-              }
-            })
-            Object.assign(params, { couponPreferentialRules: ruleList })
+          const params = { // 设置基础参数
+            platformList: [platformList], // 单选 字符串转成数组
+            receiveType,
+            couponName,
+            couponDetails: couponDetailsArr,
+            marketLimitUser
+          }
+          // 手动领券
+          if (receiveType === 2) Object.assign(params, { receiveTimeType, limitReceive })
+          // 系统领券 
+          if (receiveType === 1) {
+            Object.assign(params, { issueTimeType })
+            switch (issueTimeType) {
+              case 8:
+              case 16:
+                Object.assign(params, { issueTimeValues })
+                break
+              case 32:
+                const searchDate = this.getSearchDate(issueTime, 'dateTime', 'issueTimeStart', 'issueTimeEnd')
+                Object.assign(params, { ...searchDate })
+                break
+            }
           }
           if (couponId) Object.assign(params, { couponId }) // 编辑操作 添加id字段
+          console.log(params)
           const reqFun = couponId ? requestMethods['edit'] : requestMethods['add']
           reqFun(params).then(() => {
             this.$msgTip('操作成功')
-            this.routerLink('/marketing/ticket/list')
+            this.routerLink('/marketing/rule/list')
             this.closeCurrentTag()
           })
         } else {
@@ -529,8 +548,6 @@ export default {
       line-height: 30px;
       background-color: @light_gray;
     }
-  }
-  .num-box {
   }
 }
 </style>

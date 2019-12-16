@@ -35,7 +35,7 @@ export default {
       tableHeader: [
         {
           label: '优惠券名称',
-          prop: 'couponName',
+          prop: 'couponRuleName',
           search: {
             type: 'input'
           }

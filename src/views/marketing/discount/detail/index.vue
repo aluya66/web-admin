@@ -44,10 +44,16 @@
         @on-submit="dialogConfirm"
       >
         <customer-select
-          ref="customerSelectRef"
+          v-if="dialogObj.type === 'customer'"
+          ref="childRef"
           :initChecked="formModel.selectedCustomerList"
           :sourceList="customerList"
-        ></customer-select>
+        />
+        <goods-select
+          v-if="dialogObj.type === 'goods'"
+          ref="childRef"
+          :sourceList="goodsList"
+        />
       </c-dialog>
     </div>
   </c-view>
@@ -60,6 +66,7 @@ import GBasic from './basic'
 import GRule from './rule'
 import GApply from './apply'
 import customerSelect from '../../../common/customerSelect'
+import goodsSelect from '../../../common/goodsSelect'
 import CDialog from 'components/dialog'
 
 export default {
@@ -67,6 +74,7 @@ export default {
   mixins: [MixinForm, mixinTable],
   data() {
     return {
+      goodsList: [],
       customerList: [{
         name: '张三',
         code: '1',
@@ -89,8 +97,29 @@ export default {
   },
   created() {
     this.fetchData()
+    this.getGoodsList()
   },
   methods: {
+    // 渠道关联的商品列表
+    getGoodsList() {
+      const { totalNum, ...page } = this.pageInfo
+      this.isLoading = true
+      this.$api.marketing
+        .getCouponRuleList({
+          ...this.searchObj,
+          ...page
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.goodsList = data || []
+          } else {
+            this.goodsList = res || []
+          }
+        })
+    },
     // 获取详情
     fetchData() {
       const { params } = this.$route
@@ -134,13 +163,14 @@ export default {
       }
     },
     dialogConfirm() {
-      const checkedTagsList = this.$refs.customerSelectRef.checkedAttr
+      const checkedTagsList = this.$refs.childRef.checkedAttr
       this.selectedCustomerList = checkedTagsList
       this.dialogObj.isShow = false
       this.$set(this.formModel, 'selectedCustomerList', JSON.parse(JSON.stringify(this.selectedCustomerList)))
     },
-    showDialog() {
+    showDialog(type) {
       this.dialogObj = {
+        type,
         isShow: true,
         title: '选择用户'
       }
@@ -238,6 +268,7 @@ export default {
     GRule,
     GApply,
     customerSelect,
+    goodsSelect,
     CDialog
   }
 }

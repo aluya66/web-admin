@@ -7,6 +7,11 @@ export const addCouponRule = params =>
   Http.fetch(`${context}/api/mks/coupon`, params, {
     method: 'post'
   })
+// 券规则 详情
+export const getCouponRuleDetail = params =>
+  Http.fetch(`${context}/api/mks/coupon/detail`, params, {
+    method: 'get'
+  })
 
 // 券规则 编辑
 export const updateCouponRule = params =>
@@ -23,7 +28,7 @@ export const getCouponRuleList = params =>
 // 券规则 删除
 export const deleteCouponRule = params =>
   Http.fetch(`${context}/api/mks/coupon/delete`, params, {
-    method: 'put'
+    method: 'get'
   })
 
 // 优惠券 列表

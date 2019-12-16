@@ -50,7 +50,16 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 // import dictObj from '@/store/dictData'
-
+const receiveTypeList = [ // 领券方式
+  {
+    label: '系统发券',
+    value: 1
+  },
+  {
+    label: '手动领券',
+    value: 2
+  }
+]
 export default {
   name: 'ruleList',
   mixins: [mixinTable],
@@ -67,10 +76,8 @@ export default {
           notBtn: 'status',
           icon: 'el-icon-edit',
           handle(row) {
-            const { couponId, status } = row
-            // 未发布：可修改优惠券所有信息; 进行中、未开始、已下架：只可修改使用说明
-            if (status !== 4 && status !== 5 && status !== 6 && status !== 7) return vm.$msgTip('该优惠券不支持编辑操作', 'warning')
-            vm.routerLink(`/marketing/ticket/ticketInfo/${couponId}`)
+            const { couponId } = row
+            vm.routerLink(`/marketing/rule/ruleInfo/${couponId}`)
           }
         },
         {
@@ -100,15 +107,18 @@ export default {
         },
         {
           label: '领取方式',
-          prop: 'couponName'
+          prop: 'receiveType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.receiveType, receiveTypeList)
+          }
         },
-        {
-          label: '已发送',
-          prop: 'typeName'
-        },
+        // {
+        //   label: '已发送',
+        //   prop: 'typeName'
+        // },
         {
           label: '创建人',
-          prop: 'createBy',
+          prop: 'opCreator',
           search: {
             type: 'input'
           }
@@ -153,7 +163,7 @@ export default {
      * @param {string} [msgTip='删除成功']
      */
     deleteData(param, msgTip = '删除成功') {
-      this.$api.marketing.deleteCoupon(param).then(() => {
+      this.$api.marketing.deleteCouponRule(param).then(() => {
         this.$msgTip(msgTip)
         this.fetchData()
       })
