@@ -1,0 +1,101 @@
+<template>
+  <c-table
+    ref="cTable"
+    selection
+    hasBorder
+    :size="size"
+    :max-height="maxHeight"
+    :loading="isLoading"
+    :table-header="tableHeader"
+    :table-list="tableList"
+    :page-info="pageInfo"
+    :table-inner-btns="tableInnerBtns"
+    @change-pagination="changePagination"
+  >
+    <template v-slot:header>
+      <c-search
+        :form-model="searchObj"
+        :form-items="searchItems"
+        @submit-form="searchSubmit"
+        @reset-form="searchReset"
+      ></c-search>
+    </template>
+  </c-table>
+</template>
+
+<script>
+import mixinTable from 'mixins/table'
+import dictObj from '@/store/dictData'
+
+export default {
+  name: '{{camelCase secondName}}List',
+  mixins: [mixinTable],
+  data(vm) {
+    return {
+      tableInnerBtns: [
+        {
+          name: '编辑',
+          icon: 'el-icon-edit',
+          width: 130,
+          handle(row) {
+            const { id } = row
+            vm.$emit('showDialog', {
+              title: '编辑标签2',
+              initData: {
+                id
+								// TODO...
+              },
+              isEdit: true
+            })
+          }
+        }
+      ],
+      tableHeader: [
+        {
+          label: '标签2',
+          prop: '',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '创建时间',
+          prop: 'created'
+        },
+        {
+          label: '更新时间',
+          prop: 'updated'
+        }
+      ]
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    /**
+     * 获取表格数据
+     */
+    fetchData() {
+      const { dateTime, ...other } = this.searchObj
+      const { totalNum, ...page } = this.pageInfo
+      const searchDate = this.getSearchDate(dateTime)
+      this.isLoading = true
+      this.$api.{{camelCase apiFile}}.query{{properCase secondName}}({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
+    }
+  }
+}
+</script>

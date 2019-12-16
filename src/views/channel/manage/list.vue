@@ -370,7 +370,7 @@ export default {
     deleteData(params, msgTip = '删除成功') {
       this.$api.channel.deleteChannel(params).then(() => {
         this.$msgTip(msgTip)
-        this.fetchData()
+        this.delResetData()
       })
     }
   }
