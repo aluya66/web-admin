@@ -184,7 +184,7 @@ export default {
     deleteHandle(params) {
       this.$api.{{camelCase apiFile}}.delete{{properCase name}}(params).then(() => {
         this.$msgTip('删除成功')
-        this.fetchData()
+        this.delResetData()
       })
     }
   }

@@ -55,7 +55,7 @@ export default {
 				handle(row) {
 				const { name, id } = row
 					vm.confirmTip(`是否删除【${name}】`, () => {
-						vm.deleteHandle(id)
+						vm.deleteHandle({id})
 					})
 				}
 			}],
@@ -115,10 +115,10 @@ export default {
 		 * 删除单条表格数据
 		 * @id {Number}
 		 */
-		deleteHandle(id) {
-			this.$api.{{camelCase apiFile}}.delete{{properCase name}}({ id }).then(() => {
+		deleteHandle(params) {
+      this.$api.{{camelCase apiFile}}.delete{{properCase name}}(params).then(() => {
 				this.$msgTip('删除成功')
-				this.fetchData()
+				this.delResetData()
 			})
 		}
   }

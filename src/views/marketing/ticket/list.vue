@@ -384,7 +384,7 @@ export default {
     deleteData(param, msgTip = '删除成功') {
       this.$api.marketing.deleteCoupon(param).then(() => {
         this.$msgTip(msgTip)
-        this.fetchData()
+        this.delResetData()
       })
     },
     // 审核劵
