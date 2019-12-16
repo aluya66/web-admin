@@ -85,7 +85,7 @@ export default {
           handle(row) {
             const { name, id } = row
             vm.confirmTip(`是否删除【${name}】`, () => {
-              vm.deleteHandle(id)
+              vm.deleteHandle({ id })
             })
           }
         }
@@ -160,20 +160,16 @@ export default {
 		 */
     dialogConfirm() {
       const childRef = this.$refs.childRef
-      const requestMethods = {
-        'add': this.$api.{{camelCase apiFile}}.add{{properCase name}},
-        'edit': this.$api.{{camelCase apiFile}}.edit{{properCase name}}
-      }
       childRef.$refs.formRef.validate(valid => {
 				if (valid) {
-					const childFormModel = childRef.formModel
-					const request = childFormModel.id ? requestMethods['edit'] : requestMethods['add']
+					const params = childRef.formModel
+					const curAction = this.dialogObj.isEdit ? 'edit{{properCase name}}' : 'add{{properCase name}}'
 					// TODO...
-					const params = {
+          this.$api.{{camelCase apiFile}}[curAction]({
 						// TODO...
-					}
-          request(params).then(() => {
-            this.responeHandle( childFormModel.id ? '更新成功' : '新增成功')
+						...params
+					}).then(() => {
+            this.responeHandle( this.dialogObj.isEdit ? '更新成功' : '新增成功')
           })
         } else {
           console.log('error submit!!')
@@ -185,8 +181,8 @@ export default {
 		 * 删除单条表格数据
 		 * @id {Number}
 		 */
-    deleteHandle(id) {
-      this.$api.{{camelCase apiFile}}.delete{{properCase name}}({ id }).then(() => {
+    deleteHandle(params) {
+      this.$api.{{camelCase apiFile}}.delete{{properCase name}}(params).then(() => {
         this.$msgTip('删除成功')
         this.fetchData()
       })
