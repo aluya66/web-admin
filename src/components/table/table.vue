@@ -365,11 +365,11 @@ export default {
     color: @active;
     cursor: pointer;
   }
-  .el-table__fixed, .el-table__fixed-right{
-    .cell {
-      word-break: normal;
-    }
-  }
+  // .el-table__fixed, .el-table__fixed-right{
+  //   .cell {
+  //     word-break: normal;
+  //   }
+  // }
 }
 .el-popover {
   max-width: 800px;
