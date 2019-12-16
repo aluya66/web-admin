@@ -98,11 +98,15 @@ export default {
           }
         },
         {
-          label: '提现金额',
+          label: '提现金额(元)',
           prop: 'extractAmount'
         },
+         {
+          label: '审核金额(元)',
+          prop: 'checkAmount'
+        },
         {
-          label: '手续费',
+          label: '手续费(元)',
           prop: 'checkServiceFee'
         },
         {
@@ -161,7 +165,7 @@ export default {
         ...page
       }).then(res => {
         this.isLoading = false
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
           this.tableList = data || []

@@ -3,7 +3,7 @@
     ref="formRef"
     :model="formModel"
     :rules="rules"
-    label-width="120px"
+    label-width="140px"
     class="form"
     label-position="right"
     status-icon

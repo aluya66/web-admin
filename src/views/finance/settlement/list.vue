@@ -3,23 +3,23 @@
     <template v-slot:header>
       <div class="title">{{$route.meta.name || $t(`route.${$route.meta.title}`)}}</div>
       <div class="header-btn">
-        <el-button
+        <!-- <el-button
           :size="size"
           type="primary"
           :loading="exportLoading"
           icon="el-icon-download"
           @click="exportFile"
-        >导出</el-button>
+        >导出</el-button> -->
       </div>
     </template>
     <div class="main__box">
       <div class="over-view">
         <div>
-          <span>400,004,00</span>
+          <span>{{totalSellPrice}}</span>
           <span>销售总额(元)</span>
         </div>
         <div>
-          <span>500,004,00</span>
+          <span>{{totalEarnings}}</span>
           <span>结算总收益(元)</span>
         </div>
       </div>
@@ -58,6 +58,8 @@ export default {
   mixins: [mixinTable],
   data(vm) {
     return {
+      totalSellPrice: 0, // 总销售金额
+      totalEarnings: 0, // 结算总收益
       exportLoading: false,
       tableInnerBtns: [],
       // 表格内操作按钮
@@ -135,9 +137,6 @@ export default {
     this.fetchData()
   },
   methods: {
-    exportFile() {
-
-    },
     /*
 	   * 查询表格列表数据
 	   */
@@ -152,10 +151,12 @@ export default {
         ...page
       }).then(res => {
         this.isLoading = false
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
-          this.tableList = data || []
+          this.tableList = data.earningsList || []
+          this.totalSellPrice = data.totalSellPrice
+          this.totalEarnings = data.totalEarnings
         } else {
           this.tableList = res || []
         }

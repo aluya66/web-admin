@@ -115,7 +115,7 @@ export default {
         ...page
       }).then(res => {
         this.isLoading = false
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
           this.tableList = data || []

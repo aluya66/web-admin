@@ -51,7 +51,7 @@
           ></c-search>
           <div class="opt-btn">
             <el-button type="primary" icon="el-icon-plus" :size="size" @click="showDialog">新增交易明细</el-button>
-            <el-button :size="size" icon="el-icon-download" @click="exportFile">导出</el-button>
+            <el-button :size="size" disabled icon="el-icon-download" @click="exportFile">导出</el-button>
           </div>
         </template>
       </c-table>
@@ -91,6 +91,7 @@ export default {
       dialogObj: {},
       formModel: {},
       tableInnerBtns: [{
+        width: 150,
         name: '编辑',
         icon: 'el-icon-edit',
         handle(row) {
@@ -177,7 +178,7 @@ export default {
       const { id } = this.$route.params
       this.$api.finance.queryShopList({ shopId: id }).then(res => {
         this.setTagsViewTitle()
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           if (res.data) {
             this.formModel = res.data[0]
           }
@@ -188,14 +189,16 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const { transactionTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(transactionTime, 'dateTime', 'startTime', 'endTime')
+      const { id } = this.$route.params
       this.isLoading = true
       this.$api.finance.queryAccountList({
+        shopId: id,
         ...searchDate,
         ...other,
         ...page
       }).then(res => {
         this.isLoading = false
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
           this.tableList = data || []

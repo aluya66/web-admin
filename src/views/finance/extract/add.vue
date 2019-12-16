@@ -159,8 +159,7 @@ export default {
     }
   }
   .check-form {
-    padding-top: 10px;
-    text-align: center;
+    padding: 10px 0 0 15px;
     border: 1px solid @border-default;
     border-radius: 4px;
   }
