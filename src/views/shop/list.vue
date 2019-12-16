@@ -62,16 +62,36 @@ export default {
       // 表格内操作按钮
       tableHeader: [
         {
-          label: '创建人',
+          label: '门店Id',
+          prop: 'shopId'
+        },
+        {
+          label: '门店名称',
+          prop: 'shopName'
+        },
+        {
+          label: '门店类型',
+          prop: 'shopType'
+        },
+        {
+          label: '联系人',
+          prop: 'contact'
+        },
+        {
+          label: '联系手机',
+          prop: 'contactTel'
+        },
+        {
+          label: '经营方式',
           prop: 'opCreator'
         },
         {
-          label: '创建时间',
-          prop: 'created',
-          search: {
-            type: 'dateTime',
-            prop: 'dateTime'
-          }
+          label: '关联商户',
+          prop: 'opCreator'
+        },
+        {
+          label: '状态',
+          prop: 'opCreator'
         },
         {
           label: '更新人',
@@ -102,7 +122,7 @@ export default {
         ...page
       }).then(res => {
         this.isLoading = false
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
           this.tableList = data || []

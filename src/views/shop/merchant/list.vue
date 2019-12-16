@@ -37,7 +37,7 @@ import mixinTable from 'mixins/table'
 // import dictObj from '@/store/dictData'
 
 export default {
-  name: 'shop',
+  name: 'shopMerchant',
   mixins: [mixinTable],
   data(vm) {
     return {
@@ -62,36 +62,28 @@ export default {
       // 表格内操作按钮
       tableHeader: [
         {
-          label: '店铺Id',
-          prop: 'opCreator'
+          label: '商户编码',
+          prop: ''
         },
         {
-          label: '门店名称',
-          prop: 'opCreator'
+          label: '商户名称',
+          prop: ''
         },
         {
-          label: '门店类型',
-          prop: 'opCreator'
+          label: '企业名称',
+          prop: ''
         },
         {
-          label: '联系人',
-          prop: 'opCreator'
+          label: '商户类型',
+          prop: ''
         },
         {
-          label: '联系手机',
-          prop: 'opCreator'
+          label: '负责人',
+          prop: ''
         },
         {
-          label: '经营方式',
-          prop: 'opCreator'
-        },
-        {
-          label: '关联商户',
-          prop: 'opCreator'
-        },
-        {
-          label: '状态',
-          prop: 'opCreator'
+          label: '联系方式',
+          prop: ''
         },
         {
           label: '更新人',
@@ -122,7 +114,7 @@ export default {
         ...page
       }).then(res => {
         this.isLoading = false
-        if (res.totalCount) {
+        if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
           this.tableList = data || []
