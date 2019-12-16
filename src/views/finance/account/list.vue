@@ -123,16 +123,6 @@ export default {
           this.tableList = res || []
         }
       })
-    },
-    /**
-		 * 删除单条表格数据
-		 * @id {Number}
-		 */
-    deleteHandle(id) {
-      this.$api.finance.deleteFinance({ id }).then(() => {
-        this.$msgTip('删除成功')
-        this.fetchData()
-      })
     }
   }
 }

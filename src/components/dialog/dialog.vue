@@ -6,6 +6,8 @@
 		:before-close="handleClose"
 		:close-on-click-modal="closeModal"
 		:show-close="closeBtn"
+    v-bind="$attrs"
+    v-on="$listeners"
 	>
     <div slot="title" v-if="$slots.header">
       <slot name="header"></slot>
@@ -26,12 +28,16 @@
 			>
 				{{ btn.label }}
 			</el-button>
+      <div class="dialog-info" v-if="$slots.info">
+        <slot name="info"></slot>
+      </div>
 		</div>
 	</el-dialog>
 </template>
 
 <script>
 export default {
+  inheritAttrs: false,
   name: 'CDialog',
   props: {
     title: {
@@ -107,5 +113,10 @@ export default {
 .dialog-content {
 	max-height: 500px;
 	overflow: auto;
+}
+.dialog-info {
+  color: @danger;
+  margin-top: 10px;
+  text-align: center;
 }
 </style>

@@ -4,15 +4,27 @@
       <div class="info">
         <div class="label">店铺信息</div>
         <ul class="msg">
-          <li><span>店铺名称：</span><span>{{formModel.shopName}}</span></li>
-          <li><span>店铺类型：</span><span>{{setTableColumnLabel(formModel.shopType, 'shopTypeList')}}</span></li>
-          <li><span>店铺状态：</span><span>{{setTableColumnLabel(formModel.shopStatus, 'disStatus')}}</span></li>
+          <li>
+            <span>店铺名称：</span>
+            <span>{{formModel.shopName}}</span>
+          </li>
+          <li>
+            <span>店铺类型：</span>
+            <span>{{setTableColumnLabel(formModel.shopType, 'shopTypeList')}}</span>
+          </li>
+          <li>
+            <span>店铺状态：</span>
+            <span>{{setTableColumnLabel(formModel.shopStatus, 'disStatus')}}</span>
+          </li>
         </ul>
       </div>
       <div class="info">
         <div class="label">账户信息</div>
         <ul class="msg">
-          <li><span>预存款余额(元)：</span><span>{{formModel.transactionAmount || 0}}</span></li>
+          <li>
+            <span>预存款余额(元)：</span>
+            <span>{{formModel.transactionAmount || 0}}</span>
+          </li>
         </ul>
       </div>
     </c-card>
@@ -26,6 +38,7 @@
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
+        :table-inner-btns="tableInnerBtns"
         :page-info="pageInfo"
         @change-pagination="changePagination"
       >
@@ -51,7 +64,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <list-add :is-edit="dialogObj.isEdit" :init-data.sync="dialogObj.initData"></list-add>
+        <list-add ref="childRef" :is-edit="dialogObj.isEdit" :init-data.sync="dialogObj.initData"></list-add>
       </c-dialog>
     </div>
   </c-view>
@@ -76,24 +89,31 @@ export default {
   data(vm) {
     return {
       dialogObj: {},
-      formModel: {
-        // TODO... 初始化数据，需加备注
-      },
+      formModel: {},
       tableInnerBtns: [{
         name: '编辑',
-        icon: 'el-icon-tickets',
+        icon: 'el-icon-edit',
         handle(row) {
           vm.showDialog({
             title: '更新交易明细',
             isEdit: true,
             initData: {
-              shopId: row.shopId,
+              id: row.id,
               type: row.type,
-              transactionTime: row.transactionTime,
               transactionAmount: row.transactionAmount,
               orderNo: row.orderNo,
               remark: row.remark
             }
+          })
+        }
+      },
+      {
+        name: '删除',
+        icon: 'el-icon-detele',
+        handle(row) {
+          const { orderNo, id } = row
+          vm.confirmTip(`确认删除 ${orderNo} 交易信息?`, () => {
+            vm.deleteHandle({ id })
           })
         }
       }],
@@ -185,32 +205,32 @@ export default {
       })
     },
     dialogConfirm() {
-      this.dialogObj.isShow = false
-    },
-    submitHandle() {
-      this.$refs.formRef.validate(valid => {
+      const { id } = this.$route.params
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
         if (valid) {
-          const requestMethods = {
-            'add': this.$api.finance.addFinance,
-            'edit': this.$api.finance.editFinance
-          }
-          const { id } = this.$route.params
-          const request = id ? requestMethods['edit'] : requestMethods['add']
-
-          const params = {
-            // TODO...
-          }
-
-          request(params).then(() => {
-            this.$msgTip(id ? '更新成功' : '新增成功').then(() => {
-              this.closeCurrentTag()
-              this.goBack()
-            })
+          const params = childRef.formModel
+          const curAction = this.dialogObj.isEdit ? 'editAccountList' : 'addAccountList'
+          this.$api.finance[curAction]({
+            shopId: id,
+            ...params
+          }).then(res => {
+            this.responeHandle(this.dialogObj.isEdit ? '更新成功' : '新增成功')
           })
         } else {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    /**
+		 * 删除单条表格数据
+		 * @id {Number}
+		 */
+    deleteHandle(params) {
+      this.$api.finance.deleteAccountList(params).then(() => {
+        this.$msgTip('删除成功')
+        this.fetchData()
       })
     }
   }
@@ -235,18 +255,19 @@ export default {
       }
       span {
         width: 50%;
-        display:inline-block;
+        display: inline-block;
 
         &:first-child {
           width: 150px;
           text-align: right;
+          font-weight: 500;
         }
       }
     }
   }
-  .list-table{
+  .list-table {
     min-height: 670px;
-    .opt-btn{
+    .opt-btn {
       margin-top: -10px;
       margin-bottom: 10px;
     }

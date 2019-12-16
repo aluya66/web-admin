@@ -36,7 +36,7 @@
         maxlength="300"
         show-word-limit
         placeholder="请输入类型描述"
-        v-model="formModel.categoryDesc"
+        v-model.trim="formModel.categoryDesc"
       ></el-input>
     </el-form-item>
   </el-form>

@@ -27,7 +27,8 @@ export default {
     meta: {
       title: 'financeAccountDetail',
       noCache: true,
-      activeMenu: '/finance/account'
+      activeMenu: '/finance/account',
+      roles: ['admin']
     }
   },
   {

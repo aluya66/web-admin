@@ -62,8 +62,54 @@ export default {
       // 表格内操作按钮
       tableHeader: [
         {
-          label: '创建人',
-          prop: 'opCreator'
+          label: '支付单号',
+          prop: '',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '兑换码',
+          prop: '',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '用户',
+          prop: '',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '手机号',
+          prop: '',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '金额',
+          prop: 'faceValue'
+        },
+        {
+          label: '赠送金额',
+          prop: 'givingValue'
+        },
+        {
+          label: '类型',
+          prop: '',
+          search: {
+            type: 'dict'
+          }
+        },
+        {
+          label: '开卡店员',
+          prop: 'opCreator',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '创建时间',
@@ -72,14 +118,6 @@ export default {
             type: 'dateTime',
             prop: 'dateTime'
           }
-        },
-        {
-          label: '更新人',
-          prop: 'opEditor'
-        },
-        {
-          label: '更新时间',
-          prop: 'updated'
         }
       ]
     }
@@ -96,7 +134,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.finance.queryFinanceList({
+      this.$api.marketing.queryCouponCard({
         ...searchDate,
         ...other,
         ...page

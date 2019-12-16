@@ -87,3 +87,9 @@ export const userCoupon = params =>
     method: 'get',
     mockFile: 'coupon-user'
   })
+
+// 查询星卡购列表（财务中心）
+export const queryCouponCard = params =>
+  Http.fetch(`${context}/api/mks/coupon/card`, params, {
+    method: 'get'
+  })

@@ -1,9 +1,7 @@
 <template>
   <c-view>
     <template v-slot:header>
-      <div class="title">
-				{{$route.meta.name || $t(`route.${$route.meta.title}`)}}
-      </div>
+      <div class="title">{{$route.meta.name || $t(`route.${$route.meta.title}`)}}</div>
     </template>
     <div class="main__box">
       <c-table
@@ -15,8 +13,8 @@
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
-				:table-inner-btns="tableInnerBtns"
-				:page-info="pageInfo"
+        :table-inner-btns="tableInnerBtns"
+        :page-info="pageInfo"
         @change-pagination="changePagination"
       >
         <template v-slot:header>
@@ -29,18 +27,39 @@
         </template>
       </c-table>
     </div>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        center
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        :btns="dialogObj.btns"
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <check-add ref="addRef" :init-data="dialogObj.initData" :show-type="dialogObj.type"></check-add>
+        <template v-slot:info v-if="dialogObj.type === 1">请确认线下已打款后再操作 "同意" 按钮</template>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
+import CDialog from 'components/dialog'
 import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
+import CheckAdd from './add'
 
 export default {
   name: 'financeExtract',
   mixins: [mixinTable],
+  components: {
+    CDialog,
+    CheckAdd
+  },
   data(vm) {
     return {
+      dialogObj: {},
       tableInnerBtns: [{
         // 审核状态： 0：未审核 1：提现成功 2：提现驳回
         prop: {
@@ -52,31 +71,21 @@ export default {
           }]
         },
         handle(row) {
-          const { checkStatus, phone } = row
-          vm.confirmTip(
-            `是否确认审核通过【${phone}】提现请求`,
-            {
-              confirmHandle() {
-                vm.checkExtract({ msgTip: '审核通过' })
-              },
-              cancalHandle() {
-                vm.checkExtract({
-                  checkStatus,
-                  msgTip: '审核不通过'
-                })
-              },
-              confirmButtonText: '审核通过',
-              cancelButtonText: '审核不通过'
-            }
-          )
+          vm.showDialog({
+            initData: row
+          })
         }
       },
       {
         name: '详情',
         icon: 'el-icon-view',
         handle(row) {
-          // TODO...
-          vm.routerLink(`/finance/extractDetail/${row.id}`)
+          vm.showDialog({
+            initData: row,
+            title: '提现详情',
+            type: 3,
+            btns: []
+          })
         }
       }],
       // 表格内操作按钮
@@ -169,6 +178,59 @@ export default {
       this.$api.finance.checkExtract(other).then(() => {
         this.$msgTip(msgTip)
         this.fetchData()
+      })
+    },
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: '提现审核',
+        type: 1,
+        btns: [
+          { label: '同 意', name: 'submit', type: 'primary', size: 'small' },
+          { label: '拒 绝', name: 'reject', size: 'small', handle: this.rejectHandle },
+          { label: '取 消', name: 'cancel', size: 'small' }
+        ],
+        ...opts
+      }
+    },
+    dialogConfirm() {
+      const childRef = this.$refs.addRef
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const { checkReason, id, ...other } = childRef.formModel
+          const type = this.dialogObj.type
+          let tipMsg = ''
+          let params = ''
+          if (type === 1) {
+            tipMsg = '审核成功'
+            params = {
+              checkAmount: Number(other.checkAmount),
+              checkServiceFee: Number(other.checkServiceFee),
+              serialNumber: Number(other.serialNumber)
+            }
+          } else {
+            tipMsg = '驳回申请'
+            params = {
+              checkReason
+            }
+          }
+          this.$api.finance.checkExtract({ id, checkStatus: type, ...params }).then(res => {
+            this.responeHandle(tipMsg)
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    rejectHandle() {
+      this.showDialog({
+        title: '拒绝原因',
+        type: 2,
+        btns: [
+          { label: '确 定', name: 'submit', type: 'primary', size: 'small' },
+          { label: '取 消', name: 'cancel', size: 'small' }
+        ]
       })
     }
   }

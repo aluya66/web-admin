@@ -45,7 +45,8 @@ export default {
     component: () => import('@/views/shop/merchant/add'),
     meta: {
       title: 'shopMerchantInfo',
-      icon: 'table',
+      noCache: true,
+      activeMenu: '/shop/merchant',
       roles: ['admin']
     }
   }]
