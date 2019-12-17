@@ -2,22 +2,23 @@
   <div class="goods-select">
     <div class="header">
       <div class="title title-left">商品列表</div>
-      <div class="title">已选商品:【 {{distList.length}} 】</div>
     </div>
     <div class="content">
       <div class="source">
         <c-table
+          ref="table"
+          selection
           expand
           hasBorder
-          :max-height="685"
+          :max-height="400"
           :size="size"
           :loading="isLoading"
           :table-header="tableHeader"
-          :table-list="searchList"
+          :table-list="tableList"
           :page-info="pageInfo"
           :table-inner-btns="tableInnerBtns"
           @change-pagination="changePagination"
-					@expand-change="getSkuList"
+          @expand-change="handleSkuList"
         >
           <template v-slot:header>
             <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
@@ -58,24 +59,51 @@
             </el-form>
           </template>
           <template v-slot:expand="{props}">
-						{{props}}
-            <!-- <el-table
-              ref="multipleTable"
-              :data="props"
-              tooltip-effect="dark"
-              style="width: 100%"
-            >
-              <el-table-column type="selection" width="55"></el-table-column>
-              <el-table-column label="日期" width="120">
-                <template slot-scope="scope">{{ scope.row.date }}</template>
-              </el-table-column>
-              <el-table-column prop="name" label="姓名" width="120"></el-table-column>
-              <el-table-column prop="address" label="地址" show-overflow-tooltip></el-table-column>
-            </el-table> -->
+            {{ props.id }}
+            <c-table
+              :ref="'skuRef' + props.id"
+              hasBorder
+              selection
+              noPage
+              :max-height="400"
+              :size="size"
+              :loading="isLoading"
+              :table-header="skuTableHeader"
+              :table-list="props.skus"
+            ></c-table>
           </template>
         </c-table>
       </div>
-      <div class="dist"></div>
+      <!-- <div class="dist">
+        <div class="title">已选商品:【 {{checkedAttr.length}} 】</div>
+        <div class="selected-box">
+          <c-table
+            expand
+            noPage
+            hasBorder
+            :max-height="400"
+            :size="size"
+            :loading="isLoading"
+            :table-header="tableHeader"
+            :table-list="checkedAttr"
+            :table-inner-btns="selectedTableInnerBtns"
+            @expand-change="handleSkuList"
+          >
+            <template v-slot:expand="{props}">
+              <c-table
+                hasBorder
+                selection
+                noPage
+                :max-height="400"
+                :size="size"
+                :loading="isLoading"
+                :table-header="skuTableHeader"
+                :table-list="props.skus"
+              ></c-table>
+            </template>
+          </c-table>
+        </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -86,10 +114,11 @@ export default {
   mixins: [mixinTable],
   props: {
     disabled: Boolean,
-    sourceList: {
-      // 源数据集合
-      type: Array,
-      required: true
+    paramsObj: { // 额外参数集
+      type: Object,
+      default() {
+        return {}
+      }
     },
     initChecked: {
       // 编辑初始化选中值
@@ -99,30 +128,70 @@ export default {
       }
     }
   },
-  data() {
+  data(vm) {
     return {
+      skuTableHeader: [
+        {
+          label: '编号',
+          prop: 'goodsSkuSn'
+        },
+        {
+          label: '图片',
+          isImage: true,
+          width: 100,
+          prop: 'imageUrl'
+        },
+        {
+          label: '零售价',
+          prop: 'retailPrice'
+        },
+        {
+          label: '会员价',
+          prop: 'memberPrice'
+        },
+        {
+          label: '散批价',
+          prop: 'wholesalePrice'
+        },
+        {
+          label: '大批价',
+          prop: 'largeBatchPrice'
+        }
+      ],
+      selectedTableInnerBtns: [
+        {
+          width: 150,
+          name: '删除',
+          icon: 'el-icon-delete',
+          handle(row) {
+
+          }
+        }
+      ],
       tableInnerBtns: [
         {
           width: 150,
           name: '添加',
           icon: 'el-icon-add',
-          handle(row) {}
+          handle(row) {
+            vm.handleSelect(row)
+          }
         }
       ],
       tableHeader: [
         {
           label: '商品名称',
-          prop: 'name'
+          prop: 'goodsName'
         },
         {
           label: '图片',
-          prop: 'image',
+          prop: 'coverImg',
           width: 100,
           isImage: true
         },
         {
           label: '款号',
-          prop: 'number'
+          prop: 'goodsBn'
         }
       ],
       brandList: [],
@@ -131,33 +200,45 @@ export default {
     }
   },
   methods: {
-    getSkuList(row) {
-      console.log(row)
-    }
-  },
-  computed: {
-    distList() {
-      // 选中集合
-      return this.checkedAttr.map(res =>
-        this.sourceList.find(val => res === val.value)
-      )
+    handleSelect(row) {
+      // this.checkedAttr.push(row)
+      const targetRef = `skuRef${row.id}`
+      console.log(this.$refs[targetRef])
+      this.$nextTick(() => {
+        this.$refs[targetRef].selectAll()
+      })
+      // this.$refs[targetRef].toggleSelection(row.skus);
     },
-    searchList() {
-      // 搜索列表集合
-      let curData = []
-      if (this.searchValue) {
-        this.sourceList.forEach(res => {
-          if (res && res.label && res.label.indexOf(this.searchValue) !== -1) {
-            curData.push(res)
+    handleSkuList(row) {
+      // const idx = this.checkedAttr.findIndex((item) => row.id === item.id)
+      // if (idx !== -1) {
+      //   row.skus.forEach(row => {
+      //     this.$refs[targetRef].toggleSelection(row);
+      //   })
+      // }
+    },
+    fetchData() {
+      const { totalNum, ...page } = this.pageInfo
+      this.isLoading = true
+      this.$api.basic
+        .getGoodsListByChannel({
+          ...this.paramsObj,
+          ...page
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data || []
+          } else {
+            this.tableList = res || []
           }
         })
-      } else {
-        curData = this.sourceList
-      }
-      return curData
-    }
+    },
   },
   mounted() {
+    this.fetchData()
     this.checkedAttr = this.initChecked
   }
 }
@@ -184,16 +265,24 @@ export default {
   }
   .content {
     display: flex;
+    flex-direction: column;
     .source {
-      flex: 50%;
       flex-direction: row;
       padding: 15px;
       border-right: 1px solid @border-default;
+      border-bottom: 1px solid @border-default;
       overflow-y: auto;
     }
     .dist {
-      flex: 1;
+      height: 200px;
       overflow-y: auto;
+      .title {
+        flex: 1;
+        font-size: @f16;
+        font-weight: bold;
+        padding: 16px 0;
+        text-align: center;
+      }
     }
   }
 }

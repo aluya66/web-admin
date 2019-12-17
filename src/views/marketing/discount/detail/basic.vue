@@ -32,6 +32,7 @@
           class="search-item"
           placeholder="请选择使用渠道"
           :value.sync="formModel.platformList"
+          @change="changeChannel"
         ></query-dict>
       </el-form-item>
 
@@ -345,6 +346,9 @@ export default {
     console.log(this.formModel, 'basic')
   },
   methods: {
+    changeChannel(appCode) {
+      this.$emit('ChangeChannel', appCode)
+    },
     deleteRule(index) {
       this.formModel.marketPreferentialRules.splice(index, 1)
     },

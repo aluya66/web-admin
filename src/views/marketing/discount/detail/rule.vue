@@ -7,17 +7,30 @@
       class="form"
       label-position="right"
     >
-      <!-- <el-form-item label="门店:">
+      <el-form-item label="门店:">
+        <el-select v-model="formModel.shopType" class="form-item" disabled>
+          <el-option
+            v-for="(item, index) in shopTypeList"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
         <el-select
-          v-model="formModel.brands"
+          v-model="formModel.marketUseStoreRuleLists.storeCodes"
           class="form-item"
           filterable
-          value-key="code"
+          value-key="shopId"
           multiple
         >
-          <el-option v-for="item in brandList" :key="item.id" :label="item.name" :value="item"></el-option>
+          <el-option
+            v-for="item in shopList"
+            :key="item.shopId"
+            :label="item.shopName"
+            :value="item"
+          ></el-option>
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="商品品牌:">
         <el-select
           v-model="formModel.marketUseProductRule.useBrandCodes"
@@ -62,7 +75,7 @@
             @close="cancelSelect(index)"
           >{{tag.name + '【' +tag.phone + '】'}}</el-tag>
         </div>
-      </el-form-item> -->
+      </el-form-item>-->
     </el-form>
   </c-card>
 </template>
@@ -78,6 +91,16 @@ export default {
     return {
       brands: [],
       cascaderProp: { multiple: true },
+      shopTypeList: [{
+        label: '全部',
+        value: 1
+      }, {
+        label: '直营店',
+        value: 2
+      }, {
+        label: '加盟店',
+        value: 3
+      }],
       customerTypeList: [{
         label: '全部用户'
       }, {
@@ -91,6 +114,7 @@ export default {
       }],
       categoryList: [],
       brandList: [],
+      shopList: [],
       formModel: {}
     }
   },
@@ -116,9 +140,18 @@ export default {
   beforeMount() {
     this.getCategoryList()
     this.getbrandList()
-    this.formModel = this.dataObj
+    this.formModel = { ...this.dataObj, shopType: 2 }
   },
   methods: {
+    getShopList(appCode) {
+      this.$api.basic.getShopListByChannel({
+        appCode,
+        pageNo: 1,
+        pageSize: 100
+      }).then(res => {
+        this.shopList = res || []
+      })
+    },
     cancelSelect(index) {
       this.formModel.selectedCustomerList.splice(index, 1)
     },

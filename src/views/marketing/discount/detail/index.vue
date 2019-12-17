@@ -11,6 +11,7 @@
       :is-view="isView"
       :is-disabled="isDisabled"
       :data-obj="formModel"
+      @ChangeChannel="changeChannel"
       ref="basicRef"
       title="基础信息"
     ></g-basic>
@@ -39,6 +40,7 @@
       <c-dialog
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
+        width="80%"
         close-btn
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
@@ -52,7 +54,7 @@
         <goods-select
           v-if="dialogObj.type === 'goods'"
           ref="childRef"
-          :sourceList="goodsList"
+          :paramsObj="goodsTableParamsObj"
         />
       </c-dialog>
     </div>
@@ -92,33 +94,18 @@ export default {
       isView: true,
       btnLoading: false,
       formModel: {},
-      dialogObj: {}
+      dialogObj: {},
+      goodsTableParamsObj: {} // 弹窗 商品列表额外参数
     }
   },
   created() {
     this.fetchData()
-    this.getGoodsList()
   },
   methods: {
-    // 渠道关联的商品列表
-    getGoodsList() {
-      const { totalNum, ...page } = this.pageInfo
-      this.isLoading = true
-      this.$api.marketing
-        .getCouponRuleList({
-          ...this.searchObj,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.goodsList = data || []
-          } else {
-            this.goodsList = res || []
-          }
-        })
+    // 更改渠道 同步店铺、商品list数据
+    changeChannel(appCode) {
+      this.$refs.ruleRef.getShopList(appCode)
+      this.goodsTableParamsObj = { appCode }
     },
     // 获取详情
     fetchData() {
@@ -154,6 +141,9 @@ export default {
           marketUseProductRule: {
             useCategoryCodes: [],
             useBrandCodes: []
+          },
+          marketUseStoreRuleLists: {
+            storeCodes: []
           },
           selectedCustomerList: [],
           applicants: '',

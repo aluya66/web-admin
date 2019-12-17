@@ -82,8 +82,8 @@ export default {
         activeMenu: '/marketing/ticket/list',
         roles: ['admin']
       }
-    }
-    , {
+    },
+    {
       path: '/marketing/discount/list',
       name: 'discountList',
       component: () => import('@/views/marketing/discount/list'),

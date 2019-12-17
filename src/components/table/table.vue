@@ -1,6 +1,6 @@
 <template>
   <div class="c-table">
-    <slot name="header"/>
+    <slot name="header" />
     <el-table
       ref="multipleTable"
       stripe
@@ -17,10 +17,10 @@
       @current-change="handleSingleChange"
       @expand-change="handleExpandChange"
     >
-      <el-table-column v-if="selection" :align="align" type="selection" width="55"/>
+      <el-table-column v-if="selection" :align="align" type="selection" width="55" />
       <el-table-column v-if="expand" :align="align" type="expand" width="55">
         <template slot-scope="scope">
-          <slot name="expand" :props="scope.row"/>
+          <slot name="expand" :props="scope.row" />
         </template>
       </el-table-column>
       <el-table-column
@@ -42,9 +42,10 @@
           ></c-image>
           <el-popover trigger="hover" placement="top" v-else-if="item.isPopover">
             <p>{{scope.row[item.prop]}}</p>
-            <div slot="reference" class="name-wrapper text-multi-ellipsis">
-              {{ scope.row[item.prop] }}
-            </div>
+            <div
+              slot="reference"
+              class="name-wrapper text-multi-ellipsis"
+            >{{ scope.row[item.prop] }}</div>
           </el-popover>
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
           <div v-else-if="item.handle" class="title-active" @click="item.handle(scope.row)">
@@ -105,7 +106,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <slot name="footer"/>
+    <slot name="footer" />
     <c-pagination
       v-show="!noPage && tableList.length > 0"
       :total="pageInfo.totalNum"
@@ -231,6 +232,10 @@ export default {
     }, false)
   },
   methods: {
+    selectAll() {
+      this.$refs.multipleTable.toggleAllSelection() 
+      debugger 
+    },
     // 记录当前table滚动记录
     saveScroll() {
       this.$nextTick(() => {
@@ -271,7 +276,7 @@ export default {
           this.$refs.multipleTable.setCurrentRow(rows)
         } else {
           rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row)
+            this.$refs.multipleTable.toggleRowSelection(row, true)
           })
         }
       } else {
@@ -365,7 +370,8 @@ export default {
     color: @active;
     cursor: pointer;
   }
-  .el-table__fixed, .el-table__fixed-right{
+  .el-table__fixed,
+  .el-table__fixed-right {
     .cell {
       word-break: normal;
     }

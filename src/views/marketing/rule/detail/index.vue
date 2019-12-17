@@ -82,7 +82,8 @@
           <el-checkbox-group v-model="formModel.memberType">
             <el-checkbox
               class="checkbox-item"
-              :label="item"
+              :label="item.id"
+              :checked="item.checked"
               v-for="(item, index) in memberTypeList"
               :key="index"
             >{{ item.label }}</el-checkbox>
@@ -216,7 +217,6 @@ import MixinForm from 'mixins/form'
 import CCard from 'components/card'
 import CDialog from 'components/dialog'
 import utils from 'utils'
-import GoodsSelect from '../../../common/goodsSelect'
 import CustomerSelect from '../../../common/customerSelect'
 import CouponAdd from './add'
 export default {
@@ -224,7 +224,6 @@ export default {
   mixins: [MixinForm, mixinTable],
   components: {
     CCard,
-    GoodsSelect,
     CDialog,
     CouponAdd,
     CustomerSelect
@@ -235,15 +234,18 @@ export default {
       memberTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
           label: '全部用户',
-          type: 1
+          type: 1,
+          id: 'allCustomer'
         },
         {
           label: '全部会员',
-          type: 2
+          type: 2,
+          id: 'allMember'
         },
         {
           label: '非会员',
-          type: 8
+          type: 8,
+          id: 'notMember'
         }
       ],
       dialogObj: {},
@@ -313,7 +315,7 @@ export default {
         memberType: [],
         couponDetails: [] // 已选择的优惠券
       },
-      lobList: dictObj.lobList, // 业务线集合
+      lobList: dictObj.lobList // 业务线集合
     }
   },
 
@@ -348,7 +350,7 @@ export default {
     // 类型4为接口请求获得， 16为指定用户选中后保存时候添加
     getMemberType() {
       this.$api.member.getMemberListType().then(res => {
-        const membertTypeArr = res && res.map(val => ({ label: val.name, value: val.id, type: 4 }))
+        const membertTypeArr = res && res.map(val => ({ label: val.name, id: val.id, type: 4 }))
         this.memberTypeList = this.memberTypeList.concat(membertTypeArr)
       })
     },
@@ -372,14 +374,12 @@ export default {
     fetchData(couponId) {
       this.$api.marketing.getCouponRuleDetail({ couponId }).then(res => {
         this.setTagsViewTitle()
-        const {
+        let {
           platformList,
           couponId,
           couponName,
           issueTimeType,
           issueTimeValues,
-          limitExpireTimeStart,
-          limitExpireTimeEnd,
           limitReceive,
           receiveTimeType,
           receiveType,
@@ -388,13 +388,51 @@ export default {
           issueTimeEnd,
           marketLimitUser
         } = res
+        couponDetails = couponDetails.map((item) => {
+          let info = ''
+          if (item.marketPreferentialRules.length) {
+            const target = item.marketPreferentialRules[0]
+            switch (target.preferentialType) {
+              case 0:
+                info = `${target.preferentialLevel}元减${target.preferentialValue}元`
+                break
+              case 1:
+                info = `${target.preferentialLevel}件享${target.preferentialValue}元`
+            }
+            return {
+              ...item,
+              ...target,
+              info
+            }
+          }
+        })
+        let memberType = []
+        if (marketLimitUser.userLimitTypes && marketLimitUser.userLimitTypes.length) {
+          marketLimitUser.userLimitTypes.forEach((item) => {
+            switch (item) {
+              case 1:
+                memberType.push('allCustomer')
+                break
+              case 2:
+                memberType.push('allMember')
+                break
+              case 8:
+                memberType.push('notMember')
+                break
+              case 4:
+                memberType = memberType.concat(marketLimitUser.userLevels)
+                break
+            }
+          })
+        }
+        console.log(memberType, 'memberType')
         let params = { // 基础字段
           platformList: platformList[0], // 渠道
           receiveType, // 领券方式
           couponId, // id
           couponName, // 券规则名称
-          couponDetails: couponDetails.map((item) => ({ ...item, ...item.marketPreferentialRules[0] })), // 优惠券列表
-          memberType: []
+          couponDetails, // 优惠券列表
+          memberType // 会员类型列表
         }
         if (receiveType === 1) { // 系统发券
           // 发券时间 类型 1 立即  2 年  4 月 8 周 16 日 32 固定时间区间
@@ -416,7 +454,7 @@ export default {
           Object.assign(params, { selectedCustomerList: marketLimitUser.members })
         }
         this.formModel = params
-        console.log(this.formModel)
+        console.log(this.formModel, this.memberTypeList)
       })
     },
     submitHandle() {
@@ -429,13 +467,12 @@ export default {
           const {
             couponId, // 券规则id
             platformList, // 渠道
-            receiveType, // 领取方式 1 系统发券 2 手动领券 
+            receiveType, // 领取方式 1 系统发券 2 手动领券
             couponName, // 券规则名称
             couponDetails, // 优惠券列表
             memberType, // 发券对象
             selectedCustomerList, // 指定用户
-            limitReceiveTimeType, // 发券时间类型
-            receiveTimeType, // 每人可领类型 
+            receiveTimeType, // 每人可领类型
             limitReceive, // 每人可领类型 次数
             issueTimeType, // 发券时间 类型 1 立即  2 年  4 月 8 周 16 日 32 固定时间区间
             issueTimeValues, // 发券时间类型为 16月 8周时， 天数、周列表数据
@@ -449,14 +486,20 @@ export default {
             }
           })
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
+          let userLimitTypes = [] // 发券对象
           memberType.forEach((item) => {
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
-            if (item.type === 4) {
-              userLeveIds.push(item.value)
+            const target = this.memberTypeList.find((val) => val.id === item)
+            console.log(target, this.memberTypeList, memberType)
+            if (item === 'allCustomer' || item === 'allMember' || item === 'notMember') {
+              userLimitTypes.push(target.type)
+            } else {
+              userLeveIds.push(target.id)
+              userLimitTypes.push(4)
             }
           })
           // 发券对象, 会员等级type有重复，过滤
-          let userLimitTypes = Array.from(new Set(memberType.map((item) => item.type)))
+          userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
           if (selectedCustomerList.length) {
             userIds = selectedCustomerList.map((item) => item.userId)
@@ -478,7 +521,7 @@ export default {
           }
           // 手动领券
           if (receiveType === 2) Object.assign(params, { receiveTimeType, limitReceive })
-          // 系统领券 
+          // 系统领券
           if (receiveType === 1) {
             Object.assign(params, { issueTimeType })
             switch (issueTimeType) {
