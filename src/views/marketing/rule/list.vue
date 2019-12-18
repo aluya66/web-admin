@@ -165,7 +165,7 @@ export default {
     deleteData(param, msgTip = '删除成功') {
       this.$api.marketing.deleteCouponRule(param).then(() => {
         this.$msgTip(msgTip)
-        this.fetchData()
+        this.delResetData()
       })
     },
     /**

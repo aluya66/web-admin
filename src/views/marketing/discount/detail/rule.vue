@@ -8,7 +8,7 @@
       label-position="right"
     >
       <el-form-item label="门店:">
-        <el-select v-model="formModel.shopType" class="form-item" disabled>
+        <el-select :size="size" v-model="formModel.shopType" class="form-item" disabled>
           <el-option
             v-for="(item, index) in shopTypeList"
             :key="index"
@@ -19,6 +19,7 @@
         <el-select
           v-model="formModel.marketUseStoreRuleLists.storeCodes"
           class="form-item"
+          :size="size"
           filterable
           value-key="shopId"
           multiple
@@ -35,6 +36,7 @@
         <el-select
           v-model="formModel.marketUseProductRule.useBrandCodes"
           class="form-item"
+          :size="size"
           multiple
         >
           <el-option v-for="item in brandList" :key="item.id" :label="item.name" :value="item.code"></el-option>
@@ -44,6 +46,7 @@
         <el-cascader
           class="select-item"
           placeholder="搜索商品类目名称"
+          :size="size"
           v-model="formModel.marketUseProductRule.useCategoryCodes"
           :options="categoryList"
           filterable
@@ -130,7 +133,7 @@ export default {
   watch: {
     skuList: {
       handler(val) {
-        this.skuArr = val  
+        this.skuArr = val
         console.log(this.skuArr, 'skuArr')
       },
       deep: true

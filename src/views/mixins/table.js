@@ -15,6 +15,7 @@ export default {
       tableList: [], // 列表数据
       tableCheckedList: [], // 列表批量选中
       maxHeight: 650, // table最大高度
+      isCreated: false, // created钩子调用后为true, 组件激活后，为true时调用activated钩子
       pageInfo: { // 页码信息
         pageNo: 1,
         pageSize: 10,

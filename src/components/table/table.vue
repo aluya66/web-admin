@@ -233,7 +233,7 @@ export default {
   },
   methods: {
     selectAll() {
-      this.$refs.multipleTable.toggleAllSelection() 
+      this.$refs.multipleTable.toggleAllSelection()
     },
     // 记录当前table滚动记录
     saveScroll() {
@@ -267,7 +267,7 @@ export default {
       return tableInnerBtns
     },
     toggleRowSelection(row) {
-      this.$refs.multipleTable.toggleRowSelection(row, true)  
+      this.$refs.multipleTable.toggleRowSelection(row, true)
     },
     // 选中取消
     toggleSelection(rows) {

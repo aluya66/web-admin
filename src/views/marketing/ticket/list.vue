@@ -53,7 +53,7 @@ import CDialog from 'components/dialog'
 import dictObj from '@/store/dictData'
 
 export default {
-  name: 'couponList',
+  name: 'ticketList',
   mixins: [mixinTable],
   components: {
     CDialog
@@ -79,15 +79,15 @@ export default {
             name: 'status',
             toggle: [{
               title: '发布',
-              icon: 'el-icon-s-tools',
+              icon: 'el-icon-s-promotion',
               value: [0, 4]
             }, {
               title: '上架',
-              icon: 'el-icon-s-tools',
+              icon: 'el-icon-top',
               value: [7]
             }, {
               title: '下架',
-              icon: 'el-icon-s-tools',
+              icon: 'el-icon-bottom',
               value: [5, 6]
             }]
           },
@@ -128,7 +128,7 @@ export default {
       ],
       tableHeader: [
         {
-          label: 'ID',
+          label: '卡券ID',
           prop: 'couponId',
           width: 100,
           fixed: true,
@@ -141,6 +141,10 @@ export default {
           prop: 'platformList',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.platformList, 'lobList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.lobList
           }
         },
         {
@@ -161,11 +165,7 @@ export default {
         },
         {
           label: '卡券内容',
-          prop: 'couponRemark',
-          search: {
-            type: 'select',
-            optionsList: dictObj.lobList
-          }
+          prop: 'couponRemark'
         },
         {
           label: '卡券有效期开始时间',
@@ -175,41 +175,46 @@ export default {
           label: '卡券有效期结束时间',
           prop: 'limitExpireTimeEnd'
         },
+        // {
+        //   label: '已领取',
+        //   prop: ''
+        // },
+        // {
+        //   label: '已使用',
+        //   prop: ''
+        // },
         {
-          label: '状态', // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
+          label: '卡券状态', // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
           prop: 'status',
-          search: {
-            optionsList: dictObj.couponStatusList
-          },
           formatter(row) {
             return row && vm.setTableColumnLabel(row.status, 'couponStatusList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.couponStatusList
           }
-        },
-        {
-          label: '创建时间',
-          prop: 'created'
         },
         {
           label: '创建人',
           prop: 'opCreator',
           search: {
-            prop: 'createBy',
+            prop: 'opCreator',
             type: 'input'
           }
         },
         {
-          label: '已领取',
-          prop: ''
-        },
-        {
-          label: '已使用',
-          prop: ''
+          label: '创建时间',
+          prop: 'created'
         }
       ]
     }
   },
   created() {
     this.fetchData()
+    this.isCreated = !this.isCreated
+  },
+  activated() {
+    this.isCreated && this.fetchData()
   },
   methods: {
     /**
@@ -246,7 +251,7 @@ export default {
     deleteData(param, msgTip = '删除成功') {
       this.$api.marketing.deleteCoupon(param).then(() => {
         this.$msgTip(msgTip)
-        this.fetchData()
+        this.delResetData()
       })
     },
     // 审核劵

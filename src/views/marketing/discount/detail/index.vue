@@ -6,36 +6,38 @@
         :content="$route.meta.name || $t(`route.${$route.meta.title}`)"
       ></el-page-header>
     </template>
-    <g-basic
-      v-if="Object.keys(formModel).length"
-      :is-view="isView"
-      :is-disabled="isDisabled"
-      :data-obj="formModel"
-      @ChangeChannel="changeChannel"
-      ref="basicRef"
-      title="基础信息"
-    ></g-basic>
-    <g-rule
-      v-if="Object.keys(formModel).length"
-      :is-view="isView"
-      :is-disabled="isDisabled"
-      :data-obj="formModel"
-      ref="ruleRef"
-      title="规则设置(以下信息至少完善一项)"
-      @show-dialog="showDialog"
-    ></g-rule>
-    <g-apply
-      v-if="Object.keys(formModel).length"
-      :is-view="isView"
-      :is-disabled="isDisabled"
-      :data-obj="formModel"
-      ref="applyRef"
-      title="申请信息"
-    ></g-apply>
-    <div class="btn-wrapper">
-      <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+    <div class="form">
+      <g-basic
+        v-if="Object.keys(formModel).length"
+        :is-view="isView"
+        :is-disabled="isDisabled"
+        :data-obj="formModel"
+        @ChangeChannel="changeChannel"
+        ref="basicRef"
+        title="基础信息"
+      ></g-basic>
+      <g-rule
+        v-if="Object.keys(formModel).length"
+        :is-view="isView"
+        :is-disabled="isDisabled"
+        :data-obj="formModel"
+        ref="ruleRef"
+        title="规则设置(以下信息至少完善一项)"
+        @show-dialog="showDialog"
+      ></g-rule>
+      <g-apply
+        v-if="Object.keys(formModel).length"
+        :is-view="isView"
+        :is-disabled="isDisabled"
+        :data-obj="formModel"
+        ref="applyRef"
+        title="申请信息"
+      ></g-apply>
+      <div class="btn-wrapper">
+        <el-button :size="size" :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+        <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
+      </div>
     </div>
-
     <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
@@ -291,13 +293,8 @@ export default {
 .form {
   background-color: @white;
   padding: 15px 15px;
-  .form-btn {
-    margin-left: 20px;
-    margin-top: 20px;
-  }
 }
 .btn-wrapper {
-  display: flex;
-  justify-content: center;
+  margin-left: 140px;
 }
 </style>

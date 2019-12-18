@@ -77,13 +77,9 @@
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
 export default {
   name: 'goodsSelect',
   mixins: [mixinTable],
-  components: {
-    CDialog
-  },
   props: {
     disabled: Boolean,
     paramsObj: { // 额外参数集
@@ -119,7 +115,7 @@ export default {
           name: '删除',
           icon: 'el-icon-delete',
           handle(row) {
-             vm.deleteSelectedItem(row, 'skus')
+            vm.deleteSelectedItem(row, 'skus')
           }
         }
       ],
@@ -198,7 +194,7 @@ export default {
   },
   watch: {
     'paramsObj.appCode'(oval, nval) {
-      if (oval === nval) return 
+      if (oval === nval) return
       this.fetchData()
     }
   },
@@ -206,7 +202,7 @@ export default {
     // 删除已选择的列表数据
     deleteSelectedItem(row, type) {
       const goodsBn = row.goodsBn // 商品sku
-      const idx = this.checkedAttr.findIndex((item) => item.goodsBn === goodsBn) 
+      const idx = this.checkedAttr.findIndex((item) => item.goodsBn === goodsBn)
       if (type === 'goods') { // 删除商品
         if (idx !== -1) this.checkedAttr.splice(idx, 1)
       } else { // 删除sku
@@ -244,8 +240,8 @@ export default {
         if (goodIndex !== -1) {
           // this.tableList[goodIndex] = this.tableList[goodIndex].map((item) => ({ ...item, isSelected: false }))
           Object.assign(this.tableList[goodIndex], { skuList: rows, isSelected: false })
-          this.checkedAttr.push(this.tableList[goodIndex])  
-        }  
+          this.checkedAttr.push(this.tableList[goodIndex])
+        }
       }
     },
     fetchData() {
@@ -266,7 +262,7 @@ export default {
             this.tableList = res || []
           }
         })
-    },
+    }
   },
   mounted() {
     this.fetchData()

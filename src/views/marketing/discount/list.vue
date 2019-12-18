@@ -53,83 +53,13 @@ import CDialog from 'components/dialog'
 import dictObj from '@/store/dictData'
 
 export default {
-  name: 'couponList',
+  name: 'discountList',
   mixins: [mixinTable],
   components: {
     CDialog
   },
   data(vm) {
     return {
-      couponStatusList: [ // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
-        {
-          value: 0,
-          label: '草稿'
-        },
-        {
-          value: 1,
-          label: '审核中'
-        },
-        {
-          value: 2,
-          label: '审核不通过'
-        },
-        {
-          value: 3,
-          label: '审核通过'
-        },
-        {
-          value: 4,
-          label: '未发布'
-        },
-        {
-          value: 5,
-          label: '进行中'
-        },
-        {
-          value: 6,
-          label: '未开始'
-        },
-        {
-          value: 7,
-          label: '已下架'
-        },
-        {
-          value: 8,
-          label: '已结束(失效)'
-        }
-      ],
-      typeList: [ // 卡券类型
-        {
-          value: 1,
-          label: '现金券'
-        },
-        {
-          value: 2,
-          label: '折扣券'
-        },
-        {
-          value: 3,
-          label: '兑换券'
-        }
-      ],
-      platformList: [ // 渠道1 IPX, 2星购, 4YOSHOP, 8YSIA
-        {
-          value: 1,
-          label: 'ipx'
-        },
-        {
-          value: 2,
-          label: '星GO'
-        },
-        {
-          value: 4,
-          label: 'YOSHOP'
-        },
-        {
-          value: 8,
-          label: 'YSIA'
-        }
-      ],
       dialogObj: {}, // 对话框数据
       searchObj: {
         couponName: '', // 劵名称
@@ -140,7 +70,7 @@ export default {
       },
       tableInnerBtns: [
         {
-          width: 100,
+          width: 180,
           prop: {
             name: 'status', // 为0或1
             toggle: [{
@@ -155,13 +85,12 @@ export default {
             const { activityId, status, activityName } = row
             const tip = status === 1 ? '禁用' : '启用'
             const updateStatus = status === 1 ? 0 : 1
-            vm.confirmTip(`确认${tip}【${activityName}】 折扣活动`, () => {
-              vm.changeStatus({ activityId, status: updateStatus })
+            vm.confirmTip(`确认${tip}【${activityName}】 活动`, () => {
+              vm.changeStatus({ activityId, status: updateStatus }, tip)
             })
           }
         },
         {
-          width: 180,
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
@@ -184,7 +113,6 @@ export default {
         {
           label: '活动名称',
           prop: 'activityName',
-          width: 100,
           fixed: true,
           search: {
             type: 'input'
@@ -218,9 +146,21 @@ export default {
           prop: 'activityTypeName'
         },
         {
+          label: '活动状态',
+          prop: 'activityStatus',
+          formatter(row) { // 1待开始 2活动中 3已结束
+            return row && vm.setTableColumnLabel(row.activityStatus, 'activityStatusList')
+          },
+          search: {
+            type: 'select',
+            optionsList: dictObj.activityStatusList
+          }
+        },
+        {
           label: '活动开始时间',
           prop: 'activityTime',
           search: {
+            label: '活动时间',
             prop: 'dateTime',
             type: 'dateTime'
           }
@@ -237,17 +177,6 @@ export default {
           }
         },
         {
-          label: '活动状态',
-          prop: 'activityStatus',
-          formatter(row) { // 1待开始 2活动中 3已结束
-            return row && vm.setTableColumnLabel(row.activityStatus, 'activityStatusList')
-          },
-          search: {
-            type: 'select',
-            optionsList: dictObj.activityStatusList
-          }
-        },
-        {
           label: '申请人',
           prop: 'applicants',
           search: {
@@ -259,12 +188,16 @@ export default {
   },
   created() {
     this.fetchData()
+    this.isCreated = !this.isCreated
+  },
+  activated() {
+    this.isCreated && this.fetchData()
   },
   methods: {
     // 启用、禁用
-    changeStatus(params) {
+    changeStatus(params, msg) {
       this.$api.marketing.changeGoodsActivityStatus(params).then(() => {
-        this.$msgTip('更新成功')
+        this.$msgTip(`${msg}成功`)
         this.fetchData()
       })
     },
@@ -276,22 +209,20 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.marketing
-        .getGoodsActivityList({
-          ...searchDate,
-          ...other,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.marketing.getGoodsActivityList({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     },
     /**
      * 删除表格单条数据
@@ -302,54 +233,7 @@ export default {
     deleteData(param, msgTip = '删除成功') {
       this.$api.marketing.deleteGoodsActivity(param).then(() => {
         this.$msgTip(msgTip)
-        this.fetchData()
-      })
-    },
-    /**
-     * 对话框确认按钮，集成了表单提交功能
-     */
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const childFormModel = childRef.formModel
-          if (!this.dialogObj.isEdit) {
-            this.addHandle(childFormModel)
-          } else {
-            this.editHandle(childFormModel)
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '新增劵',
-        isEdit: opts.isEdit || false,
-        initData: opts.initData
-      }
-    },
-    /**
-     * 确认新增操作
-     */
-    addHandle(childFormModel) {
-      this.$api.marketing.addCoupon(childFormModel).then(res => {
-        this.$msgTip('添加成功')
-        this.fetchData()
-        this.dialogObj.isShow = false
-      })
-    },
-    /**
-     * 确认修改操作
-     */
-    editHandle(formModel) {
-      this.$api.marketing.addCoupon(formModel).then(res => {
-        this.$msgTip('修改成功')
-        this.fetchData()
-        this.dialogObj.isShow = false
+        this.delResetData()
       })
     }
   }
