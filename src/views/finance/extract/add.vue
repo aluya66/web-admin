@@ -103,7 +103,18 @@ export default {
   },
   data(vm) {
     const checkNumber = (rule, value, callback) => {
-      if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
+      if (!value || (!Number(value) && Number(value) !== 0) || Number(value) < 0) {
+        return callback(new Error('手续费为正数字或零'))
+      }
+      callback()
+    }
+    const checkAmountNumber = (rule, value, callback) => {
+      if (!value || !Number(value) || Number(value) < 0) {
+        return callback(new Error('审核金额为正数字'))
+      }
+      if (vm.initData.extractAmount < value) {
+        return callback(new Error('审核金额不能大于提现金额'))
+      }
       callback()
     }
     return {
@@ -116,7 +127,7 @@ export default {
       },
       rules: {
         checkAmount: [
-          { required: true, validator: checkNumber, trigger: 'blur' }
+          { required: true, validator: checkAmountNumber, trigger: 'blur' }
         ],
         checkServiceFee: [
           { required: true, validator: checkNumber, trigger: 'blur' }
