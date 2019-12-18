@@ -137,6 +137,10 @@ export default {
           }
         },
         {
+          label: '审核时间',
+          prop: 'checkTime'
+        },
+        {
           label: '创建时间',
           prop: 'created'
         },

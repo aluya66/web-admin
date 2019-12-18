@@ -51,7 +51,7 @@
           ></c-search>
           <div class="opt-btn">
             <el-button type="primary" icon="el-icon-plus" :size="size" @click="showDialog">新增交易明细</el-button>
-            <el-button :size="size" disabled icon="el-icon-download" @click="exportFile">导出</el-button>
+            <!-- <el-button :size="size" disabled icon="el-icon-download" @click="exportFile">导出</el-button> -->
           </div>
         </template>
       </c-table>
@@ -169,9 +169,8 @@ export default {
   },
 
   methods: {
-    exportFile() {
-
-    },
+    // exportFile() {
+    // },
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
@@ -225,6 +224,7 @@ export default {
             ...params
           }).then(res => {
             this.responeHandle(this.dialogObj.isEdit ? '更新成功' : '新增成功')
+            this.getDetailInfo()
           })
         } else {
           console.log('error submit!!')
