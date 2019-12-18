@@ -52,7 +52,7 @@
             item.formatter ? item.formatter(scope.row, index) : scope.row[item.prop]
             }}
           </div>
-          <span :class="item.setColor && item.setColor(scope.row)" v-else>
+          <span :class="[item.colClass, item.setColor && item.setColor(scope.row)]" v-else>
             {{
             item.formatter ? item.formatter(scope.row, index) : scope.row[item.prop]
             }}
