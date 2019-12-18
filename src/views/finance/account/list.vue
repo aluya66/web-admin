@@ -37,7 +37,7 @@ import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
 
 export default {
-  name: 'financeAccount',
+  name: 'financeAccount-nocache',
   mixins: [mixinTable],
   data(vm) {
     return {

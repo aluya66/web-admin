@@ -23,7 +23,7 @@
         <ul class="msg">
           <li>
             <span>预存款余额(元)：</span>
-            <span>{{formModel.transactionAmount || 0}}</span>
+            <span>{{formModel.balance || 0}}</span>
           </li>
         </ul>
       </div>
@@ -139,7 +139,10 @@ export default {
         },
         {
           label: '金额(元)',
-          prop: 'transactionAmount'
+          prop: 'transactionAmount',
+          formatter(row) {
+            return row.type === 4 || row.type === 6 ? `-${row.transactionAmount}` : row.transactionAmount
+          },
         },
         {
           label: '关联订单号',

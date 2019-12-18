@@ -91,13 +91,13 @@ const salesTypeList = [{
   value: 1
 }, {
   label: '采购消费',
-  value: 2
+  value: 4
 }, {
   label: '采购退款',
-  value: 3
+  value: 5
 }, {
   label: '提现',
-  value: 4
+  value: 6
 }]
 
 // 提现审核 未审核 1：提现成功 2：提现驳回
