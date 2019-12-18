@@ -52,7 +52,15 @@
         ></el-cascader>
       </el-form-item>
       <el-form-item label="指定商品:">
-        <el-button size="small" @click="showDialog('goods')">选择商品</el-button>
+        <el-button size="small" @click="showDialog('goods', '选择商品')">选择商品</el-button>
+        商品：
+        <div class="goods-box" v-for="(item, index) in goodsList" :key="index">
+          <div class="goods-item">{{ item.goodsBn }}</div>
+        </div>
+        商品sku:
+        <div class="goods-box" v-for="(item, index) in skuArr" :key="index">
+          <div class="goods-item" v-for="(sku) in item.arr" :key="sku.goodsSkuSn">{{ sku.goodsSkuSn }}</div>
+        </div>
       </el-form-item>
       <!-- <el-form-item label="用户类型:">
         <el-checkbox-group v-model="formModel.customerType">
@@ -65,7 +73,7 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="指定用户:">
-        <el-button size="small" @click="showDialog('customer')">选择用户</el-button>
+        <el-button size="small" @click="showDialog('customer', '选择用户')">选择用户</el-button>
         <div>
           <el-tag
             class="tag-item"
@@ -115,7 +123,17 @@ export default {
       categoryList: [],
       brandList: [],
       shopList: [],
-      formModel: {}
+      formModel: {},
+      skuArr: []
+    }
+  },
+  watch: {
+    skuList: {
+      handler(val) {
+        this.skuArr = val  
+        console.log(this.skuArr, 'skuArr')
+      },
+      deep: true
     }
   },
   props: {
@@ -123,6 +141,18 @@ export default {
     dataObj: {
       type: Object,
       required: true
+    },
+    skuList: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    goodsList: {
+      type: Array,
+      default() {
+        return []
+      }
     },
     isView: {
       type: Boolean,
@@ -155,8 +185,8 @@ export default {
     cancelSelect(index) {
       this.formModel.selectedCustomerList.splice(index, 1)
     },
-    showDialog(type) {
-      this.$emit('show-dialog', type)
+    showDialog(type, title) {
+      this.$emit('show-dialog', type, title)
     },
     getCategoryList() {
       this.$api.basic.queryCategoryAll().then(res => {

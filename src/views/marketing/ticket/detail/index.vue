@@ -23,6 +23,7 @@
             class="search-item"
             placeholder="请选择"
             :value.sync="formModel.platformList"
+            @change="changeChannel"
           ></query-dict>
         </el-form-item>
         <el-form-item label="卡券名称:" prop="couponName">
@@ -39,7 +40,8 @@
           <el-radio-group
             v-model="formModel.preferentialType"
             @change="changeTicketType"
-            :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7">
+            :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
+          >
             <el-radio
               v-for="item in ticketTypeArr"
               :key="item.value"
@@ -49,7 +51,8 @@
         </el-form-item>
         <!-- 卡券类型：现金券 订单满减开始 -->
         <template v-if="formModel.preferentialType === 0">
-          <el-form-item label="订单满减:"
+          <el-form-item
+            label="订单满减:"
             v-for="(item, index) in formModel.couponPreferentialRules"
             :key="index"
           >
@@ -101,7 +104,8 @@
 
         <!-- 卡券类型：折扣券 订单满折开始 -->
         <template v-if="formModel.preferentialType === 1">
-          <el-form-item label="订单满折:"
+          <el-form-item
+            label="订单满折:"
             v-for="(item, index) in formModel.couponPreferentialRules"
             :key="index"
           >
@@ -153,7 +157,8 @@
           <el-radio-group
             v-model="formModel.limitExpireDayType"
             :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
-            @change="changeExpireType">
+            @change="changeExpireType"
+          >
             <el-radio
               v-for="item in ticketValidTypeArr"
               :key="item.value"
@@ -212,7 +217,10 @@
           />
         </el-form-item>
         <el-form-item label="适用商品:">
-          <el-radio-group v-model="formModel.fitGoodsType" :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7">
+          <el-radio-group
+            v-model="formModel.fitGoodsType"
+            :disabled="(ticketType === 5 || ticketType === 6 || ticketType === 7) || !formModel.platformList.length"
+          >
             <el-radio
               v-for="item in fitGoodsTypeArr"
               :key="item.value"
@@ -221,7 +229,11 @@
           </el-radio-group>
 
           <!-- 指定商品开始 -->
-          <goodsSelect :sourceList="sourceList" v-show="formModel.fitGoodsType === 1"/>
+          <goodsSelect
+            ref="goodsSelectRef"
+            v-if="formModel.fitGoodsType === 1"
+            :paramsObj="goodsParamsObj"
+          />
           <!-- 指定商品结束 -->
         </el-form-item>
         <el-form-item class="form-btn">
@@ -253,47 +265,10 @@ export default {
       callback()
     }
     return {
+      goodsParamsObj: {},
       ticketValidTypeArr: dictObj.ticketValidTypeArr,
       checkDiscount, // 验证折扣
       ticketType: undefined, // 卡券状态 编辑使用
-      sourceList: [
-        {
-          id: '12987122',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        },
-        {
-          id: '12987123',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        },
-        {
-          id: '12987125',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        },
-        {
-          id: '12987126',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }
-      ],
       fitGoodsTypeArr: [
         {
           label: '所有商品',
@@ -337,6 +312,11 @@ export default {
     }
   },
   methods: {
+    changeChannel(val) {
+      this.goodsParamsObj = {
+        appCode: val.join(',')
+      }
+    },
     // 切换卡券有效期类型
     changeExpireType(val) {
       Reflect.deleteProperty(this.formModel, 'limitExpireTime')
@@ -435,6 +415,24 @@ export default {
               }
             })
             Object.assign(params, { couponPreferentialRules: ruleList })
+          }
+          console.log(this.$refs.goodsSelectRef.checkedAttr)
+          const selectedGoodsList = this.$refs.goodsSelectRef.checkedAttr
+          if (selectedGoodsList.length) { // 是否有指定商品列表
+            let goodsList = [], skuList = []
+            selectedGoodsList.forEach((item) => {
+              if (item.isSelected) { // 商品
+                goodsList.push(item.goodsBn)
+              } else {
+                skuList.push(item.skuList.map((item) => item.goodsSkuSn))
+              }
+            })
+            Object.assign(params, {
+              marketUseProductRule: {
+                useProductCodes: goodsList,
+                useProductSkuCodes: skuList.flat()
+              }
+            })
           }
           if (couponId) Object.assign(params, { couponId }) // 编辑操作 添加id字段
           const reqFun = couponId ? requestMethods['edit'] : requestMethods['add']

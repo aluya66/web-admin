@@ -42,7 +42,7 @@
         :title="dialogObj.title"
         width="80%"
         close-btn
-        @before-close="dialogObj.isShow = false"
+        @before-close="closeDialog"
         @on-submit="dialogConfirm"
       >
         <customer-select
@@ -55,6 +55,7 @@
           v-if="dialogObj.type === 'goods'"
           ref="childRef"
           :paramsObj="goodsTableParamsObj"
+          :initChecked="goodsList"
         />
       </c-dialog>
     </div>
@@ -76,26 +77,43 @@ export default {
   mixins: [MixinForm, mixinTable],
   data() {
     return {
+      skuTableHeader: [
+        {
+          label: '编号',
+          prop: 'goodsSkuSn'
+        },
+        {
+          label: '图片',
+          isImage: true,
+          width: 100,
+          prop: 'imageUrl'
+        },
+        {
+          label: '零售价',
+          prop: 'retailPrice'
+        },
+        {
+          label: '会员价',
+          prop: 'memberPrice'
+        },
+        {
+          label: '散批价',
+          prop: 'wholesalePrice'
+        },
+        {
+          label: '大批价',
+          prop: 'largeBatchPrice'
+        }
+      ],
       goodsList: [],
-      customerList: [{
-        name: '张三',
-        code: '1',
-        phone: '111'
-      }, {
-        name: '李四',
-        code: '2',
-        phone: '222'
-      }, {
-        name: 'zzz',
-        code: '3',
-        phone: '333'
-      }],
       isDisabled: false,
       isView: true,
       btnLoading: false,
       formModel: {},
       dialogObj: {},
-      goodsTableParamsObj: {} // 弹窗 商品列表额外参数
+      goodsTableParamsObj: {
+        appCode: 'yssp'
+      } // 弹窗 商品列表额外参数
     }
   },
   created() {
@@ -133,6 +151,7 @@ export default {
         })
       } else {
         this.formModel = {
+          platformList: 'yssp',
           marketPreferentialRules: [],
           activateMonths: [],
           activateDays: [],
@@ -153,16 +172,21 @@ export default {
       }
     },
     dialogConfirm() {
-      const checkedTagsList = this.$refs.childRef.checkedAttr
-      this.selectedCustomerList = checkedTagsList
-      this.dialogObj.isShow = false
-      this.$set(this.formModel, 'selectedCustomerList', JSON.parse(JSON.stringify(this.selectedCustomerList)))
+      const type = this.dialogObj.type
+      if (type === 'goods') { // 商品
+        this.dialogObj.isShow = false
+      } else { // 用户
+        const checkedTagsList = this.$refs.childRef.checkedAttr
+        this.selectedCustomerList = checkedTagsList
+        this.dialogObj.isShow = false
+        this.$set(this.formModel, 'selectedCustomerList', JSON.parse(JSON.stringify(this.selectedCustomerList)))
+      }
     },
-    showDialog(type) {
+    showDialog(type, title) {
       this.dialogObj = {
         type,
         isShow: true,
-        title: '选择用户'
+        title
       }
     },
     submitHandle() {

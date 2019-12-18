@@ -6,7 +6,6 @@
     <div class="content">
       <div class="source">
         <c-table
-          ref="table"
           selection
           expand
           hasBorder
@@ -18,50 +17,19 @@
           :page-info="pageInfo"
           :table-inner-btns="tableInnerBtns"
           @change-pagination="changePagination"
-          @expand-change="handleSkuList"
+          @selection-handle="handleSelect"
         >
           <template v-slot:header>
-            <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-              <el-form-item>
-                <el-input
-                  v-model="searchObj.couponName"
-                  class="search-item"
-                  size="medium"
-                  placeholder="输入SPU/SKU"
-                  clearable
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-select
-                  v-model="searchObj.couponStatus"
-                  placeholder="请选择品牌"
-                  class="search-item"
-                  size="medium"
-                  clearable
-                >
-                  <el-option
-                    v-for="item in brandList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  type="primary"
-                  class="search-btn"
-                  :size="size"
-                  icon="el-icon-search"
-                  @click="searchSubmit"
-                >筛选</el-button>
-              </el-form-item>
-            </el-form>
+            <c-search
+              :form-model="searchObj"
+              :form-items="searchItems"
+              @submit-form="searchSubmit"
+              @reset-form="searchReset"
+            ></c-search>
           </template>
           <template v-slot:expand="{props}">
-            {{ props.id }}
             <c-table
-              :ref="'skuRef' + props.id"
+              :ref="'skuRef' + props.goodsBn"
               hasBorder
               selection
               noPage
@@ -70,11 +38,12 @@
               :loading="isLoading"
               :table-header="skuTableHeader"
               :table-list="props.skus"
+              @selection-handle="handleSkuList"
             ></c-table>
           </template>
         </c-table>
       </div>
-      <!-- <div class="dist">
+      <div class="dist">
         <div class="title">已选商品:【 {{checkedAttr.length}} 】</div>
         <div class="selected-box">
           <c-table
@@ -87,31 +56,34 @@
             :table-header="tableHeader"
             :table-list="checkedAttr"
             :table-inner-btns="selectedTableInnerBtns"
-            @expand-change="handleSkuList"
           >
             <template v-slot:expand="{props}">
               <c-table
                 hasBorder
-                selection
                 noPage
                 :max-height="400"
                 :size="size"
                 :loading="isLoading"
                 :table-header="skuTableHeader"
-                :table-list="props.skus"
+                :table-list="props.skuList"
+                :table-inner-btns="selectedSkuTableInnerBtns"
               ></c-table>
             </template>
           </c-table>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
 <script>
 import mixinTable from 'mixins/table'
+import CDialog from 'components/dialog'
 export default {
   name: 'goodsSelect',
   mixins: [mixinTable],
+  components: {
+    CDialog
+  },
   props: {
     disabled: Boolean,
     paramsObj: { // 额外参数集
@@ -121,7 +93,7 @@ export default {
       }
     },
     initChecked: {
-      // 编辑初始化选中值
+      // 编辑初始化goods选中值
       type: Array,
       default() {
         return []
@@ -130,10 +102,49 @@ export default {
   },
   data(vm) {
     return {
+      dialogObj: {},
+      selectedTableInnerBtns: [
+        {
+          width: 150,
+          name: '删除',
+          icon: 'el-icon-delete',
+          handle(row) {
+            vm.deleteSelectedItem(row, 'goods')
+          }
+        }
+      ],
+      selectedSkuTableInnerBtns: [
+        {
+          width: 150,
+          name: '删除',
+          icon: 'el-icon-delete',
+          handle(row) {
+             vm.deleteSelectedItem(row, 'skus')
+          }
+        }
+      ],
+      tableInnerBtns: [
+        // {
+        //   width: 150,
+        //   name: 'sku',
+        //   icon: 'el-icon-add',
+        //   handle(row) {
+        //     vm.$emit('Handle-Sku', row)
+        //   }
+        // }
+      ],
       skuTableHeader: [
         {
           label: '编号',
           prop: 'goodsSkuSn'
+        },
+        {
+          label: '尺码',
+          prop: 'attributeSpecValue'
+        },
+        {
+          label: '颜色',
+          prop: 'attributeColorValue'
         },
         {
           label: '图片',
@@ -158,30 +169,13 @@ export default {
           prop: 'largeBatchPrice'
         }
       ],
-      selectedTableInnerBtns: [
-        {
-          width: 150,
-          name: '删除',
-          icon: 'el-icon-delete',
-          handle(row) {
-
-          }
-        }
-      ],
-      tableInnerBtns: [
-        {
-          width: 150,
-          name: '添加',
-          icon: 'el-icon-add',
-          handle(row) {
-            vm.handleSelect(row)
-          }
-        }
-      ],
       tableHeader: [
         {
           label: '商品名称',
-          prop: 'goodsName'
+          prop: 'goodsName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '图片',
@@ -191,7 +185,10 @@ export default {
         },
         {
           label: '款号',
-          prop: 'goodsBn'
+          prop: 'goodsBn',
+          search: {
+            type: 'input'
+          }
         }
       ],
       brandList: [],
@@ -199,23 +196,57 @@ export default {
       checkedAttr: [] // 选中的值
     }
   },
+  watch: {
+    'paramsObj.appCode'(oval, nval) {
+      if (oval === nval) return 
+      this.fetchData()
+    }
+  },
   methods: {
-    handleSelect(row) {
-      // this.checkedAttr.push(row)
-      const targetRef = `skuRef${row.id}`
-      console.log(this.$refs[targetRef])
-      this.$nextTick(() => {
-        this.$refs[targetRef].selectAll()
-      })
-      // this.$refs[targetRef].toggleSelection(row.skus);
+    // 删除已选择的列表数据
+    deleteSelectedItem(row, type) {
+      const goodsBn = row.goodsBn // 商品sku
+      const idx = this.checkedAttr.findIndex((item) => item.goodsBn === goodsBn) 
+      if (type === 'goods') { // 删除商品
+        if (idx !== -1) this.checkedAttr.splice(idx, 1)
+      } else { // 删除sku
+        if (idx !== -1) {
+          let arr = this.checkedAttr[idx].skuList
+          const skuIdx = arr.findIndex((item) => item.goodsSkuSn === row.goodsSkuSn)
+          if (skuIdx !== -1) {
+            arr.splice(skuIdx, 1)
+            if (!arr.length) this.checkedAttr.splice(idx, 1)
+          }
+        }
+      }
     },
-    handleSkuList(row) {
-      // const idx = this.checkedAttr.findIndex((item) => row.id === item.id)
-      // if (idx !== -1) {
-      //   row.skus.forEach(row => {
-      //     this.$refs[targetRef].toggleSelection(row);
-      //   })
-      // }
+    handleSelect(rows) {
+      if (!rows.length) return
+      this.checkedAttr = rows.map((item) => { // 设置商品被选中标识
+        return {
+          ...item,
+          isSelected: true
+        }
+      })
+      this.$emit('handle-select', rows)
+      // let targetRef = `skuRef${rows[0].skus[0].goodsBn}`
+      // this.$refs[targetRef] && this.$refs[targetRef].selectAll();
+    },
+    handleSkuList(rows) {
+      if (!rows.length) return
+      // 选中的sku是否属于已选择的商品, 选择的sku属于同一商品所以只需要拿数组【0】去对比
+      const idx = this.checkedAttr.findIndex((selectedGood) => selectedGood.goodsBn === rows[0].goodsBn)
+      if (idx !== -1) { // 商品已选择， 在已选中商品列表中添加sku集合
+        this.checkedAttr[idx].skuList = rows // 设置已选中的sku集合
+        this.checkedAttr = JSON.parse(JSON.stringify(this.checkedAttr))
+      } else { // 商品未被选择， 添加标识 商品未被选中，只选择sku isSelected:false
+        const goodIndex = this.tableList.findIndex((good) => good.goodsBn === rows[0].goodsBn)
+        if (goodIndex !== -1) {
+          // this.tableList[goodIndex] = this.tableList[goodIndex].map((item) => ({ ...item, isSelected: false }))
+          Object.assign(this.tableList[goodIndex], { skuList: rows, isSelected: false })
+          this.checkedAttr.push(this.tableList[goodIndex])  
+        }  
+      }
     },
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
