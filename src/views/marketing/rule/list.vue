@@ -130,8 +130,12 @@ export default {
       ]
     }
   },
-  mounted() {
+  created() {
     this.fetchData()
+    this.isCreated = !this.isCreated
+  },
+  activated() {
+    this.isCreated && this.fetchData()
   },
   methods: {
     /**

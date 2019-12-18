@@ -8,7 +8,7 @@
       label-position="right"
     >
       <el-form-item label="门店:">
-        <el-select :size="size" v-model="formModel.shopType" class="form-item" disabled>
+        <el-select :size="size" v-model="formModel.shopType" class="select-item" disabled>
           <el-option
             v-for="(item, index) in shopTypeList"
             :key="index"
@@ -17,8 +17,8 @@
           ></el-option>
         </el-select>
         <el-select
-          v-model="formModel.marketUseStoreRuleLists.storeCodes"
-          class="form-item"
+          v-model="formModel.storeCodes"
+          class="select-item"
           :size="size"
           filterable
           multiple
@@ -34,7 +34,7 @@
       <el-form-item label="商品品牌:">
         <el-select
           v-model="formModel.marketUseProductRule.useBrandCodes"
-          class="form-item"
+          class="select-item"
           :size="size"
           multiple
         >
@@ -168,10 +168,7 @@ export default {
       tableHeader: [
         {
           label: '商品名称',
-          prop: 'goodsName',
-          search: {
-            type: 'input'
-          }
+          prop: 'goodsName'
         },
         {
           label: '图片',
@@ -181,10 +178,7 @@ export default {
         },
         {
           label: '款号',
-          prop: 'goodsBn',
-          search: {
-            type: 'input'
-          }
+          prop: 'goodsBn'
         }
       ],
       selectedTableInnerBtns: [
@@ -249,7 +243,8 @@ export default {
     }
   },
   beforeMount() {
-    this.formModel = { ...this.dataObj, shopType: 2, selectedGoodsList: [] }
+    this.formModel = { ...this.dataObj, shopType: 2 }
+    console.log(this.formModel)
     utils.Event.$on('updateGoodsList', (val) => {
       Object.assign(this.formModel, { selectedGoodsList: val })
     })
@@ -330,11 +325,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.form-card {
-  .el-form-item {
-    width: 98%;
-    margin-bottom: 15px;
-  }
+.form {
   .select-item {
     width: 30%;
   }

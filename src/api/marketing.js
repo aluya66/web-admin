@@ -2,6 +2,12 @@ import Http from '../utils/request'
 
 const context = process.env.VUE_APP_CONSOLE_COMMON
 
+// 发放星go券
+export const addCouponAboutStarGo = params =>
+  Http.fetch(`${context}/api/mks/coupon/stargo`, params, {
+    method: 'post'
+  })
+
 // 券规则 新增
 export const addCouponRule = params =>
   Http.fetch(`${context}/api/mks/coupon`, params, {
@@ -60,14 +66,14 @@ export const updateCoupon = params =>
 
 // 优惠券 删除
 export const deleteCoupon = params =>
-  Http.fetch(`${context}/api/mks/coupon/delete`, params, {
+  Http.fetch(`${context}/api/mks/coupon/rule/delete`, params, {
     method: 'put',
     mockFile: 'coupon-delete'
   })
 
 // 优惠券 审核
 export const applyCoupon = params =>
-  Http.fetch(`${context}/api/mks/coupon/apply/opt`, params, {
+  Http.fetch(`${context}/api/mks/coupon/rule/apply/opt`, params, {
     method: 'put',
     mockFile: 'coupon-verify'
   })

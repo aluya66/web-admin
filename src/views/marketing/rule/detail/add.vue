@@ -72,7 +72,7 @@ export default {
       if (val) {
         this.selectedCouponList = val.map((item) => {
           let info = ''
-          if (item.marketPreferentialRules[0].preferentialType) {
+          if (item.marketPreferentialRules && item.marketPreferentialRules[0] && item.marketPreferentialRules[0].preferentialType) {
             switch (item.marketPreferentialRules[0].preferentialType) {
               case 0:
                 info = `${item.preferentialLevel}元减${item.preferentialValue}元`

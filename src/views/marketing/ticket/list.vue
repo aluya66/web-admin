@@ -68,10 +68,10 @@ export default {
           notBtn: 'status',
           icon: 'el-icon-edit',
           handle(row) {
-            const { couponId, status } = row
+            const { couponRuleId, status } = row
             // 未发布：可修改优惠券所有信息; 进行中、未开始、已下架：只可修改使用说明
             if (status !== 4 && status !== 5 && status !== 6 && status !== 7) return vm.$msgTip('该优惠券不支持编辑操作', 'warning')
-            vm.routerLink(`/marketing/ticket/ticketInfo/${couponId}`)
+            vm.routerLink(`/marketing/ticket/ticketInfo/${couponRuleId}`)
           }
         },
         { // 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
@@ -92,26 +92,26 @@ export default {
             }]
           },
           handle(row) {
-            const { status, couponId, couponName } = row
-            let msgTip, applyType
+            const { status, couponRuleId, couponName } = row
+            let msgTip, couponRuleStatus
             switch (status) {
               case 0:
               case 4:
                 msgTip = '发布'
-                applyType = 5
+                couponRuleStatus = 5
                 break
               case 7:
                 msgTip = '上架'
-                applyType = 5
+                couponRuleStatus = 5
                 break
               case 5:
               case 6:
                 msgTip = '下架'
-                applyType = 7
+                couponRuleStatus = 7
                 break
             }
             vm.confirmTip(`是否${msgTip}【${couponName}】优惠券`, () => {
-              vm.verifyData({ couponId, applyType, msgTip })
+              vm.verifyData({ couponRuleId, couponRuleStatus, msgTip })
             })
           }
         },
@@ -119,9 +119,9 @@ export default {
           name: '删除',
           icon: 'el-icon-delete',
           handle(row) {
-            const { couponName, couponId } = row
+            const { couponName, couponRuleId } = row
             vm.confirmTip(`确认删除  ${couponName}  劵信息`, () => {
-              vm.deleteData({ couponId })
+              vm.deleteData({ couponRuleId })
             })
           }
         }
@@ -129,7 +129,7 @@ export default {
       tableHeader: [
         {
           label: '卡券ID',
-          prop: 'couponId',
+          prop: 'couponRuleId',
           width: 100,
           fixed: true,
           search: {
@@ -256,8 +256,8 @@ export default {
     },
     // 审核劵
     verifyData(params) {
-      const { couponId, msgTip, applyType } = params
-      this.$api.marketing.applyCoupon({ couponId, applyType }).then(() => {
+      const { couponRuleId, msgTip, couponRuleStatus } = params
+      this.$api.marketing.applyCoupon({ couponRuleId, couponRuleStatus }).then(() => {
         this.$msgTip(`${msgTip}成功`)
         this.fetchData()
       })
