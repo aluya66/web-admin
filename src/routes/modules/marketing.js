@@ -108,14 +108,14 @@ export default {
     }, {
       path: '/marketing/rule/list',
       name: 'ruleList',
-      component: () => import('@/views/marketing/rule/list'),
+      component: () => import('@/views/marketing/rule/list/index'),
       meta: {
         title: 'ruleList',
         icon: 'table',
         roles: ['admin']
       }
     }, {
-      path: '/marketing/rule/ruleInfo/:id?',
+      path: '/marketing/rule/ruleInfo/:type/:id?',
       name: 'ruleInfo',
       component: () => import('@/views/marketing/rule/detail/index'),
       hidden: true,

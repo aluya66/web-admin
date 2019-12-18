@@ -17,7 +17,8 @@ const pointTypeList = [{
 {
   label: '人工修改',
   value: 5
-}]
+}
+]
 
 // 业务线
 const lobList = [{
@@ -35,7 +36,8 @@ const lobList = [{
 {
   label: '星助手',
   value: 'ysia'
-}]
+}
+]
 
 // 含公共的业务线
 const lobListAll = lobList.slice(0)
@@ -70,7 +72,8 @@ const auditStatus = [{
 {
   label: '已审核',
   value: 1
-}]
+}
+]
 
 // 标签分类类型
 const categoryTypeList = [{
@@ -109,47 +112,45 @@ const activityStatusList = [{
 }]
 
 // 卡券类型
-const ticketTypeList = [
-  {
-    value: 0,
-    label: '现金券'
-  },
-  {
-    value: 1,
-    label: '折扣券'
-  },
-  {
-    value: 3,
-    label: '兑换券'
-  }
+const ticketTypeList = [{
+  value: 0,
+  label: '现金券'
+},
+{
+  value: 1,
+  label: '折扣券'
+},
+{
+  value: 3,
+  label: '兑换券'
+}
 ]
 
 // 价格类型  0 非会员零售价 1 会员价 2 供货价 3 散批价 4 大批价 5 成本价
-const priceTypeList = [
-  {
-    value: 6,
-    label: '零售价'
-  },
-  {
-    value: 1,
-    label: '会员价'
-  },
-  {
-    value: 2,
-    label: '供货价'
-  },
-  {
-    value: 3,
-    label: '散批价'
-  },
-  {
-    value: 4,
-    label: '大批价'
-  },
-  {
-    value: 5,
-    label: '成本价'
-  }
+const priceTypeList = [{
+  value: 6,
+  label: '零售价'
+},
+{
+  value: 1,
+  label: '会员价'
+},
+{
+  value: 2,
+  label: '供货价'
+},
+{
+  value: 3,
+  label: '散批价'
+},
+{
+  value: 4,
+  label: '大批价'
+},
+{
+  value: 5,
+  label: '成本价'
+}
 ]
 const couponStatusList = [ // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
   {
@@ -189,20 +190,31 @@ const couponStatusList = [ // 卡劵状态 0草稿 1审核中 2审核不通过 3
     label: '已结束(失效)'
   }
 ]
-const ticketValidTypeArr = [
-  {
-    label: '指定日期',
-    value: 1
-  },
-  {
-    label: '自领券N日内有效',
-    value: 2
-  },
-  {
-    label: '自领券日当月有效',
-    value: 3
-  }
+const ticketValidTypeArr = [{
+  label: '指定日期',
+  value: 1
+},
+{
+  label: '自领券N日内有效',
+  value: 2
+},
+{
+  label: '自领券日当月有效',
+  value: 3
+}
 ]
+
+// 券规则领券方式
+const receiveTypeList = [{
+  label: '系统发券',
+  value: 1
+},
+{
+  label: '手动领券',
+  value: 2
+}
+]
+
 export default {
   pointTypeList,
   lobList,
@@ -216,5 +228,6 @@ export default {
   ticketTypeList,
   priceTypeList,
   couponStatusList,
-  ticketValidTypeArr
+  ticketValidTypeArr,
+  receiveTypeList
 }

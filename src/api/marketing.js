@@ -129,11 +129,35 @@ export const starGoCardExportList = params =>
 // 星购卡 记录导出
 export const exportStarGoCardRecord = params =>
   Http.fetch(`${context}/api/mks/coupon/card/store/report`, params, {
-    method: 'get'
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
   })
 
 // 星购卡 导出
 export const exportStarGoCard = params =>
   Http.fetch(`${context}/api/mks/coupon/card`, params, {
-    method: 'put'
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
+  })
+
+// 查询星购发券列表数据
+export const queryStarRuleList = params =>
+  Http.fetch(`${context}/api/mks/coupon/stargo`, params, {
+    method: 'get'
+  })
+
+// 导出星Go券码
+export const exportStargoCard = params =>
+  Http.fetch(`${context}/api/mks/coupon/card/stargo/report`, params, {
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
+  })
+
+// 添加券备注
+export const addCouponRemark = params =>
+  Http.fetch(`${context}/api/mks/coupon/remark`, params, {
+    method: 'post'
   })
