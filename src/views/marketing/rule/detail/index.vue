@@ -14,178 +14,188 @@
       class="form"
       label-position="right"
     >
-      <c-card name="券规则信息" class="form-card">
-        <el-form-item label="发券渠道:" prop="platformList">
-          <query-dict
-            disabled
-            :dict-list="lobList"
-            class="search-item"
-            placeholder="请选择"
-            :value.sync="formModel.platformList"
-          ></query-dict>
-        </el-form-item>
-        <el-form-item label="领取方式:" prop="receiveType">
-          <el-radio-group v-model="formModel.receiveType">
-            <el-radio
-              v-for="item in receiveTypeList"
-              :key="item.value"
-              :label="item.value"
-            >{{item.label}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="规则名称:" prop="couponName">
-          <el-input
-            class="select-item"
-            v-model.trim="formModel.couponName"
-            :size="size"
-            placeholder="请输入规则名称"
-            clearable
-            maxlength="20"
-          />
-        </el-form-item>
-        <el-form-item label="选择卡券:">
-          <el-button size="medium" @click="showDialog('coupon')">添加卡券</el-button>
-          <el-form-item
-            class="coupon-item"
-            v-for="(item, index) in formModel.couponDetails"
-            :key="index"
-          >
-            <div class="coupon-box">
-              <div class="top-wrapper">
-                <div class="left">{{ item.info }}</div>
-                <div class="right">{{ item.couponName }}</div>
-              </div>
-              <div class="bottom-wrapper">{{ item.created }}</div>
+      <el-form-item label="发券渠道:" prop="platformList">
+        <query-dict
+          disabled
+          showType="radio"
+          class="select-item"
+          :dict-list="lobList"
+          placeholder="请选择"
+          :value.sync="formModel.platformList"
+        ></query-dict>
+      </el-form-item>
+      <el-form-item label="领取方式:" prop="receiveType" v-if="formModel.platformList === 'yssp'">
+        <el-radio-group v-model="formModel.receiveType">
+          <el-radio
+            v-for="item in receiveTypeList"
+            :key="item.value"
+            :label="item.value"
+          >{{item.label}}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="规则名称:" prop="couponName">
+        <el-input
+          class="form-item"
+          v-model.trim="formModel.couponName"
+          :size="size"
+          placeholder="请输入规则名称"
+          clearable
+          maxlength="20"
+        />
+      </el-form-item>
+      <el-form-item label="选择卡券:">
+        <el-button size="medium" @click="showDialog('coupon')">添加卡券</el-button>
+        <el-form-item
+          class="coupon-item"
+          v-for="(item, index) in formModel.couponDetails"
+          :key="index"
+        >
+          <div class="coupon-box">
+            <div class="top-wrapper">
+              <div class="left">{{ item.info }}</div>
+              <div class="right">{{ item.couponName }}</div>
             </div>
-            <el-form-item
-              v-if="formModel.receiveType === 2"
-              class="num-box"
-              inline
-              :prop="'couponDetails.' + index + '.couponNumber'"
-              :rules="{
-                type: 'number', trigger: 'blur',  transform (value) {
+            <div class="bottom-wrapper">{{ item.created }}</div>
+          </div>
+          <el-form-item
+            v-if="formModel.receiveType === 2 || formModel.platformList === 'ysgo'"
+            label-width="80px"
+            class="num-box"
+            inline
+            :label="formModel.platformList === 'ysgo' ? '导出数量' : ''"
+            :prop="'couponDetails.' + index + '.couponNumber'"
+            :rules="{
+                type: 'number', trigger: 'blur',  message: '请输入数字', transform (value) {
                   return Number(value)
                 }
               }"
-            >
-              <el-input
-                type="number"
-                v-model.trim="item.couponNumber"
-                size="medium"
-                placeholder="设置可领数量，留空则不限制"
-                clearable
-              ></el-input>
-            </el-form-item>
-          </el-form-item>
-        </el-form-item>
-        <el-form-item :label="formModel.receiveType === 1 ? '发券对象:' : '领券对象:'" prop="memberType">
-          <el-checkbox-group v-model="formModel.memberType">
-            <el-checkbox
-              class="checkbox-item"
-              :label="item.id"
-              :checked="item.checked"
-              v-for="(item, index) in memberTypeList"
-              :key="index"
-            >{{ item.label }}</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="指定用户:">
-          <el-button size="medium" @click="showDialog('customer')">选择用户</el-button>
-          <div>
-            <el-tag
-              class="tag-item"
-              v-for="(tag, index) in formModel.selectedCustomerList"
-              :key="index"
-              closable
-              @close="cancelSelect(index)"
-            >{{tag.nickname + '【' +tag.phoneNumber + '】'}}</el-tag>
-          </div>
-        </el-form-item>
-        <!-- 系统领券 -->
-        <el-form-item label="发券时间" prop="issueTimeType" v-if="formModel.receiveType === 1">
-          <el-radio-group v-model="formModel.issueTimeType">
-            <el-radio
-              v-for="item in limitReceiveTimeTypeList"
-              :key="item.value"
-              :label="item.value"
-            >{{item.label}}</el-radio>
-          </el-radio-group>
-          <!-- 发券时间类型：指定日期 -->
-          <el-form-item prop="issueTime" v-if="formModel.issueTimeType === 32">
-            <el-date-picker
-              size="medium"
-              v-model="formModel.issueTime"
-              type="datetimerange"
-              :picker-options="pickerOptions"
-              range-separator="至"
-              start-placeholder="开始日期"
-              format="yyyy-MM-dd HH:mm:ss"
-              end-placeholder="截止日期"
-              :default-time="['00:00:00', '23:59:59']"
-              align="right"
-            ></el-date-picker>
-          </el-form-item>
-
-          <!-- 发券时间类型：每月 -->
-          <el-form-item
-            prop="issueTimeValues"
-            v-if="formModel.issueTimeType === 8 || formModel.issueTimeType === 16"
-          >
-            <el-checkbox-group
-              v-model="formModel.issueTimeValues"
-              v-if="formModel.issueTimeType === 16"
-            >
-              <el-checkbox
-                class="checkbox-item"
-                :label="item"
-                v-for="(item, index) in 31"
-                :key="index"
-              >{{ item + '号' }}</el-checkbox>
-            </el-checkbox-group>
-
-            <el-checkbox-group
-              v-model="formModel.issueTimeValues"
-              v-if="formModel.issueTimeType === 8"
-            >
-              <el-checkbox
-                class="checkbox-item"
-                :label="item"
-                v-for="(item, index) in 7"
-                :key="index"
-              >{{ item !== 7 ? '周' + item : '周日' }}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-        </el-form-item>
-
-        <!-- 手动领券 -->
-        <el-form-item label="每人可领:" prop="receiveTimeType" v-if="formModel.receiveType === 2">
-          <el-radio-group v-model="formModel.receiveTimeType">
-            <el-radio
-              v-for="item in receiveTimeTypeList"
-              :key="item.value"
-              :label="item.value"
-            >{{item.label}}</el-radio>
-          </el-radio-group>
-          <!-- 每人可领类型：次数 -->
-          <el-form-item
-            prop="limitReceive"
-            :rules="{
-              validator: checkInt, trigger: 'blur'
-            }"
           >
             <el-input
-              class="inp-item"
-              v-model.trim="formModel.limitReceive"
+              type="number"
+              v-model.trim="item.couponNumber"
               size="medium"
-              placeholder="请输入数字"
+              placeholder="设置可领数量，留空则不限制"
               clearable
             ></el-input>
           </el-form-item>
         </el-form-item>
-        <el-form-item class="form-btn">
-          <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">提交</el-button>
+      </el-form-item>
+      <el-form-item
+        :label="formModel.receiveType === 1 ? '发券对象:' : '领券对象:'"
+        prop="memberType"
+        v-if="formModel.platformList === 'yssp'"
+      >
+        <el-checkbox-group v-model="formModel.memberType">
+          <el-checkbox
+            class="checkbox-item"
+            :label="item.id"
+            :checked="item.checked"
+            v-for="(item, index) in memberTypeList"
+            :key="index"
+          >{{ item.label }}</el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+      <el-form-item label="指定用户:" v-if="formModel.platformList === 'yssp'">
+        <el-button size="medium" @click="showDialog('customer')">选择用户</el-button>
+        <div>
+          <el-tag
+            class="tag-item"
+            v-for="(tag, index) in formModel.selectedCustomerList"
+            :key="index"
+            closable
+            @close="cancelSelect(index)"
+          >{{tag.nickname + '【' +tag.phoneNumber + '】'}}</el-tag>
+        </div>
+      </el-form-item>
+      <!-- 系统领券 -->
+      <el-form-item label="发券时间" prop="issueTimeType" v-if="formModel.receiveType === 1">
+        <el-radio-group v-model="formModel.issueTimeType">
+          <el-radio
+            v-for="item in limitReceiveTimeTypeList"
+            :key="item.value"
+            :label="item.value"
+          >{{item.label}}</el-radio>
+        </el-radio-group>
+        <!-- 发券时间类型：指定日期 -->
+        <el-form-item prop="issueTime" v-if="formModel.issueTimeType === 32">
+          <el-date-picker
+            size="medium"
+            v-model="formModel.issueTime"
+            type="datetimerange"
+            :picker-options="pickerOptions"
+            range-separator="至"
+            start-placeholder="开始日期"
+            format="yyyy-MM-dd HH:mm:ss"
+            end-placeholder="截止日期"
+            :default-time="['00:00:00', '23:59:59']"
+            align="right"
+          ></el-date-picker>
         </el-form-item>
-      </c-card>
+
+        <!-- 发券时间类型：每月 -->
+        <el-form-item
+          prop="issueTimeValues"
+          v-if="formModel.issueTimeType === 8 || formModel.issueTimeType === 16"
+        >
+          <el-checkbox-group
+            v-model="formModel.issueTimeValues"
+            v-if="formModel.issueTimeType === 16"
+          >
+            <el-checkbox
+              class="checkbox-item"
+              :label="item"
+              v-for="(item, index) in 31"
+              :key="index"
+            >{{ item + '号' }}</el-checkbox>
+          </el-checkbox-group>
+
+          <el-checkbox-group
+            v-model="formModel.issueTimeValues"
+            v-if="formModel.issueTimeType === 8"
+          >
+            <el-checkbox
+              class="checkbox-item"
+              :label="item"
+              v-for="(item, index) in 7"
+              :key="index"
+            >{{ item !== 7 ? '周' + item : '周日' }}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+      </el-form-item>
+
+      <!-- 手动领券 -->
+      <el-form-item
+        label="每人可领:"
+        prop="receiveTimeType"
+        v-if="formModel.receiveType === 2 && formModel.platformList === 'yssp'"
+      >
+        <el-radio-group v-model="formModel.receiveTimeType">
+          <el-radio
+            v-for="item in receiveTimeTypeList"
+            :key="item.value"
+            :label="item.value"
+          >{{item.label}}</el-radio>
+        </el-radio-group>
+        <!-- 每人可领类型：次数 -->
+        <el-form-item
+          prop="limitReceive"
+          :rules="{
+              validator: checkInt, trigger: 'blur'
+            }"
+        >
+          <el-input
+            class="inp-item"
+            v-model.trim="formModel.limitReceive"
+            size="medium"
+            placeholder="请输入数字"
+            clearable
+          ></el-input>
+        </el-form-item>
+      </el-form-item>
+      <el-form-item class="form-btn">
+        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">提交</el-button>
+        <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
+      </el-form-item>
     </el-form>
 
     <!-- 选择优惠券 -->
@@ -214,7 +224,6 @@
 import dictObj from '@/store/dictData'
 import mixinTable from 'mixins/table'
 import MixinForm from 'mixins/form'
-import CCard from 'components/card'
 import CDialog from 'components/dialog'
 import utils from 'utils'
 import CustomerSelect from '../../../common/customerSelect'
@@ -223,13 +232,13 @@ export default {
   name: 'ruleInfo',
   mixins: [MixinForm, mixinTable],
   components: {
-    CCard,
     CDialog,
     CouponAdd,
     CustomerSelect
   },
   data() {
     return {
+      platformListType: '',
       memberList: [], // 用户列表
       memberTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
@@ -310,18 +319,19 @@ export default {
         issueTimeType: 1, // 发券时间 类型
         selectedCustomerList: [], // 指定用户
         receiveType: 2,
-        platformList: 'yssp',
+        platformList: '',
         issueTimeValues: [],
         memberType: [],
         couponDetails: [] // 已选择的优惠券
       },
-      lobList: dictObj.lobList // 业务线集合
+      lobList: dictObj.lobList.slice(1, 3) // 业务线集合
     }
   },
 
   created() {
-    const { params } = this.$route
-    if (params.id) this.fetchData(params.id)
+    const { id, type } = this.$route.params
+    this.formModel.platformList = type
+    id && this.fetchData(id)
     this.getMember()
     this.getMemberType()
   },
@@ -357,6 +367,9 @@ export default {
     dialogConfirm() {
       if (this.dialogObj.type === 'coupon') {
         // 选择优惠券
+        if (this.formModel.platformList === 'ysgo' && this.$refs.childRef.selectedCouponList.length > 1) {
+          return this.$msgTip('只能选择一张卡券')
+        }
         this.formModel.couponDetails = this.$refs.childRef.selectedCouponList
       } else {
         // 选择用户
@@ -398,6 +411,9 @@ export default {
                 break
               case 1:
                 info = `${target.preferentialLevel}件享${target.preferentialValue}元`
+                break
+              default:
+                break
             }
             return {
               ...item,
@@ -453,7 +469,6 @@ export default {
           Object.assign(params, { selectedCustomerList: marketLimitUser.members })
         }
         this.formModel = params
-        console.log(this.formModel, this.memberTypeList)
       })
     },
     submitHandle() {
@@ -461,7 +476,8 @@ export default {
         if (valid) {
           const requestMethods = {
             'add': this.$api.marketing.addCouponRule,
-            'edit': this.$api.marketing.updateCouponRule
+            'edit': this.$api.marketing.updateCouponRule,
+            'addCouponAboutStarGo': this.$api.marketing.addCouponAboutStarGo
           }
           const {
             couponId, // 券规则id
@@ -510,7 +526,7 @@ export default {
             userLeveIds, // 指定领券对象 （会员）
             userIds // 指定用户
           }
-          const params = { // 设置基础参数
+          let params = { // 设置基础参数
             platformList: [platformList], // 单选 字符串转成数组
             receiveType,
             couponName,
@@ -535,11 +551,17 @@ export default {
           }
           if (couponId) Object.assign(params, { couponId }) // 编辑操作 添加id字段
           console.log(params)
-          const reqFun = couponId ? requestMethods['edit'] : requestMethods['add']
+          if (platformList === 'ysgo') {
+            const { couponDetails, couponName } = params
+            params = { couponDetails, couponName }
+          }
+          const reqFun = platformList === 'ysgo'
+            ? requestMethods['addCouponAboutStarGo'] : couponId
+              ? requestMethods['edit'] : requestMethods['add']
           reqFun(params).then(() => {
             this.$msgTip('操作成功')
-            this.routerLink('/marketing/rule/list')
             this.closeCurrentTag()
+            this.goBack()
           })
         } else {
           console.log('error submit!!')
@@ -552,9 +574,14 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.form-card {
+.form {
+  background-color: @white;
+  padding: 15px 60px 15px 15px;
   .select-item {
     width: 30%;
+  }
+  .form-item {
+    width: 50%;
   }
   .inp-item {
     width: 150px;
@@ -564,9 +591,10 @@ export default {
   }
 }
 .coupon-item {
-  display: flex;
-  margin: 30px;
+  margin: 30px 0;
   .coupon-box {
+    display: inline-block;
+    vertical-align: middle;
     width: 300px;
     .top-wrapper {
       display: flex;
@@ -589,6 +617,10 @@ export default {
       line-height: 30px;
       background-color: @light_gray;
     }
+  }
+  .num-box {
+    display: inline-block;
+    width: 27%;
   }
 }
 </style>

@@ -10,7 +10,7 @@
     >
       <el-form-item label="活动名称:" prop="activityName">
         <el-input
-          class="select-item"
+          class="form-item"
           v-model.trim="formModel.activityName"
           :size="size"
           placeholder="请输入活动名称"
@@ -20,7 +20,7 @@
       <el-form-item label="活动类型:" prop="activityType">
         <query-dict
           :dict-list="activityTypeList"
-          class="search-item"
+          class="select-item"
           placeholder="请选择活动类型"
           :value.sync="formModel.activityType"
           @ChangeQueryDict="changeActivityType"
@@ -29,7 +29,7 @@
       <el-form-item label="使用渠道:" prop="platformList">
         <query-dict
           :dict-list="lobList"
-          class="search-item"
+          class="select-item"
           placeholder="请选择使用渠道"
           :value.sync="formModel.platformList"
           @change="changeChannel"
@@ -54,7 +54,6 @@
                   size="medium"
                   placeholder
                   clearable
-                  style="width: 100%"
                 >
                   <template slot="prepend">满</template>
                 </el-input>
@@ -74,7 +73,6 @@
                   size="medium"
                   placeholder
                   clearable
-                  style="width: 100%"
                 >
                   <template slot="append">件</template>
                 </el-input>
@@ -111,7 +109,6 @@
                   size="medium"
                   placeholder
                   clearable
-                  style="width: 100%"
                 >
                   <template slot="append">折</template>
                 </el-input>
@@ -146,7 +143,6 @@
                   size="medium"
                   placeholder
                   clearable
-                  style="width: 100%"
                 >
                   <template slot="prepend">满</template>
                   <template slot="append">元</template>
@@ -167,7 +163,6 @@
                   size="medium"
                   placeholder="优惠的金额"
                   clearable
-                  style="width: 100%"
                 >
                   <template slot="append">元</template>
                 </el-input>
@@ -202,7 +197,6 @@
                   size="medium"
                   placeholder
                   clearable
-                  style="width: 100%"
                 >
                   <template slot="prepend">一口价</template>
                   <template slot="append">元</template>
@@ -222,7 +216,7 @@
       <el-form-item label="活动时间类型:" prop="activateDayType">
         <query-dict
           :dict-list="activateDayTypeList"
-          class="search-item"
+          class="select-item"
           placeholder="请选择活动时间类型"
           :value.sync="formModel.activateDayType"
         ></query-dict>
@@ -382,10 +376,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.form-card {
-  .el-form-item {
-    width: 98%;
-    margin-bottom: 15px;
+.form {
+  .form-item {
+    width: 50%;
   }
   .select-item {
     width: 30%;
@@ -397,6 +390,9 @@ export default {
   .discount-text-r {
     text-align: right;
     margin-right: 5px;
+  }
+  .discount-item{
+    width: 100%;
   }
 }
 </style>

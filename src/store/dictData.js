@@ -112,18 +112,19 @@ const activityStatusList = [{
 }]
 
 // 卡券类型
-const ticketTypeList = [{
-  value: 0,
-  label: '现金券'
-},
-{
-  value: 1,
-  label: '折扣券'
-},
-{
-  value: 3,
-  label: '兑换券'
-}
+const ticketTypeList = [
+  {
+    value: 5,
+    label: '现金券'
+  },
+  {
+    value: 1,
+    label: '折扣券'
+  },
+  {
+    value: 3,
+    label: '兑换券'
+  }
 ]
 
 // 价格类型  0 非会员零售价 1 会员价 2 供货价 3 散批价 4 大批价 5 成本价

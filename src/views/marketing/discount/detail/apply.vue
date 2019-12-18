@@ -9,7 +9,7 @@
     >
       <el-form-item label="申请人:">
         <el-input
-          class="select-item"
+          class="form-item"
           v-model.trim="formModel.applicants"
           :size="size"
           placeholder="请输入申请人"
@@ -18,7 +18,7 @@
       </el-form-item>
       <el-form-item label="申请部门:">
         <el-input
-          class="select-item"
+          class="form-item"
           v-model.trim="formModel.applyingDepartment"
           :size="size"
           placeholder="请输入申请部门"
@@ -73,10 +73,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.form-card {
-  .el-form-item {
-    width: 98%;
-    margin-bottom: 15px;
+.form {
+  .form-item {
+    width: 50%;
   }
   .select-item {
     width: 30%;

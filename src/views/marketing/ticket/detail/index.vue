@@ -49,16 +49,16 @@
         </el-radio-group>
       </el-form-item>
       <!-- 卡券类型：现金券 订单满减开始 -->
-      <template v-if="formModel.preferentialType === 0">
+      <template v-if="formModel.preferentialType === 5">
         <el-form-item
           label="订单满减:"
-          v-for="(item, index) in formModel.couponPreferentialRules"
+          v-for="(item, index) in formModel.marketPreferentialRules"
           :key="index"
         >
           <el-col :span="7">
             <el-form-item
               inline
-              :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+              :prop="'marketPreferentialRules.' + index + '.preferentialLevel'"
               :rules="{
                   required: true, validator: checkNumber, trigger: 'blur'
                 }"
@@ -78,7 +78,7 @@
           <el-col class="discount-type" :span="1">减</el-col>
           <el-col :span="7">
             <el-form-item
-              :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+              :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
               :rules="{
                   required: true, validator: checkNumber, trigger: 'blur'
                 }"
@@ -102,13 +102,13 @@
       <template v-if="formModel.preferentialType === 1">
         <el-form-item
           label="订单满折:"
-          v-for="(item, index) in formModel.couponPreferentialRules"
+          v-for="(item, index) in formModel.marketPreferentialRules"
           :key="index"
         >
           <el-col :span="7">
             <el-form-item
               inline
-              :prop="'couponPreferentialRules.' + index + '.preferentialLevel'"
+              :prop="'marketPreferentialRules.' + index + '.preferentialLevel'"
               :rules="{
                   required: true, validator: checkInt, trigger: 'blur'
                 }"
@@ -128,7 +128,7 @@
           <el-col class="discount-type" :span="1">享</el-col>
           <el-col :span="7">
             <el-form-item
-              :prop="'couponPreferentialRules.' + index + '.preferentialValue'"
+              :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
               :rules="{
                   required: true, validator: checkDiscount, trigger: 'blur'
                 }"
@@ -212,7 +212,7 @@
       <el-form-item label="适用商品:">
         <el-radio-group
           v-model="formModel.fitGoodsType"
-          :disabled="(ticketType === 5 || ticketType === 6 || ticketType === 7) || !formModel.platformList.length"
+          :disabled="(ticketType === 5 || ticketType === 6 || ticketType === 7)"
         >
           <el-radio
             v-for="item in fitGoodsTypeArr"
@@ -225,11 +225,17 @@
           ref="goodsSelectRef"
           v-if="formModel.fitGoodsType === 1"
           :paramsObj="goodsParamsObj"
+          :initChecked="formModel.selectedGoodsList"
         />
         <!-- 指定商品结束 -->
       </el-form-item>
       <el-form-item class="form-btn">
-        <el-button :size="size" :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+        <el-button
+          :size="size"
+          :loading="btnLoading"
+          type="primary"
+          @click.native.prevent="submitHandle"
+        >保存</el-button>
         <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
@@ -284,11 +290,11 @@ export default {
         fitGoodsType: 0, // 适用商品 默认全部
         couponRuleType: 0, // 卡券类型 0为券 目前写死
         platformList: [], // 使用渠道
-        preferentialType: 0, // 卡券类型 默认现金券
+        preferentialType: 5, // 卡券类型 默认现金券
         limitExpireDayType: 2, // 卡券有效期 默认当月有效 0 无时间限制 1 固定时间 2 领取时间 3领取时间当月
-        couponPreferentialRules: [{
+        marketPreferentialRules: [{
           preferentialLevel: '', // 优惠门槛
-          preferentialType: 0, // 优惠类型
+          preferentialType: 5, // 优惠类型
           preferentialValue: '' // 优惠值
         }]
       },
@@ -317,13 +323,13 @@ export default {
     changeTicketType(val) {
       // 过滤兑换券类型
       if (val === 3) return
-      this.formModel.couponPreferentialRules = []
+      this.formModel.marketPreferentialRules = []
       let obj = {
         preferentialLevel: '', // 优惠门槛
         preferentialType: val, // 优惠类型
         preferentialValue: '' // 优惠值
       }
-      this.formModel.couponPreferentialRules.push(obj)
+      this.formModel.marketPreferentialRules.push(obj)
     },
     fetchData(couponId) {
       this.$api.marketing.couponDetail({ couponId }).then(res => {
@@ -336,12 +342,13 @@ export default {
           couponName,
           limitExpireDayType,
           preferentialType,
-          couponPreferentialRules,
+          marketPreferentialRules,
           limitExpireTimeStart,
           limitExpireTimeEnd,
           limitExpireDay,
           couponRemark,
-          status
+          status,
+          marketUseProductRule
         } = res
         this.ticketType = status // 编辑 缓存卡券状态
         let params = { // 基础字段
@@ -355,19 +362,28 @@ export default {
           couponRemark,
           status
         }
-        if (preferentialType === 0 || preferentialType === 1) { // 卡券类型 【现金券、折扣券】
-          const couponRules = couponPreferentialRules && couponPreferentialRules.map((item) => {
+        if (preferentialType === 5 || preferentialType === 1) { // 卡券类型 【现金券、折扣券】
+          const couponRules = marketPreferentialRules && marketPreferentialRules.map((item) => {
             const { cached, ...rules } = item
             return { ...rules }
           })
-          Object.assign(params, { couponPreferentialRules: couponRules })
+          Object.assign(params, { marketPreferentialRules: couponRules })
         }
         if (limitExpireDayType === 1) {
           const limitExpireTime = utils.handleDate(limitExpireTimeStart, limitExpireTimeEnd)
           Object.assign(params, { limitExpireTime })
         }
-        if (limitExpireDayType === 2) Object.assign(params, { limitExpireDay })
-        this.formModel = params
+        limitExpireDayType === 2 && Object.assign(params, { limitExpireDay })
+        let selectedGoodsList = [] // 指定商品
+        if (marketUseProductRule && marketUseProductRule.goods) {
+          selectedGoodsList.push(marketUseProductRule.goods.map((item) => ({ ...item, isSelected: true })))
+        }
+        if (marketUseProductRule && marketUseProductRule.goodSkuList) {
+          selectedGoodsList.push(marketUseProductRule.goodSkuList.map((item) => ({ ...item, isSelected: false, skuList: item.skus })))
+        }
+        Object.assign(params, { fitGoodsType: selectedGoodsList.length ? 1 : 0 })
+        this.formModel = { ...params, selectedGoodsList: selectedGoodsList.flat() }
+        console.log(this.formModel)
       })
     },
     submitHandle() {
@@ -380,7 +396,7 @@ export default {
           const {
             fitGoodsType, // 商品类型 0全部 1指定商品
             couponId, // 优惠券id 编辑时存在
-            couponPreferentialRules, // 优惠列表
+            marketPreferentialRules, // 优惠列表
             couponUseProductRule, // 指定商品列表
             limitExpireTime, // 有效期 固定时间
             preferentialType, // 优惠券类型
@@ -396,20 +412,19 @@ export default {
             const searchDate = this.getSearchDate(limitExpireTime, 'dateTime', 'limitExpireTimeStart', 'limitExpireTimeEnd')
             Object.assign(params, { ...searchDate })
           }
-          if (preferentialType === 0 || preferentialType === 1) { // 优惠券类型为现金券或折扣券， 优惠列表处理
-            let ruleList = couponPreferentialRules.map((item) => {
+          if (preferentialType === 5 || preferentialType === 1) { // 优惠券类型为现金券或折扣券， 优惠列表处理
+            let ruleList = marketPreferentialRules.map((item) => {
               return {
                 ...item,
                 preferentialLevel: Number(item.preferentialLevel),
                 preferentialValue: Number(item.preferentialValue),
-                unit: item.preferentialType === 0 ? 0 : 1 // 金额 0 折扣 1
+                unit: item.preferentialType === 5 ? 5 : 1 // 金额 5 折扣 1
               }
             })
-            Object.assign(params, { couponPreferentialRules: ruleList })
+            Object.assign(params, { marketPreferentialRules: ruleList })
           }
-          console.log(this.$refs.goodsSelectRef.checkedAttr)
           const selectedGoodsList = this.$refs.goodsSelectRef.checkedAttr
-          if (selectedGoodsList.length) { // 是否有指定商品列表
+          if (fitGoodsType === 1 && selectedGoodsList.length) { // 是否有指定商品列表, 类型为指定商品 0所有 1指定
             let goodsList = []; let skuList = []
             selectedGoodsList.forEach((item) => {
               if (item.isSelected) { // 商品
@@ -429,8 +444,8 @@ export default {
           const reqFun = couponId ? requestMethods['edit'] : requestMethods['add']
           reqFun(params).then(() => {
             this.$msgTip('操作成功')
-            this.routerLink('/marketing/ticket/list')
             this.closeCurrentTag()
+            this.goBack()
           })
         } else {
           console.log('error submit!!')
@@ -446,6 +461,7 @@ export default {
 .form {
   background-color: @white;
   padding: 15px 60px 15px 15px;
+
   .form-item {
     width: 50%;
   }

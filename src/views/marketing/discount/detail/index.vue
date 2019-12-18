@@ -180,7 +180,7 @@ export default {
                     memberType.push('notMember')
                     break
                   case 4:
-                    memberType = memberType.concat(res.marketLimitUser.userLevels)
+                    memberType = memberType.concat(res.marketLimitUser.userLeveIds)
                     break
                 }
               })
@@ -188,7 +188,14 @@ export default {
             if (res.marketLimitUser && res.marketLimitUser.members && res.marketLimitUser.members.length) {
               Object.assign(res, { selectedCustomerList: res.marketLimitUser.members })
             }
-            this.formModel = { ...res, memberType }
+            let selectedGoodsList = [] // 指定商品
+            if (res.marketUseProductRule && res.marketUseProductRule.goods) {
+              selectedGoodsList.push(res.marketUseProductRule.goods.map((item) => ({ ...item, isSelected: true })))
+            }
+            if (res.marketUseProductRule && res.marketUseProductRule.goodSkuList) {
+              selectedGoodsList.push(res.marketUseProductRule.goodSkuList.map((item) => ({ ...item, isSelected: false, skuList: item.skus })))
+            }
+            this.formModel = { ...res, memberType, selectedGoodsList: selectedGoodsList.flat() }
             this.goodsTableParamsObj = { appCode: this.formModel.platformList }
           } else {
             this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
@@ -196,6 +203,7 @@ export default {
         })
       } else {
         this.formModel = {
+          selectedGoodsList: [], // 指定商品
           selectedCustomerList: [], // 指定用户
           memberType: [],
           platformList: '',
@@ -208,9 +216,7 @@ export default {
             useCategoryCodes: [],
             useBrandCodes: []
           },
-          marketUseStoreRuleLists: {
-            storeCodes: []
-          },
+          storeCodes: [],
           applicants: '',
           applyingDepartment: '',
           remark: ''
@@ -256,11 +262,11 @@ export default {
             marketPreferentialRules // 折扣门槛列表
           } = this.$refs.basicRef.formModel
           let {
+            storeCodes, // 门店
             memberType, // 发券对象
             selectedCustomerList, // 指定用户
             selectedGoodsList, // 选择的商品
-            marketUseProductRule, // 规则设置
-            marketUseStoreRuleLists // 门店
+            marketUseProductRule // 规则设置
           } = this.$refs.ruleRef.formModel
           let {
             applicants, // 申请人
@@ -340,7 +346,7 @@ export default {
             applyingDepartment, // 部门
             remark, // 备注
             marketUseProductRule, // 规则设置
-            marketUseStoreRuleLists, // 门店
+            storeCodes, // 门店
             marketLimitUser // 用户类型
           }
           if (activateDayType === 1) { // 指定时间
@@ -360,8 +366,8 @@ export default {
           requestMethod(params).then(() => {
             const msg = this.formModel.activityId ? '编辑成功' : '新增成功'
             this.$msgTip(msg)
-            this.routerLink('/marketing/discount/list')
             this.closeCurrentTag()
+            this.goBack()
           })
         } else {
           console.log('未校验通过')
