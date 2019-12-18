@@ -38,7 +38,7 @@ export default {
     payManageAccount: '账户管理',
     payManageChannel: '渠道管理',
     channel: '渠道中心',
-    channelList: '渠道列表',
+    channelList: '店铺列表',
     channelManage: '渠道管理',
     channelRule: '渠道规则',
     channelDetail: '渠道详情',
