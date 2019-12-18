@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import fileDownload from 'js-file-download'
 /**
  * 是否开发标识
@@ -391,7 +392,7 @@ export const getRandomNum = () => `${Math.random()}`.split('.')[1].substr(0, 16)
 export const isExternal = path => {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
-
+export const Event = new Vue()
 export default {
   isDebug,
   isObject,
@@ -416,5 +417,6 @@ export default {
   getUrlParam,
   openNewWin,
   goToLogin,
-  handleDate
+  handleDate,
+  Event
 }

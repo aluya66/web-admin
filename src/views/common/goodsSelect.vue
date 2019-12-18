@@ -266,6 +266,7 @@ export default {
   },
   mounted() {
     this.fetchData()
+    console.log(12313123211312)
     this.checkedAttr = this.initChecked
   }
 }

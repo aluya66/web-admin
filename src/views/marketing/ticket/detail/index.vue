@@ -356,7 +356,7 @@ export default {
           status
         }
         if (preferentialType === 0 || preferentialType === 1) { // 卡券类型 【现金券、折扣券】
-          const couponRules = couponPreferentialRules.map((item) => {
+          const couponRules = couponPreferentialRules && couponPreferentialRules.map((item) => {
             const { cached, ...rules } = item
             return { ...rules }
           })

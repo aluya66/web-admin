@@ -44,20 +44,21 @@
         :title="dialogObj.title"
         width="80%"
         close-btn
-        @before-close="closeDialog"
+        @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
         <customer-select
-          v-if="dialogObj.type === 'customer'"
           ref="childRef"
+          v-if="dialogObj.type === 'customer'"
+          :sourceList="memberList"
           :initChecked="formModel.selectedCustomerList"
-          :sourceList="customerList"
-        />
+          @RemoteMethod="getMember"
+        ></customer-select>
         <goods-select
           v-if="dialogObj.type === 'goods'"
           ref="childRef"
           :paramsObj="goodsTableParamsObj"
-          :initChecked="goodsList"
+          :initChecked="formModel.selectedGoodsList"
         />
       </c-dialog>
     </div>
@@ -73,12 +74,14 @@ import GApply from './apply'
 import customerSelect from '../../../common/customerSelect'
 import goodsSelect from '../../../common/goodsSelect'
 import CDialog from 'components/dialog'
+import utils from 'utils'
 
 export default {
   name: 'discountDetail',
   mixins: [MixinForm, mixinTable],
   data() {
     return {
+      memberList: [],
       skuTableHeader: [
         {
           label: '编号',
@@ -122,10 +125,27 @@ export default {
     this.fetchData()
   },
   methods: {
+    getMember(val = '') {
+      this.$api.member.getMember({
+        pageNo: 1,
+        pageSize: 100,
+        appCode: this.goodsTableParamsObj.appCode,
+        name: val
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data } = res
+          this.memberList = data || []
+        } else {
+          this.memberList = res || []
+        }
+      })
+    },
     // 更改渠道 同步店铺、商品list数据
     changeChannel(appCode) {
       this.$refs.ruleRef.getShopList(appCode)
       this.goodsTableParamsObj = { appCode }
+      this.getMember()
     },
     // 获取详情
     fetchData() {
@@ -146,14 +166,39 @@ export default {
             if (res.marketUseProductRule.useCategoryCodes && res.marketUseProductRule.useAllCategoryCodes) {
               res.marketUseProductRule.useCategoryCodes = res.marketUseProductRule.useAllCategoryCodes
             }
-            this.formModel = res
+            let memberType = []
+            if (res.marketLimitUser && res.marketLimitUser.userLimitTypes && res.marketLimitUser.userLimitTypes.length) {
+              res.marketLimitUser.userLimitTypes.forEach((item) => {
+                switch (item) {
+                  case 1:
+                    memberType.push('allCustomer')
+                    break
+                  case 2:
+                    memberType.push('allMember')
+                    break
+                  case 8:
+                    memberType.push('notMember')
+                    break
+                  case 4:
+                    memberType = memberType.concat(res.marketLimitUser.userLevels)
+                    break
+                }
+              })
+            }
+            if (res.marketLimitUser && res.marketLimitUser.members && res.marketLimitUser.members.length) {
+              Object.assign(res, { selectedCustomerList: res.marketLimitUser.members })
+            }
+            this.formModel = { ...res, memberType }
+            this.goodsTableParamsObj = { appCode: this.formModel.platformList }
           } else {
             this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
           }
         })
       } else {
         this.formModel = {
-          platformList: 'yssp',
+          selectedCustomerList: [], // 指定用户
+          memberType: [],
+          platformList: '',
           marketPreferentialRules: [],
           activateMonths: [],
           activateDays: [],
@@ -166,7 +211,6 @@ export default {
           marketUseStoreRuleLists: {
             storeCodes: []
           },
-          selectedCustomerList: [],
           applicants: '',
           applyingDepartment: '',
           remark: ''
@@ -175,14 +219,16 @@ export default {
     },
     dialogConfirm() {
       const type = this.dialogObj.type
+      const selectedArr = this.$refs.childRef.checkedAttr
       if (type === 'goods') { // 商品
-        this.dialogObj.isShow = false
+        this.formModel.selectedGoodsList = JSON.parse(JSON.stringify(selectedArr))
+        utils.Event.$emit('updateGoodsList', selectedArr)
       } else { // 用户
-        const checkedTagsList = this.$refs.childRef.checkedAttr
-        this.selectedCustomerList = checkedTagsList
-        this.dialogObj.isShow = false
-        this.$set(this.formModel, 'selectedCustomerList', JSON.parse(JSON.stringify(this.selectedCustomerList)))
+        // 选择用户
+        this.formModel.selectedCustomerList = JSON.parse(JSON.stringify(selectedArr))
+        utils.Event.$emit('updateCustomerList', selectedArr)
       }
+      this.dialogObj.isShow = false
     },
     showDialog(type, title) {
       this.dialogObj = {
@@ -210,7 +256,11 @@ export default {
             marketPreferentialRules // 折扣门槛列表
           } = this.$refs.basicRef.formModel
           let {
-            marketUseProductRule // 规则设置
+            memberType, // 发券对象
+            selectedCustomerList, // 指定用户
+            selectedGoodsList, // 选择的商品
+            marketUseProductRule, // 规则设置
+            marketUseStoreRuleLists // 门店
           } = this.$refs.ruleRef.formModel
           let {
             applicants, // 申请人
@@ -241,6 +291,45 @@ export default {
               return item[2] // 只传第三级
             })
           }
+          if (selectedGoodsList.length) { // 是否有指定商品列表
+            let goodsList = []; let skuList = []
+            selectedGoodsList.forEach((item) => {
+              if (item.isSelected) { // 商品
+                goodsList.push(item.goodsBn)
+              } else {
+                skuList.push(item.skuList.map((item) => item.goodsSkuSn))
+              }
+            })
+            marketUseProductRule.useProductCodes = goodsList
+            marketUseProductRule.useProductSkuCodes = skuList.flat()
+          }
+          let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
+          let userLimitTypes = [] // 发券对象
+          const memberTypeList = this.$refs.ruleRef.memberTypeList // 会员列表
+          memberType.forEach((item) => {
+            // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
+            const target = memberTypeList.find((val) => val.id === item)
+            if (item === 'allCustomer' || item === 'allMember' || item === 'notMember') {
+              userLimitTypes.push(target.type)
+            } else {
+              userLeveIds.push(target.id)
+              userLimitTypes.push(4)
+            }
+          })
+          // 发券对象, 会员等级type有重复，过滤
+          userLimitTypes = Array.from(new Set(userLimitTypes))
+          let userIds = [] // 指定用户
+          if (selectedCustomerList.length) {
+            userIds = selectedCustomerList.map((item) => item.userId)
+            // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
+            userLimitTypes.push(16)
+          }
+          // 处理领券对象、指定用户数据
+          let marketLimitUser = {
+            userLimitTypes, // 可领券会员列表
+            userLeveIds, // 指定领券对象 （会员）
+            userIds // 指定用户
+          }
           let params = { // 基础参数
             activityName, // 活动名称
             activateDayType, // 活动时间类型
@@ -250,7 +339,9 @@ export default {
             applicants, // 申请人
             applyingDepartment, // 部门
             remark, // 备注
-            marketUseProductRule // 规则设置
+            marketUseProductRule, // 规则设置
+            marketUseStoreRuleLists, // 门店
+            marketLimitUser // 用户类型
           }
           if (activateDayType === 1) { // 指定时间
             if (activateDate) { // 固定日期

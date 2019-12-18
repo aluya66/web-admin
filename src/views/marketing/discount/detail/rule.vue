@@ -21,14 +21,13 @@
           class="form-item"
           :size="size"
           filterable
-          value-key="shopId"
           multiple
         >
           <el-option
             v-for="item in shopList"
             :key="item.shopId"
             :label="item.shopName"
-            :value="item"
+            :value="item.shopId"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -56,27 +55,46 @@
       </el-form-item>
       <el-form-item label="指定商品:">
         <el-button size="small" @click="showDialog('goods', '选择商品')">选择商品</el-button>
-        商品：
-        <div class="goods-box" v-for="(item, index) in goodsList" :key="index">
-          <div class="goods-item">{{ item.goodsBn }}</div>
-        </div>
-        商品sku:
-        <div class="goods-box" v-for="(item, index) in skuArr" :key="index">
-          <div class="goods-item" v-for="(sku) in item.arr" :key="sku.goodsSkuSn">{{ sku.goodsSkuSn }}</div>
+        <div class="selected-box">
+          <c-table
+            expand
+            noPage
+            hasBorder
+            :max-height="400"
+            size="medium"
+            :loading="isLoading"
+            :table-header="tableHeader"
+            :table-list="formModel.selectedGoodsList"
+            :table-inner-btns="selectedTableInnerBtns"
+          >
+            <template v-slot:expand="{props}">
+              <c-table
+                hasBorder
+                noPage
+                :max-height="400"
+                size="medium"
+                :loading="isLoading"
+                :table-header="skuTableHeader"
+                :table-list="props.skuList"
+                :table-inner-btns="selectedSkuTableInnerBtns"
+              ></c-table>
+            </template>
+          </c-table>
         </div>
       </el-form-item>
-      <!-- <el-form-item label="用户类型:">
-        <el-checkbox-group v-model="formModel.customerType">
+      <el-form-item label="选择用户类型">
+        <el-checkbox-group v-model="formModel.memberType">
           <el-checkbox
-            v-for="(item, index) in customerTypeList"
+            class="checkbox-item"
+            :label="item.id"
+            :checked="item.checked"
+            v-for="(item, index) in memberTypeList"
             :key="index"
-            :label="item.label"
-            :value="item.label"
           >{{ item.label }}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="指定用户:">
-        <el-button size="small" @click="showDialog('customer', '选择用户')">选择用户</el-button>
+        <el-button size="medium" @click="showDialog('customer', '选择用户')">选择用户</el-button>
         <div>
           <el-tag
             class="tag-item"
@@ -84,22 +102,101 @@
             :key="index"
             closable
             @close="cancelSelect(index)"
-          >{{tag.name + '【' +tag.phone + '】'}}</el-tag>
+          >{{tag.nickname + '【' +tag.phoneNumber + '】'}}</el-tag>
         </div>
-      </el-form-item>-->
+      </el-form-item>
     </el-form>
   </c-card>
 </template>
 <script>
 import MixinForm from 'mixins/form'
+import mixinTable from 'mixins/table'
 import CCard from 'components/card'
 import utils from 'utils'
 // import dictObj from '@/store/dictData'
 
 export default {
-  mixins: [MixinForm],
-  data() {
+  mixins: [MixinForm, mixinTable],
+  data(vm) {
     return {
+      skuTableHeader: [
+        {
+          label: '编号',
+          prop: 'goodsSkuSn'
+        },
+        {
+          label: '尺码',
+          prop: 'attributeSpecValue'
+        },
+        {
+          label: '颜色',
+          prop: 'attributeColorValue'
+        },
+        {
+          label: '图片',
+          isImage: true,
+          width: 100,
+          prop: 'imageUrl'
+        },
+        {
+          label: '零售价',
+          prop: 'retailPrice'
+        },
+        {
+          label: '会员价',
+          prop: 'memberPrice'
+        },
+        {
+          label: '散批价',
+          prop: 'wholesalePrice'
+        },
+        {
+          label: '大批价',
+          prop: 'largeBatchPrice'
+        }
+      ],
+      selectedSkuTableInnerBtns: [
+        {
+          width: 150,
+          name: '删除',
+          icon: 'el-icon-delete',
+          handle(row) {
+            vm.deleteSelectedItem(row, 'skus')
+          }
+        }
+      ],
+      tableHeader: [
+        {
+          label: '商品名称',
+          prop: 'goodsName',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '图片',
+          prop: 'coverImg',
+          width: 100,
+          isImage: true
+        },
+        {
+          label: '款号',
+          prop: 'goodsBn',
+          search: {
+            type: 'input'
+          }
+        }
+      ],
+      selectedTableInnerBtns: [
+        {
+          width: 150,
+          name: '删除',
+          icon: 'el-icon-delete',
+          handle(row) {
+            vm.deleteSelectedItem(row, 'goods')
+          }
+        }
+      ],
       brands: [],
       cascaderProp: { multiple: true },
       shopTypeList: [{
@@ -112,31 +209,28 @@ export default {
         label: '加盟店',
         value: 3
       }],
-      customerTypeList: [{
-        label: '全部用户'
-      }, {
-        label: '全部会员'
-      }, {
-        label: '白金会员'
-      }, {
-        label: '钻石会员'
-      }, {
-        label: '非会员'
-      }],
+      memberTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
+        {
+          label: '全部用户',
+          type: 1,
+          id: 'allCustomer'
+        },
+        {
+          label: '全部会员',
+          type: 2,
+          id: 'allMember'
+        },
+        {
+          label: '非会员',
+          type: 8,
+          id: 'notMember'
+        }
+      ],
       categoryList: [],
       brandList: [],
       shopList: [],
       formModel: {},
       skuArr: []
-    }
-  },
-  watch: {
-    skuList: {
-      handler(val) {
-        this.skuArr = val
-        console.log(this.skuArr, 'skuArr')
-      },
-      deep: true
     }
   },
   props: {
@@ -145,25 +239,9 @@ export default {
       type: Object,
       required: true
     },
-    skuList: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
-    goodsList: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
     isView: {
       type: Boolean,
       default: false
-    },
-    size: {
-      type: String,
-      default: 'medium'
     },
     isDisabled: {
       type: Boolean,
@@ -171,11 +249,48 @@ export default {
     }
   },
   beforeMount() {
+    this.formModel = { ...this.dataObj, shopType: 2, selectedGoodsList: [] }
+    utils.Event.$on('updateGoodsList', (val) => {
+      Object.assign(this.formModel, { selectedGoodsList: val })
+    })
+    utils.Event.$on('updateCustomerList', (val) => {
+      Object.assign(this.formModel, { selectedCustomerList: val })
+    })
+
+    if (this.formModel.platformList) {
+      this.getShopList(this.formModel.platformList)
+    }
     this.getCategoryList()
     this.getbrandList()
-    this.formModel = { ...this.dataObj, shopType: 2 }
+    this.getMemberType()
   },
   methods: {
+    // 拼接会员等级到会员分类列表 类型有 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
+    // 类型4为接口请求获得， 16为指定用户选中后保存时候添加
+    getMemberType() {
+      this.$api.member.getMemberListType().then(res => {
+        const membertTypeArr = res && res.map(val => ({ label: val.name, id: val.id, type: 4 }))
+        this.memberTypeList = this.memberTypeList.concat(membertTypeArr)
+      })
+    },
+    // 删除已选择的列表数据
+    deleteSelectedItem(row, type) {
+      const goodsBn = row.goodsBn // 商品sku
+      const list = this.formModel.selectedGoodsList
+      const idx = list.findIndex((item) => item.goodsBn === goodsBn)
+      if (type === 'goods') { // 删除商品
+        if (idx !== -1) list.splice(idx, 1)
+      } else { // 删除sku
+        if (idx !== -1) {
+          let arr = list[idx].skuList
+          const skuIdx = arr.findIndex((item) => item.goodsSkuSn === row.goodsSkuSn)
+          if (skuIdx !== -1) {
+            arr.splice(skuIdx, 1)
+            if (!arr.length) list.splice(idx, 1)
+          }
+        }
+      }
+    },
     getShopList(appCode) {
       this.$api.basic.getShopListByChannel({
         appCode,
