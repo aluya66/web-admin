@@ -47,6 +47,7 @@ export default create({
       console.log(fileList, status)
       this.initFileList = fileList
       this.disabled = status
+      this.$emit('upload', fileList)
     },
     uploadImage() {
       this.$refs.childRef.submitUpload()

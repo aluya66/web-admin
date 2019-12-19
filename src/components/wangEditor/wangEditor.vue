@@ -32,9 +32,18 @@ export default create({
     // 初始化编辑器
     this.editor = new E(this.$refs[this.editorRef])
     // 编辑富文本内容时
-    this.editor.customConfig.onchange = html => {
-      console.log('editor=', html)
-      this.$emit('update:content', html)
+    // this.editor.customConfig.uploadImgShowBase64 = true // 使用 base64 保存图片
+    this.editor.customConfig = {
+      uploadImgShowBase64: true,
+      // uploadImgServer: 'http://pillar-admin.yosar.develop/api/upload/file', // 配置服务器端地址
+      uploadImgMaxSize: 2 * 1024 * 1024, // 将图片大小限制为 2M
+      // uploadImgParams: {
+      //   token
+      // }
+      onchange: html => {
+        console.log('editor=', html)
+        this.$emit('update:content', html)
+      }
     }
     // 创建富文本实例
     this.editor.create()

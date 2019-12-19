@@ -5,6 +5,7 @@
         v-if="showType === '' || showType === 'select'"
         v-model="dictValue"
         :disabled="disabled"
+        :size="size"
         clearable
         v-bind="$attrs"
         v-on="$listeners"
@@ -73,6 +74,10 @@ export default {
     showType: {
       type: String,
       default: 'select'
+    },
+    size: {
+      type: String,
+      default: 'medium'
     },
     dictLob: String
   },

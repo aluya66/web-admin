@@ -11,7 +11,7 @@
     :http-request="uploadHandle"
     :file-list.sync="fileList"
     :on-remove="handleRemove"
-    :on-success="handleSuccess"
+    @on-success="handleSuccess"
   ></c-upload>
 </template>
 
