@@ -61,6 +61,7 @@ export default {
     return {
       dialogObj: {},
       tableInnerBtns: [{
+        width: 120,
         // 审核状态： 0：未审核 1：提现成功 2：提现驳回
         prop: {
           name: 'checkStatus',
@@ -93,9 +94,14 @@ export default {
         {
           label: '用户手机',
           prop: 'phone',
+          fixed: true,
           search: {
             type: 'input'
           }
+        },
+        {
+          label: '交易单号',
+          prop: 'extractOrder'
         },
         {
           label: '提现金额(元)',
