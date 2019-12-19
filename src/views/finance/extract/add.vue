@@ -49,7 +49,7 @@
             <el-form-item label="审核金额(元)：" prop="checkAmount">
               <el-input
                 v-model.trim="formModel.checkAmount"
-                size="small"
+                :size="size"
                 placeholder="请输入审核金额"
                 clearable
               ></el-input>
@@ -58,7 +58,7 @@
               <el-input
                 v-model.trim="formModel.checkServiceFee"
                 placeholder="请输入提现手续费"
-                size="small"
+                :size="size"
                 clearable
               ></el-input>
             </el-form-item>
@@ -66,7 +66,7 @@
               <el-input
                 v-model.trim="formModel.serialNumber"
                 placeholder="请输入交易流水号"
-                size="small"
+                :size="size"
                 clearable
               ></el-input>
             </el-form-item>
@@ -106,18 +106,28 @@ export default {
       if (!value || (!Number(value) && Number(value) !== 0) || Number(value) < 0) {
         return callback(new Error('手续费为正数字或零'))
       }
+      if (Number(vm.initData.extractAmount) < Number(value)) {
+        return callback(new Error('手续费不能大于提现金额'))
+      }
+      if (vm.formModel.checkAmount && Number(vm.initData.extractAmount) < Number(value) + Number(vm.formModel.checkAmount)) {
+        return callback(new Error('手续费与审核金额之和不能大于提现金额'))
+      }
       callback()
     }
     const checkAmountNumber = (rule, value, callback) => {
       if (!value || !Number(value) || Number(value) < 0) {
         return callback(new Error('审核金额为正数字'))
       }
-      if (vm.initData.extractAmount < value) {
+      if (Number(vm.initData.extractAmount) < Number(value)) {
         return callback(new Error('审核金额不能大于提现金额'))
+      }
+      if ((vm.formModel.checkServiceFee || Number(vm.formModel.checkServiceFee) === 0) && Number(vm.initData.extractAmount) < Number(value) + Number(vm.formModel.checkServiceFee)) {
+        return callback(new Error('审核金额与手续费之和不能大于提现金额'))
       }
       callback()
     }
     return {
+      size: 'small',
       formModel: {
         checkAmount: '',
         checkServiceFee: '',
@@ -146,6 +156,7 @@ export default {
 
 <style lang='less' scoped>
 .check-info {
+  min-height: 280px;
   .label {
     font-weight: bold;
     margin-bottom: 10px;
@@ -170,7 +181,7 @@ export default {
     }
   }
   .check-form {
-    padding: 10px 0 0 15px;
+    padding: 10px 0 15px 15px;
     border: 1px solid @border-default;
     border-radius: 4px;
   }
