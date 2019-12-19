@@ -32,16 +32,17 @@
         <el-form
           ref="formRef"
           :model="formModel"
-          label-width="120px"
+          label-width="80px"
           class="form"
           label-position="right"
           status-icon
         >
-          <el-form-item label="备注:" prop="couponRemark">
+          <el-form-item prop="couponRemark">
             <el-input
               type="textarea"
-              placeholder="请输入备注内容"
+              placeholder="请输入备注说明"
               v-model.trim="formModel.couponRemark"
+              rows="4"
               maxlength="300"
               show-word-limit
             ></el-input>
