@@ -362,6 +362,7 @@ export default {
           couponRemark,
           status
         }
+        Object.assign(this.goodsParamsObj, { appCode: platformList.join(',')})
         if (preferentialType === 5 || preferentialType === 1) { // 卡券类型 【现金券、折扣券】
           const couponRules = marketPreferentialRules && marketPreferentialRules.map((item) => {
             const { cached, ...rules } = item

@@ -436,7 +436,7 @@ export default {
                 memberType.push('notMember')
                 break
               case 4:
-                memberType = memberType.concat(marketLimitUser.userLevels)
+                memberType = memberType.concat(marketLimitUser.userLeveIds ? marketLimitUser.userLeveIds : [])
                 break
             }
           })
@@ -505,6 +505,7 @@ export default {
           memberType.forEach((item) => {
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             const target = this.memberTypeList.find((val) => val.id === item)
+            console.log(this.memberTypeList, item)
             if (item === 'allCustomer' || item === 'allMember' || item === 'notMember') {
               userLimitTypes.push(target.type)
             } else {

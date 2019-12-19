@@ -180,7 +180,7 @@ export default {
                     memberType.push('notMember')
                     break
                   case 4:
-                    memberType = memberType.concat(res.marketLimitUser.userLeveIds)
+                    memberType = memberType.concat(res.marketLimitUser.userLeveIds ? res.marketLimitUser.userLeveIds : [])
                     break
                 }
               })
@@ -297,7 +297,7 @@ export default {
               return item[2] // 只传第三级
             })
           }
-          if (selectedGoodsList.length) { // 是否有指定商品列表
+          if (selectedGoodsList && selectedGoodsList.length) { // 是否有指定商品列表
             let goodsList = []; let skuList = []
             selectedGoodsList.forEach((item) => {
               if (item.isSelected) { // 商品
@@ -325,7 +325,7 @@ export default {
           // 发券对象, 会员等级type有重复，过滤
           userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
-          if (selectedCustomerList.length) {
+          if (selectedCustomerList && selectedCustomerList.length) {
             userIds = selectedCustomerList.map((item) => item.userId)
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             userLimitTypes.push(16)

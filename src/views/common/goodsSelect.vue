@@ -247,7 +247,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.basic
+      this.$api.channel
         .getGoodsListByChannel({
           ...this.paramsObj,
           ...page
