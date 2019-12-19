@@ -212,7 +212,7 @@
       <el-form-item label="适用商品:">
         <el-radio-group
           v-model="formModel.fitGoodsType"
-          :disabled="(ticketType === 5 || ticketType === 6 || ticketType === 7)"
+          :disabled="(ticketType === 5 || ticketType === 6 || ticketType === 7) || !formModel.platformList.length"
         >
           <el-radio
             v-for="item in fitGoodsTypeArr"
@@ -362,6 +362,7 @@ export default {
           couponRemark,
           status
         }
+        Object.assign(this.goodsParamsObj, { appCode: platformList.join(',') })
         if (preferentialType === 5 || preferentialType === 1) { // 卡券类型 【现金券、折扣券】
           const couponRules = marketPreferentialRules && marketPreferentialRules.map((item) => {
             const { cached, ...rules } = item

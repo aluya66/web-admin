@@ -287,7 +287,7 @@ export default {
       }
     },
     getShopList(appCode) {
-      this.$api.basic.getShopListByChannel({
+      this.$api.channel.getShopListByChannel({
         appCode,
         pageNo: 1,
         pageSize: 100

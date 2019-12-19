@@ -117,3 +117,15 @@ export const getRuleInfo = params =>
   Http.fetch(`${context}/api/rule/byid`, params, {
     method: 'get'
   })
+
+// 根据渠道查询商品列表
+export const getGoodsListByChannel = params =>
+  Http.fetch(`${context}/api/business/goods/list`, params, {
+    method: 'get'
+  })
+
+// 根据渠道查询店铺列表
+export const getShopListByChannel = params =>
+  Http.fetch(`${context}/api/channel/shoplist`, params, {
+    method: 'get'
+  })

@@ -32,16 +32,17 @@
         <el-form
           ref="formRef"
           :model="formModel"
-          label-width="120px"
+          label-width="80px"
           class="form"
           label-position="right"
           status-icon
         >
-          <el-form-item label="备注:" prop="couponRemark">
+          <el-form-item prop="couponRemark">
             <el-input
               type="textarea"
-              placeholder="请输入备注内容"
+              placeholder="请输入备注说明"
               v-model.trim="formModel.couponRemark"
+              rows="4"
               maxlength="300"
               show-word-limit
             ></el-input>
@@ -72,7 +73,10 @@ export default {
           name: '备注',
           icon: 'el-icon-edit-outline',
           handle(row) {
-            vm.showDialog()
+            vm.dialogObj = {
+              isShow: true,
+              title: '备注说明'
+            }
             vm.formModel = {
               couponId: row.couponId,
               couponRemark: row.couponRemark
@@ -85,7 +89,7 @@ export default {
           icon: 'el-icon-edit',
           handle(row) {
             const { couponId } = row
-            vm.routerLink(`/marketing/rule/ruleInfo/${couponId}`)
+            vm.routerLink(`/marketing/rule/ruleInfo/yssp/${couponId}`)
           }
         },
         {
@@ -182,20 +186,20 @@ export default {
         if (valid) {
           this.$api.marketing.addCouponRemark(this.formModel).then(res => {
             this.responeHandle('添加成功')
+            this.dialogObj.isShow = false
           })
         } else {
           console.log('error submit!!')
           return false
         }
       })
-    },
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '备注说明',
-        initData: opts.initData
-      }
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+.form {
+  width: 90%;
+}
+</style>

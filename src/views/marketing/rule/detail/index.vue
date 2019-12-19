@@ -436,7 +436,7 @@ export default {
                 memberType.push('notMember')
                 break
               case 4:
-                memberType = memberType.concat(marketLimitUser.userLevels)
+                memberType = memberType.concat(marketLimitUser.userLeveIds ? marketLimitUser.userLeveIds : [])
                 break
             }
           })
