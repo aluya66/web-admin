@@ -261,7 +261,7 @@ export default {
       callback()
     }
     return {
-      size: 'medium',
+      size: 'default',
       goodsParamsObj: {},
       ticketValidTypeArr: dictObj.ticketValidTypeArr,
       checkDiscount, // 验证折扣

@@ -34,37 +34,9 @@
 <script>
 import MixinForm from 'mixins/form'
 import MixinFormCard from 'mixins/formCard'
-import CCard from 'components/card'
 
 export default {
-  mixins: [MixinForm, MixinFormCard],
-  data() {
-    return {
-    }
-  },
-  props: {
-    title: String,
-    dataObj: {
-      type: Object,
-      required: true
-    },
-    isView: {
-      type: Boolean,
-      default: false
-    },
-    isDisabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  created() {
-  },
-  methods: {
-
-  },
-  components: {
-    CCard
-  }
+  mixins: [MixinForm, MixinFormCard]
 }
 </script>
 <style lang="less" scoped>

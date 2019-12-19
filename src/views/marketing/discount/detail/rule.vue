@@ -94,7 +94,7 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="指定用户:">
-        <el-button size="medium" @click="showDialog('customer', '选择用户')">选择用户</el-button>
+        <el-button size="small" @click="showDialog('customer', '选择用户')" >选择用户</el-button>
         <div>
           <el-tag
             class="tag-item"
@@ -112,9 +112,7 @@
 import MixinForm from 'mixins/form'
 import MixinFormCard from 'mixins/formCard'
 import mixinTable from 'mixins/table'
-import CCard from 'components/card'
 import utils from 'utils'
-// import dictObj from '@/store/dictData'
 
 export default {
   mixins: [MixinForm, mixinTable, MixinFormCard],
@@ -227,21 +225,6 @@ export default {
       skuArr: []
     }
   },
-  props: {
-    title: String,
-    dataObj: {
-      type: Object,
-      required: true
-    },
-    isView: {
-      type: Boolean,
-      default: false
-    },
-    isDisabled: {
-      type: Boolean,
-      default: false
-    }
-  },
   beforeMount() {
     utils.Event.$on('updateGoodsList', (val) => {
       Object.assign(this.formModel, { selectedGoodsList: val })
@@ -316,9 +299,6 @@ export default {
         }
       })
     }
-  },
-  components: {
-    CCard
   }
 }
 </script>

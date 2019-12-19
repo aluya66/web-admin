@@ -9,7 +9,6 @@ export default {
     return {
       dictData: {}, // 字典数据
       isLoading: false, // 数据加载状态
-      size: 'medium', // 表格、按钮大小
       searchObj: {}, // 搜索查询对象
       searchItems: [], // 搜索表单元素配置项
       tableList: [], // 列表数据

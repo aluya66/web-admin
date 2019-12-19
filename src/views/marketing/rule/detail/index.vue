@@ -44,7 +44,7 @@
         />
       </el-form-item>
       <el-form-item label="选择卡券:">
-        <el-button size="medium" @click="showDialog('coupon')">添加卡券</el-button>
+        <el-button size="small" @click="showDialog('coupon')">添加卡券</el-button>
         <el-form-item
           class="coupon-item"
           v-for="(item, index) in formModel.couponDetails"
@@ -73,7 +73,7 @@
             <el-input
               type="number"
               v-model.trim="item.couponNumber"
-              size="medium"
+              :size="size"
               placeholder="设置可领数量，留空则不限制"
               clearable
             ></el-input>
@@ -96,7 +96,7 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="指定用户:" v-if="formModel.platformList === 'yssp'">
-        <el-button size="medium" @click="showDialog('customer')">选择用户</el-button>
+        <el-button size="small" @click="showDialog('customer')">选择用户</el-button>
         <div>
           <el-tag
             class="tag-item"
@@ -119,7 +119,7 @@
         <!-- 发券时间类型：指定日期 -->
         <el-form-item prop="issueTime" v-if="formModel.issueTimeType === 32">
           <el-date-picker
-            size="medium"
+            :size="size"
             v-model="formModel.issueTime"
             type="datetimerange"
             :picker-options="pickerOptions"
@@ -186,14 +186,14 @@
           <el-input
             class="inp-item"
             v-model.trim="formModel.limitReceive"
-            size="medium"
+            :size="size"
             placeholder="请输入数字"
             clearable
           ></el-input>
         </el-form-item>
       </el-form-item>
       <el-form-item class="form-btn">
-        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">提交</el-button>
+        <el-button :size="size" :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">提交</el-button>
         <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
@@ -238,6 +238,7 @@ export default {
   },
   data() {
     return {
+      size: 'defalut',
       platformListType: '',
       memberList: [], // 用户列表
       memberTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户

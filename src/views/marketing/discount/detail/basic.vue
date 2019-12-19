@@ -51,7 +51,7 @@
                 <el-input
                   class="discount-item"
                   v-model.trim="item.preferentialLevel"
-                  size="medium"
+                  :size="size"
                   placeholder
                   clearable
                 >
@@ -70,7 +70,7 @@
                 <el-input
                   class="discount-item"
                   v-model.trim="item.preferentiaMaxlLevel"
-                  size="medium"
+                  :size="size"
                   placeholder
                   clearable
                 >
@@ -106,7 +106,7 @@
                 <el-input
                   class="discount-item"
                   v-model.trim="item.preferentialValue"
-                  size="medium"
+                  :size="size"
                   placeholder
                   clearable
                 >
@@ -140,7 +140,7 @@
                 <el-input
                   class="discount-item"
                   v-model.trim="item.preferentialLevel"
-                  size="medium"
+                  :size="size"
                   placeholder
                   clearable
                 >
@@ -160,7 +160,7 @@
                 <el-input
                   class="discount-item"
                   v-model.trim="item.preferentialValue"
-                  size="medium"
+                  :size="size"
                   placeholder="优惠的金额"
                   clearable
                 >
@@ -169,7 +169,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-button @click="deleteRule(index)" v-if="index !== 0">删除</el-button>
+              <el-button @click="deleteRule(index)" size="medium" v-if="index !== 0">删除</el-button>
             </el-col>
           </el-row>
           <el-row>
@@ -194,7 +194,7 @@
                 <el-input
                   class="discount-item"
                   v-model.trim="item.preferentialValue"
-                  size="medium"
+                  :size="size"
                   placeholder
                   clearable
                 >
@@ -217,13 +217,14 @@
         <query-dict
           :dict-list="activateDayTypeList"
           class="select-item"
+          :size="size"
           placeholder="请选择活动时间类型"
           :value.sync="formModel.activateDayType"
         ></query-dict>
       </el-form-item>
       <el-form-item label="设置固定周期:" prop="activateDate" v-if="formModel.activateDayType === 1">
         <el-date-picker
-          size="medium"
+          :size="size"
           v-model="formModel.activateDate"
           type="datetimerange"
           value-format="yyyy-MM-dd HH:mm:ss"
@@ -262,7 +263,6 @@
 <script>
 import MixinForm from 'mixins/form'
 import MixinFormCard from 'mixins/formCard'
-import CCard from 'components/card'
 import utils from 'utils'
 import dictObj from '@/store/dictData'
 
@@ -309,30 +309,8 @@ export default {
       ],
       activityTypeList: dictObj.activityTypeList, // 活动类型
       lobList: dictObj.lobList, // 渠道
-      priceTypeList: dictObj.priceTypeList, // 价格类型
+      priceTypeList: dictObj.priceTypeList // 价格类型
     }
-  },
-  props: {
-    title: String,
-    isTag: {
-      type: Boolean,
-      default: false
-    },
-    dataObj: {
-      type: Object,
-      required: true
-    },
-    isView: {
-      type: Boolean,
-      default: false
-    },
-    isDisabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  created() {
-    
   },
   methods: {
     changeChannel(appCode) {
@@ -364,9 +342,6 @@ export default {
       if (this.formModel.activityType === 1) Object.assign(obj, { priceType: 6 })
       this.formModel.marketPreferentialRules = [obj]
     }
-  },
-  components: {
-    CCard
   }
 }
 </script>
