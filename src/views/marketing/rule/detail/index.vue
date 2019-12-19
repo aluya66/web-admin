@@ -65,7 +65,7 @@
             :label="formModel.platformList === 'ysgo' ? '导出数量' : ''"
             :prop="'couponDetails.' + index + '.couponNumber'"
             :rules="{
-                type: 'number', trigger: 'blur',  message: '请输入数字', transform (value) {
+                type: 'number', trigger: 'change',  message: '请输入数字', transform (value) {
                   return Number(value)
                 }
               }"

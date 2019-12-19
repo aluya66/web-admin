@@ -8,33 +8,35 @@
     </template>
     <div class="form">
       <g-basic
-        v-if="Object.keys(formModel).length"
+        :data-obj.sync="formModel"
         :is-view="isView"
         :is-disabled="isDisabled"
-        :data-obj="formModel"
         @ChangeChannel="changeChannel"
         ref="basicRef"
         title="基础信息"
       ></g-basic>
       <g-rule
-        v-if="Object.keys(formModel).length"
+        :data-obj.sync="formModel"
         :is-view="isView"
         :is-disabled="isDisabled"
-        :data-obj="formModel"
         ref="ruleRef"
         title="规则设置(以下信息至少完善一项)"
         @show-dialog="showDialog"
       ></g-rule>
       <g-apply
-        v-if="Object.keys(formModel).length"
         :is-view="isView"
         :is-disabled="isDisabled"
-        :data-obj="formModel"
+        :data-obj.sync="formModel"
         ref="applyRef"
         title="申请信息"
       ></g-apply>
       <div class="btn-wrapper">
-        <el-button :size="size" :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+        <el-button
+          :size="size"
+          :loading="btnLoading"
+          type="primary"
+          @click.native.prevent="submitHandle"
+        >保存</el-button>
         <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
       </div>
     </div>
@@ -114,7 +116,25 @@ export default {
       isDisabled: false,
       isView: true,
       btnLoading: false,
-      formModel: {},
+      formModel: {
+        shopType: 2, // 直营
+        selectedGoodsList: [], // 指定商品
+        selectedCustomerList: [], // 指定用户
+        memberType: [],
+        platformList: '',
+        marketPreferentialRules: [],
+        activateMonths: [],
+        activateDays: [],
+        activateDate: '',
+        marketUseProductRule: {
+          useCategoryCodes: [],
+          useBrandCodes: []
+        },
+        storeCodes: [],
+        applicants: '',
+        applyingDepartment: '',
+        remark: ''
+      },
       dialogObj: {},
       goodsTableParamsObj: {
         appCode: 'yssp'
@@ -155,6 +175,8 @@ export default {
           this.setTagsViewTitle()
           if (res) {
             res.platformList = res.platformList[0] // 处理渠道单选 接口返回list后处理为字符串
+            res.storeCodes = res.storeCodes.map((item) => Number(item))
+            this.$refs.ruleRef.getShopList(res.platformList)
             if (res.activityTime && res.activityEndTime) {
               res.activateDate = [res.activityTime, res.activityEndTime]
             }
@@ -195,32 +217,13 @@ export default {
             if (res.marketUseProductRule && res.marketUseProductRule.goodSkuList) {
               selectedGoodsList.push(res.marketUseProductRule.goodSkuList.map((item) => ({ ...item, isSelected: false, skuList: item.skus })))
             }
-            this.formModel = { ...res, memberType, selectedGoodsList: selectedGoodsList.flat() }
+            this.formModel = { ...res, memberType, selectedGoodsList: selectedGoodsList.flat(), shopType: 2 }
+            console.log(this.formModel)
             this.goodsTableParamsObj = { appCode: this.formModel.platformList }
           } else {
             this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
           }
         })
-      } else {
-        this.formModel = {
-          selectedGoodsList: [], // 指定商品
-          selectedCustomerList: [], // 指定用户
-          memberType: [],
-          platformList: '',
-          marketPreferentialRules: [],
-          activateMonths: [],
-          activateDays: [],
-          activateDate: '',
-          useBrandCodes: [],
-          marketUseProductRule: {
-            useCategoryCodes: [],
-            useBrandCodes: []
-          },
-          storeCodes: [],
-          applicants: '',
-          applyingDepartment: '',
-          remark: ''
-        }
       }
     },
     dialogConfirm() {

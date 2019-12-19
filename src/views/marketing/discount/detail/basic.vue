@@ -261,12 +261,13 @@
 </template>
 <script>
 import MixinForm from 'mixins/form'
+import MixinFormCard from 'mixins/formCard'
 import CCard from 'components/card'
 import utils from 'utils'
 import dictObj from '@/store/dictData'
 
 export default {
-  mixins: [MixinForm],
+  mixins: [MixinForm, MixinFormCard],
   data() {
     return {
       rules: {
@@ -309,7 +310,6 @@ export default {
       activityTypeList: dictObj.activityTypeList, // 活动类型
       lobList: dictObj.lobList, // 渠道
       priceTypeList: dictObj.priceTypeList, // 价格类型
-      formModel: {}
     }
   },
   props: {
@@ -326,18 +326,13 @@ export default {
       type: Boolean,
       default: false
     },
-    size: {
-      type: String,
-      default: 'medium'
-    },
     isDisabled: {
       type: Boolean,
       default: false
     }
   },
   created() {
-    this.formModel = this.dataObj
-    console.log(this.formModel, 'basic')
+    
   },
   methods: {
     changeChannel(appCode) {

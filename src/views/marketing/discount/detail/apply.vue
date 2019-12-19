@@ -33,13 +33,13 @@
 </template>
 <script>
 import MixinForm from 'mixins/form'
+import MixinFormCard from 'mixins/formCard'
 import CCard from 'components/card'
 
 export default {
-  mixins: [MixinForm],
+  mixins: [MixinForm, MixinFormCard],
   data() {
     return {
-      formModel: {}
     }
   },
   props: {
@@ -52,17 +52,12 @@ export default {
       type: Boolean,
       default: false
     },
-    size: {
-      type: String,
-      default: 'medium'
-    },
     isDisabled: {
       type: Boolean,
       default: false
     }
   },
   created() {
-    this.formModel = this.dataObj
   },
   methods: {
 

@@ -110,13 +110,14 @@
 </template>
 <script>
 import MixinForm from 'mixins/form'
+import MixinFormCard from 'mixins/formCard'
 import mixinTable from 'mixins/table'
 import CCard from 'components/card'
 import utils from 'utils'
 // import dictObj from '@/store/dictData'
 
 export default {
-  mixins: [MixinForm, mixinTable],
+  mixins: [MixinForm, mixinTable, MixinFormCard],
   data(vm) {
     return {
       skuTableHeader: [
@@ -223,7 +224,6 @@ export default {
       categoryList: [],
       brandList: [],
       shopList: [],
-      formModel: {},
       skuArr: []
     }
   },
@@ -243,8 +243,6 @@ export default {
     }
   },
   beforeMount() {
-    this.formModel = { ...this.dataObj, shopType: 2 }
-    console.log(this.formModel)
     utils.Event.$on('updateGoodsList', (val) => {
       Object.assign(this.formModel, { selectedGoodsList: val })
     })
