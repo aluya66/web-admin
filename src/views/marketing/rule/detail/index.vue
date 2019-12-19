@@ -367,8 +367,8 @@ export default {
     dialogConfirm() {
       if (this.dialogObj.type === 'coupon') {
         // 选择优惠券
-        if (this.formModel.platformList === 'ysgo' && this.$refs.childRef.selectedCouponList.length > 1) {
-          return this.$msgTip('只能选择一张卡券')
+        if (this.formModel.platformList === 'ysgo' && this.$refs.childRef.selectedCouponList.length !== 1) {
+          return this.$msgTip('选择一张卡券', 'warning')
         }
         this.formModel.couponDetails = this.$refs.childRef.selectedCouponList
       } else {
