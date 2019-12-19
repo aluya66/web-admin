@@ -135,12 +135,8 @@ export default {
       ]
     }
   },
-  created() {
-    this.fetchData()
-    this.isCreated = !this.isCreated
-  },
   activated() {
-    this.isCreated && this.fetchData()
+    this.fetchData()
   },
   methods: {
     /**
