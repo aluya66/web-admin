@@ -39,7 +39,7 @@ export default {
           name: '导出券码',
           icon: 'el-icon-download',
           handle(row) {
-            vm.exportFile({ couponRecordId: row.couponRecordId })
+            vm.exportFile({ couponDetailId: row.couponDetailId })
           }
         }
       ],

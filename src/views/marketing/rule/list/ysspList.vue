@@ -72,7 +72,10 @@ export default {
           name: '备注',
           icon: 'el-icon-edit-outline',
           handle(row) {
-            vm.showDialog()
+            vm.dialogObj = {
+              isShow: true,
+              title: '备注说明'
+            }
             vm.formModel = {
               couponId: row.couponId,
               couponRemark: row.couponRemark
@@ -85,7 +88,7 @@ export default {
           icon: 'el-icon-edit',
           handle(row) {
             const { couponId } = row
-            vm.routerLink(`/marketing/rule/ruleInfo/${couponId}`)
+            vm.routerLink(`/marketing/rule/ruleInfo/yssp/${couponId}`)
           }
         },
         {
@@ -182,20 +185,20 @@ export default {
         if (valid) {
           this.$api.marketing.addCouponRemark(this.formModel).then(res => {
             this.responeHandle('添加成功')
+            this.dialogObj.isShow = false
           })
         } else {
           console.log('error submit!!')
           return false
         }
       })
-    },
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '备注说明',
-        initData: opts.initData
-      }
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+.form {
+  width: 90%;
+}
+</style>
