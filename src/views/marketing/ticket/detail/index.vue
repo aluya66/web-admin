@@ -212,7 +212,7 @@
       <el-form-item label="适用商品:">
         <el-radio-group
           v-model="formModel.fitGoodsType"
-          :disabled="(ticketType === 5 || ticketType === 6 || ticketType === 7)"
+          :disabled="(ticketType === 5 || ticketType === 6 || ticketType === 7) || !formModel.platformList.length"
         >
           <el-radio
             v-for="item in fitGoodsTypeArr"

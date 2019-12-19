@@ -193,7 +193,7 @@ export default {
     }
   },
   watch: {
-    'paramsObj.appCode'(oval, nval) {
+    'paramsObj.appCode'(nval, oval) {
       if (oval === nval) return
       this.fetchData()
     }
@@ -245,6 +245,10 @@ export default {
       }
     },
     fetchData() {
+      if (this.paramsObj.appCode === '') {
+        this.tableList = []
+        return
+      }
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
       this.$api.channel
