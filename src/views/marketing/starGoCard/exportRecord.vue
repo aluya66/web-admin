@@ -26,20 +26,17 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
+import utils from 'utils'
 
 export default {
   name: 'exportRecord',
   mixins: [mixinTable],
-  components: {
-    CDialog
-  },
   data(vm) {
     return {
       formModel: {},
       dialogObj: {}, // 对话框数据
       tableInnerBtns: [
-         {
+        {
           name: '下载兑换码',
           icon: 'el-icon-download',
           handle(row) {

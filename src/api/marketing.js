@@ -203,5 +203,3 @@ export const getExportRecordList = params =>
   Http.fetch(`${context}/api/mks/coupon/card/report`, params, {
     method: 'get'
   })
-
-
