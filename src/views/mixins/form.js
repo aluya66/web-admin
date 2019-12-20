@@ -11,8 +11,11 @@ export default {
       callback()
     }
     const checkNumber = (rule, value, callback) => {
-      if (!value || !Number(value) || Number(value) < 0) return callback(new Error('请输入数字'))
-      callback()
+      if (value && Number(value) >= 0) {
+        callback()
+      } else {
+        callback(new Error('请输入数字'))  
+      }
     }
     return {
       checkInt,

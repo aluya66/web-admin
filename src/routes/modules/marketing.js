@@ -123,8 +123,17 @@ export default {
         icon: 'table',
         noCache: true,
         title: 'ruleInfo',
-        activeMenu: '/marketing/rule/list',
         roles: ['admin']
       }
-    }]
+    }, {
+      path: '/marketing/starGoCard/list',
+      name: 'starGoCard',
+      component: () => import('@/views/marketing/starGoCard/list'),
+      meta: {
+        title: 'starGoCard',
+        icon: 'table',
+        roles: ['admin']
+      }
+    }
+  ]
 }

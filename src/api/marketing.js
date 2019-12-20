@@ -173,3 +173,35 @@ export const queryCouponCard = params =>
   Http.fetch(`${context}/api/mks/coupon/card`, params, {
     method: 'get'
   })
+
+// 【星购卡】兑换码列表中导出
+export const exportRedeemCode = params =>
+  Http.fetch(`${context}/api/mks/coupon/card`, params, {
+    method: 'put'
+  })
+
+// 【星购卡】 兑换码列表
+export const getRedeemCodeList = params =>
+  Http.fetch(`${context}/api/mks/coupon/card`, params, {
+    method: 'get'
+  })
+
+// 【星购卡】 新增兑换码
+export const addRedeemCode = params =>
+  Http.fetch(`${context}/api/mks/coupon/card`, params, {
+    method: 'post'
+  })
+
+// 【星购卡】 导出记录中下载兑换码
+export const exportExportRecord = params =>
+  Http.fetch(`${context}/api/mks/coupon/card/store/report`, params, {
+    method: 'get'
+  })
+
+// 【星购卡】 导出记录列表
+export const getExportRecordList = params =>
+  Http.fetch(`${context}/api/mks/coupon/card/report`, params, {
+    method: 'get'
+  })
+
+

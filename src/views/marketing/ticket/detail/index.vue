@@ -424,10 +424,10 @@ export default {
             })
             Object.assign(params, { marketPreferentialRules: ruleList })
           }
-          const selectedGoodsList = this.$refs.goodsSelectRef.checkedAttr
-          if (fitGoodsType === 1 && selectedGoodsList.length) { // 是否有指定商品列表, 类型为指定商品 0所有 1指定
+          if (fitGoodsType === 1) { // 是否有指定商品列表, 类型为指定商品 0所有 1指定
+            const selectedGoodsList = this.$refs.goodsSelectRef ? this.$refs.goodsSelectRef.checkedAttr : []
             let goodsList = []; let skuList = []
-            selectedGoodsList.forEach((item) => {
+            selectedGoodsList.length && selectedGoodsList.forEach((item) => {
               if (item.isSelected) { // 商品
                 goodsList.push(item.goodsBn)
               } else {
