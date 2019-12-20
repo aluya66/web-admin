@@ -191,18 +191,6 @@ export default {
       ],
       tableHeader: [
         {
-          label: '渠道主图',
-          prop: 'channelImage',
-          width: 100,
-          isImage: true
-        },
-        {
-          label: '渠道LOGO ',
-          prop: 'channelLogo',
-          width: 100,
-          isImage: true
-        },
-        {
           label: '渠道名称',
           prop: 'channelName',
           isPopover: true,

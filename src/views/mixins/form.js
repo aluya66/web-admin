@@ -14,7 +14,7 @@ export default {
       if (value && Number(value) >= 0) {
         callback()
       } else {
-        callback(new Error('请输入数字'))  
+        callback(new Error('请输入数字'))
       }
     }
     return {

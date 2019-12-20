@@ -113,11 +113,24 @@ const extractStatusList = [{
   value: 2
 }]
 
+/**
+ * 商户类型
+ */
 const shopTypeList = [{
   label: '自营',
   value: 1
 }, {
-  label: '加盟',
+  label: '合作商户',
+  value: 2
+}]
+/**
+ * 商户分类
+ */
+const businessCategoryList = [{
+  label: '企业',
+  value: 1
+}, {
+  label: '个人',
   value: 2
 }]
 
@@ -293,6 +306,7 @@ export default {
   salesTypeList,
   extractStatusList,
   shopTypeList,
+  businessCategoryList,
   earningsTypeList,
   earningsStatusList,
   equityTypeList,
