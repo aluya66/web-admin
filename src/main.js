@@ -49,8 +49,13 @@ const globalVue = new Vue({
   store,
   render: h => h(App),
   beforeCreate () {
+    // 表格、表单元素尺寸
+    Vue.prototype.size = 'medium'
     // 添加全局事件bus
+    Vue.prototype.eventBus = this
+    // 接口服务
     Vue.prototype.$api = serviceApi
+    // 全局消息提醒
     Vue.prototype.$msgTip = (message, type = 'success', duration = 1500) => {
       // eslint-disable-next-line promise/param-names
       return new Promise(reslove => {

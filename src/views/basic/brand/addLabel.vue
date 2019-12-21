@@ -34,6 +34,7 @@
         :is-view="false"
         :is-disabled="isDisabled"
         :data-obj="curTags"
+        :size="size"
         ref="paramsRef"
         title="标签信息"
         @set-tag="setTagValue"
@@ -236,6 +237,9 @@ export default {
   .form-btn {
     margin-left: 20px;
     margin-top: 20px;
+  }
+  .coverImg{
+    width: 60px;
   }
 }
 </style>

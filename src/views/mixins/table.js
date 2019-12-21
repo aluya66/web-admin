@@ -9,12 +9,12 @@ export default {
     return {
       dictData: {}, // 字典数据
       isLoading: false, // 数据加载状态
-      size: 'medium', // 表格、按钮大小
       searchObj: {}, // 搜索查询对象
       searchItems: [], // 搜索表单元素配置项
       tableList: [], // 列表数据
       tableCheckedList: [], // 列表批量选中
       maxHeight: 650, // table最大高度
+      isCreated: false, // created钩子调用后为true, 组件激活后，为true时调用activated钩子
       pageInfo: { // 页码信息
         pageNo: 1,
         pageSize: 10,
@@ -127,16 +127,15 @@ export default {
      * 表格项获取字典数据label数据
      */
     setTableColumnLabel(value, dictKey) {
+      let curArr = utils.isArray(dictKey) ? dictKey : dictObj[dictKey]
       if (Array.isArray(value)) { // value 为数组
         let arr = []
-        let curArr = utils.isArray(dictKey) ? dictKey : dictObj[dictKey]
         value.forEach((item) => {
           let curVal = curArr.find(res => item === res.value)
           curVal && arr.push(curVal.label)
         })
         return arr.join(',')
       } else { // value 字符串和数字
-        let curArr = utils.isArray(dictKey) ? dictKey : dictObj[dictKey]
         let curVal = curArr.find(res => value === res.value)
         return curVal ? curVal.label : ''
       }

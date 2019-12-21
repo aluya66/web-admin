@@ -4,28 +4,50 @@ export default {
   path: '/channel',
   name: 'channel',
   component: Layout,
-  redirect: '/channel/list',
+  redirect: '/channel/shop/list',
   meta: {
     title: 'channel',
     icon: 'nested'
   },
   children: [{
-    path: '/channel/list',
+    path: '/channel/shop/list',
     name: 'channelList',
-    component: () => import('@/views/channel/list'),
+    component: () => import('@/views/channel/shop/list'),
     meta: {
       title: 'channelList',
       icon: 'table'
     }
   },
   {
-    path: '/channel/detail/:shopId',
+    path: '/channel/shop/detail/:id?',
     name: 'channelDetail',
     hidden: true,
-    component: () => import('@/views/channel/detail/index'),
+    component: () => import('@/views/channel/shop/detail/index'),
     meta: {
       title: 'channelDetail',
       icon: 'table'
+    }
+  },
+  {
+    path: '/channel/merchant',
+    name: 'channelMerchant',
+    component: () => import('@/views/channel/merchant/list'),
+    meta: {
+      title: 'channelMerchant',
+      icon: 'table',
+      roles: ['admin']
+    }
+  },
+  {
+    path: '/channel/merchant/detail/:id?',
+    name: 'channelMerchantInfo',
+    hidden: true,
+    component: () => import('@/views/channel/merchant/add'),
+    meta: {
+      title: 'channelMerchantInfo',
+      noCache: true,
+      activeMenu: '/channel/merchant',
+      roles: ['admin']
     }
   },
   {

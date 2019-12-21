@@ -26,6 +26,7 @@
         :is-view="false"
         :is-disabled="isDisabled"
         :data-obj="curTags"
+        :size="size"
         ref="paramsRef"
         title="属性信息"
         @set-tag="setTagValue"
@@ -33,11 +34,11 @@
       <el-form-item class="form-btn">
         <el-button
           :loading="btnLoading"
-          size="medium"
+          :size="size"
           type="primary"
           @click.native.prevent="submitHandle"
         >保存</el-button>
-        <el-button size="medium" @click.native.prevent="goBack">返回</el-button>
+        <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
     <div v-if="dialogObj.isShow">

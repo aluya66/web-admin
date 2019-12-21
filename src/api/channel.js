@@ -15,6 +15,42 @@ export const getShopDetail = params =>
   })
 
 /**
+ * 新增商户
+ * @param {*}
+ */
+export const addBusiness = params =>
+  Http.fetch(`${context}/api/business/saveBusiness`, params, {
+    method: 'post'
+  })
+
+/**
+ * 编辑商户
+ * @param {*}
+ */
+export const editBusiness = params =>
+  Http.fetch(`${context}/api/business/updatebusiness`, params, {
+    method: 'put'
+  })
+
+/**
+ * 删除商户
+ * @param {*}
+ */
+export const deleteBusiness = params =>
+  Http.fetch(`${context}/api/business/deletebusiness`, params, {
+    method: 'delete'
+  })
+
+/**
+ * 查询商户列表
+ * @param {*}
+ */
+export const queryBusinessList = params =>
+  Http.fetch(`${context}/api/business/querybusinesspage`, params, {
+    method: 'get'
+  })
+
+/**
  * @param {*} 渠道列表
  */
 export const getChannel = params =>
@@ -115,5 +151,17 @@ export const editRule = params =>
  */
 export const getRuleInfo = params =>
   Http.fetch(`${context}/api/rule/byid`, params, {
+    method: 'get'
+  })
+
+// 根据渠道查询商品列表
+export const getGoodsListByChannel = params =>
+  Http.fetch(`${context}/api/business/goods/list`, params, {
+    method: 'get'
+  })
+
+// 根据渠道查询店铺列表
+export const getShopListByChannel = params =>
+  Http.fetch(`${context}/api/channel/shoplist`, params, {
     method: 'get'
   })

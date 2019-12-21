@@ -55,7 +55,10 @@ export default {
         },
         {
           label: '权益说明',
-          prop: 'description'
+          prop: 'description',
+          vHtml(row) {
+            return row.type === 2 ? `<p>${row.description}</p><p>发券:${row.sendCoupon}</p><p>有效期:${row.expired}</p>` : row.description
+          }
         },
         {
           label: '权益类型',

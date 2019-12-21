@@ -1,8 +1,14 @@
 <template>
   <c-view>
     <template v-slot:header>
-      <div class="title">
-				{{$route.meta.name || $t(`route.${$route.meta.title}`)}}
+      <div class="title">{{$route.meta.name || $t(`route.${$route.meta.title}`)}}</div>
+      <div class="header-btn">
+        <el-button
+          type="primary"
+          :size="size"
+          icon="el-icon-plus"
+          @click="routerLink('/channel/merchant/detail')"
+        >新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -15,8 +21,8 @@
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
-				:table-inner-btns="tableInnerBtns"
-				:page-info="pageInfo"
+        :table-inner-btns="tableInnerBtns"
+        :page-info="pageInfo"
         @change-pagination="changePagination"
       >
         <template v-slot:header>
@@ -34,64 +40,75 @@
 
 <script>
 import mixinTable from 'mixins/table'
-// import dictObj from '@/store/dictData'
+import dictObj from '@/store/dictData'
 
 export default {
-  name: 'shop',
+  name: 'shopMerchant',
   mixins: [mixinTable],
   data(vm) {
     return {
       tableInnerBtns: [{
+        width: 150,
         name: '编辑',
         icon: 'el-icon-edit',
         handle(row) {
-          // TODO...
-          vm.routerLink(`/shop/detail/${row.id}`)
+          vm.routerLink(`/channel/merchant/detail/${row.id}`)
         }
       },
       {
         name: '删除',
         icon: 'el-icon-delete',
         handle(row) {
-          const { name, id } = row
-          vm.confirmTip(`是否删除【${name}】`, () => {
-            vm.deleteHandle(id)
+          const { businessName, id } = row
+          vm.confirmTip(`是否确定删除【${businessName}】商户`, () => {
+            vm.deleteHandle({ id })
           })
         }
       }],
       // 表格内操作按钮
       tableHeader: [
         {
-          label: '门店Id',
-          prop: 'shopId'
+          label: '商户编码',
+          prop: 'businessCode'
         },
         {
-          label: '门店名称',
-          prop: 'shopName'
+          label: '商户名称',
+          prop: 'businessName',
+          search: {
+            type: 'input'
+          }
         },
         {
-          label: '门店类型',
-          prop: 'shopType'
+          label: '企业名称',
+          prop: 'companyName',
+          search: {
+            type: 'input'
+          }
         },
         {
-          label: '联系人',
-          prop: 'contact'
+          label: '商户类型',
+          prop: 'businessType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.businessType, 'shopTypeList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.shopTypeList
+          }
         },
         {
-          label: '联系手机',
-          prop: 'contactTel'
+          label: '负责人',
+          prop: 'responsibleName',
+          search: {
+            type: 'input'
+          }
         },
         {
-          label: '经营方式',
-          prop: 'opCreator'
-        },
-        {
-          label: '关联商户',
-          prop: 'opCreator'
-        },
-        {
-          label: '状态',
-          prop: 'opCreator'
+          label: '联系方式',
+          prop: 'responsiblePhone',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '更新人',
@@ -116,7 +133,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.shop.queryShopList({
+      this.$api.channel.queryBusinessList({
         ...searchDate,
         ...other,
         ...page
@@ -135,10 +152,10 @@ export default {
 		 * 删除单条表格数据
 		 * @id {Number}
 		 */
-    deleteHandle(id) {
-      this.$api.shop.deleteShop({ id }).then(() => {
+    deleteHandle(params) {
+      this.$api.channel.deleteBusiness(params).then(() => {
         this.$msgTip('删除成功')
-        this.fetchData()
+        this.delResetData()
       })
     }
   }
