@@ -154,7 +154,8 @@ export default {
       this.$api.marketing.getCouponRuleList({
         ...searchDate,
         ...other,
-        ...page
+        ...page,
+        platformList: ['yssp']
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {

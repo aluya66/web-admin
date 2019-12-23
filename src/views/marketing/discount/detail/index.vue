@@ -175,7 +175,7 @@ export default {
           this.setTagsViewTitle()
           if (res) {
             res.platformList = res.platformList[0] // 处理渠道单选 接口返回list后处理为字符串
-            res.storeCodes = res.storeCodes.map((item) => Number(item))
+            res.storeCodes = res.storeCodes && res.storeCodes.map((item) => Number(item))
             this.$refs.ruleRef.getShopList(res.platformList)
             if (res.activityTime && res.activityEndTime) {
               res.activateDate = [res.activityTime, res.activityEndTime]
