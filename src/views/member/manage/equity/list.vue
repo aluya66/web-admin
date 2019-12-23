@@ -47,11 +47,11 @@ export default {
       tableHeader: [
         {
           label: '权益id',
-          prop: 'id'
+          prop: 'code'
         },
         {
           label: '权益名称',
-          prop: 'typeName'
+          prop: 'name'
         },
         {
           label: '权益说明',
@@ -59,6 +59,10 @@ export default {
           vHtml(row) {
             return row.type === 2 ? `<p>${row.description}</p><p>发券:${row.sendCoupon}</p><p>有效期:${row.expired}</p>` : row.description
           }
+        },
+        {
+          label: '关联活动',
+          prop: 'contactActivity'
         },
         {
           label: '权益类型',
