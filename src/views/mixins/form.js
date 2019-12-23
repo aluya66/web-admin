@@ -11,10 +11,12 @@ export default {
       callback()
     }
     const checkNumber = (rule, value, callback) => {
-      if (value && Number(value) >= 0) {
+      if (!value) {
+        return callback(new Error('字段不能为空'))
+      } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
         callback()
       } else {
-        callback(new Error('请输入数字'))
+        return callback(new Error('请输入0～9999999.99，且最多两位小数的有效数字'))
       }
     }
     return {

@@ -24,6 +24,19 @@ export const isInteger = val => val && !/^[1-9]\d*$/.test(val)
 export const isArray = arr => Array.isArray(arr)
 
 /**
+ * 将数字转换为千分位显示
+ * // 先提取整数部分，对整数部分添加分隔符
+ * @param {*} num
+ */
+export const setNumToThousand = num => num.toString().replace(/\d+/, n => n.replace(/(\d)(?=(\d{3})+$)/g, $1 => $1 + ','))
+
+/**
+ * 设置金额格式为数字
+ * @param {*} val
+ */
+export const setThousandToNum = val => val && val.trim().replace(/,/g, '')
+
+/**
  * 路由打开新窗口
  * 还可以通过<router-link target="_blank" 和 <a target="_blank"这两种方式开新窗口
  */
@@ -417,6 +430,8 @@ export default {
   getUrlParam,
   openNewWin,
   goToLogin,
+  setNumToThousand,
+  setThousandToNum,
   handleDate,
   Event
 }

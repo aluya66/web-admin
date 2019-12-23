@@ -103,28 +103,35 @@ export default {
   },
   data(vm) {
     const checkNumber = (rule, value, callback) => {
-      if (!value || (!Number(value) && Number(value) !== 0) || Number(value) < 0) {
-        return callback(new Error('手续费为正数字或零'))
+      if (!value) {
+        return callback(new Error('手续费不能为空'))
+      } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
+        if (Number(vm.initData.extractAmount) < Number(value)) {
+          return callback(new Error('手续费不能大于提现金额'))
+        }
+        if (vm.formModel.checkAmount && Number(vm.initData.extractAmount) < Number(value) + Number(vm.formModel.checkAmount)) {
+          return callback(new Error('手续费与审核金额之和不能大于提现金额'))
+        }
+        callback()
+      } else {
+        return callback(new Error('手续费为0～9999999.99，且最多两位小数的有效数字'))
       }
-      if (Number(vm.initData.extractAmount) < Number(value)) {
-        return callback(new Error('手续费不能大于提现金额'))
-      }
-      if (vm.formModel.checkAmount && Number(vm.initData.extractAmount) < Number(value) + Number(vm.formModel.checkAmount)) {
-        return callback(new Error('手续费与审核金额之和不能大于提现金额'))
-      }
-      callback()
     }
+
     const checkAmountNumber = (rule, value, callback) => {
-      if (!value || !Number(value) || Number(value) < 0) {
-        return callback(new Error('审核金额为正数字'))
+      if (!value) {
+        return callback(new Error('审核金额不能为空'))
+      } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{1,2})$/.test(value)) {
+        if (Number(vm.initData.extractAmount) < Number(value)) {
+          return callback(new Error('审核金额不能大于提现金额'))
+        }
+        if ((vm.formModel.checkServiceFee || Number(vm.formModel.checkServiceFee) === 0) && Number(vm.initData.extractAmount) < Number(value) + Number(vm.formModel.checkServiceFee)) {
+          return callback(new Error('审核金额与手续费之和不能大于提现金额'))
+        }
+        callback()
+      } else {
+        return callback(new Error('审核金额为大于0～9999999.99，且最多两位小数的有效数字'))
       }
-      if (Number(vm.initData.extractAmount) < Number(value)) {
-        return callback(new Error('审核金额不能大于提现金额'))
-      }
-      if ((vm.formModel.checkServiceFee || Number(vm.formModel.checkServiceFee) === 0) && Number(vm.initData.extractAmount) < Number(value) + Number(vm.formModel.checkServiceFee)) {
-        return callback(new Error('审核金额与手续费之和不能大于提现金额'))
-      }
-      callback()
     }
     return {
       size: 'small',
