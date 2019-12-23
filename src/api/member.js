@@ -207,3 +207,23 @@ export const exportMember = params =>
     responseType: 'arraybuffer',
     hasErrMsg: true
   })
+
+/**
+ * 分销结算列表
+ * @param {*}
+ */
+export const queryEarningslist = params =>
+  Http.fetch(`${context}/api/earnings/earningslist`, params, {
+    method: 'get'
+  })
+
+/**
+ * 导出分销结算列表
+ * @param {*} params
+ */
+export const exportEarnings = params =>
+  Http.fetch(`${context}/api/earnings/export`, params, {
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
+  })

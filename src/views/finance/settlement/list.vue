@@ -3,13 +3,13 @@
     <template v-slot:header>
       <div class="title">{{$route.meta.name || $t(`route.${$route.meta.title}`)}}</div>
       <div class="header-btn">
-        <!-- <el-button
+        <el-button
           :size="size"
           type="primary"
           :loading="exportLoading"
           icon="el-icon-download"
           @click="exportFile"
-        >导出</el-button> -->
+        >导出</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -52,6 +52,7 @@
 <script>
 import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
+import utils from 'utils'
 
 export default {
   name: 'financeSettlement',
@@ -137,6 +138,29 @@ export default {
     this.fetchData()
   },
   methods: {
+    exportFile() {
+      const { dateTime, ...other } = this.searchObj
+      const { totalNum } = this.pageInfo
+      const searchDate = this.getSearchDate(dateTime)
+      this.exportLoading = true
+      this.$api.member.exportEarnings({
+        ...searchDate,
+        ...other,
+        total: totalNum
+      }).then(res => {
+        this.exportLoading = false
+        if (res) {
+          const { data, filename } = res
+          if (data && filename) {
+            utils.createBlobFile(data, filename)
+          } else {
+            this.$msgTip('导出数据异常', 'warning')
+          }
+        } else {
+          this.$msgTip('导出数据失败', 'warning')
+        }
+      })
+    },
     /*
 	   * 查询表格列表数据
 	   */
@@ -145,7 +169,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.finance.queryEarningslist({
+      this.$api.member.queryEarningslist({
         ...searchDate,
         ...other,
         ...page
@@ -160,16 +184,6 @@ export default {
         } else {
           this.tableList = res || []
         }
-      })
-    },
-    /**
-		 * 删除单条表格数据
-		 * @id {Number}
-		 */
-    deleteHandle(id) {
-      this.$api.finance.deleteFinance({ id }).then(() => {
-        this.$msgTip('删除成功')
-        this.fetchData()
       })
     }
   }

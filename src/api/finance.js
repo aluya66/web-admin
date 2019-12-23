@@ -64,12 +64,3 @@ export const checkExtract = params =>
   Http.fetch(`${context}/api/userextractdetail/checkextract`, params, {
     method: 'put'
   })
-
-/**
- * 分销结算列表
- * @param {*}
- */
-export const queryEarningslist = params =>
-  Http.fetch(`${context}/api/earnings/earningslist`, params, {
-    method: 'get'
-  })
