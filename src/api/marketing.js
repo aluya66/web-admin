@@ -195,7 +195,9 @@ export const addRedeemCode = params =>
 // 【星购卡】 导出记录中下载兑换码
 export const exportExportRecord = params =>
   Http.fetch(`${context}/api/mks/coupon/card/store/report`, params, {
-    method: 'get'
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
   })
 
 // 【星购卡】 导出记录列表

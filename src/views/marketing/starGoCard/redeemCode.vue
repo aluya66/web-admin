@@ -78,7 +78,7 @@ export default {
               title: '导出兑换码'
             }
             vm.formModel = {
-              couponRuleId: row.couponId,
+              couponDetailId: row.couponDetailId,
               couponNumber: ''
             }
           }
