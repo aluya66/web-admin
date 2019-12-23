@@ -4,7 +4,7 @@
       <el-select
         v-model="checkedAttr"
         filterable
-        value-key="id"
+        value-key="userId"
         multiple
         reserve-keyword
         :remote-method="remoteMethod"
