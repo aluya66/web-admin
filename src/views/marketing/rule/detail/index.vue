@@ -344,7 +344,7 @@ export default {
       // 发券渠道暂只能选择YOSHOP，其他平台后续业务再对接
       this.$api.member.getMember({
         pageNo: 1,
-        pageSize: 100,
+        pageSize: 1000,
         appCode: 'yssp',
         name: val
       }).then(res => {

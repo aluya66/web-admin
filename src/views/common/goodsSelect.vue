@@ -253,6 +253,7 @@ export default {
       this.isLoading = true
       this.$api.channel
         .getGoodsListByChannel({
+          ...this.searchObj,
           ...this.paramsObj,
           ...page
         })
