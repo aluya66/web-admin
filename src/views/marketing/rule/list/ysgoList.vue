@@ -99,7 +99,8 @@ export default {
       this.$api.marketing.queryStarRuleList({
         ...searchDate,
         ...other,
-        ...page
+        ...page,
+        platformList: ['ysgo'],
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {

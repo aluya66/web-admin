@@ -6,6 +6,7 @@
     <div class="content">
       <div class="source">
         <c-table
+          ref="goodsTableRef"
           selection
           expand
           hasBorder
@@ -110,14 +111,14 @@ export default {
         }
       ],
       selectedSkuTableInnerBtns: [
-        {
-          width: 150,
-          name: '删除',
-          icon: 'el-icon-delete',
-          handle(row) {
-            vm.deleteSelectedItem(row, 'skus')
-          }
-        }
+        // {
+        //   width: 150,
+        //   name: '删除',
+        //   icon: 'el-icon-delete',
+        //   handle(row) {
+        //     vm.deleteSelectedItem(row, 'skus')
+        //   }
+        // }
       ],
       tableInnerBtns: [
         // {
@@ -201,17 +202,23 @@ export default {
   methods: {
     // 删除已选择的列表数据
     deleteSelectedItem(row, type) {
-      const goodsBn = row.goodsBn // 商品sku
+      const goodsBn = row.goodsBn // 商品goodsBn
       const idx = this.checkedAttr.findIndex((item) => item.goodsBn === goodsBn)
+      const tableIdx = this.tableList.findIndex((item) => item.goodsBn === goodsBn)
+      const targetRef = `skuRef${goodsBn}` // 子table
       if (type === 'goods') { // 删除商品
-        if (idx !== -1) this.checkedAttr.splice(idx, 1)
+        tableIdx !== -1 && this.$refs.goodsTableRef.$refs.multipleTable.toggleRowSelection(this.tableList[tableIdx], false)
+        idx !== -1 && this.checkedAttr.splice(idx, 1)
+        this.$refs[targetRef] && this.$refs[targetRef].$refs.multipleTable.clearSelection() // 取消选中sku
       } else { // 删除sku
         if (idx !== -1) {
           let arr = this.checkedAttr[idx].skuList
           const skuIdx = arr.findIndex((item) => item.goodsSkuSn === row.goodsSkuSn)
           if (skuIdx !== -1) {
+            const targetRef = `skuRef${goodsBn}`
+            this.$refs[targetRef].$refs.multipleTable.toggleRowSelection(arr.skuList[skuIdx], false) // 取消选中sku
             arr.splice(skuIdx, 1)
-            if (!arr.length) this.checkedAttr.splice(idx, 1)
+            !arr.length && this.checkedAttr.splice(idx, 1)
           }
         }
       }
@@ -225,8 +232,6 @@ export default {
         }
       })
       this.$emit('handle-select', rows)
-      // let targetRef = `skuRef${rows[0].skus[0].goodsBn}`
-      // this.$refs[targetRef] && this.$refs[targetRef].selectAll();
     },
     handleSkuList(rows) {
       if (!rows.length) return
