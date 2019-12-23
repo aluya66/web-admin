@@ -402,9 +402,9 @@ export default {
           issueTimeEnd,
           marketLimitUser
         } = res
-        couponDetails = couponDetails.map((item) => {
+        couponDetails = couponDetails ? couponDetails.map((item) => {
           let info = ''
-          if (item.marketPreferentialRules.length) {
+          if (item.marketPreferentialRules && item.marketPreferentialRules.length) {
             const target = item.marketPreferentialRules[0]
             switch (target.preferentialType) {
               case 0:
@@ -422,9 +422,9 @@ export default {
               info
             }
           }
-        })
+        }) : []
         let memberType = []
-        if (marketLimitUser.userLimitTypes && marketLimitUser.userLimitTypes.length) {
+        if (marketLimitUser && marketLimitUser.userLimitTypes && marketLimitUser.userLimitTypes.length) {
           marketLimitUser.userLimitTypes.forEach((item) => {
             switch (item) {
               case 1:
@@ -466,7 +466,7 @@ export default {
         if (receiveType === 2) { // 手动领券
           Object.assign(params, { receiveTimeType, limitReceive })
         }
-        if (marketLimitUser.members && marketLimitUser.members.length) {
+        if (marketLimitUser && marketLimitUser.members && marketLimitUser.members.length) {
           Object.assign(params, { selectedCustomerList: marketLimitUser.members })
         }
         this.formModel = params
@@ -495,12 +495,12 @@ export default {
             issueTime // 发券时间类型为 32 固定日期时间
           } = this.formModel
           // 处理优惠券列表数据
-          let couponDetailsArr = couponDetails.map((item) => {
+          let couponDetailsArr = couponDetails ? couponDetails.map((item) => {
             return {
               couponRuleId: item.couponId,
               couponNumber: item.couponNumber ? item.couponNumber : ''
             }
-          })
+          }) : []
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
           let userLimitTypes = [] // 发券对象
           memberType.forEach((item) => {

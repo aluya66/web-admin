@@ -123,6 +123,7 @@ export default {
         icon: 'table',
         noCache: true,
         title: 'ruleInfo',
+        activeMenu: '/marketing/rule/list',
         roles: ['admin']
       }
     }, {
