@@ -81,6 +81,10 @@ or
 		proxy_pass  http://upms.yosar.develop/   （获取ipx菜单服务地址）
 	}
 
+	location /api-upload {
+		proxy_pass  http://pillar-admin.yosar.develop/   （获取上传服务地址，不走网管）
+	}
+
 	// 在VUE_APP_BASEURLPATH为/console-admin,VUE_APP_ROUTEMODEL为history时，
 	location /console-admin {
 		try_files $uri $uri/ /console-admin/index.html;
