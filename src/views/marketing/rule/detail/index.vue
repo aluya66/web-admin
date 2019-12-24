@@ -248,9 +248,14 @@ export default {
           id: 'allCustomer'
         },
         {
-          label: '全部会员',
+          label: '指定会员',
           type: 2,
           id: 'allMember'
+        },
+        {
+          label: '指定用户',
+          type: 16,
+          id: 'selectedCustomer'
         },
         {
           label: '非会员',

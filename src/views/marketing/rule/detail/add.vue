@@ -95,7 +95,8 @@ export default {
       this.$api.marketing.getCoupon({
         ...this.searchObj,
         pageNo: 1,
-        pageSize: 100
+        pageSize: 100,
+        status: 5 // 进行中的优惠券
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {

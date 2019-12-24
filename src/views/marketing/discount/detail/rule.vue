@@ -57,7 +57,6 @@
         <el-button size="small" @click="showDialog('goods', '选择商品')">选择商品</el-button>
         <div class="selected-box">
           <c-table
-            expand
             noPage
             hasBorder
             :max-height="400"
@@ -66,35 +65,35 @@
             :table-header="tableHeader"
             :table-list="formModel.selectedGoodsList"
             :table-inner-btns="selectedTableInnerBtns"
-          >
-            <template v-slot:expand="{props}">
-              <c-table
-                hasBorder
-                noPage
-                :max-height="400"
-                size="medium"
-                :loading="isLoading"
-                :table-header="skuTableHeader"
-                :table-list="props.skuList"
-                :table-inner-btns="selectedSkuTableInnerBtns"
-              ></c-table>
-            </template>
-          </c-table>
+            :rowStyle="{height:0}"
+            :cellStyle="{padding:0}"
+          ></c-table>
         </div>
       </el-form-item>
       <el-form-item label="选择用户类型">
-        <el-checkbox-group v-model="formModel.memberType">
-          <el-checkbox
+        <el-radio-group v-model="formModel.customerType">
+          <el-radio
             class="checkbox-item"
-            :label="item.id"
+            :label="item.type"
             :checked="item.checked"
-            v-for="(item, index) in memberTypeList"
+            v-for="(item, index) in customerTypeList"
             :key="index"
-          >{{ item.label }}</el-checkbox>
-        </el-checkbox-group>
+          >{{ item.label }}</el-radio>
+        </el-radio-group>
+        <el-form-item label>
+          <el-checkbox-group v-model="formModel.memberType" v-if="formModel.customerType === 2">
+            <el-checkbox
+              class="checkbox-item"
+              :label="item.id"
+              :checked="item.checked"
+              v-for="(item, index) in memberTypeList"
+              :key="index"
+            >{{ item.label }}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
       </el-form-item>
-      <el-form-item label="指定用户:">
-        <el-button size="small" @click="showDialog('customer', '选择用户')" >选择用户</el-button>
+      <el-form-item label="指定用户:" v-if="formModel.customerType === 16">
+        <el-button size="small" @click="showDialog('customer', '选择用户')">选择用户</el-button>
         <div>
           <el-tag
             class="tag-item"
@@ -118,6 +117,7 @@ export default {
   mixins: [MixinForm, mixinTable, MixinFormCard],
   data(vm) {
     return {
+      memberTypeList: [],
       skuTableHeader: [
         {
           label: '编号',
@@ -202,16 +202,21 @@ export default {
         label: '加盟店',
         value: 3
       }],
-      memberTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
+      customerTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
           label: '全部用户',
           type: 1,
           id: 'allCustomer'
         },
         {
-          label: '全部会员',
+          label: '指定会员',
           type: 2,
           id: 'allMember'
+        },
+        {
+          label: '指定用户',
+          type: 16,
+          id: 'selectedCustomer'
         },
         {
           label: '非会员',
@@ -226,12 +231,12 @@ export default {
     }
   },
   beforeMount() {
-    utils.Event.$on('updateGoodsList', (val) => {
-      Object.assign(this.formModel, { selectedGoodsList: val })
-    })
-    utils.Event.$on('updateCustomerList', (val) => {
-      Object.assign(this.formModel, { selectedCustomerList: val })
-    })
+    // utils.Event.$on('updateGoodsList', (val) => {
+    //   Object.assign(this.formModel, { selectedGoodsList: val })
+    // })
+    // utils.Event.$on('updateCustomerList', (val) => {
+    //   Object.assign(this.formModel, { selectedCustomerList: val })
+    // })
 
     if (this.formModel.platformList) {
       this.getShopList(this.formModel.platformList)
@@ -245,8 +250,7 @@ export default {
     // 类型4为接口请求获得， 16为指定用户选中后保存时候添加
     getMemberType() {
       this.$api.member.getMemberListType().then(res => {
-        const membertTypeArr = res && res.map(val => ({ label: val.name, id: val.id, type: 4 }))
-        this.memberTypeList = this.memberTypeList.concat(membertTypeArr)
+        this.memberTypeList = res && res.map(val => ({ label: val.name, id: val.id, type: 4 }))
       })
     },
     // 删除已选择的列表数据
@@ -309,6 +313,9 @@ export default {
   }
   .tag-item {
     margin: 5px;
+  }
+  .selected-box {
+    width: 40vw;
   }
 }
 </style>

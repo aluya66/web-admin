@@ -119,7 +119,7 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-button @click="addRules">添加</el-button>
+            <el-button class="rule-btn" @click="addRules">添加</el-button>
           </el-row>
         </el-form-item>
       </template>
@@ -173,7 +173,7 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-button @click="addRules">添加</el-button>
+            <el-button class="rule-btn" @click="addRules">添加</el-button>
           </el-row>
         </el-form-item>
       </template>
@@ -208,7 +208,7 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-button @click="addRules">添加</el-button>
+            <el-button class="rule-btn" @click="addRules">添加</el-button>
           </el-row>
         </el-form-item>
       </template>
@@ -369,6 +369,9 @@ export default {
   }
   .discount-item{
     width: 100%;
+  }
+  .rule-btn {
+    margin-top: 15px;
   }
 }
 </style>

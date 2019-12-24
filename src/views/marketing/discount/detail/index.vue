@@ -52,13 +52,13 @@
         <customer-select
           ref="childRef"
           v-if="dialogObj.type === 'customer'"
-          :sourceList="memberList"
+          :paramsObj="goodsTableParamsObj"
           :initChecked="formModel.selectedCustomerList"
-          @RemoteMethod="getMember"
         ></customer-select>
         <goods-select
           v-if="dialogObj.type === 'goods'"
           ref="childRef"
+          expand
           :paramsObj="goodsTableParamsObj"
           :initChecked="formModel.selectedGoodsList"
         />
@@ -76,7 +76,7 @@ import GApply from './apply'
 import customerSelect from '../../../common/customerSelect'
 import goodsSelect from '../../../common/goodsSelect'
 import CDialog from 'components/dialog'
-import utils from 'utils'
+// import utils from 'utils'
 
 export default {
   name: 'discountDetail',
@@ -188,21 +188,19 @@ export default {
             if (res.marketUseProductRule.useCategoryCodes && res.marketUseProductRule.useAllCategoryCodes) {
               res.marketUseProductRule.useCategoryCodes = res.marketUseProductRule.useAllCategoryCodes
             }
-            let memberType = []
+            let customerType = '' // 指定用户类型
+            let memberType = [] // 会员类型
             if (res.marketLimitUser && res.marketLimitUser.userLimitTypes && res.marketLimitUser.userLimitTypes.length) {
               res.marketLimitUser.userLimitTypes.forEach((item) => {
                 switch (item) {
                   case 1:
-                    memberType.push('allCustomer')
-                    break
                   case 2:
-                    memberType.push('allMember')
-                    break
                   case 8:
-                    memberType.push('notMember')
+                  case 16:
+                    customerType = item
                     break
                   case 4:
-                    memberType = memberType.concat(res.marketLimitUser.userLeveIds ? res.marketLimitUser.userLeveIds : [])
+                    memberType = res.marketLimitUser.userLeveIds ? res.marketLimitUser.userLeveIds : []
                     break
                 }
               })
@@ -217,7 +215,7 @@ export default {
             if (res.marketUseProductRule && res.marketUseProductRule.goodSkuList) {
               selectedGoodsList.push(res.marketUseProductRule.goodSkuList.map((item) => ({ ...item, isSelected: false, skuList: item.skus })))
             }
-            this.formModel = { ...res, memberType, selectedGoodsList: selectedGoodsList.flat(), shopType: 2 }
+            this.formModel = { ...res, memberType, customerType, selectedGoodsList: selectedGoodsList.flat(), shopType: 2 }
             console.log(this.formModel)
             this.goodsTableParamsObj = { appCode: this.formModel.platformList }
           } else {
@@ -230,13 +228,16 @@ export default {
       const type = this.dialogObj.type
       const selectedArr = this.$refs.childRef.checkedAttr
       if (type === 'goods') { // 商品
-        this.formModel.selectedGoodsList = JSON.parse(JSON.stringify(selectedArr))
-        utils.Event.$emit('updateGoodsList', selectedArr)
+        this.formModel.selectedGoodsList = selectedArr
+        // this.formModel.selectedGoodsList = JSON.parse(JSON.stringify(selectedArr))
+        // utils.Event.$emit('updateGoodsList', selectedArr)
       } else { // 用户
         // 选择用户
-        this.formModel.selectedCustomerList = JSON.parse(JSON.stringify(selectedArr))
-        utils.Event.$emit('updateCustomerList', selectedArr)
+        this.formModel.selectedCustomerList = selectedArr
+        // this.formModel.selectedCustomerList = JSON.parse(JSON.stringify(selectedArr))
+        // utils.Event.$emit('updateCustomerList', selectedArr)
       }
+      this.formModel = JSON.parse(JSON.stringify(this.formModel))
       this.dialogObj.isShow = false
     },
     showDialog(type, title) {
@@ -266,7 +267,8 @@ export default {
           } = this.$refs.basicRef.formModel
           let {
             storeCodes, // 门店
-            memberType, // 发券对象
+            customerType, // 用户类型
+            memberType, // 指定的会员
             selectedCustomerList, // 指定用户
             selectedGoodsList, // 选择的商品
             marketUseProductRule // 规则设置
@@ -313,17 +315,19 @@ export default {
             marketUseProductRule.useProductSkuCodes = skuList.flat()
           }
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
-          let userLimitTypes = [] // 发券对象
-          const memberTypeList = this.$refs.ruleRef.memberTypeList // 会员列表
-          memberType.forEach((item) => {
+          let userLimitTypes = [customerType] // 发券对象， 单选的用户类型
+          // const customerTypeList = this.$refs.ruleRef.customerTypeList // 用户类型
+          memberType && memberType.forEach((item) => {
+            userLeveIds.push(item) // 指定会员
+            userLimitTypes.push(4)
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
-            const target = memberTypeList.find((val) => val.id === item)
-            if (item === 'allCustomer' || item === 'allMember' || item === 'notMember') {
-              userLimitTypes.push(target.type)
-            } else {
-              userLeveIds.push(target.id)
-              userLimitTypes.push(4)
-            }
+            // const target = customerTypeList.find((val) => val.id === item)
+            // if (item === 'allCustomer' || item === 'allMember' || item === 'notMember') {
+            //   userLimitTypes.push(target.type)
+            // } else {
+            //   userLeveIds.push(target.id)
+            //   userLimitTypes.push(4)
+            // }
           })
           // 发券对象, 会员等级type有重复，过滤
           userLimitTypes = Array.from(new Set(userLimitTypes))
@@ -331,7 +335,7 @@ export default {
           if (selectedCustomerList && selectedCustomerList.length) {
             userIds = selectedCustomerList.map((item) => item.userId)
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
-            userLimitTypes.push(16)
+            // userLimitTypes.push(16)
           }
           // 处理领券对象、指定用户数据
           let marketLimitUser = {

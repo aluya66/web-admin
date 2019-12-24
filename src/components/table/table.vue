@@ -16,13 +16,16 @@
       @selection-change="handleSelectionChange"
       @current-change="handleSingleChange"
       @expand-change="handleExpandChange"
+      :row-style="rowStyle"
+      :cell-style="cellStyle"
+      :header-cell-style="headerCellStyle"
     >
-      <el-table-column v-if="selection" :align="align" type="selection" width="55" />
       <el-table-column v-if="expand" :align="align" type="expand" width="55">
         <template slot-scope="scope">
           <slot name="expand" :props="scope.row" />
         </template>
       </el-table-column>
+      <el-table-column v-if="selection" :align="align" type="selection" width="55" />
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
@@ -193,7 +196,10 @@ export default {
       type: Boolean,
       default: false
     },
-    maxHeight: Number
+    maxHeight: Number,
+    rowStyle: Object,
+    cellStyle: Object,
+    headerCellStyle: Object
   },
   data() {
     return {

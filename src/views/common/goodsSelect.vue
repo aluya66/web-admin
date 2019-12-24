@@ -2,13 +2,14 @@
   <div class="goods-select">
     <div class="header">
       <div class="title title-left">商品列表</div>
+      <div class="title title-right">已选商品:【 {{checkedAttr.length}} 】</div>
     </div>
     <div class="content">
       <div class="source">
         <c-table
           ref="goodsTableRef"
           selection
-          expand
+          :expand="expand"
           hasBorder
           :max-height="400"
           :size="size"
@@ -17,6 +18,8 @@
           :table-list="tableList"
           :page-info="pageInfo"
           :table-inner-btns="tableInnerBtns"
+          :rowStyle="{height:0}"
+          :cellStyle="{padding:0}"
           @change-pagination="changePagination"
           @selection-handle="handleSelect"
         >
@@ -30,6 +33,7 @@
           </template>
           <template v-slot:expand="{props}">
             <c-table
+              class="sku-table"
               :ref="'skuRef' + props.goodsBn"
               hasBorder
               selection
@@ -39,16 +43,17 @@
               :loading="isLoading"
               :table-header="skuTableHeader"
               :table-list="props.skus"
+              :rowStyle="{height:0}"
+              :cellStyle="{padding:0}"
+              :headerCellStyle="{height:0,padding:0}"
               @selection-handle="handleSkuList"
             ></c-table>
           </template>
         </c-table>
       </div>
       <div class="dist">
-        <div class="title">已选商品:【 {{checkedAttr.length}} 】</div>
         <div class="selected-box">
           <c-table
-            expand
             noPage
             hasBorder
             :max-height="400"
@@ -58,7 +63,7 @@
             :table-list="checkedAttr"
             :table-inner-btns="selectedTableInnerBtns"
           >
-            <template v-slot:expand="{props}">
+            <!-- <template v-slot:expand="{props}">
               <c-table
                 hasBorder
                 noPage
@@ -69,7 +74,7 @@
                 :table-list="props.skuList"
                 :table-inner-btns="selectedSkuTableInnerBtns"
               ></c-table>
-            </template>
+            </template>-->
           </c-table>
         </div>
       </div>
@@ -83,6 +88,10 @@ export default {
   mixins: [mixinTable],
   props: {
     disabled: Boolean,
+    expand: { // 是否有展开行
+      type: Boolean,
+      default: false
+    },
     paramsObj: { // 额外参数集
       type: Object,
       default() {
@@ -102,7 +111,7 @@ export default {
       dialogObj: {},
       selectedTableInnerBtns: [
         {
-          width: 150,
+          width: 80,
           name: '删除',
           icon: 'el-icon-delete',
           handle(row) {
@@ -136,34 +145,14 @@ export default {
           prop: 'goodsSkuSn'
         },
         {
-          label: '尺码',
-          prop: 'attributeSpecValue'
-        },
-        {
-          label: '颜色',
-          prop: 'attributeColorValue'
-        },
-        {
-          label: '图片',
-          isImage: true,
-          width: 100,
-          prop: 'imageUrl'
+          label: '规格',
+          formatter(row) {
+            return row.attributeColorValue + ' ' + row.attributeSpecValue
+          }
         },
         {
           label: '零售价',
           prop: 'retailPrice'
-        },
-        {
-          label: '会员价',
-          prop: 'memberPrice'
-        },
-        {
-          label: '散批价',
-          prop: 'wholesalePrice'
-        },
-        {
-          label: '大批价',
-          prop: 'largeBatchPrice'
         }
       ],
       tableHeader: [
@@ -224,13 +213,12 @@ export default {
       }
     },
     handleSelect(rows) {
-      if (!rows.length) return
-      this.checkedAttr = rows.map((item) => { // 设置商品被选中标识
+      this.checkedAttr = rows ? rows.map((item) => { // 设置商品被选中标识
         return {
           ...item,
           isSelected: true
         }
-      })
+      }) : []
       this.$emit('handle-select', rows)
     },
     handleSkuList(rows) {
@@ -280,8 +268,16 @@ export default {
   }
 }
 </script>
-
+<style lang="less">
+.el-table__expanded-cell {
+  padding: 0 !important;
+}
+</style>
 <style lang='less' scoped>
+.sku-table {
+  margin-top: 0;
+  margin-left: 54px;
+}
 .goods-select {
   border: 1px solid @border-default;
   border-radius: 4px;
@@ -289,37 +285,31 @@ export default {
     display: flex;
     border-bottom: 1px solid @border-default;
     .title {
-      flex: 1;
       font-size: @f16;
       font-weight: bold;
       padding: 16px 0;
       text-align: center;
-    }
-    .title-left {
-      flex: 50%;
-      border-right: 1px solid @border-default;
+      &.title-left {
+        width: 60%;
+        border-right: 1px solid @border-default;
+      }
+      &.title-right {
+        width: 40%;
+      }
     }
   }
   .content {
     display: flex;
-    flex-direction: column;
     .source {
-      flex-direction: row;
+      width: 60%;
       padding: 15px;
       border-right: 1px solid @border-default;
       border-bottom: 1px solid @border-default;
       overflow-y: auto;
     }
     .dist {
-      height: 200px;
+      width: 40%;
       overflow-y: auto;
-      .title {
-        flex: 1;
-        font-size: @f16;
-        font-weight: bold;
-        padding: 16px 0;
-        text-align: center;
-      }
     }
   }
 }
