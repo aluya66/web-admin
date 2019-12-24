@@ -156,15 +156,12 @@ export const validater = {
    * @param {*} callback
    */
   validateEmail (rule, value, callback) {
-    if (value === '') {
-      callback(new Error('请输入邮箱地址'))
+    // if (value === '') {
+    //   callback(new Error('请输入邮箱地址'))
+    // } else
+    if (value && !/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value)) {
+      callback(new Error('请输入有效的邮箱'))
     } else {
-      if (value !== '') {
-        const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-        if (!reg.test(value)) {
-          callback(new Error('请输入有效的邮箱'))
-        }
-      }
       callback()
     }
   },
@@ -192,12 +189,9 @@ export const validater = {
    * 手机号码校验
    */
   phoneNumber (rule, value, callback) {
-    if (
-      value &&
-      (!/^[1][34578]\d{9}$/.test(value) ||
-        !/^[1-9]\d*$/.test(value) ||
-        value.length !== 11)
-    ) {
+    if (!value) {
+      callback(new Error('手机号码不能为空'))
+    } else if (value && (!/^[1][34578]\d{9}$/.test(value) || !/^[1-9]\d*$/.test(value) || value.length !== 11)) {
       callback(new Error('手机号码不符合规范'))
     } else {
       callback()

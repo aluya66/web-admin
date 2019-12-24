@@ -100,7 +100,7 @@ export default {
         ...searchDate,
         ...other,
         ...page,
-        platformList: ['ysgo'],
+        platformList: ['ysgo']
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {

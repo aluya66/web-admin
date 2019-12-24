@@ -279,7 +279,7 @@ export default {
         } else {
           rows.forEach(row => {
             this.$refs.multipleTable.toggleRowSelection(row, true)
-            console.log( this.$refs.multipleTable.toggleRowSelection(row, true))
+            console.log(this.$refs.multipleTable.toggleRowSelection(row, true))
           })
         }
       } else {
