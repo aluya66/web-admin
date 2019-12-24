@@ -102,7 +102,8 @@ export default {
           name: '删除',
           icon: 'el-icon-delete',
           handle(row) {
-            const { activityId, activityName } = row
+            const { activityId, activityName, status } = row
+            if (status === 1) return vm.$msgTip('已启用的折扣活动不能进行删除操作', 'warning')
             vm.confirmTip(`确认删除  ${activityName}  折扣活动`, () => {
               vm.deleteData({ activityId })
             })
