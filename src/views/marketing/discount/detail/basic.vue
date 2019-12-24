@@ -315,7 +315,7 @@ export default {
   },
   methods: {
     changeActivateDayType() {
-      this.formModel.activateDate = ''    
+      this.formModel.activateDate = ''
       this.formModel.activateMonths = []
       this.formModel.activateDays = []
     },

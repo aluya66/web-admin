@@ -103,10 +103,10 @@
             :on-preview="uploadReview"
           >
             <i class="el-icon-plus"></i>
-            <div class="info">只能上传图片png/jepg后缀文件，且不超过10M</div>
+            <div class="info">只能上传png,jpg,jpeg,gif图片文件，且不能大于10M</div>
           </c-upload>
         </el-form-item>
-        <el-form-item label="地址:" prop="companyAddressCode">
+        <el-form-item label="区域地址:" prop="companyAddressCode">
           <el-cascader
             clearable
             class="select-item"
@@ -116,7 +116,7 @@
             filterable
           ></el-cascader>
         </el-form-item>
-        <el-form-item prop="companyAddress">
+        <el-form-item label="详细地址:" prop="companyAddress">
           <el-input
             v-model.trim="formModel.companyAddress"
             placeholder="请输入详细地址"
@@ -186,7 +186,9 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <!-- TODO... 根据需求添加业务对话框处理 -->
+        <div class="preview">
+          <img :src="dialogObj.imageUrl" alt="">
+        </div>
       </c-dialog>
     </div>
   </c-view>
@@ -199,7 +201,6 @@ import CUpload from 'components/upload'
 import CCard from 'components/card'
 import dictObj from '@/store/dictData'
 import utils from 'utils'
-console.log(utils)
 
 export default {
   name: 'shopMerchantInfo',
@@ -234,7 +235,9 @@ export default {
         fileList: [] // 上传图片
       },
       isEdit: false,
-      dialogObj: {},
+      dialogObj: {
+        title: '预览'
+      },
       btnLoading: false,
       rules: {
         businessType: [
@@ -285,7 +288,11 @@ export default {
     },
     // 预览图片
     uploadReview(file) {
-      this.$emit('show-image', file)
+      this.dialogObj = {
+        ...this.dialogObj,
+        imageUrl: file.url,
+        isShow: true
+      }
     },
     fetchAreaData(node = {}, callBack) {
       const { level, value } = node
@@ -421,6 +428,18 @@ export default {
       margin-top: 5px;
       font-size: @f12;
     }
+  }
+}
+.preview {
+  box-sizing: border-box;
+  text-align: center;
+
+  img {
+    object-fit: contain;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

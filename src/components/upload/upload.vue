@@ -131,14 +131,14 @@ export default {
       const hasFile = this.limit > 1 ? this.mutiFiles.getAll('files').find(res => res.uid === uid) : true
       if (hasFile) {
         this.isUpload = true
+        this.limit === 1 && this.$refs[this.uploadRef].clearFiles() // 清空未上传的文件列表
         this.$api.common.uploadFile(this.mutiFiles).then(res => {
           if (res) {
-            let fileList = []
-            fileList = res.map(res => ({
+            let fileList = res ? res.map(res => ({
               name: fileObj.file.name,
               id: res.id,
               url: res.url
-            }))
+            })) : []
             if (this.fileList.length) {
               fileList = this.fileList.concat(fileList)
             }
@@ -197,11 +197,9 @@ export default {
     },
     beforeRemove(file, fileList) {
       if (this.fileType !== 'excel') {
-        if (/\.(png|jpeg|jpg|mp4)$/.test(file.name)) {
-          return this.$emit('before-remove', file, fileList)
-        } else if (/\.(png|jpeg|jpg)$/.test(file.url)) {
+        if (/\.(png|jpeg|jpg|gif)$/.test(file.url)) {
           return this.$confirm(
-            `确定移除 ${file.name}`,
+            `确定移除 ${file.name} 文件`,
             '提示',
             {
               confirmButtonText: '确定',
@@ -219,33 +217,30 @@ export default {
       }
     },
     beforeUpload(file) {
-      if (this.fileType === 'image') {
-        const isJPG = /\.(png|jpeg|jpg)$/.test(file.name)
-        if (isJPG) {
-          return this.showTip(file)
-        } else {
-          this.$message.error('上传图片只能是 png,jpg,jpeg 格式!')
-        }
-      } else if (this.fileType === 'excel') {
+      if (this.limit <= this.fileList.length) {
+        this.$message.warning(`当前限制只能上传 ${this.limit} 个文件`)
+        return false
+      }
+      if (this.fileType === 'excel') {
         const isXlxs = /\.(xlsx|xls)$/.test(file.name)
         if (isXlxs) {
           return this.showTip(file)
         } else {
-          this.$message.error('只能上传.xlsx,.xls格式文件!')
+          this.$message.error('请上传后缀为.xlsx,.xls格式文件!')
         }
       } else if (this.fileType === 'video') {
         const isJPG = /\.(mp4)$/.test(file.name)
         if (isJPG) {
           return this.showTip(file)
         } else {
-          this.$message.error('上传视频只能是 mp4 格式!')
+          this.$message.error('请上传后缀为mp4格式的文件!')
         }
       } else {
-        const isFile = /\.(png|jpeg|jpg|mp4)$/.test(file.name)
-        if (isFile) {
+        const isJPG = /\.(png|jpeg|jpg|gif)$/.test(file.name)
+        if (isJPG) {
           return this.showTip(file)
         } else {
-          this.$message.error('上传图片/视频只能是 png,jpg,jpeg,mp4 格式!')
+          this.$message.error('请上传后缀为png,jpg,jpeg,gif格式的文件!')
         }
       }
       this.$emit('before-upload')
