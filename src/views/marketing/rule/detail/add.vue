@@ -72,13 +72,15 @@ export default {
       if (val) {
         this.selectedCouponList = val.map((item) => {
           let info = ''
-          if (item.marketPreferentialRules && item.marketPreferentialRules[0] && item.marketPreferentialRules[0].preferentialType) {
-            switch (item.marketPreferentialRules[0].preferentialType) {
-              case 0:
-                info = `${item.preferentialLevel}元减${item.preferentialValue}元`
+          const rules = item.marketPreferentialRules
+          if (rules && rules[0] && rules[0].preferentialType) {
+            // 5现金券、1折扣券
+            switch (rules[0].preferentialType) {
+              case 5:
+                info = `${rules[0].preferentialLevel}元减${rules[0].preferentialValue}元`
                 break
               case 1:
-                info = `${item.preferentialLevel}件享${item.preferentialValue}元`
+                info = `${rules[0].preferentialLevel}件享${rules[0].preferentialValue}折`
             }
           }
           return {

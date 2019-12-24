@@ -220,6 +220,7 @@
           :size="size"
           placeholder="请选择活动时间类型"
           :value.sync="formModel.activateDayType"
+          @ChangeQueryDict="changeActivateDayType"
         ></query-dict>
       </el-form-item>
       <el-form-item label="设置固定周期:" prop="activateDate" v-if="formModel.activateDayType === 1">
@@ -234,7 +235,7 @@
           end-placeholder="截止日期"
           :default-time="['00:00:00', '23:59:59']"
           align="right"
-          :disabled="!!formModel.activateMonths.length && !!formModel.activateDays.length"
+          :disabled="!!formModel.activateMonths.length || !!formModel.activateDays.length"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="设置固定月份:" prop="activateMonths" v-if="formModel.activateDayType === 1">
@@ -313,6 +314,11 @@ export default {
     }
   },
   methods: {
+    changeActivateDayType() {
+      this.formModel.activateDate = ''    
+      this.formModel.activateMonths = []
+      this.formModel.activateDays = []
+    },
     changeChannel(appCode) {
       this.$emit('ChangeChannel', appCode)
     },
