@@ -536,7 +536,7 @@ export default {
           // 发券对象, 会员等级type有重复，过滤
           userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
-          if (selectedCustomerList.length) {
+          if (selectedCustomerList && selectedCustomerList.length) {
             userIds = selectedCustomerList.map((item) => item.userId)
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             userLimitTypes.push(16)
