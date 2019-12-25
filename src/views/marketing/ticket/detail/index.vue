@@ -31,6 +31,7 @@
           class="form-item"
           v-model.trim="formModel.couponName"
           :size="size"
+          maxlength="20"
           placeholder="请输入卡券名称"
           clearable
         />
@@ -210,9 +211,10 @@
         />
       </el-form-item>
       <el-form-item label="适用商品:">
+        <!-- 卡券类型5、6、7 或 未选择渠道 或 卡券类型为兑换券禁用 -->
         <el-radio-group
           v-model="formModel.fitGoodsType"
-          :disabled="(ticketType === 5 || ticketType === 6 || ticketType === 7) || !formModel.platformList.length"
+          :disabled="(ticketType === 5 || ticketType === 6 || ticketType === 7) || !formModel.platformList.length || formModel.preferentialType === 3"
         >
           <el-radio
             v-for="item in fitGoodsTypeArr"
@@ -223,7 +225,7 @@
         <!-- 指定商品开始 -->
         <goodsSelect
           ref="goodsSelectRef"
-          v-if="formModel.fitGoodsType === 1"
+          v-if="formModel.fitGoodsType === 1 && formModel.platformList.length"
           :paramsObj="goodsParamsObj"
           :initChecked="formModel.selectedGoodsList"
         />
@@ -322,7 +324,10 @@ export default {
     // 切换卡券类型
     changeTicketType(val) {
       // 过滤兑换券类型
-      if (val === 3) return
+      if (val === 3) {
+        this.formModel.fitGoodsType = 1
+        return
+      }
       this.formModel.marketPreferentialRules = []
       let obj = {
         preferentialLevel: '', // 优惠门槛
@@ -371,7 +376,7 @@ export default {
           Object.assign(params, { marketPreferentialRules: couponRules })
         }
         if (limitExpireDayType === 1) {
-          const limitExpireTime = utils.handleDate(limitExpireTimeStart, limitExpireTimeEnd)
+          const limitExpireTime = [limitExpireTimeStart, limitExpireTimeEnd]
           Object.assign(params, { limitExpireTime })
         }
         limitExpireDayType === 2 && Object.assign(params, { limitExpireDay })

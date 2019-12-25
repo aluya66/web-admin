@@ -183,7 +183,7 @@ export default {
     }
   },
   watch: {
-    'paramsObj.appCode'(nval, oval) {
+    paramsObj(nval, oval) {
       if (oval === nval) return
       this.fetchData()
     }

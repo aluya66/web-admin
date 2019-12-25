@@ -28,6 +28,12 @@ import dictObj from '@/store/dictData'
 
 export default {
   mixins: [mixinTable],
+  props: {
+    platformList: {
+      type: String,
+      default: ''
+    }
+  },
   data(vm) {
     return {
       selectedCouponList: [],
@@ -94,6 +100,7 @@ export default {
       this.isLoading = true
       this.$api.marketing.getCoupon({
         ...this.searchObj,
+        platformList: [this.platformList],
         pageNo: 1,
         pageSize: 100,
         status: 5 // 进行中的优惠券

@@ -65,9 +65,7 @@
             :label="formModel.platformList === 'ysgo' ? '导出数量' : ''"
             :prop="'couponDetails.' + index + '.couponNumber'"
             :rules="{
-                type: 'number', trigger: 'change',  message: '请输入数字', transform (value) {
-                  return Number(value)
-                }
+                validator: checkIntNoQuired, trigger: 'change'
               }"
           >
             <el-input
@@ -85,17 +83,30 @@
         prop="memberType"
         v-if="formModel.platformList === 'yssp'"
       >
-        <el-checkbox-group v-model="formModel.memberType">
-          <el-checkbox
+        <el-radio-group v-model="formModel.customerType">
+          <el-radio
             class="checkbox-item"
-            :label="item.id"
-            :checked="item.checked"
-            v-for="(item, index) in memberTypeList"
+            :label="item.type"
+            v-for="(item, index) in customerTypeList"
             :key="index"
-          >{{ item.label }}</el-checkbox>
-        </el-checkbox-group>
+          >{{ item.label }}</el-radio>
+        </el-radio-group>
+        <el-form-item>
+          <el-checkbox-group v-model="formModel.memberType" v-if="formModel.customerType === 2">
+            <el-checkbox
+              class="checkbox-item"
+              :label="item.id"
+              :checked="item.checked"
+              v-for="(item, index) in memberTypeList"
+              :key="index"
+            >{{ item.label }}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
       </el-form-item>
-      <el-form-item label="指定用户:" v-if="formModel.platformList === 'yssp'">
+      <el-form-item
+        label="指定用户:"
+        v-if="formModel.platformList === 'yssp' && formModel.customerType === 16"
+      >
         <el-button size="small" @click="showDialog('customer')">选择用户</el-button>
         <div>
           <el-tag
@@ -193,7 +204,12 @@
         </el-form-item>
       </el-form-item>
       <el-form-item class="form-btn">
-        <el-button :size="size" :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">提交</el-button>
+        <el-button
+          :size="size"
+          :loading="btnLoading"
+          type="primary"
+          @click.native.prevent="submitHandle"
+        >提交</el-button>
         <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
@@ -204,10 +220,11 @@
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
         close-btn
+        width="80%"
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <coupon-add ref="childRef" v-if="dialogObj.type === 'coupon'"></coupon-add>
+        <coupon-add ref="childRef" v-if="dialogObj.type === 'coupon'" :platformList="this.formModel.platformList"></coupon-add>
         <customer-select
           ref="childRef"
           v-if="dialogObj.type === 'customer'"
@@ -238,10 +255,11 @@ export default {
   },
   data() {
     return {
+      memberTypeList: [],
       size: 'defalut',
       platformListType: '',
       memberList: [], // 用户列表
-      memberTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
+      customerTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
           label: '全部用户',
           type: 1,
@@ -327,7 +345,8 @@ export default {
         receiveType: 2,
         platformList: '',
         issueTimeValues: [],
-        memberType: [],
+        memberType: [], // 会员类型
+        customerType: 1, // 用户类型
         couponDetails: [] // 已选择的优惠券
       },
       lobList: dictObj.lobList.slice(1, 3) // 业务线集合
@@ -428,21 +447,19 @@ export default {
             }
           }
         }) : []
+        let customerType = '' // 指定用户类型
         let memberType = []
         if (marketLimitUser && marketLimitUser.userLimitTypes && marketLimitUser.userLimitTypes.length) {
           marketLimitUser.userLimitTypes.forEach((item) => {
             switch (item) {
               case 1:
-                memberType.push('allCustomer')
-                break
               case 2:
-                memberType.push('allMember')
-                break
               case 8:
-                memberType.push('notMember')
+              case 16:
+                customerType = item
                 break
               case 4:
-                memberType = memberType.concat(marketLimitUser.userLeveIds ? marketLimitUser.userLeveIds : [])
+                memberType = marketLimitUser.userLeveIds ? marketLimitUser.userLeveIds : []
                 break
             }
           })
@@ -453,7 +470,8 @@ export default {
           couponId, // id
           couponName, // 券规则名称
           couponDetails, // 优惠券列表
-          memberType // 会员类型列表
+          memberType, // 会员类型列表
+          customerType // 用户类型
         }
         if (receiveType === 1) { // 系统发券
           // 发券时间 类型 1 立即  2 年  4 月 8 周 16 日 32 固定时间区间
@@ -474,6 +492,7 @@ export default {
         if (marketLimitUser && marketLimitUser.members && marketLimitUser.members.length) {
           Object.assign(params, { selectedCustomerList: marketLimitUser.members })
         }
+        console.log(this.formModel)
         this.formModel = params
       })
     },
@@ -491,7 +510,8 @@ export default {
             receiveType, // 领取方式 1 系统发券 2 手动领券
             couponName, // 券规则名称
             couponDetails, // 优惠券列表
-            memberType, // 发券对象
+            memberType, // 会员类型
+            customerType, // 用户类型
             selectedCustomerList, // 指定用户
             receiveTimeType, // 每人可领类型
             limitReceive, // 每人可领类型 次数
@@ -507,16 +527,11 @@ export default {
             }
           }) : []
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
-          let userLimitTypes = [] // 发券对象
+          let userLimitTypes = [customerType] // 发券对象
           memberType.forEach((item) => {
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
-            const target = this.memberTypeList.find((val) => val.id === item)
-            if (item === 'allCustomer' || item === 'allMember' || item === 'notMember') {
-              userLimitTypes.push(target.type)
-            } else {
-              userLeveIds.push(target.id)
-              userLimitTypes.push(4)
-            }
+            userLeveIds.push(item) // 指定会员
+            userLimitTypes.push(4)
           })
           // 发券对象, 会员等级type有重复，过滤
           userLimitTypes = Array.from(new Set(userLimitTypes))
@@ -601,7 +616,7 @@ export default {
   .coupon-box {
     display: inline-block;
     vertical-align: middle;
-    width: 300px;
+    width: 500px;
     .top-wrapper {
       display: flex;
       text-align: center;
@@ -612,6 +627,7 @@ export default {
         height: 30px;
         line-height: 30px;
         background-color: @light_gray;
+        overflow: hidden;
       }
       .left {
         margin-right: 1px;

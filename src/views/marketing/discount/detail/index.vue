@@ -117,10 +117,11 @@ export default {
       isView: true,
       btnLoading: false,
       formModel: {
-        shopType: 2, // 直营
+        shopType: '', // 门店类型
         selectedGoodsList: [], // 指定商品
         selectedCustomerList: [], // 指定用户
         memberType: [],
+        customerType: 1,
         platformList: '',
         marketPreferentialRules: [],
         activateMonths: [],
@@ -161,10 +162,26 @@ export default {
         }
       })
     },
+    // 获取商品选择参数字段
+    getGoodsParams() {
+      const { platformList } = this.$refs.basicRef.formModel
+      const {
+        storeCodes, // 门店
+        marketUseProductRule // 规则设置
+      } = this.$refs.ruleRef.formModel
+      const { useBrandCodes, useCategoryCodes } = marketUseProductRule // 品牌、分类
+      let categoryCodes = []
+      if (useCategoryCodes && useCategoryCodes.length) {
+        categoryCodes = useCategoryCodes.map((item) => {
+          return item[2] // 只传第三级
+        })
+      }
+      this.goodsTableParamsObj = { appCode: platformList, brandCodes: useBrandCodes, categoryCodes }
+    },
     // 更改渠道 同步店铺、商品list数据
     changeChannel(appCode) {
       this.$refs.ruleRef.getShopList(appCode)
-      this.goodsTableParamsObj = { appCode }
+      this.getGoodsParams()
       this.getMember()
     },
     // 获取详情
@@ -241,6 +258,7 @@ export default {
       this.dialogObj.isShow = false
     },
     showDialog(type, title) {
+      if (type === 'goods') this.getGoodsParams()
       this.dialogObj = {
         type,
         isShow: true,

@@ -157,7 +157,7 @@ export const getRuleInfo = params =>
 // 根据渠道查询商品列表
 export const getGoodsListByChannel = params =>
   Http.fetch(`${context}/api/business/goods/list`, params, {
-    method: 'get'
+    method: 'post'
   })
 
 // 根据渠道查询店铺列表

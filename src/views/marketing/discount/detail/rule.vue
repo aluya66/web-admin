@@ -8,7 +8,7 @@
       label-position="right"
     >
       <el-form-item label="门店:">
-        <el-select :size="size" v-model="formModel.shopType" class="select-item" disabled>
+        <el-select :size="size" v-model="formModel.shopType" class="select-item" @change="changeShopType">
           <el-option
             v-for="(item, index) in shopTypeList"
             :key="index"
@@ -80,7 +80,7 @@
             :key="index"
           >{{ item.label }}</el-radio>
         </el-radio-group>
-        <el-form-item label>
+        <el-form-item>
           <el-checkbox-group v-model="formModel.memberType" v-if="formModel.customerType === 2">
             <el-checkbox
               class="checkbox-item"
@@ -193,14 +193,11 @@ export default {
       brands: [],
       cascaderProp: { multiple: true },
       shopTypeList: [{
-        label: '全部',
+        label: '直营店',
         value: 1
       }, {
-        label: '直营店',
-        value: 2
-      }, {
         label: '加盟店',
-        value: 3
+        value: 2
       }],
       customerTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
@@ -246,6 +243,10 @@ export default {
     this.getMemberType()
   },
   methods: {
+    changeShopType(val) {
+      this.getShopList(this.formModel.platformList)
+      this.formModel.storeCodes = []
+    },
     // 拼接会员等级到会员分类列表 类型有 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
     // 类型4为接口请求获得， 16为指定用户选中后保存时候添加
     getMemberType() {
@@ -274,6 +275,7 @@ export default {
     getShopList(appCode) {
       this.$api.channel.getShopListByChannel({
         appCode,
+        shopType: this.formModel.shopType,
         pageNo: 1,
         pageSize: 100
       }).then(res => {

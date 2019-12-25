@@ -39,7 +39,7 @@
       <!-- 活动类型：满件折扣活动 开始 -->
       <template v-if="formModel.activityType === 1">
         <el-form-item label="折扣条件:">
-          <el-row v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
+          <el-row class="rule-item" v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
             <el-col :span="3">
               <el-form-item
                 inline
@@ -128,7 +128,7 @@
       <!-- 活动类型：满额减 开始 -->
       <template v-if="formModel.activityType === 2">
         <el-form-item label="折扣条件:">
-          <el-row v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
+          <el-row class="rule-item" v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
             <el-col :span="6">
               <el-form-item
                 inline
@@ -182,7 +182,7 @@
       <!-- 活动类型：一口价 开始 -->
       <template v-if="formModel.activityType === 3">
         <el-form-item label="折扣条件:">
-          <el-row v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
+          <el-row class="rule-item" v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
             <el-col :span="6">
               <el-form-item
                 inline
@@ -372,6 +372,9 @@ export default {
   }
   .rule-btn {
     margin-top: 15px;
+  }
+  .rule-item {
+    margin-bottom: 25px;
   }
 }
 </style>

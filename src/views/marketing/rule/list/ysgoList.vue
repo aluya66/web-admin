@@ -52,14 +52,14 @@ export default {
         },
         {
           label: '规则名称',
-          prop: 'couponRuleName',
-          search: {
-            type: 'input'
-          }
+          prop: 'couponRuleName'
         },
         {
           label: '卡券名称',
-          prop: 'couponName'
+          prop: 'couponName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '卡券类型',
@@ -84,7 +84,7 @@ export default {
       ]
     }
   },
-  mounted() {
+  activated() {
     this.fetchData()
   },
   methods: {

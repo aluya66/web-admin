@@ -2,13 +2,21 @@ import QueryDict from '../common/queryDict'
 
 export default {
   data() {
-    const checkInt = (rule, value, callback) => {
+    const checkIntNoQuired = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('字段不能为空'))
-      } else if (!Number(value) || !Number.isInteger(Number(value)) || Number(value) <= 0) {
-        return callback(new Error('请输入整数'))
+        callback()
+      } else if (value && Number(value) > 0 && Number.isInteger(Number(value))) {
+        callback()
+      } else {
+        callback('请输入整数')
       }
-      callback()
+    }
+    const checkInt = (rule, value, callback) => {
+      if (value && Number(value) > 0 && Number.isInteger(Number(value))) {
+        callback()
+      } else {
+        callback('请输入整数')
+      }
     }
     const checkNumber = (rule, value, callback) => {
       if (!value) {
@@ -16,11 +24,12 @@ export default {
       } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
         callback()
       } else {
-        return callback(new Error('请输入0～9999999.99，且最多两位小数的有效数字'))
+        return callback(new Error('请输入最多两位小数的数字'))
       }
     }
     return {
       checkInt,
+      checkIntNoQuired,
       checkNumber,
       dictData: {} // 字典数据
     }
