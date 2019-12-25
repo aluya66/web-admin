@@ -176,7 +176,7 @@ export default {
           return item[2] // 只传第三级
         })
       }
-      this.goodsTableParamsObj = { appCode: platformList, brandCodes: useBrandCodes, categoryCodes }
+      this.goodsTableParamsObj = { appCode: platformList, storeCodes, brandCodes: useBrandCodes, categoryCodes }
     },
     // 更改渠道 同步店铺、商品list数据
     changeChannel(appCode) {

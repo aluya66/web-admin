@@ -8,14 +8,14 @@ export default {
       } else if (value && Number(value) > 0 && Number.isInteger(Number(value))) {
         callback()
       } else {
-        callback('请输入整数')
+        return callback(new Error('请输入整数'))
       }
     }
     const checkInt = (rule, value, callback) => {
       if (value && Number(value) > 0 && Number.isInteger(Number(value))) {
         callback()
       } else {
-        callback('请输入整数')
+        return callback(new Error('请输入整数'))
       }
     }
     const checkNumber = (rule, value, callback) => {
