@@ -17,15 +17,6 @@
           clearable
         />
       </el-form-item>
-      <el-form-item label="活动类型:" prop="activityType">
-        <query-dict
-          :dict-list="activityTypeList"
-          class="select-item"
-          placeholder="请选择活动类型"
-          :value.sync="formModel.activityType"
-          @ChangeQueryDict="changeActivityType"
-        ></query-dict>
-      </el-form-item>
       <el-form-item label="使用渠道:" prop="platformList">
         <query-dict
           :dict-list="lobList"
@@ -35,9 +26,18 @@
           @change="changeChannel"
         ></query-dict>
       </el-form-item>
+      <el-form-item label="活动类型:" prop="activityType">
+        <query-dict
+          :dict-list="activityTypeList"
+          class="select-item"
+          placeholder="请选择活动类型"
+          :value.sync="formModel.activityType"
+          @ChangeQueryDict="changeActivityType"
+        ></query-dict>
+      </el-form-item>
 
       <!-- 活动类型：满件折扣活动 开始 -->
-      <template v-if="formModel.activityType === 1">
+      <template v-if="formModel.activityType === 2">
         <el-form-item label="折扣条件:">
           <el-row class="rule-item" v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
             <el-col :span="3">
@@ -126,7 +126,7 @@
       <!-- 活动类型：满件折扣活动 结束 -->
 
       <!-- 活动类型：满额减 开始 -->
-      <template v-if="formModel.activityType === 2">
+      <template v-if="formModel.activityType === 1">
         <el-form-item label="折扣条件:">
           <el-row class="rule-item" v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
             <el-col :span="6">
@@ -333,7 +333,7 @@ export default {
         preferentialValue: '',
         unit: ''
       }
-      if (this.formModel.activityType === 1) Object.assign(obj, { priceType: 6 })
+      if (this.formModel.activityType === 2) Object.assign(obj, { priceType: 6 })
       this.formModel.marketPreferentialRules.push(obj)
     },
     changeActivityType({ value }) {
@@ -345,7 +345,7 @@ export default {
         preferentialValue: '',
         unit: ''
       }
-      if (this.formModel.activityType === 1) Object.assign(obj, { priceType: 6 })
+      if (this.formModel.activityType === 2) Object.assign(obj, { priceType: 6 })
       this.formModel.marketPreferentialRules = [obj]
     }
   }
