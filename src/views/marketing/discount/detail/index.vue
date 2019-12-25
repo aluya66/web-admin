@@ -202,8 +202,14 @@ export default {
               res.activateDays = []
             }
             // 处理分类code [["02", "0202", "020200"]]
-            if (res.marketUseProductRule.useCategoryCodes && res.marketUseProductRule.useAllCategoryCodes) {
-              res.marketUseProductRule.useCategoryCodes = res.marketUseProductRule.useAllCategoryCodes
+            if (res.marketUseProductRule) {
+              if (res.marketUseProductRule.useCategoryCodes && res.marketUseProductRule.useAllCategoryCodes) {
+                res.marketUseProductRule.useCategoryCodes = res.marketUseProductRule.useAllCategoryCodes
+              }
+            } else {
+              res.marketUseProductRule = {}
+              res.marketUseProductRule.useBrandCodes = []
+              res.marketUseProductRule.useCategoryCodes = []
             }
             let customerType = '' // 指定用户类型
             let memberType = [] // 会员类型
