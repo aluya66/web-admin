@@ -36,7 +36,6 @@
           label-width="80px"
           class="form"
           label-position="right"
-          status-icon
         >
           <el-form-item
             prop="couponNumber"
@@ -44,7 +43,7 @@
                 type: 'number', trigger: 'change',  message: '请输入数字', required: true
               }"
           >
-            <el-input placeholder="请输入要导出兑换码的数量" v-model.number="formModel.couponNumber"></el-input>
+            <el-input placeholder="请输入要导出兑换码的数量" v-model.number="formModel.couponNumber" maxlength="10" clearable></el-input>
           </el-form-item>
         </el-form>
       </c-dialog>

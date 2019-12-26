@@ -59,7 +59,7 @@
             :max-height="600"
             :size="size"
             :loading="isSelectedLoading"
-            :table-header="tableHeader"
+            :table-header="distTableHeader"
             :table-list="checkedAttr"
             :table-inner-btns="selectedTableInnerBtns"
           >
@@ -159,6 +159,47 @@ export default {
           prop: 'retailPrice'
         }
       ],
+      distTableHeader: [
+        {
+          label: '款号',
+          prop: 'goodsBn',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '商品名称',
+          prop: 'goodsName',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '店铺名称',
+          prop: 'shopName'
+        },
+        {
+          label: '规格',
+          formatter(row) {
+            if (row.isSelected) {
+              return '全部'
+            } else {
+              let list = row.skuList
+              let arr = []
+              list.length && list.forEach((item) => {
+                arr.push(item.attributeColorValue + ' ' + item.attributeSpecValue)
+              })
+              return arr.length ? arr.join(',') : ''
+            }
+          }
+        },
+        {
+          label: '图片',
+          prop: 'coverImg',
+          width: 100,
+          isImage: true
+        }
+      ],
       tableHeader: [
         {
           label: '款号',
@@ -243,16 +284,14 @@ export default {
       if (this.finishChangePage) {
         const pageCheckedArr = utils.getStore('cacheSelectedGoodsList')
         if (pageCheckedArr.length) { // 有选择行，过滤重复
-          selectRows.forEach((item) => {
-            let idx = pageCheckedArr.findIndex((checkedItem) => {
-              console.log(item.goodsBn === checkedItem.goodsBn, item.shopId === checkedItem.shopId)
+          pageCheckedArr.forEach((item) => {
+            let idx = selectRows.findIndex((checkedItem) => {
               if (item.goodsBn === checkedItem.goodsBn) {
                 if (item.shopId === checkedItem.shopId) {
                   return true
                 }
               }
             })
-            console.log(idx)
             if (idx !== -1) selectRows.splice(idx, 1)
           })
         }
@@ -267,12 +306,12 @@ export default {
     handleSkuList(rows) {
       if (!rows.length) return
       // 选中的sku是否属于已选择的商品, 选择的sku属于同一商品所以只需要拿数组【0】去对比
-      const idx = this.checkedAttr.findIndex((selectedGood) => selectedGood.goodsBn === rows[0].goodsBn && selectedGood.shopId === rows[0].shopId)
+      const idx = this.checkedAttr.findIndex((selectedGood) => selectedGood.goodsBn === rows[0].goodsBn)
       if (idx !== -1) { // 商品已选择， 在已选中商品列表中添加sku集合
         this.checkedAttr[idx].skuList = rows // 设置已选中的sku集合
         this.checkedAttr = JSON.parse(JSON.stringify(this.checkedAttr))
       } else { // 商品未被选择， 添加标识 商品未被选中，只选择sku isSelected:false
-        const goodIndex = this.tableList.findIndex((good) => good.goodsBn === rows[0].goodsBn && good.shopId === rows[0].shopId)
+        const goodIndex = this.tableList.findIndex((good) => good.goodsBn === rows[0].goodsBn)
         if (goodIndex !== -1) {
           // this.tableList[goodIndex] = this.tableList[goodIndex].map((item) => ({ ...item, isSelected: false }))
           Object.assign(this.tableList[goodIndex], { skuList: rows, isSelected: false })

@@ -53,7 +53,7 @@
           <div class="coupon-box">
             <div class="top-wrapper">
               <div class="left">{{ item.info }}</div>
-              <div class="right">{{ item.couponName }}</div>
+              <div class="right">{{ item.couponRuleName }}</div>
             </div>
             <div class="bottom-wrapper">{{ item.created }}</div>
           </div>
