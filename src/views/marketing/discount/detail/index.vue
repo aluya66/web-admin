@@ -311,6 +311,14 @@ export default {
             applyingDepartment, // 部门
             remark // 备注
           } = this.$refs.applyRef.formModel
+          // 检验满件规则 X不能大于等于Y
+          if (marketPreferentialRules && marketPreferentialRules.length) {
+            for (let i = 0, len = marketPreferentialRules.length; i < len; i++) {
+              if (marketPreferentialRules[i].preferentiaMaxlLevel && marketPreferentialRules[i].preferentiaMaxlLevel <= marketPreferentialRules[i].preferentialLevel) {
+                return this.$msgTip('请填写正确的满件规则', 'warning')
+              }
+            }  
+          }
           // 设置折扣门槛 单位unit 枚举 4 金额 1数量
           // 优惠类型 枚举 1折扣 2积分 3兑换券 4一口价 5金额
           let ruleUnit, preferentialType
@@ -328,7 +336,6 @@ export default {
               preferentialType = 4
               break
           }
-          console.log(activityType, ruleUnit)
           marketPreferentialRules = marketPreferentialRules.map((item) => {
             return {
               ...item,

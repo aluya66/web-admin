@@ -164,25 +164,27 @@ export default {
           }
         },
         {
-          label: '卡券内容',
-          prop: 'couponRemark'
+          label: '卡券内容', 
+          prop: 'couponRemark',
+          formatter() { // 卡券类型 5现金券 1折扣券 3兑换券
+
+          }
         },
         {
-          label: '卡券有效期开始时间',
-          prop: 'limitExpireTimeStart'
+          width: 300,
+          label: '卡券有效期',
+          formatter(row) {
+            // limitExpireDayType 卡券有效期: 1指定日期  2自领券N日内有效 3自领券日当月有效
+            switch (row.limitExpireDayType) {
+              case 1: 
+                return row.limitExpireTimeStart + '~' + row.limitExpireTimeEnd
+              case 2:
+                return row.limitExpireDay + '天'
+              case 3: 
+                return '领券30天内'    
+            } 
+          }
         },
-        {
-          label: '卡券有效期结束时间',
-          prop: 'limitExpireTimeEnd'
-        },
-        // {
-        //   label: '已领取',
-        //   prop: ''
-        // },
-        // {
-        //   label: '已使用',
-        //   prop: ''
-        // },
         {
           label: '卡券状态', // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
           prop: 'status',

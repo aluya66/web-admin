@@ -294,7 +294,7 @@ export default {
         couponRuleType: 16, // 卡券类型 卡劵类型 1卡 2通用券 4运费券 8售后代金券 16券 32优惠券
         platformList: [], // 使用渠道
         preferentialType: 5, // 卡券类型 默认现金券
-        limitExpireDayType: 1, // 卡券有效期 默认当月有效 0 无时间限制 1 固定时间 2 领取时间 3领取时间当月
+        limitExpireDayType: 1, // 卡券有效期: 1指定日期  2自领券N日内有效 3自领券日当月有效
         marketPreferentialRules: [{
           preferentialLevel: '', // 优惠门槛
           preferentialType: 5, // 优惠类型

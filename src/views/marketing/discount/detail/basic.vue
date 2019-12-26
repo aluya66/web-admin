@@ -64,7 +64,7 @@
               <el-form-item
                 :prop="'marketPreferentialRules.' + index + '.preferentiaMaxlLevel'"
                 :rules="{
-                  required: true, validator: checkNumber, trigger: 'blur'
+                  validator: checkIntNoQuired, trigger: 'blur'
                 }"
               >
                 <el-input
@@ -372,7 +372,8 @@ export default {
     margin-right: 5px;
   }
   .discount-item{
-    width: 100%;
+    min-width: 120px;
+    max-width: 100%;
   }
   .rule-btn {
     margin-top: 15px;
