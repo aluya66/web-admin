@@ -97,7 +97,7 @@ export default {
           label: '结算类型',
           prop: 'type',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.type, 'earningsTypeList')
+            return row.typeName || vm.setTableColumnLabel(row.type, 'earningsTypeList')
           },
           search: {
             type: 'dict',
@@ -116,7 +116,7 @@ export default {
           label: '结算状态',
           prop: 'earningsStatus',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.earningsStatus, 'earningsStatusList')
+            return row.earningsStatusName || vm.setTableColumnLabel(row.earningsStatus, 'earningsStatusList')
           },
           search: {
             type: 'dict',

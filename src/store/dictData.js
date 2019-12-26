@@ -150,6 +150,9 @@ const earningsStatusList = [{
 }, {
   label: '已结算',
   value: 20
+}, {
+  label: '已关闭',
+  value: 25
 }]
 
 // 权益类型  1.商品折扣 2.送券 3.积分 4.营销活动
