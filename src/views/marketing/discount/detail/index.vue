@@ -117,7 +117,7 @@ export default {
       isView: true,
       btnLoading: false,
       formModel: {
-        shopType: '', // 门店类型
+        shopType: 1, // 门店类型
         selectedGoodsList: [], // 指定商品
         selectedCustomerList: [], // 指定用户
         memberType: [],
@@ -126,7 +126,7 @@ export default {
         marketPreferentialRules: [],
         activateMonths: [],
         activateDays: [],
-        activateDate: '',
+        activateDate: [],
         marketUseProductRule: {
           useCategoryCodes: [],
           useBrandCodes: []
@@ -180,6 +180,17 @@ export default {
     },
     // 更改渠道 同步店铺、商品list数据
     changeChannel(appCode) {
+      this.formModel.shopType = 1 // 门店类型 默认显示直营
+      this.formModel.selectedGoodsList = [] // 指定商品
+      this.formModel.selectedCustomerList = [] // 指定用户
+      this.formModel.memberType = []
+      this.formModel.customerType = 1
+      this.formModel.marketPreferentialRules = []
+      this.formModel.marketUseProductRule = {
+        useCategoryCodes: [],
+        useBrandCodes: []
+      }
+      this.formModel.storeCodes = []
       this.$refs.ruleRef.getShopList(appCode)
       this.getGoodsParams()
       this.getMember()
@@ -194,9 +205,7 @@ export default {
             res.platformList = res.platformList[0] // 处理渠道单选 接口返回list后处理为字符串
             res.storeCodes = res.storeCodes && res.storeCodes.map((item) => Number(item))
             this.$refs.ruleRef.getShopList(res.platformList)
-            if (res.activityTime && res.activityEndTime) {
-              res.activateDate = [res.activityTime, res.activityEndTime]
-            }
+            res.activateDate = res.activityTime && res.activityEndTime ? [res.activityTime, res.activityEndTime] : null
             if (!res.activateMonths && !res.activateDays) { // 初始化月份、天数
               res.activateMonths = []
               res.activateDays = []
@@ -302,23 +311,29 @@ export default {
             applyingDepartment, // 部门
             remark // 备注
           } = this.$refs.applyRef.formModel
-          // 设置折扣门槛 单位
-          let ruleUnit
-          switch (activityType) {
+          // 设置折扣门槛 单位unit 枚举 4 金额 1数量
+          // 优惠类型 枚举 1折扣 2积分 3兑换券 4一口价 5金额
+          let ruleUnit, preferentialType
+          switch (activityType) { // activityType 1 满减 2 折扣 3 一口价
             case 1:
-              ruleUnit = 1
+              ruleUnit = 4
+              preferentialType = 5
               break
             case 2:
-              ruleUnit = 4
+              ruleUnit = 1
+              preferentialType = 1
               break
             case 3:
-              ruleUnit = 2
+              ruleUnit = 4
+              preferentialType = 4
               break
           }
+          console.log(activityType, ruleUnit)
           marketPreferentialRules = marketPreferentialRules.map((item) => {
             return {
               ...item,
-              unit: ruleUnit
+              unit: ruleUnit,
+              preferentialType
             }
           })
           if (marketUseProductRule.useCategoryCodes && marketUseProductRule.useCategoryCodes.length) {
