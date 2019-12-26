@@ -156,7 +156,10 @@ export default {
         },
         {
           label: '卡券类型',
-          prop: 'typeName',
+          prop: 'preferentialType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.preferentialType, 'ticketTypeList')
+          },
           search: {
             prop: 'type',
             type: 'select',
@@ -165,9 +168,17 @@ export default {
         },
         {
           label: '卡券内容',
-          prop: 'couponRemark',
-          formatter() { // 卡券类型 5现金券 1折扣券 3兑换券
-
+          formatter(row) { // 卡券类型 5现金券 1折扣券 3兑换券
+            const marketPreferentialRules = row.marketPreferentialRules && row.marketPreferentialRules[0] ? row.marketPreferentialRules[0] : {}
+            const { preferentialLevel, preferentialValue } = marketPreferentialRules
+            switch (row.preferentialType) {
+              case 1:
+                return `满${preferentialLevel || ''}件享${preferentialValue || ''}折`
+              case 3:
+                return ''
+              case 5:
+                return `满${preferentialLevel || ''}元减${preferentialValue || ''}元`
+            }
           }
         },
         {

@@ -2,7 +2,7 @@
   <div class="goods-select">
     <div class="header">
       <div class="title title-left">商品列表</div>
-      <div class="title title-right">已选商品:【 {{checkedAttr.length}} 】</div>
+      <div class="title title-right">已选商品:【 {{checkedAttr.length}} 】<el-button @click="deleteAll">删除所有</el-button></div>
     </div>
     <div class="content">
       <div class="source">
@@ -22,6 +22,7 @@
           :cellStyle="{padding:0}"
           @change-pagination="changePagination"
           @handle-select="handleSelect"
+          @handle-selectall="handleSelect"
         >
           <template v-slot:header>
             <c-search
@@ -238,6 +239,11 @@ export default {
     }
   },
   methods: {
+    deleteAll() {
+      this.checkedAttr = []
+      utils.removeStore('cacheSelectedGoodsList')
+      this.$refs.goodsTableRef.$refs.multipleTable.clearSelection()
+    },
     changePagination(pageInfo) {
       this.pageInfo.pageNo = pageInfo.page
       this.pageInfo.pageSize = pageInfo.limit
@@ -282,7 +288,7 @@ export default {
       }) : []
       // 已操作了翻页，需要进行翻页数据拼接
       if (this.finishChangePage) {
-        const pageCheckedArr = utils.getStore('cacheSelectedGoodsList')
+        const pageCheckedArr = utils.getStore('cacheSelectedGoodsList') ? utils.getStore('cacheSelectedGoodsList') : []
         if (pageCheckedArr.length) { // 有选择行，过滤重复
           pageCheckedArr.forEach((item) => {
             let idx = selectRows.findIndex((checkedItem) => {
@@ -364,8 +370,12 @@ export default {
   border: 1px solid @border-default;
   border-radius: 4px;
   .header {
+    position: sticky;
+    top: 0;
+    z-index: 99;
     display: flex;
     border-bottom: 1px solid @border-default;
+    background-color: #fff;
     .title {
       font-size: @f16;
       font-weight: bold;
@@ -381,6 +391,8 @@ export default {
     }
   }
   .content {
+    position: relative;
+    z-index: 9;
     display: flex;
     .source {
       width: 60%;
