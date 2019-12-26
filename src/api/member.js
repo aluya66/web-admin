@@ -29,6 +29,12 @@ export const updatePoint = params =>
     method: 'put'
   })
 
+// 修改收益
+export const updateEarning = params =>
+  Http.fetch(`${context}/api/member/earning`, params, {
+    method: 'put'
+  })
+
 // 会员详情
 export const getMemberDetail = params =>
   Http.fetch(`${context}/api/member/detail`, params, {

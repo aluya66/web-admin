@@ -247,7 +247,7 @@ export default {
             let idx = pageCheckedArr.findIndex((checkedItem) => {
               console.log(item.goodsBn === checkedItem.goodsBn, item.shopId === checkedItem.shopId)
               if (item.goodsBn === checkedItem.goodsBn) {
-                 if (item.shopId === checkedItem.shopId) {
+                if (item.shopId === checkedItem.shopId) {
                   return true
                 }
               }

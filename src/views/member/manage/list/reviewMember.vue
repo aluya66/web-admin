@@ -37,7 +37,7 @@
         </div>
         <div>
           <span class="label">星购卡余额(元):</span>
-          <span class="value">{{formModel.starGoCardAmout}}</span>
+          <span class="value">{{formModel.starGoCardAmount}}</span>
         </div>
       </div>
     </div>

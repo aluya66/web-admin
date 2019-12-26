@@ -183,6 +183,8 @@ export default {
           this.totalEarnings = data.totalEarnings
         } else {
           this.tableList = res || []
+          this.totalSellPrice = '0.00'
+          this.totalEarnings = '0.00'
         }
       })
     }

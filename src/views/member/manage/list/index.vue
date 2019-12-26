@@ -57,6 +57,7 @@
           :init-data.sync="dialogObj.initData"
         ></edit-balance>
         <edit-point v-if="dialogObj.type === 4" ref="childRef" :init-data.sync="dialogObj.initData"></edit-point>
+        <edit-profit v-if="dialogObj.type === 5" ref="childRef" :init-data.sync="dialogObj.initData"></edit-profit>
       </c-dialog>
     </div>
   </c-view>
@@ -69,6 +70,7 @@ import ReviewMember from './reviewMember'
 import EditMember from './editMember'
 import EditBalance from './editBalance'
 import EditPoint from './editPoint'
+import EditProfit from './editProfit'
 import dictObj from '@/store/dictData'
 import utils from 'utils'
 
@@ -111,6 +113,7 @@ export default {
     EditBalance,
     EditPoint,
     ReviewMember,
+    EditProfit,
     CDialog
   },
   data(vm) {
@@ -133,7 +136,7 @@ export default {
       memberTypeSelect: [],
       tableInnerBtns: [
         {
-          width: 150,
+          width: 180,
           name: '查看',
           icon: 'el-icon-view',
           handle(row) {
@@ -202,6 +205,26 @@ export default {
               initData: {
                 userId,
                 appCode
+              }
+            })
+          }
+        },
+        {
+          name: '收益',
+          icon: 'el-icon-edit',
+          handle(row) {
+            const {
+              userId,
+              appCode,
+              earnings
+            } = row
+            vm.showDialog({
+              title: '编辑收益',
+              type: 5,
+              initData: {
+                userId,
+                appCode,
+                earnings
               }
             })
           }
@@ -429,6 +452,10 @@ export default {
         const { appCode, userId, point } = childFormModel
         this.$api.member.updatePoint({ appCode, userId, point }).then(res => {
           this.responeHandle('修改积分成功')
+        })
+      } else if (type === 5) {
+        this.$api.member.updateEarning(childFormModel).then(res => {
+          this.responeHandle('修改收益成功')
         })
       }
     },
