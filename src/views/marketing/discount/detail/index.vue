@@ -317,7 +317,7 @@ export default {
               if (marketPreferentialRules[i].preferentiaMaxlLevel && marketPreferentialRules[i].preferentiaMaxlLevel <= marketPreferentialRules[i].preferentialLevel) {
                 return this.$msgTip('请填写正确的满件规则', 'warning')
               }
-            }  
+            }
           }
           // 设置折扣门槛 单位unit 枚举 4 金额 1数量
           // 优惠类型 枚举 1折扣 2积分 3兑换券 4一口价 5金额

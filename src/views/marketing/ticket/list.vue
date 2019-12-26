@@ -164,7 +164,7 @@ export default {
           }
         },
         {
-          label: '卡券内容', 
+          label: '卡券内容',
           prop: 'couponRemark',
           formatter() { // 卡券类型 5现金券 1折扣券 3兑换券
 
@@ -176,13 +176,13 @@ export default {
           formatter(row) {
             // limitExpireDayType 卡券有效期: 1指定日期  2自领券N日内有效 3自领券日当月有效
             switch (row.limitExpireDayType) {
-              case 1: 
+              case 1:
                 return row.limitExpireTimeStart + '~' + row.limitExpireTimeEnd
               case 2:
                 return row.limitExpireDay + '天'
-              case 3: 
-                return '领券30天内'    
-            } 
+              case 3:
+                return '领券30天内'
+            }
           }
         },
         {
