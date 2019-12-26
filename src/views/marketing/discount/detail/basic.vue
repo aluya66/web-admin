@@ -235,11 +235,12 @@
           end-placeholder="截止日期"
           :default-time="['00:00:00', '23:59:59']"
           align="right"
+          @change="test"
           :disabled="!!formModel.activateMonths.length || !!formModel.activateDays.length"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="设置固定月份:" prop="activateMonths" v-if="formModel.activateDayType === 1">
-        <el-checkbox-group v-model="formModel.activateMonths" :disabled="!!formModel.activateDate">
+        <el-checkbox-group v-model="formModel.activateMonths" :disabled="formModel.activateDate !== null">
           <el-checkbox
             class="checkbox-item"
             :label="item"
@@ -249,7 +250,7 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="设置固定日期:" prop="activateDays" v-if="formModel.activateDayType === 1">
-        <el-checkbox-group v-model="formModel.activateDays" :disabled="!!formModel.activateDate">
+        <el-checkbox-group v-model="formModel.activateDays" :disabled="formModel.activateDate !== null">
           <el-checkbox
             class="checkbox-item"
             :label="item"
@@ -314,8 +315,11 @@ export default {
     }
   },
   methods: {
+    test(val) {
+      console.log(val, this.formModel.activateDate)
+    },
     changeActivateDayType() {
-      this.formModel.activateDate = ''
+      this.formModel.activateDate = null
       this.formModel.activateMonths = []
       this.formModel.activateDays = []
     },

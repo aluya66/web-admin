@@ -224,7 +224,11 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <coupon-add ref="childRef" v-if="dialogObj.type === 'coupon'" :platformList="this.formModel.platformList"></coupon-add>
+        <coupon-add
+          ref="childRef"
+          v-if="dialogObj.type === 'coupon'"
+          :platformList="this.formModel.platformList"
+        ></coupon-add>
         <customer-select
           ref="childRef"
           v-if="dialogObj.type === 'customer'"
@@ -430,12 +434,13 @@ export default {
           let info = ''
           if (item.marketPreferentialRules && item.marketPreferentialRules.length) {
             const target = item.marketPreferentialRules[0]
+            // 5现金券、1折扣券
             switch (target.preferentialType) {
-              case 0:
+              case 5:
                 info = `${target.preferentialLevel}元减${target.preferentialValue}元`
                 break
               case 1:
-                info = `${target.preferentialLevel}件享${target.preferentialValue}元`
+                info = `${target.preferentialLevel}件享${target.preferentialValue}折`
                 break
               default:
                 break

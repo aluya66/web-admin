@@ -55,7 +55,7 @@
       </el-form-item>
       <el-form-item label="指定商品:">
         <el-button size="small" @click="showDialog('goods', '选择商品')">选择商品</el-button>
-        <div class="selected-box">
+        <div class="selected-box" v-show="formModel.selectedGoodsList.length">
           <c-table
             noPage
             hasBorder

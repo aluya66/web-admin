@@ -14,6 +14,8 @@
       tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      @select="handleSelect"
+      @select-all="handleSelectAll"
       @current-change="handleSingleChange"
       @expand-change="handleExpandChange"
       :row-style="rowStyle"
@@ -306,6 +308,12 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
       this.$emit('selection-handle', val)
+    },
+    handleSelect(val) {
+      this.$emit('handle-select', val)
+    },
+    handleSelectAll(val) {
+      this.$emit('handle-selectall', val)
     },
     // 表格行操作函数
     handleClick(handle, item, index) {

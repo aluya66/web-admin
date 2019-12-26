@@ -226,6 +226,7 @@
         <goodsSelect
           ref="goodsSelectRef"
           v-if="formModel.fitGoodsType === 1 && formModel.platformList.length"
+          :disabled="ticketType === 5 || ticketType === 6 || ticketType === 7"
           :paramsObj="goodsParamsObj"
           :initChecked="formModel.selectedGoodsList"
         />
@@ -356,6 +357,7 @@ export default {
           marketUseProductRule
         } = res
         this.ticketType = status // 编辑 缓存卡券状态
+        console.log(this.ticketType)
         let params = { // 基础字段
           platformList,
           couponRuleId,
