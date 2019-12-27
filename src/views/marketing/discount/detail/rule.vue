@@ -22,6 +22,7 @@
           :size="size"
           filterable
           multiple
+          @change="getbrandList"
         >
           <el-option
             v-for="item in shopList"
@@ -294,9 +295,11 @@ export default {
       })
     },
     getbrandList() {
+      // 品牌关联门店
       this.$api.basic.brandList({
         pageNo: 1,
         pageSize: 100,
+        shopIds: this.formModel.storeCodes, // 门店id列表
         status: 1
       }).then(res => {
         const { data, totalCount } = res

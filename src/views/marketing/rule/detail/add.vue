@@ -3,7 +3,6 @@
     ref="cTable"
     selection
     hasBorder
-    noPage
     :size="size"
     :max-height="300"
     :loading="isLoading"
