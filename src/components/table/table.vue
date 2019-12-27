@@ -309,8 +309,8 @@ export default {
       this.multipleSelection = val
       this.$emit('selection-handle', val)
     },
-    handleSelect(val) {
-      this.$emit('handle-select', val)
+    handleSelect(vals, val) {
+      this.$emit('handle-select', vals, val)
     },
     handleSelectAll(val) {
       this.$emit('handle-selectall', val)

@@ -47,6 +47,7 @@ import CDialog from 'components/dialog'
 import ExportRecord from './exportRecord'
 import RedeemCode from './redeemCode'
 import HandleRedeemCode from './handleRedeemCode'
+import { debounce } from 'utils/base'
 
 export default {
   name: 'starGoCard',

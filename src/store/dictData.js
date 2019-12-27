@@ -202,11 +202,11 @@ const ticketTypeList = [
   {
     value: 1,
     label: '折扣券'
-  },
-  {
-    value: 3,
-    label: '兑换券'
   }
+  // {
+  //   value: 3,
+  //   label: '兑换券'
+  // }
 ]
 
 // 价格类型  0 非会员零售价 1 会员价 2 供货价 3 散批价 4 大批价 5 成本价
@@ -283,7 +283,7 @@ const ticketValidTypeArr = [{
 },
 {
   label: '自领券日当月有效',
-  value: 3
+  value: 4
 }
 ]
 
