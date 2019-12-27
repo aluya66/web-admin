@@ -451,6 +451,10 @@ export default {
               info
             }
           }
+          return {
+            ...item,
+            info
+          }
         }) : []
         let customerType = '' // 指定用户类型
         let memberType = []

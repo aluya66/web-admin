@@ -2,7 +2,10 @@
   <div class="goods-select">
     <div class="header">
       <div class="title title-left">商品列表</div>
-      <div class="title title-right">已选商品:【 {{checkedAttr.length}} 】</div>
+      <div class="title title-right">
+        已选商品:【 {{checkedAttr.length}} 】
+        <el-button @click="deleteAll">删除所有</el-button>
+      </div>
     </div>
     <div class="content">
       <div class="source">
@@ -22,6 +25,7 @@
           :cellStyle="{padding:0}"
           @change-pagination="changePagination"
           @handle-select="handleSelect"
+          @handle-selectall="handleSelect"
         >
           <template v-slot:header>
             <c-search
@@ -238,6 +242,11 @@ export default {
     }
   },
   methods: {
+    deleteAll() {
+      this.checkedAttr = []
+      utils.removeStore('cacheSelectedGoodsList')
+      this.$refs.goodsTableRef.$refs.multipleTable.clearSelection()
+    },
     changePagination(pageInfo) {
       this.pageInfo.pageNo = pageInfo.page
       this.pageInfo.pageSize = pageInfo.limit
@@ -282,7 +291,7 @@ export default {
       }) : []
       // 已操作了翻页，需要进行翻页数据拼接
       if (this.finishChangePage) {
-        const pageCheckedArr = utils.getStore('cacheSelectedGoodsList')
+        const pageCheckedArr = utils.getStore('cacheSelectedGoodsList') ? utils.getStore('cacheSelectedGoodsList') : []
         if (pageCheckedArr.length) { // 有选择行，过滤重复
           pageCheckedArr.forEach((item) => {
             let idx = selectRows.findIndex((checkedItem) => {
@@ -306,12 +315,25 @@ export default {
     handleSkuList(rows) {
       if (!rows.length) return
       // 选中的sku是否属于已选择的商品, 选择的sku属于同一商品所以只需要拿数组【0】去对比
-      const idx = this.checkedAttr.findIndex((selectedGood) => selectedGood.goodsBn === rows[0].goodsBn)
+      const idx = this.checkedAttr.findIndex((selectedGood) => {
+        if (selectedGood.goodsBn === rows[0].goodsBn) {
+          if (selectedGood.shopId === rows[0].shopId) {
+            return true
+          }
+        }
+      })
+      console.log(idx)
       if (idx !== -1) { // 商品已选择， 在已选中商品列表中添加sku集合
         this.checkedAttr[idx].skuList = rows // 设置已选中的sku集合
         this.checkedAttr = JSON.parse(JSON.stringify(this.checkedAttr))
       } else { // 商品未被选择， 添加标识 商品未被选中，只选择sku isSelected:false
-        const goodIndex = this.tableList.findIndex((good) => good.goodsBn === rows[0].goodsBn)
+        const goodIndex = this.tableList.findIndex((good) => {
+          if (good.goodsBn === rows[0].goodsBn) {
+            if (good.shopId === rows[0].shopId) {
+              return true
+            }
+          }
+        })
         if (goodIndex !== -1) {
           // this.tableList[goodIndex] = this.tableList[goodIndex].map((item) => ({ ...item, isSelected: false }))
           Object.assign(this.tableList[goodIndex], { skuList: rows, isSelected: false })
@@ -364,8 +386,12 @@ export default {
   border: 1px solid @border-default;
   border-radius: 4px;
   .header {
+    position: sticky;
+    top: 0;
+    z-index: 99;
     display: flex;
     border-bottom: 1px solid @border-default;
+    background-color: #fff;
     .title {
       font-size: @f16;
       font-weight: bold;
@@ -381,6 +407,8 @@ export default {
     }
   }
   .content {
+    position: relative;
+    z-index: 9;
     display: flex;
     .source {
       width: 60%;

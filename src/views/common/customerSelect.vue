@@ -152,6 +152,7 @@ export default {
   border: 1px solid @border-default;
   border-radius: 4px;
   .header {
+    position: sticky;
     display: flex;
     border-bottom: 1px solid @border-default;
     .title {
