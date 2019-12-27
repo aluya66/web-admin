@@ -531,7 +531,7 @@ export default {
           // 处理优惠券列表数据
           let couponDetailsArr = couponDetails ? couponDetails.map((item) => {
             return {
-              couponRuleId: item.couponId,
+              couponRuleId: item.couponRuleId,
               couponNumber: item.couponNumber ? item.couponNumber : ''
             }
           }) : []
