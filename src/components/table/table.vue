@@ -265,6 +265,9 @@ export default {
           return res.prop.toggle.some(val => val.value.includes(row[res.prop.name]))
         }
         if (res.notBtn) { // 渠道关联关联后，屏蔽关联按钮 !row[res.notBtn].length
+          if (typeof res.notBtn === 'function') { // 多个条件状态，判断是否显示某一个按钮时
+            return res.notBtn(row)
+          }
           return Array.isArray(row[res.notBtn]) ? !row[res.notBtn].length : !!row[res.notBtn]
         } else {
           return true

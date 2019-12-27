@@ -297,8 +297,37 @@ const receiveTypeList = [{
   value: 2
 }
 ]
+// 结算状态
+const settleStatusList = [{
+  label: '待结算',
+  value: 1
+},
+{
+  label: '已结算',
+  value: 2
+},
+{
+  label: '已关闭',
+  value: 3
+}]
+
+// 付款状态
+const payStatusList = [{
+  label: '未支付',
+  value: 1
+},
+{
+  label: '部分支付',
+  value: 2
+},
+{
+  label: '已支付',
+  value: 3
+}]
 
 export default {
+  payStatusList,
+  settleStatusList,
   pointTypeList,
   lobList,
   lobListAll,
