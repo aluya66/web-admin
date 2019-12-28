@@ -12,18 +12,12 @@
       <span class="red">{{formModel.settleWaitPay}}</span>
     </el-form-item>
     <template v-if="showType === 1">
-      <el-form-item
-        label="实际结算金额(元):"
-        prop="settleActualPay"
-        :rules="{
-          required: true, validator: checkNumber, trigger: 'blur'
-        }"
-      >
+      <el-form-item label="实际结算金额(元):" prop="settleActualPay">
         <el-input v-model.trim="formModel.settleActualPay" placeholder="请输入实际结算金额" clearable></el-input>
       </el-form-item>
     </template>
     <template v-if="showType === 3">
-      <el-form-item label="已结算总金额(元):">{{formModel.settleAlreadyPay}}</el-form-item>
+      <el-form-item label="已结算总金额(元):"><span class="blue">{{formModel.settleAlreadyPay || "0.00"}}</span></el-form-item>
       <el-form-item label="付款金额(元):" prop="payAmount">
         <el-input v-model.trim="formModel.payAmount" placeholder="请输入付款金额" clearable></el-input>
       </el-form-item>
@@ -57,14 +51,27 @@ export default {
     showType: Number
   },
   data(vm) {
+    const checkCheckNumber = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('实际结算金额不能为空'))
+      } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
+        if (Number(vm.formModel.settleWaitPay) < Number(value)) {
+          return callback(new Error('实际结算金额不能大于应结算金额'))
+        }
+        callback()
+      } else {
+        return callback(new Error('实际结算金额为0～9999999.99，且最多两位小数的有效数字'))
+      }
+    }
+
     const checkNumber = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('手续费不能为空'))
       } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
-        if (Number(vm.initData.serviceFee) < Number(value)) {
+        if (Number(vm.formModel.serviceFee) < Number(value)) {
           return callback(new Error('手续费不能大于应结算金额减去已结算金额的额度'))
         }
-        if (vm.formModel.payAmount && Number(vm.initData.settleWaitPay) < Number(value) + Number(vm.formModel.payAmount)) {
+        if (vm.formModel.payAmount && Number(vm.formModel.settleWaitPay) < Number(value) + Number(vm.formModel.payAmount)) {
           return callback(new Error('手续费与付款金额之和不能大于应结算金额减去已结算金额的额度'))
         }
         callback()
@@ -77,10 +84,10 @@ export default {
       if (!value) {
         return callback(new Error('付款金额不能为空'))
       } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{1,2})$/.test(value)) {
-        if (Number(vm.initData.payAmount) < Number(value)) {
+        if (Number(vm.formModel.payAmount) < Number(value)) {
           return callback(new Error('付款金额不能大于应结算金额减去已结算金额的额度'))
         }
-        if ((vm.formModel.serviceFee || Number(vm.formModel.serviceFee) === 0) && Number(vm.initData.settleWaitPay) < Number(value) + Number(vm.formModel.serviceFee)) {
+        if ((vm.formModel.serviceFee || Number(vm.formModel.serviceFee) === 0) && Number(vm.formModel.settleWaitPay) < Number(value) + Number(vm.formModel.serviceFee)) {
           return callback(new Error('付款金额与手续费之和不能大于应结算金额减去已结算金额的额度'))
         }
         callback()
@@ -90,6 +97,9 @@ export default {
     }
     return {
       rules: {
+        settleActualPay: [
+          { required: true, validator: checkCheckNumber, trigger: 'blur' }
+        ],
         payAmount: [
           { required: true, validator: checkAmountNumber, trigger: 'blur' }
         ],

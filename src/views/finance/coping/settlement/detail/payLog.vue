@@ -2,13 +2,14 @@
   <c-table
     ref="cTable"
     hasBorder
-    :max-height="200"
-    :loading="false"
-    size="small"
+    :max-height="300"
+    :size="size"
+    :loading="isLoading"
     :table-header="tableHeader"
-    :table-list="payLogList"
-  >
-  </c-table>
+    :table-list="tableList"
+    :page-info="pageInfo"
+    @change-pagination="changePagination"
+  ></c-table>
 </template>
 
 <script>
@@ -17,41 +18,74 @@ import mixinTable from 'mixins/table'
 export default {
   mixins: [mixinTable],
   props: {
-    payLogList: {
-      type: Array,
-      default() {
-        return []
+    settleId: {
+      type: String,
+      required: true
+    },
+    changeTime: Number
+  },
+  watch: {
+    changeTime(val) {
+      console.log(val)
+      if (val) {
+        this.pageInfo.pageNo = 1
+        this.fetchData()
       }
     }
   },
-  data() {
+  created() {
+    this.settleId && this.fetchData()
+  },
+  data(vm) {
     return {
       tableHeader: [
         {
           label: '操作时间',
-          prop: ''
+          prop: 'created'
         },
         {
           label: '操作人',
-          prop: ''
+          prop: 'opCreator'
         },
         {
           label: '付款金额',
-          prop: ''
+          prop: 'payAmount'
         },
         {
           label: '手续费',
-          prop: ''
+          prop: 'serviceFee'
         },
         {
           label: '打款流水号',
-          prop: ''
+          prop: 'paySerialNumber'
         },
         {
           label: '备注',
-          prop: ''
+          prop: 'remark'
         }
       ]
+    }
+  },
+  methods: {
+    /**
+     * 获取支付记录
+     */
+    fetchData(id) {
+      const { totalNum, ...page } = this.pageInfo
+      this.isLoading = true
+      this.$api.finance.queryBusinessSettlePaymentLogPage({
+        businessSettleId: this.settleId,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     }
   }
 }

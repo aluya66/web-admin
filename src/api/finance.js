@@ -151,7 +151,7 @@ export const queryBusinessSettlePaymentLogPage = params =>
  * @param {*}
  */
 export const financialFinishPay = params =>
-  Http.fetch(`${context}/api/businesssettle/financialFinishPay`, params, {
+  Http.fetch(`${context}/api/businesssettle/financialfinishpay`, params, {
     method: 'post'
   })
 
@@ -160,6 +160,6 @@ export const financialFinishPay = params =>
  * @param {*}
  */
 export const querySettleOperateLog = params =>
-  Http.fetch(`${context}/api/businesssettle/querySettleOperateLog`, params, {
+  Http.fetch(`${context}/api/businesssettle/querybusinesssettleoperatelogpage`, params, {
     method: 'get'
   })

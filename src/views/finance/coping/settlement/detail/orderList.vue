@@ -3,7 +3,7 @@
     <c-table
       ref="cTable"
       hasBorder
-      :max-height="300"
+      :max-height="400"
       :size="size"
       :loading="isLoading"
       :table-header="tableHeader"
@@ -13,8 +13,14 @@
       @change-pagination="changePagination"
     >
       <template v-slot:header>
-        <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-          <el-form-item label="结算店铺" prop="shopId" :rules="{required: true, message: ''}">
+        <el-form
+          :inline="true"
+          ref="searchRef"
+          :model="searchObj"
+          label-width="100px"
+          class="search-form"
+        >
+          <el-form-item label="结算店铺:" prop="shopId" :rules="{required: true, message: '请选择结算店铺'}">
             <query-dict
               :disabled="isEdit"
               :size="size"
@@ -23,7 +29,11 @@
               :value.sync="searchObj.shopId"
             ></query-dict>
           </el-form-item>
-          <el-form-item label="结算日期">
+          <el-form-item
+            label="结算日期:"
+            prop="settleStartDate"
+            :rules="{required: true, message: '请选择结束日期'}"
+          >
             <el-date-picker
               disabled
               v-model="searchObj.settleStartDate"
@@ -31,7 +41,9 @@
               :size="size"
               placeholder="开始日期"
             ></el-date-picker>
-            <span>～</span>
+          </el-form-item>
+          <el-form-item>~</el-form-item>
+          <el-form-item prop="settleEndDate" :rules="{required: true, message: '请选择结束日期'}">
             <el-date-picker
               :disabled="isEdit"
               v-model="searchObj.settleEndDate"
@@ -41,6 +53,20 @@
               :picker-options="pickerOptions"
             ></el-date-picker>
           </el-form-item>
+          <template v-if="isEdit">
+            <el-form-item label="结算状态:">
+              {{searchObj.settleStatus}}
+            </el-form-item>
+            <el-form-item label="支付状态:">
+              {{searchObj.payStatus}}
+            </el-form-item>
+            <el-form-item label="制单人:">
+              {{searchObj.opCreator}}
+            </el-form-item>
+            <el-form-item label="制单时间:">
+              {{searchObj.created}}
+            </el-form-item>
+          </template>
           <el-button
             type="primary"
             :size="size"
@@ -49,10 +75,24 @@
             @click="searchSubmitHandle"
           >匹配订单数据</el-button>
         </el-form>
-        <div class="input-info">
+        <div class="input-info" v-if="!isEdit">
           <p>1、点击【匹配订单数据】，系统会自动匹配符合该店铺在你设置的结算周期内可结算的订单以及售后订单</p>
           <p>2、数据加载需要时间，数据过大会有延时，可以喝口茶，等待一小会儿</p>
         </div>
+        <!-- <div class="header-btn" v-if="isEdit">
+          <el-button
+            type="primary"
+            :size="size"
+            :loading="btnLoading"
+            @click="exportOrderList"
+          >导出订单</el-button>
+          <el-button
+            type="primary"
+            :size="size"
+            :loading="btnGoodsLoading"
+            @click="exportGoodsList"
+          >导出订单商品清单</el-button>
+        </div> -->
       </template>
     </c-table>
   </c-view>
@@ -85,6 +125,7 @@ export default {
   data(vm) {
     return {
       btnLoading: false,
+      btnGoodsLoading: false,
       pickerOptions: {
         disabledDate(time) {
           const curDate = new Date()
@@ -155,19 +196,46 @@ export default {
     }
   },
   created() {
-    this.searchObj = {
-      shopId: '',
-      settleStartDate: '',
-      settleEndDate: ''
+    if (!this.isEdit) {
+      this.searchObj = {
+        shopId: '',
+        settleStartDate: '',
+        settleEndDate: ''
+      }
     }
     this.queryShopList()
   },
+
   watch: {
     'searchObj.shopId'(val) {
-      val && this.queryDate(val)
+      !this.isEdit && val && this.queryDate(val)
+    },
+    queryData(val) {
+      const { id } = this.$route.params
+      if (val.detailBusinessSettleVo && id) {
+        const { settleStartDate, settleEndDate, settleStatus, payStatus, opCreator, created } = val.detailBusinessSettleVo
+        this.searchObj = {
+          ...this.searchObj,
+          shopId: id,
+          settleStartDate,
+          settleEndDate,
+          settleStatus,
+          payStatus,
+          opCreator,
+          created
+        }
+        this.businessSettleId = id
+        this.fetchData()
+      }
     }
   },
   methods: {
+    // exportGoodsList() {
+
+    // },
+    // exportOrderList() {
+
+    // },
     /**
      *  获取加盟开启的门店列表，
      */
@@ -213,17 +281,24 @@ export default {
 	   * 点击匹配订单数据按钮，得出合计、付款等信息
 	   */
     searchSubmitHandle() {
-      this.btnLoading = true
-      const { settleStartDate, settleEndDate, ...other } = this.searchObj
-      this.$api.finance.matchingOrder({
-        settleStartDate: utils.fomartDate(settleStartDate, '{y}-{m}-{d}'),
-        settleEndDate: utils.fomartDate(settleEndDate, '{y}-{m}-{d}'),
-        ...other
-      }).then(res => {
-        if (res) {
-          this.queryData = res
-          this.businessSettleId = res.detailBusinessSettleVo ? res.detailBusinessSettleVo.id : ''
-          this.fetchData()
+      this.$refs.searchRef.validate(valid => {
+        if (valid) {
+          this.btnLoading = true
+          const { settleStartDate, settleEndDate, ...other } = this.searchObj
+          this.$api.finance.matchingOrder({
+            settleStartDate: utils.fomartDate(settleStartDate, '{y}-{m}-{d}'),
+            settleEndDate: utils.fomartDate(settleEndDate, '{y}-{m}-{d}'),
+            ...other
+          }).then(res => {
+            if (res) {
+              this.queryData = res
+              this.businessSettleId = res.detailBusinessSettleVo ? res.detailBusinessSettleVo.id : ''
+              this.fetchData()
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
         }
       })
     }
