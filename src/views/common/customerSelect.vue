@@ -19,7 +19,8 @@
           :rowStyle="{height:0}"
           :cellStyle="{padding:0}"
           @change-pagination="changePagination"
-          @selection-handle="handleSelect"
+          @handle-select="handleSelect"
+          @handle-selectall="handleSelect"
         >
           <template v-slot:header>
             <c-search
@@ -65,8 +66,8 @@ export default {
     }
   },
   mounted() {
-    this.fetchData()
     this.checkedAttr = this.initChecked
+    this.fetchData()
   },
   data() {
     return {
@@ -133,6 +134,15 @@ export default {
           } else {
             this.tableList = res || []
           }
+          this.checkedAttr.length && this.checkedAttr.forEach((checkedItem) => {
+            const idx = this.tableList.findIndex((item) => checkedItem.userId === item.userId)
+            if (idx !== -1) {
+              this.$nextTick(() => {
+                this.$refs.customerTableRef.$refs.multipleTable.toggleRowSelection(this.tableList[idx])
+              })
+              console.log(idx, this.tableList[idx])
+            }
+          })
         })
     }
   }

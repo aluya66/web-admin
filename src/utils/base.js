@@ -197,7 +197,7 @@ export const getCurrentUserLanguage = () => {
 export const donwFile = (url, param) => {
   window.open(
     `${window.globalVue.$filePath}${
-      process.env.VUE_APP_serverPath
+    process.env.VUE_APP_serverPath
     }${url}?${serializeParam(param)}`
   )
 }
@@ -239,24 +239,14 @@ export const objectMerge = (target, source) => {
  * @param {*} fn
  * @param {*} delay
  */
-export const debounce = (fn, delay) => {
+export const debounce = (fn, delay, that) => {
   // eslint-disable-next-line no-undef
-  let args = arguments
-  let context = this
   let timer = null
-
+  clearTimeout(timer)
   return function () {
-    if (timer) {
-      clearTimeout(timer)
-
-      timer = setTimeout(function () {
-        fn.apply(context, args)
-      }, delay)
-    } else {
-      timer = setTimeout(function () {
-        fn.apply(context, args)
-      }, delay)
-    }
+    timer = setTimeout(function () {
+      fn.apply(that, arguments)
+    }, delay)
   }
 }
 /**
@@ -266,8 +256,6 @@ export const debounce = (fn, delay) => {
  */
 export const throttle = (fn, delay) => {
   // eslint-disable-next-line no-undef
-  let args = arguments
-  let context = this
   let timer = null
   let remaining = 0
   let previous = new Date()
@@ -281,12 +269,12 @@ export const throttle = (fn, delay) => {
         clearTimeout(timer)
       }
 
-      fn.apply(context, args)
+      fn.apply(this, arguments)
       previous = now
     } else {
       if (!timer) {
         timer = setTimeout(function () {
-          fn.apply(context, args)
+          fn.apply(this, arguments)
           previous = new Date()
         }, delay - remaining)
       }

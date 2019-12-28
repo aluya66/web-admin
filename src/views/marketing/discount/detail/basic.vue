@@ -207,9 +207,9 @@
               <el-button @click="deleteRule(index)" v-if="index !== 0">删除</el-button>
             </el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-button class="rule-btn" @click="addRules">添加</el-button>
-          </el-row>
+          </el-row> -->
         </el-form-item>
       </template>
       <!-- 活动类型：一口价 结束 -->

@@ -50,7 +50,8 @@
               :rowStyle="{height:0}"
               :cellStyle="{padding:0}"
               :headerCellStyle="{height:0,padding:0}"
-              @selection-handle="handleSkuList"
+              @handle-select="handleSkuList"
+              @handle-selectall="handleSkuList"
             ></c-table>
           </template>
         </c-table>
@@ -312,24 +313,27 @@ export default {
       utils.setStore('cacheSelectedGoodsList', this.checkedAttr)
       this.$emit('handle-select', rows)
     },
-    handleSkuList(rows) {
-      if (!rows.length) return
+    handleSkuList(rows, row) {
       // 选中的sku是否属于已选择的商品, 选择的sku属于同一商品所以只需要拿数组【0】去对比
       const idx = this.checkedAttr.findIndex((selectedGood) => {
-        if (selectedGood.goodsBn === rows[0].goodsBn) {
-          if (selectedGood.shopId === rows[0].shopId) {
+        if (selectedGood.goodsBn === row.goodsBn) {
+          if (selectedGood.shopId === row.shopId) {
             return true
           }
         }
       })
-      console.log(idx)
       if (idx !== -1) { // 商品已选择， 在已选中商品列表中添加sku集合
+        if (!rows.length) { // 进行的是清空已选择sku操作，删除spu
+          if (this.checkedAttr[idx].isSelected) return
+          this.checkedAttr.splice(idx, 1)
+          return
+        }
         this.checkedAttr[idx].skuList = rows // 设置已选中的sku集合
         this.checkedAttr = JSON.parse(JSON.stringify(this.checkedAttr))
       } else { // 商品未被选择， 添加标识 商品未被选中，只选择sku isSelected:false
         const goodIndex = this.tableList.findIndex((good) => {
-          if (good.goodsBn === rows[0].goodsBn) {
-            if (good.shopId === rows[0].shopId) {
+          if (good.goodsBn === row.goodsBn) {
+            if (good.shopId === row.shopId) {
               return true
             }
           }

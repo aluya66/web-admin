@@ -24,7 +24,7 @@
 				:disabled="btn.disabled"
 				:size="btn.size"
 				:loading="btn.loading"
-				@click="btnHandle(btn, index)"
+				@click.prevent="btnHandle(btn, index)"
 			>
 				{{ btn.label }}
 			</el-button>

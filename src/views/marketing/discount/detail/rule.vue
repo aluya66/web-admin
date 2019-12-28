@@ -8,7 +8,12 @@
       label-position="right"
     >
       <el-form-item label="门店:">
-        <el-select :size="size" v-model="formModel.shopType" class="select-item" @change="changeShopType">
+        <el-select
+          :size="size"
+          v-model="formModel.shopType"
+          class="select-item"
+          @change="changeShopType"
+        >
           <el-option
             v-for="(item, index) in shopTypeList"
             :key="index"
@@ -167,18 +172,37 @@ export default {
       ],
       tableHeader: [
         {
+          label: '款号',
+          prop: 'goodsBn'
+        },
+        {
           label: '商品名称',
           prop: 'goodsName'
+        },
+        {
+          label: '店铺名称',
+          prop: 'shopName'
+        },
+        {
+          label: '规格',
+          formatter(row) {
+            if (row.isSelected) {
+              return '全部'
+            } else {
+              let list = row.skuList
+              let arr = []
+              list.length && list.forEach((item) => {
+                arr.push(item.attributeColorValue + ' ' + item.attributeSpecValue)
+              })
+              return arr.length ? arr.join(',') : ''
+            }
+          }
         },
         {
           label: '图片',
           prop: 'coverImg',
           width: 100,
           isImage: true
-        },
-        {
-          label: '款号',
-          prop: 'goodsBn'
         }
       ],
       selectedTableInnerBtns: [

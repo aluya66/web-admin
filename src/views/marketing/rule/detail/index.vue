@@ -65,7 +65,7 @@
             :label="formModel.platformList === 'ysgo' ? '导出数量' : ''"
             :prop="'couponDetails.' + index + '.couponNumber'"
             :rules="{
-                validator: checkIntNoQuired, trigger: 'change'
+                validator: formModel.platformList === 'ysgo' ? checkInt : checkIntNoQuired, trigger: 'change'
               }"
           >
             <el-input
@@ -80,7 +80,7 @@
       </el-form-item>
       <el-form-item
         :label="formModel.receiveType === 1 ? '发券对象:' : '领券对象:'"
-        prop="memberType"
+        prop="customerType"
         v-if="formModel.platformList === 'yssp'"
       >
         <el-radio-group v-model="formModel.customerType">
@@ -92,7 +92,7 @@
           >{{ item.label }}</el-radio>
         </el-radio-group>
         <el-form-item>
-          <el-checkbox-group v-model="formModel.memberType" v-if="formModel.customerType === 2">
+          <el-checkbox-group v-model="formModel.memberType" v-if="formModel.customerType === 4">
             <el-checkbox
               class="checkbox-item"
               :label="item.id"
@@ -228,6 +228,7 @@
           ref="childRef"
           v-if="dialogObj.type === 'coupon'"
           :platformList="this.formModel.platformList"
+          :initChecked="formModel.couponDetails"
         ></coupon-add>
         <customer-select
           ref="childRef"
@@ -266,23 +267,19 @@ export default {
       customerTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
           label: '全部用户',
-          type: 1,
-          id: 'allCustomer'
+          type: 1
         },
         {
           label: '指定会员',
-          type: 2,
-          id: 'allMember'
+          type: 4
         },
         {
           label: '指定用户',
-          type: 16,
-          id: 'selectedCustomer'
+          type: 16
         },
         {
           label: '非会员',
-          type: 8,
-          id: 'notMember'
+          type: 8
         }
       ],
       dialogObj: {},
@@ -468,6 +465,7 @@ export default {
                 customerType = item
                 break
               case 4:
+                customerType = item
                 memberType = marketLimitUser.userLeveIds ? marketLimitUser.userLeveIds : []
                 break
             }
@@ -501,7 +499,7 @@ export default {
         if (marketLimitUser && marketLimitUser.members && marketLimitUser.members.length) {
           Object.assign(params, { selectedCustomerList: marketLimitUser.members })
         }
-        console.log(this.formModel)
+        console.log(params, 'params')
         this.formModel = params
       })
     },
@@ -540,15 +538,15 @@ export default {
           memberType.forEach((item) => {
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             userLeveIds.push(item) // 指定会员
-            userLimitTypes.push(4)
+            userLimitTypes = [4]
           })
           // 发券对象, 会员等级type有重复，过滤
-          userLimitTypes = Array.from(new Set(userLimitTypes))
+          // userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
           if (selectedCustomerList && selectedCustomerList.length) {
             userIds = selectedCustomerList.map((item) => item.userId)
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
-            userLimitTypes.push(16)
+            userLimitTypes = [16]
           }
           // 处理领券对象、指定用户数据
           let marketLimitUser = {

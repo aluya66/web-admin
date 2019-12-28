@@ -185,13 +185,13 @@ export default {
           width: 300,
           label: '卡券有效期',
           formatter(row) {
-            // limitExpireDayType 卡券有效期: 1指定日期  2自领券N日内有效 3自领券日当月有效
+            // limitExpireDayType 卡券有效期: 1指定日期  2自领券N日内有效 4自领券日当月有效
             switch (row.limitExpireDayType) {
               case 1:
                 return row.limitExpireTimeStart + '~' + row.limitExpireTimeEnd
               case 2:
                 return row.limitExpireDay + '天'
-              case 3:
+              case 4:
                 return '领券30天内'
             }
           }

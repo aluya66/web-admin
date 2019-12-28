@@ -274,8 +274,8 @@ export default {
       })
       return tableInnerBtns
     },
-    toggleRowSelection(row) {
-      this.$refs.multipleTable.toggleRowSelection(row, true)
+    toggleRowSelection(row, flag = true) {
+      this.$refs.multipleTable.toggleRowSelection(row, flag)
     },
     // 选中取消
     toggleSelection(rows) {
@@ -287,7 +287,6 @@ export default {
         } else {
           rows.forEach(row => {
             this.$refs.multipleTable.toggleRowSelection(row, true)
-            console.log(this.$refs.multipleTable.toggleRowSelection(row, true))
           })
         }
       } else {
@@ -309,8 +308,8 @@ export default {
       this.multipleSelection = val
       this.$emit('selection-handle', val)
     },
-    handleSelect(val) {
-      this.$emit('handle-select', val)
+    handleSelect(vals, val) {
+      this.$emit('handle-select', vals, val)
     },
     handleSelectAll(val) {
       this.$emit('handle-selectall', val)
