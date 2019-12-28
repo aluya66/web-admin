@@ -311,11 +311,25 @@ export default {
             applyingDepartment, // 部门
             remark // 备注
           } = this.$refs.applyRef.formModel
-          // 检验满件规则 X不能大于等于Y
+          // 检验满件规则
           if (marketPreferentialRules && marketPreferentialRules.length) {
+            // X不能大于等于Y
             for (let i = 0, len = marketPreferentialRules.length; i < len; i++) {
               if (marketPreferentialRules[i].preferentiaMaxlLevel && marketPreferentialRules[i].preferentiaMaxlLevel <= marketPreferentialRules[i].preferentialLevel) {
                 return this.$msgTip('请填写正确的满件规则', 'warning')
+              }
+            }
+            // 所有X不能相等、所有Y不能相等
+            for (let i = 0, len = marketPreferentialRules.length - 1; i < len; i++) {
+              if (marketPreferentialRules[i].preferentiaMaxlLevel) {
+                for (let j = i + 1, subLen = marketPreferentialRules.length; j < subLen; j++) {
+                  if (marketPreferentialRules[j].preferentiaMaxlLevel) {
+                    if (marketPreferentialRules[i].preferentiaMaxlLevel === marketPreferentialRules[j].preferentiaMaxlLevel || marketPreferentialRules[i].preferentialLevel === marketPreferentialRules[j].preferentialLevel) {
+                      console.log('i: ' + i + ',j:' + j + ',X: ', marketPreferentialRules[i].preferentiaMaxlLevel, marketPreferentialRules[j].preferentiaMaxlLevel)
+                      return this.$msgTip('满件规则不能重复', 'warning')
+                    }
+                  }
+                }
               }
             }
           }
@@ -428,7 +442,6 @@ export default {
       })
     }
   },
-
   components: {
     GBasic,
     GRule,

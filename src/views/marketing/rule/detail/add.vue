@@ -31,6 +31,13 @@ export default {
     platformList: {
       type: String,
       default: ''
+    },
+    initChecked: {
+      // 初始化选中值
+      type: Array,
+      default() {
+        return []
+      }
     }
   },
   data(vm) {
@@ -70,6 +77,7 @@ export default {
     }
   },
   created() {
+    this.selectedCouponList = this.initChecked
     this.fetchData()
   },
   methods: {
@@ -112,6 +120,14 @@ export default {
         } else {
           this.tableList = res || []
         }
+        this.selectedCouponList.length && this.selectedCouponList.forEach((checkedItem) => {
+          const idx = this.tableList.findIndex((item) => checkedItem.couponRuleId === item.couponRuleId)
+          if (idx !== -1) {
+            this.$nextTick(() => {
+              this.$refs.cTable.$refs.multipleTable.toggleRowSelection(this.tableList[idx])
+            })
+          }
+        })
       })
     }
   }

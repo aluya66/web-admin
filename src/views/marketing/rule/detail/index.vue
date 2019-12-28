@@ -65,7 +65,7 @@
             :label="formModel.platformList === 'ysgo' ? '导出数量' : ''"
             :prop="'couponDetails.' + index + '.couponNumber'"
             :rules="{
-                validator: checkIntNoQuired, trigger: 'change'
+                validator: formModel.platformList === 'ysgo' ? checkInt : checkIntNoQuired, trigger: 'change'
               }"
           >
             <el-input
@@ -228,6 +228,7 @@
           ref="childRef"
           v-if="dialogObj.type === 'coupon'"
           :platformList="this.formModel.platformList"
+          :initChecked="formModel.couponDetails"
         ></coupon-add>
         <customer-select
           ref="childRef"
@@ -470,7 +471,6 @@ export default {
             }
           })
         }
-        console.log(memberType, customerType)
         let params = { // 基础字段
           platformList: platformList[0], // 渠道
           receiveType, // 领券方式

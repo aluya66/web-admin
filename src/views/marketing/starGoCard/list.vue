@@ -47,7 +47,7 @@ import CDialog from 'components/dialog'
 import ExportRecord from './exportRecord'
 import RedeemCode from './redeemCode'
 import HandleRedeemCode from './handleRedeemCode'
-import { debounce } from 'utils/base'
+import utils from 'utils'
 
 export default {
   name: 'starGoCard',
@@ -59,6 +59,7 @@ export default {
   },
   data(vm) {
     return {
+      flag: true,
       dialogObj: {
         isShow: false,
         title: '创建兑换码'
@@ -78,20 +79,26 @@ export default {
   },
   methods: {
     dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const childFormModel = childRef.formModel
-          this.$api.marketing.addRedeemCode(childFormModel).then(res => {
-            this.$msgTip('添加成功')
-            this.$refs.childList.fetchData()
-            this.dialogObj.isShow = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      if (this.flag) {
+        this.flag = false
+        const childRef = this.$refs.childRef
+        childRef.$refs.formRef.validate(valid => {
+          if (valid) {
+            const childFormModel = childRef.formModel
+            this.$api.marketing.addRedeemCode(childFormModel).then(res => {
+              this.$msgTip('添加成功')
+              this.$refs.childList.fetchData()
+              this.dialogObj.isShow = false
+            })
+            setTimeout(() => {
+              this.flag = true;
+            }, 1000); // 一秒内不能重复点击
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      }
     }
   }
 }
