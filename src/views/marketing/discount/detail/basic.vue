@@ -39,7 +39,11 @@
       <!-- 活动类型：满件折扣活动 开始 -->
       <template v-if="formModel.activityType === 2">
         <el-form-item label="折扣条件:">
-          <el-row class="rule-item" v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
+          <el-row
+            class="rule-item"
+            v-for="(item, index) in formModel.marketPreferentialRules"
+            :key="index"
+          >
             <el-col :span="3">
               <el-form-item
                 inline
@@ -128,7 +132,11 @@
       <!-- 活动类型：满额减 开始 -->
       <template v-if="formModel.activityType === 1">
         <el-form-item label="折扣条件:">
-          <el-row class="rule-item" v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
+          <el-row
+            class="rule-item"
+            v-for="(item, index) in formModel.marketPreferentialRules"
+            :key="index"
+          >
             <el-col :span="6">
               <el-form-item
                 inline
@@ -182,7 +190,11 @@
       <!-- 活动类型：一口价 开始 -->
       <template v-if="formModel.activityType === 3">
         <el-form-item label="折扣条件:">
-          <el-row class="rule-item" v-for="(item, index) in formModel.marketPreferentialRules" :key="index">
+          <el-row
+            class="rule-item"
+            v-for="(item, index) in formModel.marketPreferentialRules"
+            :key="index"
+          >
             <el-col :span="6">
               <el-form-item
                 inline
@@ -209,7 +221,7 @@
           </el-row>
           <!-- <el-row>
             <el-button class="rule-btn" @click="addRules">添加</el-button>
-          </el-row> -->
+          </el-row>-->
         </el-form-item>
       </template>
       <!-- 活动类型：一口价 结束 -->
@@ -235,12 +247,14 @@
           end-placeholder="截止日期"
           :default-time="['00:00:00', '23:59:59']"
           align="right"
-          @change="test"
           :disabled="!!formModel.activateMonths.length || !!formModel.activateDays.length"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="设置固定月份:" prop="activateMonths" v-if="formModel.activateDayType === 1">
-        <el-checkbox-group v-model="formModel.activateMonths" :disabled="formModel.activateDate !== null">
+        <el-checkbox-group
+          v-model="formModel.activateMonths"
+          :disabled="formModel.activateDate !== null"
+        >
           <el-checkbox
             class="checkbox-item"
             :label="item"
@@ -250,7 +264,10 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="设置固定日期:" prop="activateDays" v-if="formModel.activateDayType === 1">
-        <el-checkbox-group v-model="formModel.activateDays" :disabled="formModel.activateDate !== null">
+        <el-checkbox-group
+          v-model="formModel.activateDays"
+          :disabled="formModel.activateDate !== null"
+        >
           <el-checkbox
             class="checkbox-item"
             :label="item"
@@ -287,7 +304,12 @@ export default {
           { required: true, message: '请选择活动时间类型', trigger: 'blur' }
         ]
       },
-      pickerOptions: utils.pickerOptions,
+      pickerOptions: {
+        ...utils.pickerOptions,
+        disabledDate(time) {
+          return time.getTime() < Date.now()
+        }
+      },
       activateDayTypeList: [{ // 活动时间类型
         label: '固定时间',
         value: 1
@@ -315,9 +337,6 @@ export default {
     }
   },
   methods: {
-    test(val) {
-      console.log(val, this.formModel.activateDate)
-    },
     changeActivateDayType() {
       this.formModel.activateDate = null
       this.formModel.activateMonths = []
@@ -371,7 +390,7 @@ export default {
     text-align: right;
     margin-right: 5px;
   }
-  .discount-item{
+  .discount-item {
     min-width: 120px;
     max-width: 100%;
   }

@@ -7,6 +7,7 @@
     :max-height="300"
     :loading="isLoading"
     :table-header="tableHeader"
+    :page-info="pageInfo"
     @selection-handle="handleSelection"
     :table-list="tableList"
   >

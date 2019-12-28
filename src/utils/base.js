@@ -197,7 +197,7 @@ export const getCurrentUserLanguage = () => {
 export const donwFile = (url, param) => {
   window.open(
     `${window.globalVue.$filePath}${
-    process.env.VUE_APP_serverPath
+      process.env.VUE_APP_serverPath
     }${url}?${serializeParam(param)}`
   )
 }
