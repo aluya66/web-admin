@@ -278,11 +278,11 @@ export default {
           value: 1
         }
       ],
-      pickerOptions: {        
-          ...utils.pickerOptions, 
-          disabledDate(time) {
-            return time.getTime() < Date.now();
-          }      
+      pickerOptions: {
+        ...utils.pickerOptions,
+        disabledDate(time) {
+          return time.getTime() < Date.now()
+        }
       },
       ticketTypeArr: dictObj.ticketTypeList,
       btnLoading: false,

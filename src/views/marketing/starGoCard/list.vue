@@ -47,7 +47,6 @@ import CDialog from 'components/dialog'
 import ExportRecord from './exportRecord'
 import RedeemCode from './redeemCode'
 import HandleRedeemCode from './handleRedeemCode'
-import utils from 'utils'
 
 export default {
   name: 'starGoCard',
@@ -91,8 +90,8 @@ export default {
               this.dialogObj.isShow = false
             })
             setTimeout(() => {
-              this.flag = true;
-            }, 1000); // 一秒内不能重复点击
+              this.flag = true
+            }, 1000) // 一秒内不能重复点击
           } else {
             console.log('error submit!!')
             return false
