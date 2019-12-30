@@ -38,6 +38,10 @@ export default {
   name: 'CUpload',
   // inheritAttrs: false,
   props: {
+    fileType: {
+      type: String,
+      default: ''
+    },
     uploadRef: {
       type: String,
       default: 'upload'
@@ -116,7 +120,6 @@ export default {
   mounted() {
     if (this.disabled) {
       const curUplist = document.getElementsByClassName('el-upload')
-      console.log(curUplist)
       for (let i = 0; i < curUplist.length; i++) {
         curUplist[i].style.display = 'none'
       }
@@ -165,7 +168,7 @@ export default {
     handleExceed(files, fileList) {
       this.$message.warning(
         `当前限制选择 ${this.limit} 个文件，本次选择了 ${
-          files.length
+        files.length
         } 个文件，共选择了 ${files.length + fileList.length} 个文件`
       )
       this.$emit('on-exceed', files, fileList)
@@ -217,6 +220,7 @@ export default {
       }
     },
     beforeUpload(file) {
+      this.$emit('before-upload')
       if (this.limit <= this.fileList.length) {
         this.$message.warning(`当前限制只能上传 ${this.limit} 个文件`)
         return false
@@ -243,7 +247,6 @@ export default {
           this.$message.error('请上传后缀为png,jpg,jpeg,gif格式的文件!')
         }
       }
-      this.$emit('before-upload')
       return false
     },
     // 上传提醒

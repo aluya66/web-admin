@@ -6,24 +6,41 @@
         :content="$route.meta.name || $t(`route.${$route.meta.title}`)"
       ></el-page-header>
     </template>
-    <el-form
-      ref="formRef"
-      :model="formModel"
-      label-width="110px"
-      class="form"
-      label-position="right"
-    >
+    <div class="form">
       <s-shop
         :is-view="isView"
         :is-disabled="isDisabled"
         :data-obj.sync="formModel"
-        ref="basicRef"
+        ref="formRef"
         @show-image="reviewImage"
+        @open-dialog="showDialog"
       ></s-shop>
-      <el-form-item class="form-btn" v-if="!isView">
-        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
-      </el-form-item>
-    </el-form>
+      <div class="btn-wrapper">
+        <el-button
+          :size="size"
+          :loading="btnLoading"
+          type="primary"
+          @click.native.prevent="submitHandle"
+        >保存</el-button>
+        <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
+      </div>
+    </div>
+
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        width="80%"
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <channel-connect
+          ref="childRef"
+          :initChecked="formModel.channelCode"
+        ></channel-connect>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
@@ -49,13 +66,13 @@ export default {
         coordinate: '', // 门店坐标
         contact: '', // 联系人
         contactTel: '', // 联系手机
-        usePos: false, // 使用pos
-        isConnectPrinter: false, // 是否关联打印机
+        usePos: '', // 使用pos
+        isConnectPrinter: '', // 是否关联打印机
         printer: '', // 打印机编号
         businessType: 1, // 经营方式 1加盟
         settleType: 1, // 结算方式 1先款后贷
         status: '', // 状态
-        isRecommend: '', // 是否推荐
+        isRecommend: 1, // 是否推荐
         style: '', // 店铺风格
         shopImage: [], // 店招图片
         exhibitionImage: [], // 展馆图
@@ -72,9 +89,15 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    // this.fetchData()
   },
   methods: {
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: '关联渠道'
+      }
+    },
     fetchData() {
       const { params } = this.$route
       this.isDisabled = true
@@ -87,12 +110,14 @@ export default {
       })
     },
     submitHandle() {
-      this.$refs.formRef.validate(valid => {
-        if (valid) {
-          console.log(this.$refs.formModel)
+      const shopForm = this.$refs.formRef.$refs.shopFormRef
+      Promise.all([shopForm].map(this.getFormPromise)).then(res => {
+        // 所有子表单是否校验通过
+        const validateResult = res.every(item => !!item)
+        if (validateResult) {
+          console.log(this.$refs.formRef.formModel)
         } else {
-          console.log('error submit!!')
-          return false
+          console.log('未校验通过')
         }
       })
     },
@@ -116,5 +141,8 @@ export default {
     margin-left: 20px;
     margin-top: 20px;
   }
+}
+.btn-wrapper {
+  margin-left: 140px;
 }
 </style>
