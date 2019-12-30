@@ -325,6 +325,15 @@ const payStatusList = [{
   value: 3
 }]
 
+const orderTypeList = [{
+  label: '销售订单',
+  value: 1
+},
+{
+  label: '售后订单',
+  value: 2
+}]
+
 export default {
   payStatusList,
   settleStatusList,
@@ -348,5 +357,6 @@ export default {
   priceTypeList,
   couponStatusList,
   ticketValidTypeArr,
-  receiveTypeList
+  receiveTypeList,
+  orderTypeList
 }

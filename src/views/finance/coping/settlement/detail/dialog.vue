@@ -9,7 +9,7 @@
     status-icon
   >
     <el-form-item label="应结算总金额(元):" v-if="showType === 1 || showType === 3">
-      <span class="red">{{formModel.settleWaitPay}}</span>
+      <span class="red">{{formModel.settleStatus === 2 ? formModel.settleActualPay : formModel.settleWaitPay}}</span>
     </el-form-item>
     <template v-if="showType === 1">
       <el-form-item label="实际结算金额(元):" prop="settleActualPay">
@@ -17,7 +17,7 @@
       </el-form-item>
     </template>
     <template v-if="showType === 3">
-      <el-form-item label="已结算总金额(元):"><span class="blue">{{formModel.settleAlreadyPay || "0.00"}}</span></el-form-item>
+      <el-form-item label="已结算总金额(元):"><span class="blue">{{formModel.curPayAmount || "0.00"}}</span></el-form-item>
       <el-form-item label="付款金额(元):" prop="payAmount">
         <el-input v-model.trim="formModel.payAmount" placeholder="请输入付款金额" clearable></el-input>
       </el-form-item>
@@ -43,6 +43,7 @@
 
 <script>
 import MixinForm from 'mixins/form'
+import utils from 'utils'
 
 export default {
   mixins: [MixinForm],
@@ -56,11 +57,11 @@ export default {
         return callback(new Error('实际结算金额不能为空'))
       } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
         if (Number(vm.formModel.settleWaitPay) < Number(value)) {
-          return callback(new Error('实际结算金额不能大于应结算金额'))
+          return callback(new Error('实际结算金额不能大于应结算总金额'))
         }
         callback()
       } else {
-        return callback(new Error('实际结算金额为0～9999999.99，且最多两位小数的有效数字'))
+        return callback(new Error('实际结算金额为不大于9999999.99，且最多两位小数的有效数字'))
       }
     }
 
@@ -68,10 +69,10 @@ export default {
       if (!value) {
         return callback(new Error('手续费不能为空'))
       } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
-        if (Number(vm.formModel.serviceFee) < Number(value)) {
-          return callback(new Error('手续费不能大于应结算金额减去已结算金额的额度'))
+        if (utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) < value) {
+          return callback(new Error('手续费不能大于应结算总金额减去已结算总金额的额度'))
         }
-        if (vm.formModel.payAmount && Number(vm.formModel.settleWaitPay) < Number(value) + Number(vm.formModel.payAmount)) {
+        if (vm.formModel.payAmount && (utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.payAmount]))) {
           return callback(new Error('手续费与付款金额之和不能大于应结算金额减去已结算金额的额度'))
         }
         callback()
@@ -84,15 +85,16 @@ export default {
       if (!value) {
         return callback(new Error('付款金额不能为空'))
       } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{1,2})$/.test(value)) {
-        if (Number(vm.formModel.payAmount) < Number(value)) {
-          return callback(new Error('付款金额不能大于应结算金额减去已结算金额的额度'))
+        if (utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) < value) {
+          console.log(utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) === value)
+          return callback(new Error('付款金额不能大于应结算总金额减去已结算总金额的额度'))
         }
-        if ((vm.formModel.serviceFee || Number(vm.formModel.serviceFee) === 0) && Number(vm.formModel.settleWaitPay) < Number(value) + Number(vm.formModel.serviceFee)) {
-          return callback(new Error('付款金额与手续费之和不能大于应结算金额减去已结算金额的额度'))
+        if ((vm.formModel.serviceFee || Number(vm.formModel.serviceFee) === 0) && (utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.serviceFee]))) {
+          return callback(new Error('付款金额与手续费之和不能大于应结算总金额减去已结算总金额的额度'))
         }
         callback()
       } else {
-        return callback(new Error('审核金额为大于0～9999999.99，且最多两位小数的有效数字'))
+        return callback(new Error('付款金额为大于零小于等于9999999.99，且最多两位小数的有效数字'))
       }
     }
     return {

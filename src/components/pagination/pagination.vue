@@ -48,7 +48,7 @@ export default {
     },
     autoScroll: {
       type: Boolean,
-      default: true
+      default: false
     },
     hidden: {
       type: Boolean,
@@ -77,13 +77,13 @@ export default {
     handleSizeChange (val) {
       this.$emit('pagination', { page: 1, limit: val })
       if (this.autoScroll) {
-        utils.scrollTo(0, 800)
+        utils.scrollTo(0, 800) // 返回到document顶部
       }
     },
     handleCurrentChange (val) {
       this.$emit('pagination', { page: val, limit: this.pageSize })
       if (this.autoScroll) {
-        utils.scrollTo(0, 800)
+        utils.scrollTo(0, 800) // 返回到document顶部
       }
     }
   }

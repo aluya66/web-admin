@@ -5,6 +5,7 @@
       hasBorder
       :max-height="400"
       :size="size"
+      :auto-scroll="false"
       :loading="isLoading"
       :table-header="tableHeader"
       :table-list="tableList"
@@ -55,10 +56,10 @@
           </el-form-item>
           <template v-if="isEdit">
             <el-form-item label="结算状态:">
-              {{searchObj.settleStatus}}
+              {{setTableColumnLabel(searchObj.settleStatus, 'settleStatusList')}}
             </el-form-item>
             <el-form-item label="支付状态:">
-              {{searchObj.payStatus}}
+              {{setTableColumnLabel(searchObj.payStatus, 'payStatusList')}}
             </el-form-item>
             <el-form-item label="制单人:">
               {{searchObj.opCreator}}
@@ -101,7 +102,7 @@
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
-// import dictObj from '@/store/dictData'
+import dictObj from '@/store/dictData'
 
 export default {
   mixins: [mixinTable],
@@ -130,6 +131,7 @@ export default {
         disabledDate(time) {
           const curDate = new Date()
           return time.getTime() > curDate.getTime() - 24 * 60 * 60 * 1000
+          // || time.getTime < curDate.getTime() - new Date(vm.searchObj.settleStartDate).getTime()
         }
       },
       businessSettleId: '', // 订单列表查询id
@@ -146,7 +148,14 @@ export default {
         },
         {
           label: '订单类型',
-          prop: 'orderType'
+          prop: 'orderType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.orderType, 'orderTypeList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.orderTypeList
+          }
         },
         {
           label: '订单金额(元)',
@@ -213,10 +222,10 @@ export default {
     queryData(val) {
       const { id } = this.$route.params
       if (val.detailBusinessSettleVo && id) {
-        const { settleStartDate, settleEndDate, settleStatus, payStatus, opCreator, created } = val.detailBusinessSettleVo
+        const { settleStartDate, settleEndDate, settleStatus, payStatus, opCreator, created, shopId } = val.detailBusinessSettleVo
         this.searchObj = {
           ...this.searchObj,
-          shopId: id,
+          shopId,
           settleStartDate,
           settleEndDate,
           settleStatus,
@@ -242,7 +251,6 @@ export default {
     queryShopList() {
       this.$api.channel.getShopList({ shopType: 2, status: 1, pageSize: 100, pageNo: 1 }).then(res => {
         if (res && res.data) {
-          console.log(res, 'shopList')
           this.shopList = res.data.map(val => ({ label: val.shopName, value: val.shopId }))
         }
       })

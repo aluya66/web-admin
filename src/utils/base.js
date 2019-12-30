@@ -28,7 +28,8 @@ export const isArray = arr => Array.isArray(arr)
  * // 先提取整数部分，对整数部分添加分隔符
  * @param {*} num
  */
-export const setNumToThousand = num => num.toString().replace(/\d+/, n => n.replace(/(\d)(?=(\d{3})+$)/g, $1 => $1 + ','))
+export const setNumToThousand = num => num.toString().replace(/\d+/, n => n.replace(
+  /(\d)(?=(\d{3})+$)/g, $1 => $1 + ','))
 
 /**
  * 设置金额格式为数字
@@ -405,6 +406,34 @@ export const getRandomNum = () => `${Math.random()}`.split('.')[1].substr(0, 16)
 export const isExternal = path => {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
+
+/**
+ * 数据处理-准确(准确程度视位数而定)的加减法
+ * @param arrNum 加减数的数组
+ * @param isNum	(选填)返回结果是否为数字,默认返回字符串
+ * @param digits (选填)精确位数,默认为2位
+ * @returns
+ */
+export const sumPack = (arrNum, isNum, digits) => {
+  digits = digits || 2
+  isNum = isNum || false
+  const multi = Math.pow(10, digits)
+  let intSum = 0
+  for (let i in arrNum) {
+    let num = arrNum[i]
+    if (num !== '' && !isNaN(num)) {
+      let fltNum = Number(num)
+      // 此处也可考虑将四舍五入放在加减后进行,视业务需求而定
+      let intNum = Math.round(fltNum * multi)
+      intSum += intNum
+    } else if (isNaN(num)) {
+      console.log('can not parse : ' + num)
+    }
+  }
+  let fltSum = intSum / multi
+  return isNum ? fltSum : fltSum.toFixed(digits)
+}
+
 export const Event = new Vue()
 export default {
   isDebug,
@@ -433,5 +462,6 @@ export default {
   setNumToThousand,
   setThousandToNum,
   handleDate,
+  sumPack,
   Event
 }

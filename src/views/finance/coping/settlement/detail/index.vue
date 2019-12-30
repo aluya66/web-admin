@@ -8,7 +8,7 @@
     </template>
     <div class="main__box">
       <order-list :init-data.sync="detailData" :is-edit="isEdit"></order-list>
-      <template v-if="detailData.detailBusinessSettleVo.settleStatus">
+      <template v-if="detailData.detailBusinessSettleVo.settleStatus && isNotEmpty">
         <!-- 合计 -->
         <el-divider content-position="left">合计：</el-divider>
         <div class="card-info">
@@ -33,7 +33,7 @@
             <span>实际售后退款总金额(元)：{{detailData.detailBusinessSettleVo.afterActualRetund}}</span>
           </div>
           <div class="row">
-            <span>应结算总金额(元)：{{detailData.detailBusinessSettleVo.settleMoney}}</span>
+            <span>应结算总金额(元)：{{detailData.detailBusinessSettleVo.settleWaitPay}}</span>
           </div>
         </div>
         <!-- 合计 -->
@@ -45,16 +45,18 @@
           <el-divider content-position="left">付款信息：</el-divider>
           <div class="card-info">
             <div class="row">
-              <span>应结算总额(元)：{{detailData.detailBusinessSettleVo.settleWaitPay}}</span>
-              <span class="blue">已结算金额(元)：{{detailData.detailBusinessSettleVo.settleAlreadyPay}}</span>
-              <span class="red">待结算金额(元)：{{detailData.detailBusinessSettleVo.settleActualPay}}</span>
+              <span>财务审核应结算总金额(元)：{{detailData.detailBusinessSettleVo.settleActualPay}}</span>
+            </div>
+            <div class="row">
+              <span class="blue">已结算总金额(元)：{{detailData.detailBusinessSettleVo.payAmount}}</span>
+              <span class="red">待结算总金额(元)：{{waitPay}}</span>
             </div>
           </div>
           <!-- 付款信息 -->
           <!-- 付款记录 -->
           <el-divider content-position="left">付款记录：</el-divider>
           <div class="card-info">
-            <el-button size="small" type="primary" @click.native.prevent="showTypeDialog(3)">添加付款记录</el-button>
+            <el-button size="small" type="primary" @click.native.prevent="showTypeDialog(3)" v-if="detailData.detailBusinessSettleVo.settleStatus === 2 && detailData.detailBusinessSettleVo.payStatus === 1">添加付款记录</el-button>
             <pay-log :settle-id="$route.params.id || ''" :change-time="changeTime"/>
           </div>
           <!-- 付款记录 -->
@@ -65,6 +67,8 @@
           <div class="row">
             <span>银行开户名：{{detailData.businessResp.bankOfDeposit}}</span>
             <span>银行卡号：{{detailData.businessResp.bankCardNo}}</span>
+          </div>
+          <div class="row">
             <span>开户支行名称：{{detailData.businessResp.bankBranchName}}</span>
             <span>开户银行地址：{{detailData.businessResp.bankBranchRegion}}</span>
           </div>
@@ -74,11 +78,11 @@
         </div>
         <!-- 收款账号信息 -->
       </template>
-      <div class="card-info">
+      <div class="card-info" v-if="isNotEmpty">
         <template
           v-if="detailData.detailBusinessSettleVo && detailData.detailBusinessSettleVo.settleStatus === 4"
         >
-          <el-button :size="size" type="primary" @click.native.prevent="showTypeDialog(4)">保存返回</el-button>
+          <el-button :size="size" type="primary" @click.native.prevent="showTypeDialog(4)">保存</el-button>
           <el-button
             :size="size"
             type="primary"
@@ -88,20 +92,17 @@
         </template>
         <template v-else-if="detailData.detailBusinessSettleVo.settleStatus === 1">
           <el-button :size="size" type="primary" @click.native.prevent="showTypeDialog(1)">结算核对完成</el-button>
-          <el-button
-            :size="size"
-            type="primary"
-            @click.native.prevent="showTypeDialog(1, true)"
-          >结算核对并进行确认</el-button>
           <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
         </template>
-        <template v-else-if="detailData.detailBusinessSettleVo.payStatus">
+        <template v-else-if="detailData.detailBusinessSettleVo.payStatus === 1">
           <el-button :size="size" type="primary" @click.native.prevent="showTypeDialog(5)">确认完成</el-button>
           <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
         </template>
       </div>
       <!-- 日志记录 -->
-      <template v-if="detailData.detailBusinessSettleVo.settleStatus !== 4">
+      <template
+        v-if="detailData.detailBusinessSettleVo.settleStatus && detailData.detailBusinessSettleVo.settleStatus !== 4"
+      >
         <el-divider content-position="left">日志记录：</el-divider>
         <div class="card-info">
           <log :settle-id="$route.params.id || ''"/>
@@ -118,6 +119,9 @@
         @on-submit="dialogConfirm"
       >
         <page-dialog ref="childRef" :data-obj="dialogObj.initData" :show-type="dialogObj.type"></page-dialog>
+        <template v-slot:headerInfo>
+          <p class="info-content">{{dialogObj.info}}</p>
+        </template>
       </c-dialog>
     </div>
   </c-view>
@@ -153,12 +157,25 @@ export default {
       payLogList: [] // 付款记录列表
     }
   },
-
   created() {
     const { id } = this.$route.params
     if (id) {
       this.isEdit = true
       this.fetchData()
+    }
+  },
+  computed: {
+    // 待结算总金额
+    waitPay() {
+      if (this.detailData.detailBusinessSettleVo) {
+        const { payAmount = 0, settleActualPay } = this.detailData.detailBusinessSettleVo
+        return (Number(settleActualPay) - Number(payAmount)).toFixed(2)
+      }
+      return '0.00'
+    },
+    // 当销售和售后都为零时，不能创建结算单
+    isNotEmpty() {
+      return this.detailData.detailBusinessSettleVo.sellOrderNum && this.detailData.detailBusinessSettleVo.afterOrderNum
     }
   },
   methods: {
@@ -167,17 +184,43 @@ export default {
     */
     showTypeDialog(type, flag) {
       this.isGoTo = flag
-      const { settleWaitPay, settleAlreadyPay, id } = this.detailData.detailBusinessSettleVo
-      this.dialogObj = {
-        title: '提示',
-        isShow: true,
-        type,
-        initData: {
-          id,
-          settleWaitPay,
-          settleAlreadyPay,
-          remark: ''
+      const { settleWaitPay, settleActualPay, payAmount, id, settleStatus } = this.detailData.detailBusinessSettleVo
+      if (type !== 4) {
+        let info = '' // 弹出框特殊提示
+        let title = '提示'
+        // type 1为结算单核对确认，2为新增结算单，3为添加付款记录，4为新增取消，5为确认完成打款操作
+        switch (type) {
+          case 1:
+            info = '请认真核对结算金额后，再进行确认操作！'
+            title = '核对结算单'
+            break
+          case 2:
+            info = '请填写取消的原由!'
+            break
+          case 3:
+            title = '添加付款记录'
+            break
+          case 5:
+            info = '请确认打款完成，再进行确认操作！'
+            title = '核对打款金额'
+            break
         }
+        this.dialogObj = {
+          title,
+          isShow: true,
+          type,
+          info,
+          initData: {
+            id,
+            settleStatus,
+            settleWaitPay,
+            settleActualPay: type === 1 ? settleWaitPay : settleActualPay,
+            curPayAmount: payAmount,
+            remark: ''
+          }
+        }
+      } else {
+        this.optHandle({ id, settleStatus: 1 }, true)
       }
     },
 
@@ -197,7 +240,33 @@ export default {
         }
       })
     },
-
+    /**
+     * 结算单核算、新增保存、新增取消操作
+     */
+    optHandle(params, isAdd) {
+      this.$api.finance.financialSettle(params).then(res => {
+        const { type } = this.dialogObj
+        let msgTip = '结算单保存成功'
+        if (type) {
+          msgTip = type === 1 ? '结算单核对完成' : '取消成功'
+          this.dialogObj.isShow = false
+        }
+        this.$msgTip(msgTip).then(res => {
+          if (isAdd && this.isGoTo) {
+            if (isAdd) {
+              const { path } = this.$route
+              this.routerLink(`${path}/${this.detailData.detailBusinessSettleVo.id}`)
+            } else {
+              // 结算单核对后，直接刷数据可以进行打款
+              this.fetchData()
+            }
+          } else {
+            this.closeCurrentTag()
+            this.goBack()
+          }
+        })
+      })
+    },
     dialogConfirm() {
       const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
@@ -205,29 +274,33 @@ export default {
           let params = {}
           // 添加付款记录
           if (this.dialogObj.type === 3) {
-            const { settleAlreadyPay, settleWaitPay, id, ...other } = childRef.formModel
+            const { id, payAmount, serviceFee, paySerialNumber, remark } = childRef.formModel
             params = {
               businessSettleId: id,
-              ...other
+              payAmount,
+              serviceFee,
+              paySerialNumber,
+              remark
             }
             this.$api.finance.savePaymentLog(params).then(res => {
               this.dialogObj.isShow = false
               this.$msgTip('添加付款记录成功')
               this.changeTime = new Date().getTime()
+              this.detailData.detailBusinessSettleVo.payAmount = Number(this.detailData.detailBusinessSettleVo.payAmount) + Number(payAmount)
             })
             return false
           }
-          // 部分付款和全部付款
+          // 全部付款
           if (this.dialogObj.type === 5) {
-            const { id } = childRef.formModel
-            const isTrue = this.detailData.detailBusinessSettleVo.settleAlreadyPay < this.detailData.detailBusinessSettleVo.settleWaitPay
+            const { id, remark } = childRef.formModel
             params = {
-              businessSettleId: id,
-              payStatus: isTrue ? 2 : 3
+              id,
+              payStatus: 3,
+              remark
             }
             this.$api.finance.financialFinishPay(params).then(res => {
               this.dialogObj.isShow = false
-              this.$msgTip(isTrue ? '部分支付成功' : '全部支付成功').then(res => {
+              this.$msgTip('已全部支付完成').then(res => {
                 this.closeCurrentTag()
                 this.goBack()
               })
@@ -244,33 +317,16 @@ export default {
               id,
               remark
             }
-          } else if (this.dialogObj.type === 2 || this.dialogObj.type === 4) {
-            // 新增结算
+          } else if (this.dialogObj.type === 2) {
+            // 取消关闭
             const { remark, id } = childRef.formModel
-            if (this.dialogObj.type === 4) { // 取消
-              params = {
-                settleStatus: 1
-              }
-            }
             params = {
-              ...params,
+              settleStatus: 3,
               id,
               remark
             }
           }
-          this.$api.finance.financialSettle(params).then(res => {
-            const { type } = this.dialogObj
-            this.dialogObj.isShow = false
-            this.$msgTip(type === 1 ? '结算核对完成' : type === 4 ? '保存成功' : '取消成功').then(res => {
-              if (type === 4 && this.isGoTo) {
-                const { path } = this.$route
-                this.routerLink(path, 'replace')
-              } else {
-                this.closeCurrentTag()
-                this.goBack()
-              }
-            })
-          })
+          this.optHandle(params)
         } else {
           console.log('error submit!!')
           return false
@@ -295,5 +351,10 @@ export default {
       }
     }
   }
+}
+.info-content {
+  margin: -30px 0 10px 0;
+  line-height: 30px;
+  font-size: @f16;
 }
 </style>

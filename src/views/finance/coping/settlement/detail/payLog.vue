@@ -4,6 +4,7 @@
     hasBorder
     :max-height="300"
     :size="size"
+    :auto-scroll="false"
     :loading="isLoading"
     :table-header="tableHeader"
     :table-list="tableList"

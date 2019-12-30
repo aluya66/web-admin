@@ -12,6 +12,9 @@
     <div slot="title" v-if="$slots.header">
       <slot name="header"></slot>
     </div>
+    <div class="dialog-info" v-if="$slots.headerInfo">
+      <slot name="headerInfo"></slot>
+    </div>
 		<div class="dialog-content">
 			<slot />
 		</div>
