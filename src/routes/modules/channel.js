@@ -20,11 +20,11 @@ export default {
   },
   {
     path: '/channel/shop/detail/:id?',
-    name: 'channelDetail',
+    name: 'shopDetail',
     hidden: true,
     component: () => import('@/views/channel/shop/detail/index'),
     meta: {
-      title: 'channelDetail',
+      title: 'shopDetail',
       icon: 'table'
     }
   },

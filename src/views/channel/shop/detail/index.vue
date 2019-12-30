@@ -16,19 +16,10 @@
       <s-shop
         :is-view="isView"
         :is-disabled="isDisabled"
-        :data-obj="formModel"
+        :data-obj.sync="formModel"
         ref="basicRef"
-        title="商铺信息"
         @show-image="reviewImage"
       ></s-shop>
-      <s-people
-        :is-view="isView"
-        :is-disabled="isDisabled"
-        v-if="formModel"
-        :data-obj="formModel"
-        ref="paramsRef"
-        title="其他信息"
-      ></s-people>
       <el-form-item class="form-btn" v-if="!isView">
         <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
       </el-form-item>
@@ -37,18 +28,44 @@
 </template>
 
 <script>
+import MixinForm from 'mixins/form'
 import SShop from './shop'
-import SPeople from './people'
 
 export default {
   name: 'shopDetail',
   components: {
-    SShop,
-    SPeople
+    SShop
   },
+  mixins: [MixinForm],
   data() {
     return {
-      formModel: {},
+      formModel: {
+        shopType: 1, // 门店类型
+        businessCode: '', // 选择商户
+        shopLogo: [], // 门店logo
+        shopName: '', // 门店名称
+        shopAddress: 1, // 门店地址
+        address: '', // 详细地址
+        coordinate: '', // 门店坐标
+        contact: '', // 联系人
+        contactTel: '', // 联系手机
+        usePos: false, // 使用pos
+        isConnectPrinter: false, // 是否关联打印机
+        printer: '', // 打印机编号
+        businessType: 1, // 经营方式 1加盟
+        settleType: 1, // 结算方式 1先款后贷
+        status: '', // 状态
+        isRecommend: '', // 是否推荐
+        style: '', // 店铺风格
+        shopImage: [], // 店招图片
+        exhibitionImage: [], // 展馆图
+        videoUrl: [], // 店铺视频
+        businessHours: '', // 营业时间
+        shopDescription: '', // 描述
+        isVisible: '', // 是否隐藏门店
+        stockCheck: '', // 支持盘点
+        channelCode: [] // 关联渠道
+      },
       isView: true,
       isDisabled: true,
       btnLoading: false
@@ -86,9 +103,6 @@ export default {
         videoUrl: file.videoUrl,
         fileType: file.fileType
       }
-    },
-    goBack() {
-      this.$router.go(-1)
     }
   }
 }

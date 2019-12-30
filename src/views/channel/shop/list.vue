@@ -2,6 +2,14 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
+      <div class="header-btn">
+        <el-button
+          type="primary"
+          :size="size"
+          icon="el-icon-plus"
+          @click="routerLink('/channel/shop/detail/index')"
+        >新增</el-button>
+      </div>
     </template>
     <div class="main__box">
       <c-table
@@ -86,18 +94,18 @@ export default {
           width: 100
         },
         {
-          label: '店铺名称',
+          label: '门店名称',
           prop: 'shopName',
           search: {
             type: 'input'
           }
         },
         {
-          label: '店铺风格',
+          label: '门店风格',
           prop: 'styleName'
         },
         {
-          label: '店铺类型',
+          label: '经营方式',
           prop: 'shopType',
           search: {
             type: 'select',
@@ -108,7 +116,11 @@ export default {
           }
         },
         {
-          label: '店铺地址',
+          label: '关联商户',
+          prop: 'businessName'
+        },
+        {
+          label: '门店地址',
           prop: 'address',
           isPopover: true
         },

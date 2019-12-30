@@ -140,7 +140,6 @@ export default {
               this.$nextTick(() => {
                 this.$refs.customerTableRef.$refs.multipleTable.toggleRowSelection(this.tableList[idx])
               })
-              console.log(idx, this.tableList[idx])
             }
           })
         })
