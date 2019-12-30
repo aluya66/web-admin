@@ -35,10 +35,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <channel-connect
-          ref="childRef"
-          :initChecked="formModel.channelCode"
-        ></channel-connect>
+        <channel-connect ref="childRef" :initChecked="formModel.channelCode"></channel-connect>
       </c-dialog>
     </div>
   </c-view>
@@ -47,15 +44,20 @@
 <script>
 import MixinForm from 'mixins/form'
 import SShop from './shop'
+import ChannelConnect from './add'
+import CDialog from './add'
 
 export default {
   name: 'shopDetail',
   components: {
-    SShop
+    SShop,
+    ChannelConnect,
+    CDialog
   },
   mixins: [MixinForm],
   data() {
     return {
+      dialogObj: {},
       formModel: {
         shopType: 1, // 门店类型
         businessCode: '', // 选择商户
@@ -92,11 +94,16 @@ export default {
     // this.fetchData()
   },
   methods: {
-    showDialog(opts) {
+    dialogConfirm() {
+      this.formModel.channelCode = this.$refs.childRef.checkedAttr
+      this.dialogObj.isShow = false
+    },
+    showDialog() {
       this.dialogObj = {
         isShow: true,
         title: '关联渠道'
       }
+       console.log(this.dialogObj)
     },
     fetchData() {
       const { params } = this.$route
