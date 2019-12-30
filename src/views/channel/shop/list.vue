@@ -128,7 +128,7 @@ export default {
           },
           search: {
             type: 'dict',
-            optionsList: shopTypeSelect
+            optionsList: shopStatusSelect
           }
         },
         {

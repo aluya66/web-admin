@@ -7,8 +7,10 @@
     :max-height="300"
     :loading="isLoading"
     :table-header="tableHeader"
+    :page-info="pageInfo"
     @selection-handle="handleSelection"
     :table-list="tableList"
+    @change-pagination="changePagination"
   >
     <template v-slot:header>
       <c-search
@@ -105,11 +107,11 @@ export default {
     },
     fetchData() {
       this.isLoading = true
+      const { totalNum, ...page } = this.pageInfo
       this.$api.marketing.getCoupon({
         ...this.searchObj,
+        ...page,
         platformList: [this.platformList],
-        pageNo: 1,
-        pageSize: 100,
         status: 5 // 进行中的优惠券
       }).then(res => {
         this.isLoading = false
