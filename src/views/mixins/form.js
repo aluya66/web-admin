@@ -24,7 +24,7 @@ export default {
       } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
         callback()
       } else {
-        return callback(new Error('请输入最多两位小数的数字'))
+        return callback(new Error('最多八位整数两位小数的数字'))
       }
     }
     return {

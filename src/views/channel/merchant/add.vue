@@ -35,7 +35,7 @@
         </el-form-item>
         <el-form-item label="商户类型:" prop="businessType">
           <query-dict
-            :disabled="isEdit"
+            disabled
             :dict-list="businessTypeList"
             class="select-item"
             placeholder="请选择商户类型"
@@ -227,7 +227,7 @@ export default {
       businessTypeList: dictObj.shopTypeList, // 商户类型集合
       formModel: {
         businessName: '', // 商户名称
-        businessType: '', // 商户类型
+        businessType: 2, // 商户类型
         responsibleName: '', // 负责人
         responsiblePhone: '', // 负责人手机
         companyAddress: '', // 详细地址
