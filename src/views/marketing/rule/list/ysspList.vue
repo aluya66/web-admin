@@ -79,7 +79,7 @@ export default {
             }
             vm.formModel = {
               couponId: row.couponId,
-              couponRemark: row.couponRemark
+              couponRemark: row.opEditor
             }
           }
         },
