@@ -243,7 +243,6 @@
           v-if="dialogObj.type === 'customer'"
           :sourceList="memberList"
           :initChecked="formModel.selectedCustomerList"
-          @RemoteMethod="getMember"
         ></customer-select>
       </c-dialog>
     </div>
@@ -366,7 +365,6 @@ export default {
     const { id, type } = this.$route.params
     this.formModel.platformList = type
     id && this.fetchData(id)
-    this.getMember()
     this.getMemberType()
   },
   methods: {
@@ -375,23 +373,6 @@ export default {
     },
     cancelSelect(index) {
       this.formModel.selectedCustomerList.splice(index, 1)
-    },
-    getMember(val = '') {
-      // 发券渠道暂只能选择YOSHOP，其他平台后续业务再对接
-      this.$api.member.getMember({
-        pageNo: 1,
-        pageSize: 1000,
-        appCode: 'yssp',
-        name: val
-      }).then(res => {
-        this.isLoading = false
-        if (res && res.totalCount) {
-          const { data } = res
-          this.memberList = data || []
-        } else {
-          this.memberList = res || []
-        }
-      })
     },
     // 拼接会员等级到会员分类列表 类型有 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
     // 类型4为接口请求获得， 16为指定用户选中后保存时候添加
@@ -418,7 +399,7 @@ export default {
       this.dialogObj = {
         type,
         isShow: true,
-        title: '选择卡券'
+        title: type === 'coupon' ? '选择卡券' : '选择用户'
       }
     },
     fetchData(couponId) {
