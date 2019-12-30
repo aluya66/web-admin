@@ -136,8 +136,16 @@
           >{{item.label}}</el-radio>
         </el-radio-group>
         <!-- 发券时间类型：指定日期 -->
-        <el-form-item prop="issueTime" v-if="formModel.issueTimeType === 32">
+        <el-form-item prop="issueTimeStart" v-if="formModel.issueTimeType === 32">
           <el-date-picker
+            :size="size"
+            v-model="formModel.issueTimeStart"
+            type="datetime"
+            :picker-options="pickerOptions"
+             value-format="yyyy-MM-dd HH:mm:ss"
+            align="right"
+          ></el-date-picker>
+          <!-- <el-date-picker
             :size="size"
             v-model="formModel.issueTime"
             type="datetimerange"
@@ -148,7 +156,7 @@
             end-placeholder="截止日期"
             :default-time="['00:00:00', '23:59:59']"
             align="right"
-          ></el-date-picker>
+          ></el-date-picker> -->
         </el-form-item>
 
         <!-- 发券时间类型：每月 -->
@@ -347,6 +355,7 @@ export default {
         ]
       },
       formModel: {
+        issueTimeStart: '',
         receiveTimeType: 32, // 每人可领
         issueTimeType: 1, // 发券时间 类型
         selectedCustomerList: [], // 指定用户
@@ -416,7 +425,8 @@ export default {
           receiveType,
           couponDetails,
           issueTimeStart,
-          issueTimeEnd,
+          // issueTimeStart,
+          // issueTimeEnd,
           marketLimitUser
         } = res
         couponDetails = couponDetails ? couponDetails.map((item) => {
@@ -481,8 +491,8 @@ export default {
               Object.assign(params, { issueTimeValues })
               break
             case 32:
-              const issueTime = [issueTimeStart, issueTimeEnd]
-              Object.assign(params, { issueTime })
+              // const issueTime = [issueTimeStart, issueTimeEnd]
+              Object.assign(params, { issueTimeStart })
           }
         }
         if (receiveType === 2) { // 手动领券
@@ -516,7 +526,7 @@ export default {
             limitReceive, // 每人可领类型 次数
             issueTimeType, // 发券时间 类型 1 立即  2 年  4 月 8 周 16 日 32 固定时间区间
             issueTimeValues, // 发券时间类型为 16月 8周时， 天数、周列表数据
-            issueTime // 发券时间类型为 32 固定日期时间
+            issueTimeStart // 发券时间类型为 32 固定日期时间
           } = this.formModel
           // 处理优惠券列表数据
           let couponDetailsArr = couponDetails ? couponDetails.map((item) => {
@@ -564,8 +574,9 @@ export default {
                 Object.assign(params, { issueTimeValues })
                 break
               case 32:
-                const searchDate = this.getSearchDate(issueTime, 'dateTime', 'issueTimeStart', 'issueTimeEnd')
-                Object.assign(params, { ...searchDate })
+                // const searchDate = this.getSearchDate(issueTime, 'dateTime', 'issueTimeStart', 'issueTimeEnd')
+                // Object.assign(params, { ...searchDate })
+                Object.assign(params, { issueTimeStart })
                 break
             }
           }
