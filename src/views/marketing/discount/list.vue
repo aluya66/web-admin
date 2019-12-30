@@ -216,7 +216,6 @@ export default {
         ...page
       }).then(res => {
         this.isLoading = false
-        console.log(res, res.totalCount)
         if (res && res.totalCount) {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
