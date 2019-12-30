@@ -116,8 +116,15 @@ export default {
           }
         },
         {
-          name: '删除',
-          icon: 'el-icon-delete',
+          // 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
+          prop: {
+            name: 'status',
+            toggle: [{
+              title: '删除',
+              icon: 'el-icon-delete',
+              value: [0, 1, 2, 3, 4, 6, 7, 8]
+            }]
+          },
           handle(row) {
             const { couponName, couponRuleId } = row
             vm.confirmTip(`确认删除  ${couponName}  劵信息`, () => {
@@ -192,7 +199,7 @@ export default {
               case 2:
                 return row.limitExpireDay + '天'
               case 4:
-                return '领券30天内'
+                return '领券当月有效'
             }
           }
         },

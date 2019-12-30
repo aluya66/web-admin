@@ -104,7 +104,7 @@
               <el-form-item
                 :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
                 :rules="{
-                  required: true, validator: checkNumber, trigger: 'blur'
+                  required: true, validator: checkDiscountNumber, trigger: 'blur'
                 }"
               >
                 <el-input
@@ -284,11 +284,20 @@ import MixinForm from 'mixins/form'
 import MixinFormCard from 'mixins/formCard'
 import utils from 'utils'
 import dictObj from '@/store/dictData'
-
+const checkDiscountNumber = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('字段不能为空'))
+  } else if (/^([1-9]{1}\d{0,6})(\.\d{0,1})?$/.test(value) || /^(0{1})(\.\d{0,1})?$/.test(value)) {
+    callback()
+  } else {
+    return callback(new Error('最多八位整数一位小数的数字'))
+  }
+}
 export default {
   mixins: [MixinForm, MixinFormCard],
   data() {
     return {
+      checkDiscountNumber,
       rules: {
         activityName: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
