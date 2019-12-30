@@ -366,7 +366,6 @@ export default {
     const { id, type } = this.$route.params
     this.formModel.platformList = type
     id && this.fetchData(id)
-    this.getMember()
     this.getMemberType()
   },
   methods: {
@@ -380,7 +379,7 @@ export default {
       // 发券渠道暂只能选择YOSHOP，其他平台后续业务再对接
       this.$api.member.getMember({
         pageNo: 1,
-        pageSize: 1000,
+        pageSize: 10,
         appCode: 'yssp',
         name: val
       }).then(res => {
@@ -418,7 +417,7 @@ export default {
       this.dialogObj = {
         type,
         isShow: true,
-        title: '选择卡券'
+        title: type === 'coupon' ? '选择卡券' : '选择用户'
       }
     },
     fetchData(couponId) {
