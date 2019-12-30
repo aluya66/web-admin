@@ -25,7 +25,7 @@
         ></query-dict>
       </el-form-item>
       <el-form-item label="领取方式:" prop="receiveType" v-if="formModel.platformList === 'yssp'">
-        <el-radio-group v-model="formModel.receiveType">
+        <el-radio-group v-model="formModel.receiveType" @change="changeReceiveType">
           <el-radio
             v-for="item in receiveTypeList"
             :key="item.value"
@@ -83,7 +83,15 @@
         prop="customerType"
         v-if="formModel.platformList === 'yssp'"
       >
-        <el-radio-group v-model="formModel.customerType">
+        <el-radio-group v-model="formModel.customerType" v-if="formModel.receiveType === 1">
+          <el-radio
+            class="checkbox-item"
+            :label="item.type"
+            v-for="(item, index) in customerTypeList.slice(1,3)"
+            :key="index"
+          >{{ item.label }}</el-radio>
+        </el-radio-group>
+        <el-radio-group v-model="formModel.customerType" v-if="formModel.receiveType === 2">
           <el-radio
             class="checkbox-item"
             :label="item.type"
@@ -362,6 +370,9 @@ export default {
     this.getMemberType()
   },
   methods: {
+    changeReceiveType(val) {
+      val === 1 ? this.formModel.customerType = 4 : this.formModel.customerType = 1
+    },
     cancelSelect(index) {
       this.formModel.selectedCustomerList.splice(index, 1)
     },
