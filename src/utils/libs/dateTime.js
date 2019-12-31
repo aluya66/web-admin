@@ -81,6 +81,31 @@ export const pickerOptions = {
   ]
 }
 
+// element-ui 时间限制
+export const disabledDate = {
+  /**
+   * 禁用当前时间以前的日期，不包括当天
+   * @param {*} time
+   */
+  disPrevToday(time) {
+    return time.getTime() < Date.now() - 8.64e7
+  },
+  /**
+   * 禁用当前时间以后的日期，不包括当天
+   * @param {*} time
+   */
+  disNextToday(time) {
+    return time.getTime() > Date.now()
+  },
+  /**
+   * 禁用当前时间以前的日期，包括当天
+   * @param {*} time
+   */
+  disToday(time) {
+    return time.getTime() < Date.now()
+  }
+}
+
 export function formatTime (time, option) {
   if (('' + time).length === 10) {
     time = parseInt(time) * 1000
@@ -155,5 +180,6 @@ export default {
   formatTime,
   getCurrentTime,
   getCurMonthDays,
-  pickerOptions
+  pickerOptions,
+  disabledDate
 }

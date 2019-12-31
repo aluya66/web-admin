@@ -280,9 +280,7 @@ export default {
       ],
       pickerOptions: {
         ...utils.pickerOptions,
-        disabledDate(time) {
-          return time.getTime() < Date.now()
-        }
+        disabledDate: utils.disabledDate.disPrevToday
       },
       ticketTypeArr: dictObj.ticketTypeList,
       btnLoading: false,
