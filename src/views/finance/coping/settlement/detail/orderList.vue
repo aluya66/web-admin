@@ -55,18 +55,14 @@
             ></el-date-picker>
           </el-form-item>
           <template v-if="isEdit">
-            <el-form-item label="结算状态:">
-              {{setTableColumnLabel(searchObj.settleStatus, 'settleStatusList')}}
-            </el-form-item>
-            <el-form-item label="支付状态:">
-              {{setTableColumnLabel(searchObj.payStatus, 'payStatusList')}}
-            </el-form-item>
-            <el-form-item label="制单人:">
-              {{searchObj.opCreator}}
-            </el-form-item>
-            <el-form-item label="制单时间:">
-              {{searchObj.created}}
-            </el-form-item>
+            <el-form-item
+              label="结算状态:"
+            >{{setTableColumnLabel(searchObj.settleStatus, 'settleStatusList')}}</el-form-item>
+            <el-form-item
+              label="支付状态:"
+            >{{setTableColumnLabel(searchObj.payStatus, 'payStatusList')}}</el-form-item>
+            <el-form-item label="制单人:">{{searchObj.opCreator}}</el-form-item>
+            <el-form-item label="制单时间:">{{searchObj.created}}</el-form-item>
           </template>
           <el-button
             type="primary"
@@ -93,7 +89,7 @@
             :loading="btnGoodsLoading"
             @click="exportGoodsList"
           >导出订单商品清单</el-button>
-        </div> -->
+        </div>-->
       </template>
     </c-table>
   </c-view>
@@ -130,8 +126,7 @@ export default {
       pickerOptions: {
         disabledDate(time) {
           const curDate = new Date()
-          return time.getTime() > curDate.getTime() - 24 * 60 * 60 * 1000
-          // || time.getTime < curDate.getTime() - new Date(vm.searchObj.settleStartDate).getTime()
+          return time.getTime() > curDate.getTime() - 24 * 60 * 60 * 1000 || time.getTime() < new Date(vm.searchObj.settleStartDate).getTime()
         }
       },
       businessSettleId: '', // 订单列表查询id

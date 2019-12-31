@@ -55,13 +55,13 @@ export default {
     const checkCheckNumber = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('实际结算金额不能为空'))
-      } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
+      } else if ((/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) && Number(value)) {
         if (Number(vm.formModel.settleWaitPay) < Number(value)) {
           return callback(new Error('实际结算金额不能大于应结算总金额'))
         }
         callback()
       } else {
-        return callback(new Error('实际结算金额为不大于9999999.99，且最多两位小数的有效数字'))
+        return callback(new Error('实际结算金额为大于0小于等于9999999.99，且最多两位小数的有效数字'))
       }
     }
 
@@ -69,10 +69,10 @@ export default {
       if (!value) {
         return callback(new Error('手续费不能为空'))
       } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
-        if (utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) < value) {
+        if (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < Number(value)) {
           return callback(new Error('手续费不能大于应结算总金额减去已结算总金额的额度'))
         }
-        if (vm.formModel.payAmount && (utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.payAmount]))) {
+        if (vm.formModel.payAmount && (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.payAmount]))) {
           return callback(new Error('手续费与付款金额之和不能大于应结算金额减去已结算金额的额度'))
         }
         callback()
@@ -84,17 +84,16 @@ export default {
     const checkAmountNumber = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('付款金额不能为空'))
-      } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{1,2})$/.test(value)) {
-        if (utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) < value) {
-          console.log(utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) === value)
+      } else if ((/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{1,2})$/.test(value)) && Number(value)) {
+        if (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < Number(value)) {
           return callback(new Error('付款金额不能大于应结算总金额减去已结算总金额的额度'))
         }
-        if ((vm.formModel.serviceFee || Number(vm.formModel.serviceFee) === 0) && (utils.sumPack([vm.formModel.settleWaitPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.serviceFee]))) {
+        if ((vm.formModel.serviceFee || Number(vm.formModel.serviceFee) === 0) && (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.serviceFee]))) {
           return callback(new Error('付款金额与手续费之和不能大于应结算总金额减去已结算总金额的额度'))
         }
         callback()
       } else {
-        return callback(new Error('付款金额为大于零小于等于9999999.99，且最多两位小数的有效数字'))
+        return callback(new Error('付款金额为大于0小于等于9999999.99，且最多两位小数的有效数字'))
       }
     }
     return {

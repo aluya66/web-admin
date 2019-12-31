@@ -39,7 +39,7 @@
         <!-- 合计 -->
         <div
           class="payStatus"
-          v-if="detailData.detailBusinessSettleVo.payStatus && (detailData.detailBusinessSettleVo.settleStatus !== 4 && detailData.detailBusinessSettleVo.settleStatus !== 1)"
+          v-if="detailData.detailBusinessSettleVo.settleStatus !== 4 && detailData.detailBusinessSettleVo.settleStatus !== 1"
         >
           <!-- 付款信息 -->
           <el-divider content-position="left">付款信息：</el-divider>
@@ -56,7 +56,7 @@
           <!-- 付款记录 -->
           <el-divider content-position="left">付款记录：</el-divider>
           <div class="card-info">
-            <el-button size="small" type="primary" @click.native.prevent="showTypeDialog(3)" v-if="detailData.detailBusinessSettleVo.settleStatus === 2 && detailData.detailBusinessSettleVo.payStatus === 1">添加付款记录</el-button>
+            <el-button size="small" type="primary" @click.native.prevent="showTypeDialog(3)" v-if="detailData.detailBusinessSettleVo.settleStatus === 2 && detailData.detailBusinessSettleVo.payStatus !== 3">添加付款记录</el-button>
             <pay-log :settle-id="$route.params.id || ''" :change-time="changeTime"/>
           </div>
           <!-- 付款记录 -->
@@ -83,18 +83,18 @@
           v-if="detailData.detailBusinessSettleVo && detailData.detailBusinessSettleVo.settleStatus === 4"
         >
           <el-button :size="size" type="primary" @click.native.prevent="showTypeDialog(4)">保存</el-button>
-          <el-button
+          <!-- <el-button
             :size="size"
             type="primary"
             @click.native.prevent="showTypeDialog(4, true)"
-          >保存并进行结算</el-button>
+          >保存并进行核对</el-button> -->
           <el-button :size="size" @click.native.prevent="showTypeDialog(2)">取消</el-button>
         </template>
         <template v-else-if="detailData.detailBusinessSettleVo.settleStatus === 1">
           <el-button :size="size" type="primary" @click.native.prevent="showTypeDialog(1)">结算核对完成</el-button>
           <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
         </template>
-        <template v-else-if="detailData.detailBusinessSettleVo.payStatus === 1">
+        <template v-else-if="detailData.detailBusinessSettleVo.payStatus !== 3 && detailData.detailBusinessSettleVo.settleStatus !== 3">
           <el-button :size="size" type="primary" @click.native.prevent="showTypeDialog(5)">确认完成</el-button>
           <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
         </template>

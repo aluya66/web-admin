@@ -28,7 +28,6 @@
           ></c-search>
           <div class="header-btn">
             <el-button type="primary" :size="size" icon="el-icon-plus" @click="routerLink('/finance/coping/settlement/detail')">新增</el-button>
-            <el-button :size="size" disabled icon="el-icon-download" @click="exportFile">导出</el-button>
           </div>
         </template>
       </c-table>
@@ -48,8 +47,8 @@ export default {
       tableInnerBtns: [{
         name: '详情',
         icon: 'el-icon-view',
-        noBtn(row) {
-          return (row.settleStatus === 2 && row.payStatus === 2) || (row.settleStatus === 3 && row.payStatus === 1)
+        notBtn(row) {
+          return !(row.settleStatus === 2 && row.payStatus === 3) && !(row.settleStatus === 3 && row.payStatus === 1)
         },
         handle(row) {
           vm.routerLink(`/finance/coping/settlement/detail/${row.id}`)
@@ -126,9 +125,6 @@ export default {
     this.fetchData()
   },
   methods: {
-    exportFile() {
-
-    },
     /*
 	   * 查询表格列表数据
 	   */
