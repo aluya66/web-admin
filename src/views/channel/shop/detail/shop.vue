@@ -318,13 +318,12 @@ import utils from 'utils'
 import MixinForm from 'mixins/form'
 import MixinFormCard from 'mixins/formCard'
 import mixinTable from 'mixins/table'
-import CImage from 'components/image'
+// import CImage from 'components/image'
 import CUpload from 'components/upload'
 
 export default {
   components: {
-    CUpload,
-    CImage
+    CUpload
   },
   props: {
     title: String,
@@ -537,11 +536,11 @@ export default {
     uploadSuccess(response, file, fileList) {
       // shopLogoRef、shopImageRef、exhibitionImageRef、videoUrl
       // if (this.uploadType === 'videoUrl') {
-      //   this.formModel[this.uploadType] = fileList  
-      //   this.formModel.videoUrlCoverImage = fileList  
+      //   this.formModel[this.uploadType] = fileList
+      //   this.formModel.videoUrlCoverImage = fileList
       // }
       console.log(this.formModel[this.uploadType], this.uploadType)
-      this.formModel[this.uploadType] = fileList  
+      this.formModel[this.uploadType] = fileList
     },
     uploadRemove(file, fileList) {
       this.fileList = fileList

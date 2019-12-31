@@ -103,7 +103,7 @@ export default {
         isShow: true,
         title: '关联渠道'
       }
-       console.log(this.dialogObj)
+      console.log(this.dialogObj)
     },
     fetchData() {
       const { params } = this.$route
