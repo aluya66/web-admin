@@ -142,7 +142,7 @@
             v-model="formModel.issueTimeStart"
             type="datetime"
             :picker-options="pickerOptions"
-             value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
             align="right"
           ></el-date-picker>
           <!-- <el-date-picker
@@ -156,7 +156,7 @@
             end-placeholder="截止日期"
             :default-time="['00:00:00', '23:59:59']"
             align="right"
-          ></el-date-picker> -->
+          ></el-date-picker>-->
         </el-form-item>
 
         <!-- 发券时间类型：每月 -->
@@ -309,7 +309,13 @@ export default {
           value: 2
         }
       ],
-      pickerOptions: utils.pickerOptions,
+      pickerOptions: {
+        ...utils.pickerOptions,
+        selectableRange: `${utils.getCurrentTime()} - 23:59:59`,
+        disabledDate(time) {
+          return time.getTime() < Date.now()
+        }
+      },
       limitReceiveTimeTypeList: [ // 发券时间类型
         {
           label: '立即发送',
@@ -375,6 +381,7 @@ export default {
     this.formModel.platformList = type
     id && this.fetchData(id)
     this.getMemberType()
+    console.log(utils.getCurrentTime())
   },
   methods: {
     changeReceiveType(val) {
