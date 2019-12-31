@@ -44,7 +44,7 @@
             v-for="(item, index) in formModel.marketPreferentialRules"
             :key="index"
           >
-            <el-col :span="3">
+            <el-col :span="5">
               <el-form-item
                 inline
                 :prop="'marketPreferentialRules.' + index + '.preferentialLevel'"
@@ -53,31 +53,13 @@
                 }"
               >
                 <el-input
-                  class="discount-item"
+                  class="discount-item-extra"
                   v-model.trim="item.preferentialLevel"
                   :size="size"
                   placeholder
                   clearable
                 >
                   <template slot="prepend">满</template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col class="discount-type" :span="0.5">-</el-col>
-            <el-col :span="3">
-              <el-form-item
-                :prop="'marketPreferentialRules.' + index + '.preferentiaMaxlLevel'"
-                :rules="{
-                  validator: checkIntNoQuired, trigger: 'blur'
-                }"
-              >
-                <el-input
-                  class="discount-item"
-                  v-model.trim="item.preferentiaMaxlLevel"
-                  :size="size"
-                  placeholder
-                  clearable
-                >
                   <template slot="append">件</template>
                 </el-input>
               </el-form-item>
@@ -104,7 +86,7 @@
               <el-form-item
                 :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
                 :rules="{
-                  required: true, validator: checkNumber, trigger: 'blur'
+                  required: true, validator: checkDiscountNumber, trigger: 'blur'
                 }"
               >
                 <el-input
@@ -284,11 +266,20 @@ import MixinForm from 'mixins/form'
 import MixinFormCard from 'mixins/formCard'
 import utils from 'utils'
 import dictObj from '@/store/dictData'
-
+const checkDiscountNumber = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('字段不能为空'))
+  } else if (/^([1-9]{1}\d{0,6})(\.\d{0,1})?$/.test(value) || /^(0{1})(\.\d{0,1})?$/.test(value)) {
+    callback()
+  } else {
+    return callback(new Error('最多八位整数一位小数的数字'))
+  }
+}
 export default {
   mixins: [MixinForm, MixinFormCard],
   data() {
     return {
+      checkDiscountNumber,
       rules: {
         activityName: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -351,7 +342,6 @@ export default {
     addRules() {
       let obj = {
         preferentialLevel: '',
-        preferentiaMaxlLevel: '',
         preferentialType: '',
         preferentialValue: '',
         unit: ''
@@ -363,7 +353,6 @@ export default {
       this.formModel.activityType = value
       let obj = {
         preferentialLevel: '',
-        preferentiaMaxlLevel: '',
         preferentialType: '',
         preferentialValue: '',
         unit: ''
@@ -392,6 +381,10 @@ export default {
   }
   .discount-item {
     min-width: 120px;
+    max-width: 100%;
+  }
+  .discount-item-extra {
+    min-width: 150px;
     max-width: 100%;
   }
   .rule-btn {
