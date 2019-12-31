@@ -1,6 +1,6 @@
 <template>
   <div class="c-table">
-    <slot name="header"/>
+    <slot name="header" />
     <el-table
       ref="multipleTable"
       stripe
@@ -14,9 +14,20 @@
       tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      @select="handleSelect"
+      @select-all="handleSelectAll"
       @current-change="handleSingleChange"
+      @expand-change="handleExpandChange"
+      :row-style="rowStyle"
+      :cell-style="cellStyle"
+      :header-cell-style="headerCellStyle"
     >
-      <el-table-column v-if="selection" :align="align" type="selection" width="55"/>
+      <el-table-column v-if="expand" :align="align" type="expand" width="55">
+        <template slot-scope="scope">
+          <slot name="expand" :props="scope.row" />
+        </template>
+      </el-table-column>
+      <el-table-column v-if="selection" :align="align" type="selection" width="55" />
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
@@ -36,9 +47,10 @@
           ></c-image>
           <el-popover trigger="hover" placement="top" v-else-if="item.isPopover">
             <p>{{scope.row[item.prop]}}</p>
-            <div slot="reference" class="name-wrapper">
-              <div class="text-multi-ellipsis">{{ scope.row[item.prop] }}</div>
-            </div>
+            <div
+              slot="reference"
+              class="name-wrapper text-multi-ellipsis"
+            >{{ scope.row[item.prop] }}</div>
           </el-popover>
           <div v-else-if="item.vHtml" v-html="item.vHtml(scope.row)"></div>
           <div v-else-if="item.handle" class="title-active" @click="item.handle(scope.row)">
@@ -46,7 +58,7 @@
             item.formatter ? item.formatter(scope.row, index) : scope.row[item.prop]
             }}
           </div>
-          <span :class="item.setColor && item.setColor(scope.row)" v-else>
+          <span :class="[item.colClass, item.setColor && item.setColor(scope.row)]" v-else>
             {{
             item.formatter ? item.formatter(scope.row, index) : scope.row[item.prop]
             }}
@@ -99,7 +111,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <slot name="footer"/>
+    <slot name="footer" />
     <c-pagination
       v-show="!noPage && tableList.length > 0"
       :total="pageInfo.totalNum"
@@ -147,6 +159,11 @@ export default {
         return []
       }
     },
+    // 是否要扩展行
+    expand: {
+      type: Boolean,
+      default: false
+    },
     selection: {
       type: Boolean,
       default: false
@@ -181,7 +198,10 @@ export default {
       type: Boolean,
       default: false
     },
-    maxHeight: Number
+    maxHeight: Number,
+    rowStyle: Object,
+    cellStyle: Object,
+    headerCellStyle: Object
   },
   data() {
     return {
@@ -220,6 +240,9 @@ export default {
     }, false)
   },
   methods: {
+    selectAll() {
+      this.$refs.multipleTable.toggleAllSelection()
+    },
     // 记录当前table滚动记录
     saveScroll() {
       this.$nextTick(() => {
@@ -230,18 +253,32 @@ export default {
     setBtnAttribute(btn, row, type) {
       const { toggle, name } = btn.prop || {}
       if (name && toggle && type) {
+        if (toggle.every((item) => item.value)) { // toggle是否都有value属性, typeof value === array value为状态支持显示的按钮
+          let item = toggle.find(item => item.value.includes(row[name]))
+          return item ? item[type] : ''
+        }
         return toggle[row[name]][type]
       }
       return btn[type]
     },
     curBtns(row) {
-      return this.tableInnerBtns.filter(res => {
-        if (res.notBtn) {
-          return !!row[res.notBtn]
+      const tableInnerBtns = this.tableInnerBtns.filter(res => {
+        if (res.prop && res.prop.toggle && res.prop.toggle.every((item) => item.value)) {
+          return res.prop.toggle.some(val => val.value.includes(row[res.prop.name]))
+        }
+        if (res.notBtn) { // 渠道关联关联后，屏蔽关联按钮 !row[res.notBtn].length
+          if (typeof res.notBtn === 'function') { // 多个条件状态，判断是否显示某一个按钮时
+            return res.notBtn(row)
+          }
+          return Array.isArray(row[res.notBtn]) ? !row[res.notBtn].length : !!row[res.notBtn]
         } else {
           return true
         }
       })
+      return tableInnerBtns
+    },
+    toggleRowSelection(row, flag = true) {
+      this.$refs.multipleTable.toggleRowSelection(row, flag)
     },
     // 选中取消
     toggleSelection(rows) {
@@ -252,7 +289,7 @@ export default {
           this.$refs.multipleTable.setCurrentRow(rows)
         } else {
           rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row)
+            this.$refs.multipleTable.toggleRowSelection(row, true)
           })
         }
       } else {
@@ -274,6 +311,12 @@ export default {
       this.multipleSelection = val
       this.$emit('selection-handle', val)
     },
+    handleSelect(vals, val) {
+      this.$emit('handle-select', vals, val)
+    },
+    handleSelectAll(val) {
+      this.$emit('handle-selectall', val)
+    },
     // 表格行操作函数
     handleClick(handle, item, index) {
       if (typeof handle === 'string') {
@@ -289,6 +332,10 @@ export default {
     // 翻页和切换页码
     changePagination(pageInfo) {
       this.$emit('change-pagination', pageInfo)
+    },
+    // 展开一行
+    handleExpandChange(row) {
+      this.$emit('expand-change', row)
       this.resetScroll()
     },
     // 重置滚动位置
@@ -304,11 +351,13 @@ export default {
 .c-table {
   position: relative;
   margin-top: 10px;
-  // min-height: calc(100vh - 150px);
-  .el-form-item {
-    margin-bottom: 10px;
+  .el-table thead {
+    line-height: 0;
   }
   .search-form {
+    .el-form-item {
+      margin-bottom: 10px;
+    }
     margin-bottom: 10px;
     width: 100%;
     .search-item {
@@ -334,11 +383,19 @@ export default {
     }
   }
   .text-multi-ellipsis {
-    .multi-ellipsis(2);
+    .multi-ellipsis(1);
   }
   .title-active {
     color: @active;
     cursor: pointer;
   }
+  // .el-table__fixed, .el-table__fixed-right{
+  //   .cell {
+  //     word-break: normal;
+  //   }
+  // }
+}
+.el-popover {
+  max-width: 800px;
 }
 </style>

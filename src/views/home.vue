@@ -3,7 +3,7 @@
     <template v-slot:header>
       <div class="title">{{setTitleLang($route.meta.title, 'route') }}</div>
     </template>
-    <div class="box">欢迎登录使用{{ title }}！</div>
+    <div class="main__box">欢迎登录使用{{ title }}！</div>
   </c-view>
 </template>
 

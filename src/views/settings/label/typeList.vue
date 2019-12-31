@@ -1,5 +1,6 @@
 <template>
   <c-table
+    ref="cTable"
     selection
     hasBorder
     :size="size"
@@ -12,51 +13,18 @@
     @change-pagination="changePagination"
   >
     <template v-slot:header>
-      <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-        <el-form-item label="类型名称">
-          <el-input
-            v-model="searchObj.categoryName"
-            class="search-item"
-            :size="size"
-            placeholder="类型名称"
-            clearable
-          />
-        </el-form-item>
-        <el-form-item label="类型分类">
-          <query-dict
-            :dict-list="categoryTypeList"
-            class="search-item"
-            :size="size"
-            placeholder="请选择"
-            :value.sync="searchObj.categoryType"
-          ></query-dict>
-        </el-form-item>
-        <el-form-item label="业务线">
-          <query-dict
-            :dict-list="lobList"
-            class="search-item"
-            :size="size"
-            placeholder="请选择"
-            :value.sync="searchObj.categoryLob"
-          ></query-dict>
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            type="primary"
-            class="search-btn"
-            :size="size"
-            icon="el-icon-search"
-            @click="searchSubmit"
-          >查询</el-button>
-        </el-form-item>
-      </el-form>
+      <c-search
+        :form-model="searchObj"
+        :form-items="searchItems"
+        @submit-form="searchSubmit"
+        @reset-form="searchReset"
+      ></c-search>
     </template>
   </c-table>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
-import utils from 'utils'
 import dictObj from '@/store/dictData'
 
 export default {
@@ -64,14 +32,6 @@ export default {
   mixins: [mixinTable],
   data(vm) {
     return {
-      lobList: dictObj.lobList, // 业务线集合
-      categoryTypeList: dictObj.categoryTypeList, // 类型分类集合
-      searchObj: {
-        categoryName: '', // 类型名称
-        categoryLob: '', // 业务线
-        categoryType: '' // 分类类型
-      },
-      pickerOptions: utils.pickerOptions,
       tableInnerBtns: [
         {
           name: '编辑',
@@ -102,21 +62,31 @@ export default {
       tableHeader: [
         {
           label: '类型名称',
-          prop: 'categoryName'
+          prop: 'categoryName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '业务线',
           prop: 'categoryLob',
           formatter(row) {
-            const lobObj = row.categoryLob && vm.lobList.find(res => row.categoryLob === res.value)
-            return lobObj ? lobObj.label : ''
+            return row && vm.setTableColumnLabel(row.categoryLob, 'lobListAll')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.lobListAll
           }
         },
         {
           label: '类型分类',
           prop: 'categoryType',
           formatter(row) {
-            return row.categoryType || row.categoryType === 0 ? vm.categoryTypeList[row.categoryType].label : ''
+            return row && vm.setTableColumnLabel(row.categoryType, 'categoryTypeList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.categoryTypeList
           }
         },
         // {
@@ -142,9 +112,9 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.settings.getTabTypeList({
         ...searchDate,

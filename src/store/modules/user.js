@@ -28,17 +28,22 @@ const actions = {
       login({
         userName: userName,
         password: utils.encrypt(password)
-      }).then(data => {
-        // 默认system用户角色id为0,中台默认5
-        utils.setStore('SET_USERINFO', data)
-        getMenuList({ parentId: 0 }).then(res => {
-          const curMenu = res.find(item => item.path.indexOf('pillar-console.yosar') !== -1 || item.title.indexOf('中台') === 0)
-          if (curMenu) {
-            commit('SET_USERINFO', { ...data, id: curMenu.id })
-            utils.setStore('SET_USERINFO', { ...data, id: curMenu.id })
-          }
-          resolve()
-        })
+      }).then(res => {
+        const { code, data } = res
+        if (code === 0) {
+          utils.setStore('SET_USERINFO', data)
+          // 默认system用户角色id为0,中台默认5
+          getMenuList({ parentId: 0 }).then(res => {
+            const curMenu = res.find(item => item.path.indexOf('pillar-console.yosar') !== -1 || item.title.indexOf('中台') === 0)
+            if (curMenu) {
+              commit('SET_USERINFO', { ...data, id: curMenu.id })
+              utils.setStore('SET_USERINFO', { ...data, id: curMenu.id })
+            }
+            resolve()
+          })
+        } else {
+          reject(res)
+        }
       })
     })
   },

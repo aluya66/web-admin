@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -21,61 +22,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="字典名称">
-              <el-input
-                v-model="searchObj.dictName"
-                class="search-item"
-                :size="size"
-                placeholder="字典名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="字典编码">
-              <el-input
-                v-model="searchObj.dictCode"
-                class="search-item"
-                :size="size"
-                placeholder="字典编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="业务线">
-              <query-dict
-                :dict-list="lobList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.dictLob"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="字典值">
-              <el-input
-                v-model="searchObj.dictValue"
-                class="search-item"
-                :size="size"
-                placeholder="字典值"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="状态">
-              <query-dict
-                :dict-list="disStatus"
-                class="search-item"
-                :size="size"
-                :value.sync="searchObj.status"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
           <!-- <div class="check-list" v-if="tableCheckedList.length > 1">
             您已选中 {{ tableCheckedList.length }} 条数据
             <span @click="deleteData">批量删除</span>
@@ -111,21 +63,11 @@ export default {
   },
   data(vm) {
     return {
-      lobList: dictObj.lobList, // 业务线集合
-      disStatus: dictObj.disStatus, // 启用禁用集合
       // dictOpts: { // 字典参数, 路由页面需要配置
       //   codes: [], // ['disabled']
       //   dictLob: ''
       // },
       dialogObj: {}, // 对话框数据
-      searchObj: {
-        dictCode: '', // 字典编码
-        dictName: '', // 字典名称
-        dictLob: '', // 字典业务线
-        dictValue: '', // 字典值
-        status: '' // 字典状态
-      },
-      tableList: [],
       tableInnerBtns: [
         {
           width: 130,
@@ -154,18 +96,27 @@ export default {
         {
           label: '字典名称',
           prop: 'dictName',
-          fixed: true
+          fixed: true,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '字典编码',
-          prop: 'dictCode'
+          prop: 'dictCode',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '业务线',
           prop: 'dictLob',
           formatter(row) {
-            const lobObj = row.dictLob && vm.lobList.find(res => row.dictLob === res.value)
-            return lobObj ? lobObj.label : ''
+            return row && vm.setTableColumnLabel(row.dictLob, 'lobListAll')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.lobListAll
           }
         },
         {
@@ -174,6 +125,10 @@ export default {
           width: 400,
           formatter(row) {
             return row.values.map(item => item.dictValue).join('/')
+          },
+          search: {
+            type: 'input',
+            prop: 'dictValue'
           }
         },
         {
@@ -184,8 +139,12 @@ export default {
           label: '状态',
           prop: 'status',
           width: 100,
-          formatter(row, index) {
-            return row.status || row.status === 0 ? vm.disStatus[row.status].label : ''
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.status, 'disStatus')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.disStatus
           }
         }
       ]
@@ -196,9 +155,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.settings.getDictList({
         ...searchDate,

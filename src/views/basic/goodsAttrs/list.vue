@@ -14,6 +14,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -26,65 +27,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="属性名称">
-              <el-input
-                v-model="searchObj.tagName"
-                class="search-item"
-                :size="size"
-                placeholder="属性名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="属性类型">
-              <query-dict
-                :dict-list="tagTypeList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.categoryId"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="属性值">
-              <el-input
-                v-model="searchObj.value"
-                class="search-item"
-                :size="size"
-                placeholder="属性值"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="业务线">
-              <query-dict
-                :dict-list="lobList"
-                class="search-item"
-                :size="size"
-                placeholder="请选择"
-                :value.sync="searchObj.categoryLob"
-              ></query-dict>
-            </el-form-item>
-            <el-form-item label="创建时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="daterange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
       <div v-if="dialogObj.isShow">
@@ -111,7 +59,6 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import AttrAdd from '@/views/settings/label/labelAdd'
-import utils from 'utils'
 import dictObj from '@/store/dictData'
 
 const pageItemType = ['文本', '复选', '单选'] // 页面显示类型
@@ -125,18 +72,8 @@ export default {
   },
   data(vm) {
     return {
-      lobList: dictObj.lobList, // 业务线集合
-      disStatus: dictObj.disStatus, // 启用/禁用
       tagTypeList: [], // 属性集合
       dialogObj: {}, // 对话框数据
-      searchObj: {
-        tagName: '', // 属性名称
-        categoryId: '', // 属性类型id
-        value: '', // 属性值
-        dataTime: '', // 操作时间
-        tagStatus: '' // 是否禁用
-      },
-      pickerOptions: utils.pickerOptions,
       tableInnerBtns: [
         {
           width: 130,
@@ -185,11 +122,19 @@ export default {
           label: '属性名称',
           prop: 'tagName',
           fixed: true,
-          width: 150
+          width: 150,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '属性类型',
-          prop: 'categoryName'
+          prop: 'categoryName',
+          search: {
+            type: 'dict',
+            prop: 'categoryId',
+            optionsList: []
+          }
         },
         {
           label: '属性值',
@@ -197,6 +142,10 @@ export default {
           width: 600,
           formatter(row) {
             return row.tagValues.map(item => item.value).filter(d => d).join('/')
+          },
+          search: {
+            type: 'input',
+            prop: 'value'
           }
         },
         {
@@ -210,21 +159,32 @@ export default {
           label: '业务线',
           prop: 'categoryLob',
           formatter(row) {
-            const lobObj = row.categoryLob && vm.lobList.find(res => row.categoryLob === res.value)
-            return lobObj ? lobObj.label : ''
+            return row && vm.setTableColumnLabel(row.categoryLob, 'lobListAll')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.lobListAll
           }
         },
         {
           label: '属性状态',
           prop: 'tagStatus',
           formatter(row) {
-            return row.tagStatus || row.tagStatus === 0 ? vm.disStatus[row.tagStatus].label : ''
+            return row && vm.setTableColumnLabel(row.tagStatus, 'disStatus')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.disStatus
           }
         },
         {
           label: '创建时间',
           prop: 'created',
-          width: 100
+          width: 100,
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         }
         // {
         //   label: '更新时间',
@@ -246,13 +206,14 @@ export default {
       }).then(res => {
         if (res && res.length) {
           this.tagTypeList = res.map(res => ({ label: res.categoryName, value: res.id }))
+          this.setSearchOptionsList('categoryId', this.tagTypeList)
         }
       })
     },
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.settings.getTabList({
         categoryType: 0, // 商品属性

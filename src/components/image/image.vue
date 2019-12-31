@@ -12,14 +12,10 @@
 
 <script>
 import create from 'utils/create'
-// import { Image } from 'element-ui'
 
 export default create({
   name: 'image',
   inheritAttrs: false,
-  components: {
-    // Image
-  },
   props: {
     url: {
       type: String,
@@ -32,8 +28,7 @@ export default create({
 <style lang="less">
 .c-image {
   display: flex;
-  width: 80px;
-  height: 80px;
+  height: 60px;
   img {
     justify-items: center;
     align-items: center;

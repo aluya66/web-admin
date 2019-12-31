@@ -8,10 +8,10 @@
     label-position="right"
     status-icon
   >
-    <el-form-item label="类型名称" prop="categoryName">
+    <el-form-item label="类型名称:" prop="categoryName">
       <el-input v-model.trim="formModel.categoryName" class="form-item" clearable/>
     </el-form-item>
-    <el-form-item label="业务线" prop="categoryLob">
+    <el-form-item label="业务线:" prop="categoryLob">
       <query-dict
         :dict-list="lobList"
         class="form-select"
@@ -20,7 +20,7 @@
         :value.sync="formModel.categoryLob"
       ></query-dict>
     </el-form-item>
-    <el-form-item label="类型分类" prop="categoryType">
+    <el-form-item label="类型分类:" prop="categoryType">
       <query-dict
         :dict-list="categoryType"
         class="form-select"
@@ -36,7 +36,7 @@
         maxlength="300"
         show-word-limit
         placeholder="请输入类型描述"
-        v-model="formModel.categoryDesc"
+        v-model.trim="formModel.categoryDesc"
       ></el-input>
     </el-form-item>
   </el-form>

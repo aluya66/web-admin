@@ -8,10 +8,10 @@
     label-position="right"
     status-icon
   >
-    <el-form-item label="字典名称" prop="dictName">
+    <el-form-item label="字典名称:" prop="dictName">
       <el-input v-model.trim="formModel.dictName" class="form-item" clearable></el-input>
     </el-form-item>
-    <el-form-item label="字典编码" prop="dictCode">
+    <el-form-item label="字典编码:" prop="dictCode">
       <el-input v-model.trim="formModel.dictCode" :disabled="isEdit" class="form-item" clearable></el-input>
     </el-form-item>
     <el-form-item label="业务线:" prop="dictLob">
@@ -35,7 +35,7 @@
         maxlength="100"
         show-word-limit
         placeholder="请输入备注"
-        v-model="formModel.remark"
+        v-model.trim="formModel.remark"
       ></el-input>
     </el-form-item>
     <el-form-item
@@ -90,7 +90,7 @@ export default {
   },
   data() {
     return {
-      lobList: dictObj.lobList, // 业务线集合
+      lobList: dictObj.lobListAll, // 业务线集合
       delArr: [], // 删除id集合
       rules: {
         dictName: [

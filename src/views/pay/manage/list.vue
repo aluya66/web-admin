@@ -5,6 +5,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :max-height="685"
@@ -104,7 +105,7 @@
             <el-form-item label="交易时间">
               <el-date-picker
                 :size="size"
-                v-model="searchObj.dataTime"
+                v-model="searchObj.dateTime"
                 type="datetimerange"
                 :picker-options="pickerOptions"
                 range-separator="至"
@@ -144,13 +145,13 @@ export default {
       pickerOptions: utils.pickerOptions,
       dialogObj: {},
       searchObj: {
-        tradeUserName: '', // 用户名称
+        tradeUserName: '', // 用户姓名
         transactionCode: '', // 订单编号
         tradeItemType: '', // 类型
         appCode: '', // 业务线
         accountStatus: '', // 对账状态
         channelCode: '', // 交易渠道
-        dataTime: ''
+        dateTime: ''
       },
       tradeItemSelect: [
         {
@@ -426,9 +427,9 @@ export default {
 
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.pay.getPay({
         ...searchDate,

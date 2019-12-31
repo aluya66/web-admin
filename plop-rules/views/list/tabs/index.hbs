@@ -1,0 +1,121 @@
+<template>
+  <c-view>
+    <template v-slot:headerTab>
+      <el-tabs type="card" v-model="activeName">
+        <el-tab-pane
+          v-for="(item, index) in tabTitle"
+          :key="index"
+          :label="item.label"
+          :name="item.value"
+        ></el-tab-pane>
+      </el-tabs>
+      <div class="header-btn">
+        <el-button type="primary" v-permission="$route.meta.roles" icon="el-icon-plus" size="medium" @click="showDialog">新增</el-button>
+      </div>
+    </template>
+    <div class="main__box">
+      <keep-alive>
+        <component ref="childList" v-bind:is="activeName" @showDialog="showDialog"></component>
+      </keep-alive>
+    </div>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <{{camelCase firstName}}-add
+          ref="childRef"
+          v-if="activeName === '{{camelCase firstName}}List'"
+          :is-edit="dialogObj.isEdit"
+          :init-data.sync="dialogObj.initData"
+          :tag-type="tagTypeList"
+        ></{{camelCase firstName}}-add>
+        <{{camelCase secondName}}-add
+          ref="childRef"
+          v-if="activeName === '{{camelCase secondName}}List'"
+          :is-edit="dialogObj.isEdit"
+          :init-data.sync="dialogObj.initData"
+        ></{{camelCase secondName}}-add>
+      </c-dialog>
+    </div>
+  </c-view>
+</template>
+<script>
+import CDialog from 'components/dialog'
+import {{properCase firstName}}List from './{{camelCase firstName}}List'
+import {{properCase firstName}}Add from './{{camelCase firstName}}Add'
+import {{properCase secondName}}List from './{{camelCase secondName}}List'
+import {{properCase secondName}}Add from './{{camelCase secondName}}Add'
+
+export default {
+  name: '{{camelCase name}}',
+  components: {
+    CDialog,
+    {{properCase firstName}}List,
+    {{properCase firstName}}Add,
+    {{properCase secondName}}List,
+    {{properCase secondName}}Add
+  },
+  data(vm) {
+    return {
+      dialogObj: {}, // 对话框数据
+      activeName: '{{camelCase firstName}}List',
+      tabTitle: [
+        {
+          value: '{{camelCase firstName}}List',
+          label: '标签1'
+        },
+        {
+          value: '{{camelCase secondName}}List',
+          label: '标签2'
+        }
+      ]
+    }
+  },
+  created() {
+
+  },
+  methods: {
+    dialogConfirm() {
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
+				if (valid) {
+					const params = childRef.formModel
+					const curType = this.activeName === '{{camelCase firstName}}List' ? '{{camelCase firstName}}' : '{{camelCase secondName}}'
+					const curAction = this.dialogObj.isEdit ? `edit${curType}` : `add${curType}`
+					// TODO...
+          this.$api.{{camelCase apiFile}}[curAction]({
+						// TODO...
+						...params
+					}).then(() => {
+            this.responeHandle( this.dialogObj.isEdit ? '更新成功' : '新增成功')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || (this.activeName === '{{camelCase firstName}}List' ? '新增标签1' : '新增标签2'),
+        isEdit: opts.isEdit || false,
+        initData: opts.initData
+      }
+    },
+    /**
+     * 新增&编辑保存时,请求返回通用处理函数
+     * @param {*} msg
+     */
+    responeHandle(msg = '新增成功') {
+      this.dialogObj.isShow = false
+      this.$msgTip(msg)
+      this.$refs.childList.fetchData()
+    }
+  }
+}
+</script>

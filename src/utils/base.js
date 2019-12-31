@@ -1,3 +1,5 @@
+import Vue from 'vue'
+import fileDownload from 'js-file-download'
 /**
  * 是否开发标识
  */
@@ -22,6 +24,19 @@ export const isInteger = val => val && !/^[1-9]\d*$/.test(val)
 export const isArray = arr => Array.isArray(arr)
 
 /**
+ * 将数字转换为千分位显示
+ * // 先提取整数部分，对整数部分添加分隔符
+ * @param {*} num
+ */
+export const setNumToThousand = num => num.toString().replace(/\d+/, n => n.replace(/(\d)(?=(\d{3})+$)/g, $1 => $1 + ','))
+
+/**
+ * 设置金额格式为数字
+ * @param {*} val
+ */
+export const setThousandToNum = val => val && val.trim().replace(/,/g, '')
+
+/**
  * 路由打开新窗口
  * 还可以通过<router-link target="_blank" 和 <a target="_blank"这两种方式开新窗口
  */
@@ -41,6 +56,28 @@ export const openNewWin = (routerOpts) => {
   }
   window.open(routePath, '_blank')
 }
+
+/**
+ * 日期处理，回显到日期组件中
+ * @param {*} startDate 起始日期
+ * @param {*} endDate 结束日期
+ * return [startDate, endDate] 返回一个数组， [起始时间，结束时间]
+ */
+export const handleDate = (startDate, endDate) => {
+  return [Date(startDate), Date(endDate)]
+}
+
+/**
+ * 二进制流文件转换成xlsx文件
+ * @param {file} file
+ */
+export const createBlobFile = fileDownload
+// export const createBlobFile = (file) => {
+// let blob = new Blob([file], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=ISO8859-1' })
+// let fileUrl = URL.createObjectURL(blob)
+// window.location.href = fileUrl
+// }
+
 /**
  *  统一跳转到登陆页面
  */
@@ -202,24 +239,14 @@ export const objectMerge = (target, source) => {
  * @param {*} fn
  * @param {*} delay
  */
-export const debounce = (fn, delay) => {
+export const debounce = (fn, delay, that) => {
   // eslint-disable-next-line no-undef
-  let args = arguments
-  let context = this
   let timer = null
-
+  clearTimeout(timer)
   return function () {
-    if (timer) {
-      clearTimeout(timer)
-
-      timer = setTimeout(function () {
-        fn.apply(context, args)
-      }, delay)
-    } else {
-      timer = setTimeout(function () {
-        fn.apply(context, args)
-      }, delay)
-    }
+    timer = setTimeout(function () {
+      fn.apply(that, arguments)
+    }, delay)
   }
 }
 /**
@@ -229,8 +256,6 @@ export const debounce = (fn, delay) => {
  */
 export const throttle = (fn, delay) => {
   // eslint-disable-next-line no-undef
-  let args = arguments
-  let context = this
   let timer = null
   let remaining = 0
   let previous = new Date()
@@ -244,12 +269,12 @@ export const throttle = (fn, delay) => {
         clearTimeout(timer)
       }
 
-      fn.apply(context, args)
+      fn.apply(this, arguments)
       previous = now
     } else {
       if (!timer) {
         timer = setTimeout(function () {
-          fn.apply(context, args)
+          fn.apply(this, arguments)
           previous = new Date()
         }, delay - remaining)
       }
@@ -368,12 +393,13 @@ export const getRandomNum = () => `${Math.random()}`.split('.')[1].substr(0, 16)
 export const isExternal = path => {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
-
+export const Event = new Vue()
 export default {
   isDebug,
   isObject,
   isArray,
   isInteger,
+  createBlobFile,
   confirmTip,
   getCurrentUserLanguage,
   donwFile,
@@ -391,5 +417,9 @@ export default {
   isExternal,
   getUrlParam,
   openNewWin,
-  goToLogin
+  goToLogin,
+  setNumToThousand,
+  setThousandToNum,
+  handleDate,
+  Event
 }

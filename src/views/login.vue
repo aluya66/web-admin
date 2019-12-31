@@ -148,7 +148,8 @@ export default {
               }
               this.$router.push({ path: this.redirect || '/' })
             })
-            .catch(() => {
+            .catch(err => {
+              this.$msgTip(`${err.message}【${err.code}】`, 'warning')
               this.loading = false
             })
         } else {

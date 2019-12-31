@@ -3,6 +3,13 @@ import utils from 'utils'
 
 import errFun from './err'
 
+// 请求编码模式
+const CONTENTTYPE = {
+  common: 'application/json', // 以json数据传输
+  upload: 'multipart/form-data', // 上传文件或二进制数据传输
+  serializeData: 'application/x-www-form-urlencoded' // post模式，数据以&key=value拼接传输
+}
+
 let cancel = null
 const promiseArr = {}
 // const CancelToken = axios.CancelToken;
@@ -35,14 +42,26 @@ instance.interceptors.request.use((config) => {
 }, err => Promise.reject(err))
 
 // 拦截返回的信息，做统一异常处理
-instance.interceptors.response.use((response) => {
-  const {
-    data
-  } = response
-  if (data.code === 0) {
-    // 正常返回数据，指返回data;
-    return response.data
+instance.interceptors.response.use(response => {
+  const { data, config, headers } = response
+  if (response.status === 200) {
+    if (data && config.responseType === 'arraybuffer') { // 下载
+      const contentDisposition = headers['content-disposition']
+      let filename = null
+      if (contentDisposition) {
+        filename = contentDisposition.split(';').find(res => res.indexOf('filename=') !== -1)
+      }
+      return {
+        data,
+        filename: filename ? decodeURIComponent(filename.split('=')[1]) : '下载文件.xlxs'
+      }
+    }
+    if (data.code === 0) {
+      // 正常返回数据，指返回data;
+      return data
+    }
   }
+
   // 异常返回数据，返回
   if (!promiseArr.isGlobalErr) {
     errFun && errFun(data)
@@ -58,8 +77,7 @@ instance.interceptors.response.use((response) => {
  */
 const setHeaderMethod = mtd => {
   let method = 'post'
-  let contentType = 'application/json'
-  // contentType = 'application/x-www-form-urlencoded'
+  let contentType = CONTENTTYPE.common
   switch (mtd) {
     case 'post':
     case 'get':
@@ -96,12 +114,7 @@ const setProxy = mockFile => `/mock/${mockFile}`
 
 const setParams = (url, params = {}, opt = {}) => {
   promiseArr.isGlobalErr = !!opt.hasErrMsg
-  // 所有接口统一参数
-  params = {
-    // 参数全局配置
-    // code...
-    ...params
-  }
+
   // 请求个性化配置
   instance.defaults.customConfig = {
     loading: true,
@@ -113,18 +126,22 @@ const setParams = (url, params = {}, opt = {}) => {
     url = setProxy(opt.mockFile)
   }
   // 设置header和method
-  const {
+  let {
     method,
     contentType
   } = setHeaderMethod(opt.method)
   const token = utils.getStore('SET_USERINFO') ? utils.getStore('SET_USERINFO').token : ''
+  if (CONTENTTYPE[opt.contentType]) {
+    contentType = CONTENTTYPE[opt.contentType] // 特殊接口指定contentType
+  }
   let curParams = {
     url,
     headers: {
       'Content-Type': contentType,
       'token': opt.token || token
     },
-    method
+    method,
+    responseType: opt.responseType || 'json' // 下载文件时传入 opt.responseType为 arraybuffer
   }
   // get请求和post请求参数和
   if (method.toLowerCase() === 'get') {
@@ -139,7 +156,7 @@ const setParams = (url, params = {}, opt = {}) => {
     }
   } else {
     curParams = {
-      data: contentType === 'application/x-www-form-urlencoded' ? utils.serializeParam(params)
+      data: contentType === CONTENTTYPE.serializeData ? utils.serializeParam(params)
         : params,
       ...curParams
     }

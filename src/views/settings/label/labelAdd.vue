@@ -8,10 +8,10 @@
     label-position="right"
     status-icon
   >
-    <el-form-item label="标签名称" prop="tagName">
+    <el-form-item label="标签名称:" prop="tagName">
       <el-input v-model.trim="formModel.tagName" class="form-item" clearable></el-input>
     </el-form-item>
-    <el-form-item label="标签类型" prop="categoryId">
+    <el-form-item label="标签类型:" prop="categoryId">
       <query-dict
         :dict-list="tagType"
         class="form-select"
@@ -42,7 +42,7 @@
         maxlength="300"
         show-word-limit
         placeholder="请输入标签描述"
-        v-model="formModel.tagDesc"
+        v-model.trim="formModel.tagDesc"
       ></el-input>
     </el-form-item>
     <el-form-item

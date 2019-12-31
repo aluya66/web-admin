@@ -1,0 +1,48 @@
+import Http from '../utils/request'
+
+const context = process.env.VUE_APP_{{ context }}
+
+/**
+ * 查询列表
+ * @param {*}
+ */
+export const query{{properCase name}}List = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'get'
+  })
+
+/**
+ * 新增
+ * @param {*}
+ */
+export const add{{properCase name}} = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'post'
+  })
+
+/**
+ * 编辑
+ * @param {*}
+ */
+export const edit{{properCase name}} = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'put'
+  })
+
+/**
+ * 删除
+ * @param {*}
+ */
+export const delete{{properCase name}} = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'delete'
+  })
+
+/**
+ * 查看详情
+ * @param {*}
+ */
+export const query{{properCase name}}Detail = params =>
+  Http.fetch(`${context}/api`, params, {
+    method: 'get'
+  })

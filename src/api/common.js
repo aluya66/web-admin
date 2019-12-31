@@ -2,7 +2,7 @@ import Http from '../utils/request'
 // ipx服务相关接口
 const ipxContext = process.env.VUE_APP_IPX
 // 中台服务相关接口
-const context = process.env.VUE_APP_CONSOLE_COMMON
+const context = process.env.VUE_APP_UPLOAD
 
 /**
  * mock模拟数据 示例
@@ -21,7 +21,7 @@ export const mockList = params =>
  * @param {Array} params file
  */
 export const uploadFile = params => Http.fetch(`${context}/api/upload/file`, params, {
-  method: 'post'
+  contentType: 'upload'
 })
 
 /* ==================    ipx 服务接口      ==================== */
@@ -29,7 +29,7 @@ export const uploadFile = params => Http.fetch(`${context}/api/upload/file`, par
  * 登录
  * @param {*} params
  */
-export const login = params => Http.fetch(`${ipxContext}/login`, params)
+export const login = params => Http.fetch(`${ipxContext}/login`, params, { hasErrMsg: true })
 
 /**
  *  登出

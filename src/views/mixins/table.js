@@ -1,16 +1,20 @@
 import utils from 'utils'
 import CTable from 'components/table'
 import QueryDict from '../common/queryDict'
+import CSearch from 'components/search'
+import dictObj from '@/store/dictData'
 
 export default {
   data() {
     return {
       dictData: {}, // 字典数据
       isLoading: false, // 数据加载状态
-      size: 'medium', // 表格、按钮大小
+      searchObj: {}, // 搜索查询对象
+      searchItems: [], // 搜索表单元素配置项
       tableList: [], // 列表数据
       tableCheckedList: [], // 列表批量选中
       maxHeight: 650, // table最大高度
+      isCreated: false, // created钩子调用后为true, 组件激活后，为true时调用activated钩子
       pageInfo: { // 页码信息
         pageNo: 1,
         pageSize: 10,
@@ -30,6 +34,7 @@ export default {
         })
       }
     }
+    this.setSearchItems()
   },
   methods: {
     // 删除二次确认
@@ -46,13 +51,13 @@ export default {
     },
     /**
      * 获取搜索时间
-     * @param {*} dataTime
+     * @param {*} dateTime
      */
-    getSearchDate(dataTime, formatFlag, startFlag = 'beginDate', endFlag = 'endDate') {
+    getSearchDate(dateTime, formatFlag, startFlag = 'beginDate', endFlag = 'endDate') {
       let type = formatFlag === 'dateTime' ? '{y}-{m}-{d} {h}:{i}:{s}' : '{y}-{m}-{d}'
-      if (dataTime && dataTime[0]) {
-        const beginDate = utils.fomartDate(dataTime[0], type)
-        const endDate = utils.fomartDate(dataTime[1], type)
+      if (dateTime && dateTime[0]) {
+        const beginDate = utils.fomartDate(dateTime[0], type)
+        const endDate = utils.fomartDate(dateTime[1], type)
         return {
           [startFlag]: beginDate,
           [endFlag]: endDate
@@ -72,7 +77,6 @@ export default {
      *  重置按钮
      */
     searchReset() {
-      this.$refs.searchForm.resetFields()
       this.searchSubmit()
     },
     /**
@@ -93,10 +97,53 @@ export default {
       this.dialogObj.isShow = false
       this.$msgTip(msg)
       this.fetchData()
+    },
+    /**
+     * 设置搜索表单元素
+     */
+    setSearchItems() {
+      const searchObj = {} // 缓存查询初始值
+      this.tableHeader && this.tableHeader.forEach(res => {
+        const { search, label, prop } = res
+        if (search) {
+          const opts = { label, prop, ...search }
+          searchObj[opts.prop] = opts.type && (opts.type === 'cascader' || opts.type === 'min-max') ? [] : ''
+          this.searchItems.push(opts)
+        }
+      })
+      this.searchObj = searchObj
+      // console.log(this.searchObj, this.searchItems)
+    },
+    /**
+     * 设置搜索元素cascader, dict的可选值
+     */
+    setSearchOptionsList(name, value, optionType = 'optionsList') {
+      const curIndex = this.searchItems.findIndex(res => name === res.prop)
+      if (curIndex !== -1) {
+        this.$set(this.searchItems[curIndex], optionType, value)
+      }
+    },
+    /**
+     * 表格项获取字典数据label数据
+     */
+    setTableColumnLabel(value, dictKey) {
+      let curArr = utils.isArray(dictKey) ? dictKey : dictObj[dictKey]
+      if (Array.isArray(value)) { // value 为数组
+        let arr = []
+        value.forEach((item) => {
+          let curVal = curArr.find(res => item === res.value)
+          curVal && arr.push(curVal.label)
+        })
+        return arr.join(',')
+      } else { // value 字符串和数字
+        let curVal = curArr.find(res => value === res.value)
+        return curVal ? curVal.label : ''
+      }
     }
   },
   components: {
     CTable,
-    QueryDict
+    QueryDict,
+    CSearch
   }
 }
