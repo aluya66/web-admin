@@ -21,6 +21,12 @@ export const getShopDetail = params =>
     method: 'get'
   })
 
+// 店铺 新增
+export const addShop = params =>
+  Http.fetch(`${context}/api/shop`, params, {
+    method: 'post'
+  })
+
 /**
  * 新增商户
  * @param {*}

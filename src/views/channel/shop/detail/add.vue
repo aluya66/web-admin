@@ -40,74 +40,45 @@ export default {
   },
   data(vm) {
     return {
-      selectedCouponList: [],
+      selectedList: [],
       tableList: [],
       tableHeader: [
         {
-          label: '优惠券名称',
-          prop: 'couponRuleName',
+          label: '子渠道号',
+          prop: 'channelCode',
           search: {
             type: 'input'
           }
         },
         {
-          label: '有效期开始时间',
-          prop: 'limitExpireTimeStart'
-        },
-        {
-          label: '有效期结束时间',
-          prop: 'limitExpireTimeEnd'
-        },
-        {
-          label: '有效期类型',
-          prop: 'limitExpireDayType',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.limitExpireDayType, 'ticketValidTypeArr')
-          },
+          label: '子渠道名称',
+          prop: 'channelName',
           search: {
-            label: '优惠券类型',
-            prop: 'type',
-            type: 'select',
-            optionsList: dictObj.ticketTypeList
+            type: 'input'
           }
+        },
+        {
+          label: '描述',
+          prop: 'channelDescription'
         }
       ]
     }
   },
   created() {
-    this.selectedCouponList = this.initChecked
+    this.selectedList = this.initChecked
     this.fetchData()
   },
   methods: {
     handleSelection(val) {
-      if (val) {
-        this.selectedCouponList = val.map((item) => {
-          let info = ''
-          const rules = item.marketPreferentialRules
-          if (rules && rules[0] && rules[0].preferentialType) {
-            // 5现金券、1折扣券
-            switch (rules[0].preferentialType) {
-              case 5:
-                info = `${rules[0].preferentialLevel}元减${rules[0].preferentialValue}元`
-                break
-              case 1:
-                info = `${rules[0].preferentialLevel}件享${rules[0].preferentialValue}折`
-            }
-          }
-          return {
-            ...item,
-            info
-          }
-        })
-      }
+      this.selectedList = val
     },
     fetchData() {
       this.isLoading = true
       const { totalNum, ...page } = this.pageInfo
-      this.$api.marketing.getCoupon({
+      this.$api.channel.getChannel({
         ...this.searchObj,
         ...page,
-        status: 5 // 进行中的优惠券
+        channelType: 2 // 类型： 2子渠道
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {
@@ -117,7 +88,7 @@ export default {
         } else {
           this.tableList = res || []
         }
-        this.selectedCouponList.length && this.selectedCouponList.forEach((checkedItem) => {
+        this.selectedList.length && this.selectedList.forEach((checkedItem) => {
           const idx = this.tableList.findIndex((item) => checkedItem.couponRuleId === item.couponRuleId)
           if (idx !== -1) {
             this.$nextTick(() => {

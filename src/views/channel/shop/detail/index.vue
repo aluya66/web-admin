@@ -68,12 +68,12 @@ export default {
         coordinate: '', // 门店坐标
         contact: '', // 联系人
         contactTel: '', // 联系手机
-        usePos: '', // 使用pos
-        isConnectPrinter: '', // 是否关联打印机
+        usePos: 0, // 使用pos
+        isConnectPrinter: 0, // 是否关联打印机
         printer: '', // 打印机编号
         businessType: 1, // 经营方式 1加盟
         settleType: 1, // 结算方式 1先款后贷
-        status: '', // 状态
+        status: 1, // 状态
         isRecommend: 1, // 是否推荐
         style: '', // 店铺风格
         shopImage: [], // 店招图片
@@ -81,8 +81,8 @@ export default {
         videoUrl: [], // 店铺视频
         businessHours: '', // 营业时间
         shopDescription: '', // 描述
-        isVisible: '', // 是否隐藏门店
-        stockCheck: '', // 支持盘点
+        isVisible: 0, // 是否隐藏门店
+        stockCheck: 0, // 支持盘点
         channelCode: [] // 关联渠道
       },
       isView: true,
@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     dialogConfirm() {
-      this.formModel.channelCode = this.$refs.childRef.checkedAttr
+      this.formModel.channelCode = this.$refs.childRef.selectedList
       this.dialogObj.isShow = false
     },
     showDialog() {
@@ -122,7 +122,75 @@ export default {
         // 所有子表单是否校验通过
         const validateResult = res.every(item => !!item)
         if (validateResult) {
-          console.log(this.$refs.formRef.formModel)
+          const requestMethods = {
+            'add': this.$api.channel.addShop,
+            'edit': this.$api.channel.editShop,
+          }
+          const {
+            shopId, // id
+            shopType, // 门店类型
+            businessCode, // 商户code
+            shopLogo, // 门店
+            shopName, // 门店名称
+            shopAddress, // 门店地址
+            address, // 详细地址
+            coordinate, // 门店坐标
+            contact, // 联系人
+            contactTel, // 联系手机
+            usePos, // 是否使用pos
+            isConnectPrinter, // 是否关联打印机
+            printer, // 打印机编号
+            isRecommend, // 是否推荐
+            style, // 门店风格
+            shopImage, // 店招
+            exhibitionImage, // 展馆图
+            videoUrl, // 门店视频
+            businessHours, // 营业时间
+            shopDescription, // 描述
+            isVisible, // 是否隐藏门店
+            stockCheck, // 是否支持盘点
+            businessType, // 经营方式
+            settleType, // 结算方式
+            channelCode, // 渠道
+          } = this.$refs.formRef.formModel
+          let params = { // 基础参数
+            shopType, // 门店类型
+            businessCode, // 商户code
+            shopLogo: shopLogo.length ? shopLogo[0].url : '', // 门店
+            shopName, // 门店名称
+            address, // 详细地址
+            provinceCode: shopAddress[0], // 省
+            cityCode: shopAddress[1], // 市
+            areaCode: shopAddress[2], // 区
+            coordinate, // 门店坐标
+            contact, // 联系人
+            contactTel, // 联系手机
+            usePos, // 是否使用pos
+            businessType, // 经营方式
+            settleType, // 结算方式
+            channelCode: channelCode.length ? channelCode[0].channelCode : '', // 渠道
+          }
+          // 关联打印机
+          isConnectPrinter === 1 && Object.assign(params, { printer })
+          if (shopType === 1) { // 门店为自营类型
+            Object.assign(params, {
+              shopImage: shopImage.length ? shopImage[0].url : '', // 店招
+              exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
+              videoUrl: videoUrl.length ? videoUrl[0].url : '', // 门店视频
+              businessHours, // 营业时间
+              shopDescription, // 描述
+              isVisible, // 是否隐藏门店
+              stockCheck, // 是否支持盘点 
+            })
+          }
+          shopId && Object.assign(params, { shopId })
+          const reqFun = shopId
+            ? requestMethods['edit'] : requestMethods['add']
+          reqFun(params).then(() => {
+            this.$msgTip('操作成功')
+            this.closeCurrentTag()
+            this.goBack()
+          })
         } else {
           console.log('未校验通过')
         }

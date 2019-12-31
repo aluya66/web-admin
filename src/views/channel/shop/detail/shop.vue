@@ -146,7 +146,7 @@
       <el-select class="select-item" v-model="formModel.style" placeholder="请选择商户">
         <el-option
           v-for="item in styleList"
-          :key="item.id"
+          :key="item.styleId"
           :label="item.labelName"
           :value="item.id"
         ></el-option>
@@ -404,11 +404,15 @@ export default {
       tableHeader: [
         {
           label: '子渠道号',
-          prop: 'goodsBn'
+          prop: 'channelCode'
         },
         {
           label: '子渠道名称',
-          prop: 'goodsName'
+          prop: 'channelName'
+        },
+        {
+          label: '子渠道名称',
+          prop: 'channelDescription'
         }
       ],
       tableInnerBtns: [
@@ -577,6 +581,9 @@ export default {
       margin-top: 5px;
       font-size: @f12;
     }
+  }
+  .selected-box {
+    width: 40vw;
   }
 }
 </style>
