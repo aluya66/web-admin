@@ -544,7 +544,7 @@ export default {
           }) : []
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
           let userLimitTypes = [customerType] // 发券对象
-          memberType.forEach((item) => {
+          customerType === 4 && memberType && memberType.forEach((item) => {
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             userLeveIds.push(item) // 指定会员
             userLimitTypes = [4]
@@ -552,7 +552,7 @@ export default {
           // 发券对象, 会员等级type有重复，过滤
           // userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
-          if (selectedCustomerList && selectedCustomerList.length) {
+          if (customerType === 16 && selectedCustomerList && selectedCustomerList.length) {
             userIds = selectedCustomerList.map((item) => item.userId)
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             userLimitTypes = [16]

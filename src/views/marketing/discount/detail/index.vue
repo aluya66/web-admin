@@ -231,6 +231,7 @@ export default {
                     customerType = item
                     break
                   case 4:
+                    customerType = item
                     memberType = res.marketLimitUser.userLeveIds ? res.marketLimitUser.userLeveIds : []
                     break
                 }
@@ -364,15 +365,16 @@ export default {
           }
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
           let userLimitTypes = [customerType] // 发券对象， 单选的用户类型
-          memberType && memberType.forEach((item) => {
+          customerType === 4 && memberType && memberType.forEach((item) => {
             userLeveIds.push(item) // 指定会员
-            userLimitTypes.push(4)
+            userLimitTypes = [4]
           })
           // 发券对象, 会员等级type有重复，过滤
-          userLimitTypes = Array.from(new Set(userLimitTypes))
+          // userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
-          if (selectedCustomerList && selectedCustomerList.length) {
+          if (customerType === 16 && selectedCustomerList && selectedCustomerList.length) {
             userIds = selectedCustomerList.map((item) => item.userId)
+            userLimitTypes = [16]
           }
           // 处理领券对象、指定用户数据
           let marketLimitUser = {
