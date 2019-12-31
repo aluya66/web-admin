@@ -114,6 +114,7 @@
     <slot name="footer" />
     <c-pagination
       v-show="!noPage && tableList.length > 0"
+      :auto-scroll="autoScroll"
       :total="pageInfo.totalNum"
       :page.sync="pageInfo.pageNo"
       :limit.sync="pageInfo.pageSize"
@@ -181,6 +182,10 @@ export default {
           totalNum: 0
         }
       }
+    },
+    autoScroll: {
+      type: Boolean,
+      default: true
     },
     clearSelect: {
       type: Boolean,
@@ -332,6 +337,7 @@ export default {
     // 翻页和切换页码
     changePagination(pageInfo) {
       this.$emit('change-pagination', pageInfo)
+      this.resetScroll()
     },
     // 展开一行
     handleExpandChange(row) {
