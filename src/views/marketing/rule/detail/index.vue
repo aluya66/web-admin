@@ -25,7 +25,7 @@
         ></query-dict>
       </el-form-item>
       <el-form-item label="领取方式:" prop="receiveType" v-if="formModel.platformList === 'yssp'">
-        <el-radio-group v-model="formModel.receiveType">
+        <el-radio-group v-model="formModel.receiveType" @change="changeReceiveType">
           <el-radio
             v-for="item in receiveTypeList"
             :key="item.value"
@@ -83,7 +83,15 @@
         prop="customerType"
         v-if="formModel.platformList === 'yssp'"
       >
-        <el-radio-group v-model="formModel.customerType">
+        <el-radio-group v-model="formModel.customerType" v-if="formModel.receiveType === 1">
+          <el-radio
+            class="checkbox-item"
+            :label="item.type"
+            v-for="(item, index) in customerTypeList.slice(1,3)"
+            :key="index"
+          >{{ item.label }}</el-radio>
+        </el-radio-group>
+        <el-radio-group v-model="formModel.customerType" v-if="formModel.receiveType === 2">
           <el-radio
             class="checkbox-item"
             :label="item.type"
@@ -358,10 +366,12 @@ export default {
     const { id, type } = this.$route.params
     this.formModel.platformList = type
     id && this.fetchData(id)
-    this.getMember()
     this.getMemberType()
   },
   methods: {
+    changeReceiveType(val) {
+      val === 1 ? this.formModel.customerType = 4 : this.formModel.customerType = 1
+    },
     cancelSelect(index) {
       this.formModel.selectedCustomerList.splice(index, 1)
     },
@@ -369,7 +379,7 @@ export default {
       // 发券渠道暂只能选择YOSHOP，其他平台后续业务再对接
       this.$api.member.getMember({
         pageNo: 1,
-        pageSize: 1000,
+        pageSize: 10,
         appCode: 'yssp',
         name: val
       }).then(res => {
@@ -407,7 +417,7 @@ export default {
       this.dialogObj = {
         type,
         isShow: true,
-        title: '选择卡券'
+        title: type === 'coupon' ? '选择卡券' : '选择用户'
       }
     },
     fetchData(couponId) {
