@@ -44,7 +44,7 @@
             v-for="(item, index) in formModel.marketPreferentialRules"
             :key="index"
           >
-            <el-col :span="3">
+            <el-col :span="5">
               <el-form-item
                 inline
                 :prop="'marketPreferentialRules.' + index + '.preferentialLevel'"
@@ -53,31 +53,13 @@
                 }"
               >
                 <el-input
-                  class="discount-item"
+                  class="discount-item-extra"
                   v-model.trim="item.preferentialLevel"
                   :size="size"
                   placeholder
                   clearable
                 >
                   <template slot="prepend">满</template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col class="discount-type" :span="0.5">-</el-col>
-            <el-col :span="3">
-              <el-form-item
-                :prop="'marketPreferentialRules.' + index + '.preferentiaMaxlLevel'"
-                :rules="{
-                  validator: checkIntNoQuired, trigger: 'blur'
-                }"
-              >
-                <el-input
-                  class="discount-item"
-                  v-model.trim="item.preferentiaMaxlLevel"
-                  :size="size"
-                  placeholder
-                  clearable
-                >
                   <template slot="append">件</template>
                 </el-input>
               </el-form-item>
@@ -360,7 +342,6 @@ export default {
     addRules() {
       let obj = {
         preferentialLevel: '',
-        preferentiaMaxlLevel: '',
         preferentialType: '',
         preferentialValue: '',
         unit: ''
@@ -372,7 +353,6 @@ export default {
       this.formModel.activityType = value
       let obj = {
         preferentialLevel: '',
-        preferentiaMaxlLevel: '',
         preferentialType: '',
         preferentialValue: '',
         unit: ''
@@ -401,6 +381,10 @@ export default {
   }
   .discount-item {
     min-width: 120px;
+    max-width: 100%;
+  }
+  .discount-item-extra {
+    min-width: 150px;
     max-width: 100%;
   }
   .rule-btn {
