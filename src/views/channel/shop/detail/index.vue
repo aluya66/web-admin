@@ -35,7 +35,28 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <channel-connect ref="childRef" :initChecked="formModel.channelCode"></channel-connect>
+        <channel-connect
+          v-if="dialogObj.type === 'channel'"
+          ref="childRef"
+          :initChecked="formModel.channelCode"
+        ></channel-connect>
+        <div class="preview-bow" v-if="dialogObj.type === 'preview'">
+          <img
+            class="preview-item"
+            v-if="dialogObj.fileType === 'image'"
+            width="100%"
+            :src="dialogObj.imageUrl"
+            style="object-fit: contain;"
+            alt
+          />
+          <video
+            class="preview-item"
+            v-if="dialogObj.fileType === 'video'"
+            controls
+            :src="dialogObj.videoUrl"
+            width="100%"
+          >您的浏览器不支持 video 标签。</video>
+        </div>
       </c-dialog>
     </div>
   </c-view>
@@ -63,7 +84,7 @@ export default {
         businessCode: '', // 选择商户
         shopLogo: [], // 门店logo
         shopName: '', // 门店名称
-        shopAddress: 1, // 门店地址
+        shopAddress: [], // 门店地址
         address: '', // 详细地址
         coordinate: '', // 门店坐标
         contact: '', // 联系人
@@ -91,7 +112,8 @@ export default {
     }
   },
   created() {
-    // this.fetchData()
+    const { params } = this.$route
+    params.id && this.fetchData(params.id)
   },
   methods: {
     dialogConfirm() {
@@ -101,16 +123,29 @@ export default {
     showDialog() {
       this.dialogObj = {
         isShow: true,
+        type: 'channel',
         title: '关联渠道'
       }
-      console.log(this.dialogObj)
     },
-    fetchData() {
-      const { params } = this.$route
-      this.isDisabled = true
-      this.$api.channel.getShopDetail({ id: params.shopId }).then(res => {
+    fetchData(shopId) {
+      this.$api.channel.getShopDetail({ shopId }).then(res => {
         if (res) {
-          this.formModel = res
+          let {
+            shopLogo,
+            printer,
+            shopImage,
+            exhibitionImage,
+            videoUrl,
+            channelCode  
+          } = res
+          this.formModel = {
+            ...res,
+            shopLogo: [{ url: shopLogo, name: '门店LOGO' }],
+            isConnectPrinter: printer ? 1 : 0,
+            shopImage: [{ url: shopImage, name: '门招' }],
+            exhibitionImage: [{ url: exhibitionImage, name: '展馆图' }],
+            videoUrl: [{ url: videoUrl, name: '门店视频' }]
+          }
         } else {
           this.$msgTip('接口数据异常，请稍后重新尝试')
         }
@@ -124,7 +159,7 @@ export default {
         if (validateResult) {
           const requestMethods = {
             'add': this.$api.channel.addShop,
-            'edit': this.$api.channel.editShop,
+            'edit': this.$api.channel.editShop
           }
           const {
             shopId, // id
@@ -151,7 +186,8 @@ export default {
             stockCheck, // 是否支持盘点
             businessType, // 经营方式
             settleType, // 结算方式
-            channelCode, // 渠道
+            status, // 状态
+            channelCode // 渠道
           } = this.$refs.formRef.formModel
           let params = { // 基础参数
             shopType, // 门店类型
@@ -168,21 +204,34 @@ export default {
             usePos, // 是否使用pos
             businessType, // 经营方式
             settleType, // 结算方式
+            status, // 状态
             channelCode: channelCode.length ? channelCode[0].channelCode : '', // 渠道
+            // ————————————————加盟商户字段 ——————————————
+            shopImage: shopImage.length ? shopImage[0].url : '', // 店招
+            exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
+            videoUrl: videoUrl.length ? videoUrl[0].url : '', // 门店视频
+            style, // 门店风格
+            isRecommend, // 是否推荐
+            businessHours: businessHours.length ? businessHours.join('~') : '', // 营业时间
+            shopDescription, // 描述
+            isVisible, // 是否隐藏门店
+            stockCheck // 是否支持盘点
           }
           // 关联打印机
           isConnectPrinter === 1 && Object.assign(params, { printer })
-          if (shopType === 1) { // 门店为自营类型
-            Object.assign(params, {
-              shopImage: shopImage.length ? shopImage[0].url : '', // 店招
-              exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
-              videoUrl: videoUrl.length ? videoUrl[0].url : '', // 门店视频
-              businessHours, // 营业时间
-              shopDescription, // 描述
-              isVisible, // 是否隐藏门店
-              stockCheck, // 是否支持盘点 
-            })
-          }
+          // if (shopType === 1) { // 门店为自营类型
+          //   Object.assign(params, {
+          //     shopImage: shopImage.length ? shopImage[0].url : '', // 店招
+          //     exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
+          //     videoUrl: videoUrl.length ? videoUrl[0].url : '', // 门店视频
+          //     style, // 门店风格
+          //     isRecommend, // 是否推荐
+          //     businessHours: businessHours.join('~'), // 营业时间
+          //     shopDescription, // 描述
+          //     isVisible, // 是否隐藏门店
+          //     stockCheck // 是否支持盘点
+          //   })
+          // }
           shopId && Object.assign(params, { shopId })
           const reqFun = shopId
             ? requestMethods['edit'] : requestMethods['add']
@@ -199,8 +248,9 @@ export default {
     reviewImage(file) {
       this.dialogObj = {
         isShow: true,
+        type: 'preview',
         imageUrl: file.url,
-        videoUrl: file.videoUrl,
+        videoUrl: file.url,
         fileType: file.fileType
       }
     }
@@ -219,5 +269,15 @@ export default {
 }
 .btn-wrapper {
   margin-left: 140px;
+}
+.preview-bow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  .preview-item {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

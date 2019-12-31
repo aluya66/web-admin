@@ -15,7 +15,8 @@ export default {
     component: () => import('@/views/channel/shop/list'),
     meta: {
       title: 'channelList',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {

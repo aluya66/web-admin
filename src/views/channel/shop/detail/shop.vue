@@ -17,7 +17,7 @@
         @change="changeShopType"
       ></query-dict>
     </el-form-item>
-    <el-form-item label="选择商户:" prop="businessCode">
+    <el-form-item label="选择商户:" prop="businessCode" v-if="businessList.length">
       <el-select class="select-item" v-model="formModel.businessCode" placeholder="请选择商户">
         <el-option
           v-for="item in businessList"
@@ -147,8 +147,8 @@
         <el-option
           v-for="item in styleList"
           :key="item.styleId"
-          :label="item.labelName"
-          :value="item.id"
+          :label="item.styleName"
+          :value="item.styleId"
         ></el-option>
       </el-select>
     </el-form-item>
@@ -183,7 +183,7 @@
         :size="20"
         :limit="5"
         :fileList="formModel.exhibitionImage"
-        :on-success="uploadSuccess"
+        @on-success="uploadSuccess"
         :on-remove="uploadRemove"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('exhibitionImage')"
@@ -204,7 +204,7 @@
         :size="20"
         :limit="5"
         :fileList="formModel.videoUrl"
-        :on-success="uploadSuccess"
+        @on-success="uploadSuccess"
         :on-remove="uploadRemove"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('videoUrl')"
@@ -213,18 +213,17 @@
       </c-upload>
     </el-form-item>
     <el-form-item label="营业时间:" prop="businessHours" v-if="formModel.shopType === 1" required>
-      <el-date-picker
+      <el-time-picker
+        is-range
         :size="size"
+        value-format="hh:mm"
         v-model="formModel.businessHours"
-        type="datetimerange"
-        value-format="yyyy-MM-dd HH:mm:ss"
         :picker-options="pickerOptions"
         range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="截止日期"
-        :default-time="['00:00:00', '23:59:59']"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
         align="right"
-      ></el-date-picker>
+      ></el-time-picker>
     </el-form-item>
     <el-form-item label="描述:" prop="shopDescription" v-if="formModel.shopType === 1" required>
       <el-input
@@ -441,10 +440,10 @@ export default {
       }],
       isRecommendStatusList: [{ // 是否推荐
         label: '推荐',
-        value: '1'
+        value: 1
       }, {
         label: '非推荐',
-        value: '2'
+        value: 2
       }]
     }
   },
@@ -459,7 +458,7 @@ export default {
     getStyleList() {
       this.$api.channel
         .getShopStyle({
-          pageSize: 10,
+          pageSize: 100,
           pageNo: 1
         })
         .then(res => {
@@ -538,13 +537,13 @@ export default {
       })
     },
     uploadSuccess(response, file, fileList) {
-      // shopLogoRef、shopImageRef、exhibitionImageRef、videoUrl
-      // if (this.uploadType === 'videoUrl') {
-      //   this.formModel[this.uploadType] = fileList
-      //   this.formModel.videoUrlCoverImage = fileList
-      // }
-      console.log(this.formModel[this.uploadType], this.uploadType)
-      this.formModel[this.uploadType] = fileList
+      console.log(fileList)
+      this.formModel[this.uploadType] = fileList.map((item) => {
+        return {
+          ...item,
+          fileType: this.uploadType === 'videoUrl' ? 'video' : 'image'
+        }
+      })
     },
     uploadRemove(file, fileList) {
       this.fileList = fileList

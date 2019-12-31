@@ -7,7 +7,7 @@
           type="primary"
           :size="size"
           icon="el-icon-plus"
-          @click="routerLink('/channel/shop/detail/index')"
+          @click="routerLink('/channel/shop/detail')"
         >新增</el-button>
       </div>
     </template>
@@ -72,11 +72,11 @@ export default {
       isLoading: false,
       tableInnerBtns: [
         {
-          width: 130,
-          name: '详情',
-          icon: 'el-icon-view',
+          width: 100,
+          name: '编辑',
+          icon: 'el-icon-edit',
           handle(row) {
-            vm.routerLink(`/channel/detail/${row.shopId}`)
+            vm.routerLink(`/channel/shop/detail/${row.shopId}`)
           }
         }
       ],

@@ -25,7 +25,6 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import dictObj from '@/store/dictData'
 
 export default {
   mixins: [mixinTable],
