@@ -453,8 +453,8 @@ export default {
       this.$emit('open-dialog')
     },
     getStyleList() {
-      this.$api.basic
-        .getQuerypage({
+      this.$api.channel
+        .getShopStyle({
           pageSize: 10,
           pageNo: 1
         })

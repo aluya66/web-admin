@@ -1,6 +1,13 @@
 import Http from '../utils/request'
 
-const context = process.env.VUE_APP_CONSOLE_COMMON
+const context = process.env.VUE_APP_LOCALHOST
+// VUE_APP_CONSOLE_COMMON
+
+// 店铺 风格
+export const getShopStyle = params =>
+  Http.fetch(`${context}/api/shopstyle`, params, {
+    method: 'get'
+  })
 
 // 店铺列表
 export const getShopList = params =>

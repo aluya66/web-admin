@@ -45,7 +45,7 @@
 import MixinForm from 'mixins/form'
 import SShop from './shop'
 import ChannelConnect from './add'
-import CDialog from './add'
+import CDialog from 'components/dialog'
 
 export default {
   name: 'shopDetail',
