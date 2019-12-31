@@ -144,7 +144,7 @@ export const getCurrentTime = () => { // 获取当天时间
   let h = curDate.getHours() // 获取当前小时数(0-23)
   let m = curDate.getMinutes() // 获取当前分钟数(0-59)
   let s = curDate.getSeconds()
-  //获取当前时间
+  // 获取当前时间
   h = h < 10 ? '0' + h : h
   m = m < 10 ? '0' + m : m
   s = s < 10 ? '0' + s : s
