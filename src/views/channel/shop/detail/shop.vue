@@ -340,14 +340,8 @@ export default {
     return {
       areaOptions: [], // 地区列表: [],
       optionsProps: {
-        expandTrigger: 'click',
-        lazy: true,
-        lazyLoad(node, resolve) {
-          vm.fetchAreaData(node, (data) => {
-            // 通过调用resolve将子节点数据返回，通知组件数据加载完成
-            resolve(data)
-          })
-        }
+        value: 'code',
+        label: 'name'
       },
       uploadType: '',
       rules: {
@@ -464,25 +458,10 @@ export default {
           }
         })
     },
-    fetchAreaData(node = {}, callBack) {
-      const { level, value } = node
-      this.$api.basic.queryAllRegion({
-        parentCode: value || 0
-      }).then(res => {
-        const data = res.totalCount ? res.data : res
-        let curData = []
-        if (data && data.length) {
-          curData = data.map(res => ({
-            // leaf: level ? level >= 2 : 0,
-            leaf: level >= 2,
-            value: res.code,
-            label: res.name
-          }))
-        }
-        if (!value) {
-          this.areaOptions = curData
-        } else {
-          typeof callBack === 'function' && callBack(curData)
+    fetchAreaData() {
+      this.$api.basic.queryAllRegion().then(res => {
+         if (res.length) {
+          this.areaOptions = res
         }
       })
     },
