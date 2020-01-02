@@ -27,6 +27,12 @@ export const addShop = params =>
     method: 'post'
   })
 
+// 店铺 新增
+export const editShop = params =>
+  Http.fetch(`${context}/api/shop`, params, {
+    method: 'put'
+  })
+
 /**
  * 新增商户
  * @param {*}

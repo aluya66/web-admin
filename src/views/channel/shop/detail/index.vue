@@ -80,7 +80,7 @@ export default {
     return {
       dialogObj: {},
       formModel: {
-        shopType: 1, // 门店类型
+        shopType: '', // 门店类型
         businessCode: '', // 选择商户
         shopLogo: [], // 门店logo
         shopName: '', // 门店名称
@@ -97,6 +97,7 @@ export default {
         status: 1, // 状态
         isRecommend: 1, // 是否推荐
         style: '', // 店铺风格
+        shopStyle: '', // 店铺风格
         shopImage: [], // 店招图片
         exhibitionImage: [], // 展馆图
         videoUrl: [], // 店铺视频
@@ -117,6 +118,7 @@ export default {
   },
   methods: {
     dialogConfirm() {
+      if (this.$refs.childRef.selectedList.length > 1) return this.$msgTip('只能选择一条渠道', 'warning')
       this.formModel.channelCode = this.$refs.childRef.selectedList
       this.dialogObj.isShow = false
     },
@@ -136,16 +138,23 @@ export default {
             shopImage,
             exhibitionImage,
             videoUrl,
-            channelInfoRespList
+            channelInfoRespList,
+            businessHours,
+            provinceCode,
+            cityCode,
+            areaCode
           } = res
           this.formModel = {
+            ...this.formModel,
             ...res,
-            shopLogo: [{ url: shopLogo, name: '门店LOGO', fileType: 'image' }],
+            shopAddress: [provinceCode, cityCode, areaCode], // 门店省市区
+            businessHours: businessHours ? businessHours.split('~') : [],
+            shopLogo: [{ url: shopLogo, name: '门店LOGO', fileType: 'image', ref: 'shopLogo' }],
             isConnectPrinter: printer ? 1 : 0,
-            shopImage: [{ url: shopImage, name: '门招', fileType: 'image' }],
-            exhibitionImage: [{ url: exhibitionImage, name: '展馆图', fileType: 'image' }],
-            videoUrl: [{ url: videoUrl, name: '门店视频', fileType: 'video' }],
-            channelCode: channelInfoRespList
+            shopImage: shopImage ? [{ url: shopImage, name: '门招', fileType: 'image', ref: 'shopImage' }] : [],
+            exhibitionImage: exhibitionImage ? [{ url: exhibitionImage, name: '展馆图', fileType: 'image', ref: 'exhibitionImage' }] : [],
+            videoUrl: videoUrl ? [{ url: videoUrl, name: '门店视频', fileType: 'video', ref: 'videoUrl' }] : [],
+            channelCode: channelInfoRespList && channelInfoRespList.length ? channelInfoRespList : []
           }
         } else {
           this.$msgTip('接口数据异常，请稍后重新尝试')
@@ -153,6 +162,7 @@ export default {
       })
     },
     submitHandle() {
+      console.log(this.formModel)
       const shopForm = this.$refs.formRef.$refs.shopFormRef
       Promise.all([shopForm].map(this.getFormPromise)).then(res => {
         // 所有子表单是否校验通过
@@ -206,34 +216,35 @@ export default {
             businessType, // 经营方式
             settleType, // 结算方式
             status, // 状态
-            channelCode: channelCode.length ? channelCode[0].channelCode : '', // 渠道
+            channelCode: channelCode.length ? channelCode[0].channelCode : '' // 渠道
             // ————————————————加盟商户字段 ——————————————
-            shopImage: shopImage.length ? shopImage[0].url : '', // 店招
-            exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
-            videoUrl: videoUrl.length ? videoUrl[0].url : '', // 门店视频
-            style, // 门店风格
-            isRecommend, // 是否推荐
-            businessHours: businessHours.length ? businessHours.join('~') : '', // 营业时间
-            shopDescription, // 描述
-            isVisible, // 是否隐藏门店
-            stockCheck // 是否支持盘点
+            // shopImage: shopImage.length ? shopImage[0].url : '', // 店招
+            // exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
+            // videoUrl: videoUrl.length ? videoUrl[0].url : '', // 门店视频
+            // style, // 门店风格
+            // isRecommend, // 是否推荐
+            // businessHours: businessHours.length ? businessHours.join('~') : '', // 营业时间
+            // shopDescription, // 描述
+            // isVisible, // 是否隐藏门店
+            // stockCheck // 是否支持盘点
           }
           // 关联打印机
           isConnectPrinter === 1 && Object.assign(params, { printer })
-          // if (shopType === 1) { // 门店为自营类型
-          //   Object.assign(params, {
-          //     shopImage: shopImage.length ? shopImage[0].url : '', // 店招
-          //     exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
-          //     videoUrl: videoUrl.length ? videoUrl[0].url : '', // 门店视频
-          //     style, // 门店风格
-          //     isRecommend, // 是否推荐
-          //     businessHours: businessHours.join('~'), // 营业时间
-          //     shopDescription, // 描述
-          //     isVisible, // 是否隐藏门店
-          //     stockCheck // 是否支持盘点
-          //   })
-          // }
+          if (shopType === 1) { // 门店为自营类型
+            Object.assign(params, {
+              shopImage: shopImage.length ? shopImage[0].url : '', // 店招
+              exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
+              videoUrl: videoUrl.length ? videoUrl[0].url : '', // 门店视频
+              style, // 门店风格
+              isRecommend, // 是否推荐
+              businessHours: businessHours.length ? businessHours.join('~') : '', // 营业时间
+              shopDescription, // 描述
+              isVisible, // 是否隐藏门店
+              stockCheck // 是否支持盘点
+            })
+          }
           shopId && Object.assign(params, { shopId })
+          console.log(params)
           const reqFun = shopId
             ? requestMethods['edit'] : requestMethods['add']
           reqFun(params).then(() => {

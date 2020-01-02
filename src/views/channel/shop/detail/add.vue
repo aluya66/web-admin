@@ -89,7 +89,7 @@ export default {
           this.tableList = res || []
         }
         this.selectedList.length && this.selectedList.forEach((checkedItem) => {
-          const idx = this.tableList.findIndex((item) => checkedItem.couponRuleId === item.couponRuleId)
+          const idx = this.tableList.findIndex((item) => checkedItem.channelCode === item.channelCode)
           if (idx !== -1) {
             this.$nextTick(() => {
               this.$refs.cTable.$refs.multipleTable.toggleRowSelection(this.tableList[idx])

@@ -26,7 +26,8 @@ export default {
     component: () => import('@/views/channel/shop/detail/index'),
     meta: {
       title: 'shopDetail',
-      icon: 'table'
+      icon: 'table',
+      activeMenu: '/channel/shop/list'
     }
   },
   {

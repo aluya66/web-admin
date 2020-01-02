@@ -7,8 +7,9 @@
     label-position="right"
     :rules="rules"
   >
-    <el-form-item label="店铺类型:" required>
+    <el-form-item label="门店类型:" prop="shopType">
       <query-dict
+        :disabled="!!formModel.shopId"
         :dict-list="shopTypeList"
         class="select-item"
         placeholder="请选择店铺类型"
@@ -17,8 +18,13 @@
         @change="changeShopType"
       ></query-dict>
     </el-form-item>
-    <el-form-item label="选择商户:" prop="businessCode" v-if="businessList.length">
-      <el-select class="select-item" v-model="formModel.businessCode" placeholder="请选择商户">
+    <el-form-item label="选择商户:" prop="businessCode">
+      <el-select
+        class="select-item"
+        v-model="formModel.businessCode"
+        placeholder="请选择商户"
+        :disabled="!!formModel.shopId"
+      >
         <el-option
           v-for="item in businessList"
           :key="item.businessCode"
@@ -54,6 +60,7 @@
         :size="size"
         placeholder="请输入门店名称"
         clearable
+        maxlength="30"
       />
     </el-form-item>
     <el-form-item label="门店地址:" prop="shopAddress">
@@ -74,6 +81,7 @@
         :size="size"
         placeholder="请输入详细地址"
         clearable
+        maxlength="50"
       />
     </el-form-item>
     <el-form-item label="门店坐标:" prop="coordinate">
@@ -83,6 +91,7 @@
         :size="size"
         placeholder="请输入门店坐标"
         clearable
+        maxlength="30"
       />
     </el-form-item>
     <el-form-item label="联系人:" prop="contact">
@@ -92,6 +101,7 @@
         :size="size"
         placeholder="请输入联系人"
         clearable
+        maxlength="30"
       />
     </el-form-item>
     <el-form-item label="联系手机:" prop="contactTel">
@@ -130,6 +140,7 @@
         :size="size"
         placeholder="请输入打印机编号"
         clearable
+        maxlength="30"
       />
     </el-form-item>
     <el-form-item label="是否推荐" prop="isRecommend" v-if="formModel.shopType === 1" required>
@@ -161,7 +172,7 @@
         :http-request="uploadHandle"
         list-type="picture-card"
         :size="20"
-        :limit="5"
+        :limit="1"
         :fileList="formModel.shopImage"
         @on-success="uploadSuccess"
         :on-remove="uploadRemove"
@@ -181,7 +192,7 @@
         :http-request="uploadHandle"
         list-type="picture-card"
         :size="20"
-        :limit="5"
+        :limit="1"
         :fileList="formModel.exhibitionImage"
         @on-success="uploadSuccess"
         :on-remove="uploadRemove"
@@ -202,7 +213,7 @@
         :http-request="uploadHandle"
         list-type="picture-card"
         :size="20"
-        :limit="5"
+        :limit="1"
         :fileList="formModel.videoUrl"
         @on-success="uploadSuccess"
         :on-remove="uploadRemove"
@@ -210,6 +221,9 @@
         @before-upload="uploadBefore('videoUrl')"
       >
         <i class="el-icon-plus"></i>
+        <div slot="file">
+          <img class="el-upload-list__item-thumbnail" src="/static/default-video.png" />
+        </div>
       </c-upload>
     </el-form-item>
     <el-form-item label="营业时间:" prop="businessHours" v-if="formModel.shopType === 1" required>
@@ -302,7 +316,6 @@
           :loading="isLoading"
           :table-header="tableHeader"
           :table-list="formModel.channelCode"
-          :table-inner-btns="tableInnerBtns"
           :rowStyle="{height:0}"
           :cellStyle="{padding:0}"
         ></c-table>
@@ -314,32 +327,15 @@
 <script>
 import dictObj from '@/store/dictData'
 import utils from 'utils'
-import MixinForm from 'mixins/form'
 import MixinFormCard from 'mixins/formCard'
 import mixinTable from 'mixins/table'
-// import CImage from 'components/image'
 import CUpload from 'components/upload'
 
 export default {
   components: {
     CUpload
   },
-  props: {
-    title: String,
-    dataObj: {
-      type: Object,
-      required: true
-    },
-    isView: {
-      type: Boolean,
-      default: false
-    },
-    size: {
-      type: String,
-      default: 'medium'
-    }
-  },
-  mixins: [MixinForm, MixinFormCard, mixinTable],
+  mixins: [MixinFormCard, mixinTable],
   data(vm) {
     return {
       areaOptions: [], // 地区列表: [],
@@ -355,6 +351,9 @@ export default {
       },
       uploadType: '',
       rules: {
+        shopType: [
+          { required: true, message: '请选择门店类型', trigger: 'blur' }
+        ],
         activityName: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
@@ -378,7 +377,7 @@ export default {
           { required: true, message: '请输入联系人', trigger: 'blur' }
         ],
         contactTel: [
-          { required: true, message: '请输入联系人电话', trigger: 'blur' }
+          { required: true, validator: utils.validater.phoneNumber, trigger: 'blur' }
         ],
         style: [
           { required: true, message: '请选择风格', trigger: 'blur' }
@@ -410,18 +409,8 @@ export default {
           prop: 'channelName'
         },
         {
-          label: '子渠道名称',
+          label: '描述',
           prop: 'channelDescription'
-        }
-      ],
-      tableInnerBtns: [
-        {
-          width: 100,
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-
-          }
         }
       ],
       isLoading: false,
@@ -447,9 +436,13 @@ export default {
       }]
     }
   },
-  created() {
-    this.getShopList()
+  beforeMount() {
     this.getStyleList()
+  },
+  watch: {
+    'formModel.shopType'() {
+      this.getShopList()
+    }
   },
   methods: {
     showDialog() {
@@ -480,12 +473,13 @@ export default {
         let curData = []
         if (data && data.length) {
           curData = data.map(res => ({
-            leaf: level ? level >= 2 : 0,
+            // leaf: level ? level >= 2 : 0,
+            leaf: level >= 2,
             value: res.code,
             label: res.name
           }))
         }
-        if (value === 0) {
+        if (!value) {
           this.areaOptions = curData
         } else {
           typeof callBack === 'function' && callBack(curData)
@@ -509,7 +503,7 @@ export default {
       })
         .then(() => {
           this.formModel.businessCode = ''
-          this.getShopList()
+          // this.getShopList()
           this.$message({
             type: 'success',
             message: '已更新门店类型!'
@@ -537,7 +531,6 @@ export default {
       })
     },
     uploadSuccess(response, file, fileList) {
-      console.log(fileList)
       this.formModel[this.uploadType] = fileList.map((item) => {
         return {
           ...item,
@@ -546,7 +539,7 @@ export default {
       })
     },
     uploadRemove(file, fileList) {
-      this.fileList = fileList
+      this.formModel[file.ref] = fileList
     },
     uploadReview(file) {
       this.$emit('show-image', file)
