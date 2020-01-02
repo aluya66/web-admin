@@ -122,7 +122,7 @@ export default {
             toggle: [{
               title: '删除',
               icon: 'el-icon-delete',
-              value: [0, 1, 2, 3, 4, 6, 7, 8]
+              value: [0, 1, 2, 3, 4]
             }]
           },
           handle(row) {
