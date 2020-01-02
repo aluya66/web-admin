@@ -185,7 +185,6 @@ export default {
       this.formModel.selectedCustomerList = [] // 指定用户
       this.formModel.memberType = []
       this.formModel.customerType = 1
-      this.formModel.marketPreferentialRules = []
       this.formModel.marketUseProductRule = {
         useCategoryCodes: [],
         useBrandCodes: []
@@ -206,10 +205,8 @@ export default {
             res.storeCodes = res.storeCodes && res.storeCodes.map((item) => Number(item))
             this.$refs.ruleRef.getShopList(res.platformList)
             res.activateDate = res.activityTime && res.activityEndTime ? [res.activityTime, res.activityEndTime] : null
-            if (!res.activateMonths && !res.activateDays) { // 初始化月份、天数
-              res.activateMonths = []
-              res.activateDays = []
-            }
+            if (!res.activateMonths) res.activateMonths = [] // 没有月份 初始化
+            if (!res.activateDays) res.activateDays = [] // 没有天数 初始化
             // 处理分类code [["02", "0202", "020200"]]
             if (res.marketUseProductRule) {
               if (res.marketUseProductRule.useCategoryCodes && res.marketUseProductRule.useAllCategoryCodes) {
@@ -232,6 +229,7 @@ export default {
                     customerType = item
                     break
                   case 4:
+                    customerType = item
                     memberType = res.marketLimitUser.userLeveIds ? res.marketLimitUser.userLeveIds : []
                     break
                 }
@@ -313,22 +311,11 @@ export default {
           } = this.$refs.applyRef.formModel
           // 检验满件规则
           if (marketPreferentialRules && marketPreferentialRules.length) {
-            // X不能大于等于Y
-            for (let i = 0, len = marketPreferentialRules.length; i < len; i++) {
-              if (marketPreferentialRules[i].preferentiaMaxlLevel && marketPreferentialRules[i].preferentiaMaxlLevel <= marketPreferentialRules[i].preferentialLevel) {
-                return this.$msgTip('请填写正确的满件规则', 'warning')
-              }
-            }
-            // 所有X不能相等、所有Y不能相等
+            // 所有X不能相等
             for (let i = 0, len = marketPreferentialRules.length - 1; i < len; i++) {
-              if (marketPreferentialRules[i].preferentiaMaxlLevel) {
-                for (let j = i + 1, subLen = marketPreferentialRules.length; j < subLen; j++) {
-                  if (marketPreferentialRules[j].preferentiaMaxlLevel) {
-                    if (marketPreferentialRules[i].preferentiaMaxlLevel === marketPreferentialRules[j].preferentiaMaxlLevel || marketPreferentialRules[i].preferentialLevel === marketPreferentialRules[j].preferentialLevel) {
-                      console.log('i: ' + i + ',j:' + j + ',X: ', marketPreferentialRules[i].preferentiaMaxlLevel, marketPreferentialRules[j].preferentiaMaxlLevel)
-                      return this.$msgTip('满件规则不能重复', 'warning')
-                    }
-                  }
+              for (let j = i + 1, subLen = marketPreferentialRules.length; j < subLen; j++) {
+                if (marketPreferentialRules[i].preferentialLevel === marketPreferentialRules[j].preferentialLevel) {
+                  return this.$msgTip('满件规则不能重复', 'warning')
                 }
               }
             }
@@ -376,26 +363,16 @@ export default {
           }
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
           let userLimitTypes = [customerType] // 发券对象， 单选的用户类型
-          // const customerTypeList = this.$refs.ruleRef.customerTypeList // 用户类型
-          memberType && memberType.forEach((item) => {
+          customerType === 4 && memberType && memberType.forEach((item) => {
             userLeveIds.push(item) // 指定会员
-            userLimitTypes.push(4)
-            // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
-            // const target = customerTypeList.find((val) => val.id === item)
-            // if (item === 'allCustomer' || item === 'allMember' || item === 'notMember') {
-            //   userLimitTypes.push(target.type)
-            // } else {
-            //   userLeveIds.push(target.id)
-            //   userLimitTypes.push(4)
-            // }
+            userLimitTypes = [4]
           })
           // 发券对象, 会员等级type有重复，过滤
-          userLimitTypes = Array.from(new Set(userLimitTypes))
+          // userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
-          if (selectedCustomerList && selectedCustomerList.length) {
+          if (customerType === 16 && selectedCustomerList && selectedCustomerList.length) {
             userIds = selectedCustomerList.map((item) => item.userId)
-            // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
-            // userLimitTypes.push(16)
+            userLimitTypes = [16]
           }
           // 处理领券对象、指定用户数据
           let marketLimitUser = {

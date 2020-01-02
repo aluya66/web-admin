@@ -67,6 +67,11 @@ export default {
       padding: 10px 15px;
       background-color: @white;
       min-height: calc(100vh - 136px);
+
+      .header-btn {
+        margin-top: -10px;
+        margin-bottom: 10px;
+      }
     }
   }
 }

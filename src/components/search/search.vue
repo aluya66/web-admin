@@ -21,6 +21,7 @@
           class="search-item"
           :size="size"
           clearable
+          :disabled="item.disabled"
           :placeholder="item.label || '请选择'"
         >
           <el-option
@@ -36,6 +37,7 @@
           :allow-create="item.allowCreate"
           :filterable="item.filterable"
           :multiple="item.multiple"
+          :disabled="item.disabled"
           :size="size"
           :value.sync="formModel[item.prop]"
           :dict-list="item.optionsList"
@@ -61,6 +63,7 @@
         <el-input
           v-model.number="formModel[item.prop][0]"
           class="search-number"
+          :disabled="item.disabled"
           :size="size"
           placeholder="最小值"
           clearable
@@ -68,6 +71,7 @@
         <span>至</span>
         <el-input
           v-model.number="formModel[item.prop][1]"
+          :disabled="item.disabled"
           class="search-number"
           :size="size"
           placeholder="最大值"
@@ -76,6 +80,7 @@
       </template>
       <template v-else-if="item.type === 'dateTime'">
         <el-date-picker
+          :disabled="item.disabled"
           v-model="formModel[item.prop]"
           :type="item.dateType || 'daterange'"
           :picker-options="pickerOptions"
@@ -91,6 +96,7 @@
         <el-input
           v-model="formModel[item.prop]"
           class="search-item"
+          :disabled="item.disabled"
           :size="size"
           :placeholder="item.label"
           clearable
@@ -99,14 +105,20 @@
     </el-form-item>
     <slot></slot>
     <el-form-item v-if="$slots.default || formItems.length">
-      <el-button
-        type="primary"
-        class="search-btn"
-        :size="size"
-        icon="el-icon-search"
-        @click="submitForm"
-      >查询</el-button>
-      <el-button :size="size" icon="el-icon-refresh" @click="resetForm">重置</el-button>
+      <template v-if="btns && btns.length">
+        <el-button
+          v-for="(btn, index) in btns"
+          :key="index"
+          :type="btn.type || primary"
+          :size="btn.size || size"
+          :icon="btn.icon"
+          @click="btn.handle || submitForm"
+        >{{btn.name}}</el-button>
+      </template>
+      <template v-else>
+        <el-button type="primary" :size="size" icon="el-icon-search" @click="submitForm">查询</el-button>
+        <el-button :size="size" icon="el-icon-refresh" @click="resetForm">重置</el-button>
+      </template>
     </el-form-item>
   </el-form>
 </template>
@@ -138,6 +150,12 @@ export default create({
     labelWidth: {
       type: String,
       default: '100px'
+    },
+    btns: {
+      type: Array,
+      default() {
+        return []
+      }
     }
   },
   data() {

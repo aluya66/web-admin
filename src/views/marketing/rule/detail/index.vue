@@ -136,8 +136,16 @@
           >{{item.label}}</el-radio>
         </el-radio-group>
         <!-- 发券时间类型：指定日期 -->
-        <el-form-item prop="issueTime" v-if="formModel.issueTimeType === 32">
+        <el-form-item prop="issueTimeStart" v-if="formModel.issueTimeType === 32">
           <el-date-picker
+            :size="size"
+            v-model="formModel.issueTimeStart"
+            type="datetime"
+            :picker-options="pickerOptions"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            align="right"
+          ></el-date-picker>
+          <!-- <el-date-picker
             :size="size"
             v-model="formModel.issueTime"
             type="datetimerange"
@@ -148,7 +156,7 @@
             end-placeholder="截止日期"
             :default-time="['00:00:00', '23:59:59']"
             align="right"
-          ></el-date-picker>
+          ></el-date-picker>-->
         </el-form-item>
 
         <!-- 发券时间类型：每月 -->
@@ -243,7 +251,6 @@
           v-if="dialogObj.type === 'customer'"
           :sourceList="memberList"
           :initChecked="formModel.selectedCustomerList"
-          @RemoteMethod="getMember"
         ></customer-select>
       </c-dialog>
     </div>
@@ -302,7 +309,13 @@ export default {
           value: 2
         }
       ],
-      pickerOptions: utils.pickerOptions,
+      pickerOptions: {
+        ...utils.pickerOptions,
+        selectableRange: `${utils.fomartDate(new Date(), '{h}:{i}:{s}')} - 23:59:59`,
+        disabledDate(time) {
+          return time.getTime() < Date.now()
+        }
+      },
       limitReceiveTimeTypeList: [ // 发券时间类型
         {
           label: '立即发送',
@@ -348,6 +361,7 @@ export default {
         ]
       },
       formModel: {
+        issueTimeStart: '',
         receiveTimeType: 32, // 每人可领
         issueTimeType: 1, // 发券时间 类型
         selectedCustomerList: [], // 指定用户
@@ -374,23 +388,6 @@ export default {
     },
     cancelSelect(index) {
       this.formModel.selectedCustomerList.splice(index, 1)
-    },
-    getMember(val = '') {
-      // 发券渠道暂只能选择YOSHOP，其他平台后续业务再对接
-      this.$api.member.getMember({
-        pageNo: 1,
-        pageSize: 10,
-        appCode: 'yssp',
-        name: val
-      }).then(res => {
-        this.isLoading = false
-        if (res && res.totalCount) {
-          const { data } = res
-          this.memberList = data || []
-        } else {
-          this.memberList = res || []
-        }
-      })
     },
     // 拼接会员等级到会员分类列表 类型有 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
     // 类型4为接口请求获得， 16为指定用户选中后保存时候添加
@@ -434,7 +431,8 @@ export default {
           receiveType,
           couponDetails,
           issueTimeStart,
-          issueTimeEnd,
+          // issueTimeStart,
+          // issueTimeEnd,
           marketLimitUser
         } = res
         couponDetails = couponDetails ? couponDetails.map((item) => {
@@ -499,8 +497,8 @@ export default {
               Object.assign(params, { issueTimeValues })
               break
             case 32:
-              const issueTime = [issueTimeStart, issueTimeEnd]
-              Object.assign(params, { issueTime })
+              // const issueTime = [issueTimeStart, issueTimeEnd]
+              Object.assign(params, { issueTimeStart })
           }
         }
         if (receiveType === 2) { // 手动领券
@@ -534,7 +532,7 @@ export default {
             limitReceive, // 每人可领类型 次数
             issueTimeType, // 发券时间 类型 1 立即  2 年  4 月 8 周 16 日 32 固定时间区间
             issueTimeValues, // 发券时间类型为 16月 8周时， 天数、周列表数据
-            issueTime // 发券时间类型为 32 固定日期时间
+            issueTimeStart // 发券时间类型为 32 固定日期时间
           } = this.formModel
           // 处理优惠券列表数据
           let couponDetailsArr = couponDetails ? couponDetails.map((item) => {
@@ -545,7 +543,7 @@ export default {
           }) : []
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
           let userLimitTypes = [customerType] // 发券对象
-          memberType.forEach((item) => {
+          customerType === 4 && memberType && memberType.forEach((item) => {
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             userLeveIds.push(item) // 指定会员
             userLimitTypes = [4]
@@ -553,7 +551,7 @@ export default {
           // 发券对象, 会员等级type有重复，过滤
           // userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
-          if (selectedCustomerList && selectedCustomerList.length) {
+          if (customerType === 16 && selectedCustomerList && selectedCustomerList.length) {
             userIds = selectedCustomerList.map((item) => item.userId)
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             userLimitTypes = [16]
@@ -582,8 +580,9 @@ export default {
                 Object.assign(params, { issueTimeValues })
                 break
               case 32:
-                const searchDate = this.getSearchDate(issueTime, 'dateTime', 'issueTimeStart', 'issueTimeEnd')
-                Object.assign(params, { ...searchDate })
+                // const searchDate = this.getSearchDate(issueTime, 'dateTime', 'issueTimeStart', 'issueTimeEnd')
+                // Object.assign(params, { ...searchDate })
+                Object.assign(params, { issueTimeStart })
                 break
             }
           }

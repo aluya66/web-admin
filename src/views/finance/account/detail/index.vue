@@ -49,7 +49,7 @@
             @submit-form="searchSubmit"
             @reset-form="searchReset"
           ></c-search>
-          <div class="opt-btn">
+          <div class="header-btn">
             <el-button type="primary" icon="el-icon-plus" :size="size" @click="showDialog">新增交易明细</el-button>
             <!-- <el-button :size="size" disabled icon="el-icon-download" @click="exportFile">导出</el-button> -->
           </div>
@@ -276,7 +276,7 @@ export default {
   }
   .list-table {
     min-height: 670px;
-    .opt-btn {
+    .header-btn {
       margin-top: -10px;
       margin-bottom: 10px;
     }

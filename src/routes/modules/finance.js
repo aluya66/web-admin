@@ -32,21 +32,51 @@ export default {
     }
   },
   {
-    path: '/finance/extract',
-    name: 'financeExtract',
-    component: () => import('@/views/finance/extract/list'),
+    path: '/finance/coping',
+    name: 'financeCoping',
+    component: () => import('@/views/common/index'),
     meta: {
-      title: 'financeExtract',
+      title: 'financeCoping',
       icon: 'table',
       roles: ['admin']
-    }
+    },
+    children: [{
+      path: '/finance/coping/extract',
+      name: 'financeExtract',
+      component: () => import('@/views/finance/coping/extract/list'),
+      meta: {
+        title: 'financeExtract',
+        icon: 'table',
+        roles: ['admin']
+      }
+    }, {
+      path: '/finance/coping/settlement',
+      name: 'financeSettlement',
+      component: () => import('@/views/finance/coping/settlement/list'),
+      meta: {
+        title: 'financeSettlement',
+        icon: 'table',
+        roles: ['admin']
+      }
+    }, {
+      path: '/finance/coping/settlement/detail/:id?',
+      name: 'financeSettlementDetail',
+      component: () => import('@/views/finance/coping/settlement/detail/index'),
+      hidden: true,
+      meta: {
+        title: 'financeSettlementDetail',
+        noCache: true,
+        activeMenu: '/finance/coping/settlement',
+        roles: ['admin']
+      }
+    }]
   },
   {
-    path: '/finance/settlement',
-    name: 'financeSettlement',
-    component: () => import('@/views/finance/settlement/list'),
+    path: '/finance/distribution',
+    name: 'financeDistribution',
+    component: () => import('@/views/finance/distribution/list'),
     meta: {
-      title: 'financeSettlement',
+      title: 'financeDistribution',
       icon: 'table',
       roles: ['admin']
     }

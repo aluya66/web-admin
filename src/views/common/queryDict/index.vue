@@ -1,6 +1,6 @@
 <template>
-  <div v-if="this.dictList" class="dict">
-    <template v-if="this.dictList.length">
+  <div v-if="this.optionsList" class="dict">
+    <template v-if="this.optionsList.length">
       <el-select
         v-if="showType === '' || showType === 'select'"
         v-model="dictValue"
@@ -11,7 +11,7 @@
         @change="changeQueryDict"
       >
         <el-option
-          v-for="(dict, index) in dictList"
+          v-for="(dict, index) in optionsList"
           :key="dict.value + '_' + index"
           :label="dict.label"
           :disabled="dict.disabled"
@@ -26,7 +26,7 @@
         @change="changeQueryDict"
       >
         <el-checkbox
-          v-for="dict in dictList"
+          v-for="dict in optionsList"
           :label="dict.value"
           :key="dict.value"
           :disabled="dict.disabled || disabled"
@@ -40,7 +40,7 @@
         @change="changeQueryDict"
       >
         <el-radio
-          v-for="dict in dictList"
+          v-for="dict in optionsList"
           :key="dict.value"
           :disabled="dict.disabled || disabled"
           :label="dict.value"
@@ -90,6 +90,9 @@ export default {
       set(val) {
         this.$emit('update:value', val)
       }
+    },
+    optionsList() {
+      return this.dictList
     }
   }
 }
