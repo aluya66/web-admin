@@ -205,10 +205,8 @@ export default {
             res.storeCodes = res.storeCodes && res.storeCodes.map((item) => Number(item))
             this.$refs.ruleRef.getShopList(res.platformList)
             res.activateDate = res.activityTime && res.activityEndTime ? [res.activityTime, res.activityEndTime] : null
-            if (!res.activateMonths && !res.activateDays) { // 初始化月份、天数
-              res.activateMonths = []
-              res.activateDays = []
-            }
+            if (!res.activateMonths) res.activateMonths = [] // 没有月份 初始化
+            if (!res.activateDays) res.activateDays = [] // 没有天数 初始化
             // 处理分类code [["02", "0202", "020200"]]
             if (res.marketUseProductRule) {
               if (res.marketUseProductRule.useCategoryCodes && res.marketUseProductRule.useAllCategoryCodes) {

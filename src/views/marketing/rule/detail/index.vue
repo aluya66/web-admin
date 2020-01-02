@@ -311,7 +311,7 @@ export default {
       ],
       pickerOptions: {
         ...utils.pickerOptions,
-        selectableRange: `${utils.getCurrentTime()} - 23:59:59`,
+        selectableRange: `${utils.fomartDate(new Date(), '{h}:{i}:{s}')} - 23:59:59`,
         disabledDate(time) {
           return time.getTime() < Date.now()
         }
@@ -381,7 +381,6 @@ export default {
     this.formModel.platformList = type
     id && this.fetchData(id)
     this.getMemberType()
-    console.log(utils.getCurrentTime())
   },
   methods: {
     changeReceiveType(val) {
