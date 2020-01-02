@@ -88,12 +88,6 @@ export default {
           width: 100
         },
         {
-          label: '店招',
-          prop: 'shopImage',
-          isImage: true,
-          width: 100
-        },
-        {
           label: '门店名称',
           prop: 'shopName',
           search: {

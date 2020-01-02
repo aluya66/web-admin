@@ -136,15 +136,16 @@ export default {
             shopImage,
             exhibitionImage,
             videoUrl,
-            channelCode  
+            channelInfoRespList
           } = res
           this.formModel = {
             ...res,
-            shopLogo: [{ url: shopLogo, name: '门店LOGO' }],
+            shopLogo: [{ url: shopLogo, name: '门店LOGO', fileType: 'image' }],
             isConnectPrinter: printer ? 1 : 0,
-            shopImage: [{ url: shopImage, name: '门招' }],
-            exhibitionImage: [{ url: exhibitionImage, name: '展馆图' }],
-            videoUrl: [{ url: videoUrl, name: '门店视频' }]
+            shopImage: [{ url: shopImage, name: '门招', fileType: 'image' }],
+            exhibitionImage: [{ url: exhibitionImage, name: '展馆图', fileType: 'image' }],
+            videoUrl: [{ url: videoUrl, name: '门店视频', fileType: 'video' }],
+            channelCode: channelInfoRespList
           }
         } else {
           this.$msgTip('接口数据异常，请稍后重新尝试')

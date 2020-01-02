@@ -8,7 +8,8 @@
     :loading="isLoading"
     :table-header="tableHeader"
     :page-info="pageInfo"
-    @selection-handle="handleSelection"
+    @handle-select="handleSelect"
+    @handle-selectall="handleSelect"
     :table-list="tableList"
     @change-pagination="changePagination"
   >
@@ -68,7 +69,7 @@ export default {
     this.fetchData()
   },
   methods: {
-    handleSelection(val) {
+    handleSelect(val) {
       this.selectedList = val
     },
     fetchData() {
