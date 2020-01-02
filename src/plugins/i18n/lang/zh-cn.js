@@ -39,6 +39,8 @@ export default {
     payManageList: '支付记录',
     payManageAccount: '账户管理',
     payManageChannel: '渠道管理',
+    order: '订单中心',
+    orderList: '订单列表',
     channel: '分销渠道',
     channelList: '店铺列表',
     channelMerchant: '商户管理',
