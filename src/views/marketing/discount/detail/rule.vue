@@ -87,7 +87,7 @@
           >{{ item.label }}</el-radio>
         </el-radio-group>
         <el-form-item>
-          <el-checkbox-group v-model="formModel.memberType" v-if="formModel.customerType === 2">
+          <el-checkbox-group v-model="formModel.memberType" v-if="formModel.customerType === 4">
             <el-checkbox
               class="checkbox-item"
               :label="item.id"
@@ -227,23 +227,19 @@ export default {
       customerTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
           label: '全部用户',
-          type: 1,
-          id: 'allCustomer'
+          type: 1
         },
         {
           label: '指定会员',
-          type: 2,
-          id: 'allMember'
+          type: 4
         },
         {
           label: '指定用户',
-          type: 16,
-          id: 'selectedCustomer'
+          type: 16
         },
         {
           label: '非会员',
-          type: 8,
-          id: 'notMember'
+          type: 8
         }
       ],
       categoryList: [],

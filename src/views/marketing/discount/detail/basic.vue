@@ -297,9 +297,7 @@ export default {
       },
       pickerOptions: {
         ...utils.pickerOptions,
-        disabledDate(time) {
-          return time.getTime() < Date.now()
-        }
+        disabledDate: utils.disabledDate.disPrevToday
       },
       activateDayTypeList: [{ // 活动时间类型
         label: '固定时间',
