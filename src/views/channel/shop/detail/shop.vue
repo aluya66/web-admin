@@ -430,8 +430,9 @@ export default {
       }]
     }
   },
-  beforeMount() {
+  created() {
     this.getStyleList()
+    this.fetchAreaData()
   },
   watch: {
     'formModel.shopType'() {
@@ -459,8 +460,8 @@ export default {
         })
     },
     fetchAreaData() {
-      this.$api.basic.queryAllRegion().then(res => {
-         if (res.length) {
+      this.$api.basic.getAreaAll().then(res => {
+        if (res.length) {
           this.areaOptions = res
         }
       })
