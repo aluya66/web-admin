@@ -12,11 +12,22 @@ export default {
   children: [{
     path: '/order/list',
     name: 'orderList',
-    component: () => import('@/views/order/list'),
+    component: () => import('@/views/order/list/index'),
     meta: {
       title: 'orderList',
-      icon: 'table',
-      roles: ['admin']
+      icon: 'table'
     }
-  }]
+  },
+  {
+    path: '/order/detail/:id?',
+    name: 'orderDetail',
+    hidden: true,
+    component: () => import('@/views/order/detail/index'),
+    meta: {
+      title: 'orderDetail',
+      noCache: true,
+      activeMenu: '/order/list'
+    }
+  }
+  ]
 }

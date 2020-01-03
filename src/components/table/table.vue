@@ -28,6 +28,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="selection" :align="align" type="selection" width="55" />
+      <el-table-column v-if="hasIndex" label="序号" :fixed="true" align="center" width="50" type="index" :index="index => index + 1" />
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
@@ -203,6 +204,10 @@ export default {
       type: Boolean,
       default: false
     },
+    hasIndex: {
+      type: Boolean,
+      default: false
+    },
     maxHeight: Number,
     rowStyle: Object,
     cellStyle: Object,
@@ -245,6 +250,10 @@ export default {
     }, false)
   },
   methods: {
+    // table每一行序号
+    indexMethod(index) {
+      return index + 1
+    },
     selectAll() {
       this.$refs.multipleTable.toggleAllSelection()
     },
