@@ -65,7 +65,7 @@
               </el-form-item>
             </el-col>
             <el-col class="discount-text-r" :span="1">享受</el-col>
-            <el-col :span="3">
+            <!-- <el-col :span="3">
               <el-form-item
                 inline
                 :prop="'marketPreferentialRules.' + index + '.priceType'"
@@ -81,8 +81,8 @@
                   :value.sync="item.priceType"
                 ></query-dict>
               </el-form-item>
-            </el-col>
-            <el-col :span="3">
+            </el-col> -->
+            <el-col :span="5">
               <el-form-item
                 :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
                 :rules="{
@@ -90,12 +90,13 @@
                 }"
               >
                 <el-input
-                  class="discount-item"
+                  class="discount-item-extra"
                   v-model.trim="item.preferentialValue"
                   :size="size"
                   placeholder
                   clearable
                 >
+                  <template slot="prepend">零售价</template>
                   <template slot="append">折</template>
                 </el-input>
               </el-form-item>
@@ -119,7 +120,7 @@
             v-for="(item, index) in formModel.marketPreferentialRules"
             :key="index"
           >
-            <el-col :span="6">
+            <el-col :span="5">
               <el-form-item
                 inline
                 :prop="'marketPreferentialRules.' + index + '.preferentialLevel'"
@@ -139,8 +140,8 @@
                 </el-input>
               </el-form-item>
             </el-col>
-            <el-col class="discount-type" :span="2">减</el-col>
-            <el-col :span="6">
+            <el-col class="discount-type" :span="1">减</el-col>
+            <el-col :span="5">
               <el-form-item
                 :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
                 :rules="{
@@ -177,7 +178,7 @@
             v-for="(item, index) in formModel.marketPreferentialRules"
             :key="index"
           >
-            <el-col :span="6">
+            <el-col :span="5">
               <el-form-item
                 inline
                 :prop="'marketPreferentialRules.' + index + '.preferentialValue'"
