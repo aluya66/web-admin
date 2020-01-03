@@ -218,6 +218,9 @@ export default {
       brands: [],
       cascaderProp: { multiple: true },
       shopTypeList: [{
+        label: '全部',
+        value: ''
+      }, {
         label: '直营店',
         value: 1
       }, {
