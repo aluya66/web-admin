@@ -120,7 +120,7 @@ const shopTypeList = [{
   label: '自营',
   value: 1
 }, {
-  label: '合作商户',
+  label: '合作',
   value: 2
 }]
 /**

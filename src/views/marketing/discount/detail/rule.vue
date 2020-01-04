@@ -118,6 +118,9 @@ import MixinForm from 'mixins/form'
 import MixinFormCard from 'mixins/formCard'
 import mixinTable from 'mixins/table'
 import utils from 'utils'
+import dictObj from '@/store/dictData'
+
+dictObj.shopTypeList.unshift({ label: '全部', value: '' })
 
 export default {
   mixins: [MixinForm, mixinTable, MixinFormCard],
@@ -217,16 +220,7 @@ export default {
       ],
       brands: [],
       cascaderProp: { multiple: true },
-      shopTypeList: [{
-        label: '全部',
-        value: ''
-      }, {
-        label: '直营店',
-        value: 1
-      }, {
-        label: '加盟店',
-        value: 2
-      }],
+      shopTypeList: dictObj.shopTypeList,
       customerTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
           label: '全部用户',
