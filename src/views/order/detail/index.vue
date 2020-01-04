@@ -15,27 +15,11 @@
       label-position="right"
       status-icon
     >
-      <line-card title="订单信息">
-        <div class="row">
-          <span>订单号：</span>
-          <span>子订单：</span>
-          <span>订单类型：</span>
-        </div>
-        <div class="row">
-          <span>订单渠道：</span>
-          <span>所属店铺：</span>
-          <span>结算状态：</span>
-        </div>
-        <div class="row">
-          <span>客户名称：</span>
-          <span>客户手机：</span>
-          <span>下单方式：</span>
-        </div>
-        <div class="row">
-          <span>下单时间：</span>
-          <span>订单状态：</span>
-        </div>
-      </line-card>
+      <detail-info></detail-info>
+      <goods-list :order-Id="orderId"></goods-list>
+      <logistics-list :order-Id="orderId"></logistics-list>
+      <after-sale :order-Id="orderId"></after-sale>
+      <log-list :order-Id="orderId"></log-list>
       <el-form-item class="button-item">
         <el-button
           :loading="btnLoading"
@@ -54,22 +38,36 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
       >
-        <!-- TODO... 根据需求添加业务对话框处理 -->
+        <dialog-info
+          ref="childRef"
+          :init-data.sync="dialogObj.initData"
+          :is-edit="dialogObj.isEdit"
+        ></dialog-info>
       </c-dialog>
     </div>
   </c-view>
 </template>
 
 <script>
-import LineCard from '@/views/common/lineCard'
 import MixinForm from 'mixins/form'
 import CDialog from 'components/dialog'
+import DetailInfo from './info'
+import DialogInfo from './dialogInfo'
+import LogisticsList from './list/logistics'
+import GoodsList from './list/goods'
+import AfterSale from './list/afterSale'
+import LogList from './list/log'
 
 export default {
   mixins: [MixinForm],
   components: {
     CDialog,
-    LineCard
+    DetailInfo,
+    DialogInfo,
+    LogisticsList,
+    GoodsList,
+    AfterSale,
+    LogList
   },
   data() {
     return {
@@ -78,15 +76,21 @@ export default {
       },
       dialogObj: {},
       btnLoading: false,
-      rules: {}
+      rules: {},
+      orderId: ''
     }
   },
 
   created() {
-    this.fetchData()
+    const { id } = this.$route.params
+    id && this.fetchData()
+    this.orderId = id
   },
 
   methods: {
+    showDialog(row) {
+
+    },
     fetchData() {
       const { id } = this.$route.params
       this.$api.order.queryOrderDetail({ id }).then(res => {

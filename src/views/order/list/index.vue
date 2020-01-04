@@ -26,10 +26,11 @@
             @reset-form="searchReset"
           ></c-search>
           <div class="header-btn">
-            <order-info>1212</order-info>
+            <order-info></order-info>
             <el-radio-group v-model="tabValue">
               <el-radio-button
                 v-for="(item, index) in tabList"
+                :size="size"
                 :key="index"
                 :label="item.value"
               >{{item.label}}</el-radio-button>

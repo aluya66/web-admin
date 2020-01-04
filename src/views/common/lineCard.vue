@@ -21,8 +21,8 @@ export default {
 
 <style lang='less' scoped>
 .line-card {
-  padding: 10px 80px;
   .row {
+    padding: 0 80px;
     display: flex;
     flex-wrap: wrap;
     span {
