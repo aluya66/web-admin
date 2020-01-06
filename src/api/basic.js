@@ -139,7 +139,7 @@ export const queryAllVersion = params =>
 
 // 获取全部区域
 export const getAllArea = params =>
-  Http.fetch(`${context}/v1/area/all`, params, {
+  Http.fetch(`${context}/api/area/all`, params, {
     method: 'get',
     cache: 'area'
   })

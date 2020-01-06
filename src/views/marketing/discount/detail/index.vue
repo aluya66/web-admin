@@ -117,7 +117,7 @@ export default {
       isView: true,
       btnLoading: false,
       formModel: {
-        shopType: 1, // 门店类型
+        shopType: '', // 门店类型
         selectedGoodsList: [], // 指定商品
         selectedCustomerList: [], // 指定用户
         memberType: [],
@@ -180,7 +180,7 @@ export default {
     },
     // 更改渠道 同步店铺、商品list数据
     changeChannel(appCode) {
-      this.formModel.shopType = 1 // 门店类型 默认显示直营
+      this.formModel.shopType = '' // 门店类型 默认显示全部
       this.formModel.selectedGoodsList = [] // 指定商品
       this.formModel.selectedCustomerList = [] // 指定用户
       this.formModel.memberType = []

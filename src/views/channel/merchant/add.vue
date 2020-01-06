@@ -293,7 +293,6 @@ export default {
       this.$api.basic.getAllArea().then(res => {
         if (res.length) {
           this.areaOptions = res
-          console.log(this.areaOptions)
         }
       })
     },
@@ -343,8 +342,6 @@ export default {
             companyAddressCode: [companyProvince, companyCity, companyDistrict],
             fileList: companyLicenseUrl ? [{ name: '图片', url: companyLicenseUrl }] : []
           }
-          // this.getInitArea(companyProvince)
-          console.log(this.formModel.companyAddressCode)
         }
       })
     },
