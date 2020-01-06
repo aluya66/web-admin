@@ -53,7 +53,7 @@ export const setStore = (name, content, storeType = localStorage) => {
 export const getStore = (name, storeType = localStorage) => {
   if (!name) return
   let value = storeType.getItem(name)
-  if (value && value.indexOf('{') >= 0) {
+  if (value && (value.indexOf('{') >= 0 || value.indexOf('[') >= 0)) {
     value = JSON.parse(storeType.getItem(name))
   }
   return value

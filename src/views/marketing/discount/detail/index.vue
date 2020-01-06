@@ -360,6 +360,9 @@ export default {
             })
             marketUseProductRule.useProductCodes = goodsList
             marketUseProductRule.useProductSkuCodes = skuList.flat()
+          } else {
+            marketUseProductRule.useProductCodes = []
+            marketUseProductRule.useProductSkuCodes = []
           }
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
           let userLimitTypes = [customerType] // 发券对象， 单选的用户类型
