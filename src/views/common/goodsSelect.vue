@@ -89,6 +89,7 @@
 <script>
 import mixinTable from 'mixins/table'
 import utils from 'utils'
+
 export default {
   name: 'goodsSelect',
   mixins: [mixinTable],
@@ -284,17 +285,13 @@ export default {
     },
     handleSelect(rows) {
       // 当前页选中行
-      let selectRows = rows ? rows.map((item) => { // 设置商品被选中标识
-        return {
-          ...item,
-          isSelected: true
-        }
-      }) : []
+      let selectRows = rows ? rows.map(item => ({ ...item, isSelected: true })) : []// 设置商品被选中标识
+      const pageCheckedArr = utils.getStore('cacheSelectedGoodsList') ? utils.getStore('cacheSelectedGoodsList') : []
       // 已操作了翻页，需要进行翻页数据拼接
-      if (this.finishChangePage) {
-        const pageCheckedArr = utils.getStore('cacheSelectedGoodsList') ? utils.getStore('cacheSelectedGoodsList') : []
-        if (pageCheckedArr.length) { // 有选择行，过滤重复
-          pageCheckedArr.forEach((item) => {
+      if (this.finishChangePage || pageCheckedArr) {
+        // 有选择行，过滤重复
+        if (pageCheckedArr.length) {
+          pageCheckedArr.forEach(item => {
             let idx = selectRows.findIndex((checkedItem) => {
               if (item.goodsBn === checkedItem.goodsBn) {
                 if (item.shopId === checkedItem.shopId) {
@@ -352,27 +349,26 @@ export default {
       }
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.channel
-        .getGoodsListByChannel({
-          ...this.searchObj,
-          ...this.paramsObj,
-          ...page
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-        })
+      this.$api.channel.getGoodsListByChannel({
+        ...this.searchObj,
+        ...this.paramsObj,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     }
   },
   mounted() {
     this.fetchData()
     this.checkedAttr = this.initChecked
+    utils.setStore('cacheSelectedGoodsList', this.initChecked)
   }
 }
 </script>
