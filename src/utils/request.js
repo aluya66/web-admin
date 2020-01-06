@@ -202,7 +202,7 @@ export default {
                 res.data = []
               }
             }
-            opt.cache && utils.setStore(opt.cache, res.data)
+            opt.cache && res.data && utils.setStore(opt.cache, res.data)
             resolve(opt.hasErrMsg ? res : res.data)
           }
         }).catch((error) => {
