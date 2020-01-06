@@ -652,8 +652,9 @@ export default {
       let minObj = {}
       minDataList.forEach((item) => {
         let list = this.childProductArray.length ? this.childProductArray.map((skuItem) => Number(skuItem[item])) : []
-        if (list.length > 1) minObj[item] = Math.min.apply(Math, list).toFixed(2)
+        if (list.length >= 1) minObj[item] = Math.min.apply(Math, list).toFixed(2)
       })
+      console.log(minObj)
       if (Object.keys(minObj).length > 1) this.$emit('set-min-price', minObj)
     },
     // 设置成衣成本价，同时批量设置sku相关价格

@@ -12,7 +12,7 @@ export default {
   children: [{
     path: '/goods/manage/list',
     name: 'goodsManage',
-    component: () => import('@/views/goods/manage/list'),
+    component: () => import('@/views/goods/manage/list/index'),
     meta: {
       title: 'goodsManage',
       icon: 'table',
