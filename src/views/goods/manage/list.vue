@@ -213,7 +213,11 @@ export default {
           width: 100,
           search: {
             prop: 'dateTime',
-            type: 'dateTime'
+            type: 'dateTime',
+            judgeShouldShow: { // 判断是否显示
+              key: 'commodityType',
+              value: '1'
+            }
           }
         },
         {

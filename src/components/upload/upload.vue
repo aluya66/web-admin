@@ -38,6 +38,10 @@ export default {
   name: 'CUpload',
   // inheritAttrs: false,
   props: {
+    fileType: {
+      type: String,
+      default: ''
+    },
     uploadRef: {
       type: String,
       default: 'upload'
