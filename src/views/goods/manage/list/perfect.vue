@@ -26,7 +26,6 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
 const goodsStatusList = [{
   value: 1,
   label: '上架'
@@ -163,7 +162,7 @@ export default {
         .then(res => {
           this.isLoading = false
           if (res && res.totalCount) {
-            const { data, totalCount } = res
+            const { data } = res
             this.brandList = data || []
           } else {
             this.brandList = res || []
@@ -180,12 +179,20 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { dateTime, ...other } = this.searchObj
+      const { createDateTime, updateDateTime, categoryCode, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dateTime)
+      const createDate = this.getSearchDate(createDateTime, '', 'beginDate', 'endDate')
+      const updateDate = this.getSearchDate(updateDateTime, '', 'updateBeginDate', 'updateEndDate')
+      const categoryVal = {
+        cateCodeFirst: categoryCode[0] || '',
+        cateCodeSecond: categoryCode[1] || '',
+        cateCodeThird: categoryCode[2] || '',
+      }
       this.isLoading = true
       this.$api.goods.getPerfectGoodsList({
-        ...searchDate,
+        ...createDate,
+        ...updateDate,
+        ...categoryVal,
         ...other,
         ...page
       }).then(res => {
@@ -198,25 +205,7 @@ export default {
           this.tableList = res || []
         }
       })
-    },
-    /**
-     * 删除表格单条数据
-     *
-     * @param {*} curPromise
-     * @param {string} [msgTip='删除成功']
-     */
-    deleteData(param, msgTip = '删除成功') {
-      this.$api.marketing.deleteCouponRule(param).then(() => {
-        this.$msgTip(msgTip)
-        this.delResetData()
-      })
     }
   }
 }
 </script>
-
-<style lang="less" scoped>
-.form {
-  width: 90%;
-}
-</style>

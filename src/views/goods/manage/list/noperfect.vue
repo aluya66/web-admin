@@ -56,7 +56,13 @@
 <script>
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
-
+const goodsStatusList = [{
+  value: 1,
+  label: '上架'
+}, {
+  value: 2,
+  label: '下架'
+}]
 export default {
   name: 'ysspList',
   mixins: [mixinTable],
@@ -81,66 +87,131 @@ export default {
       tableHeader: [
         {
           label: '商品主图',
-          prop: 'couponId',
+          prop: 'coverImg',
           width: 100,
-          fixed: true
+          fixed: true,
+          isImage: true
         },
         {
           label: '商品名称',
-          prop: 'couponName',
+          prop: 'goodsName',
           search: {
             type: 'input'
           }
         },
         {
           label: '商品款号',
-          prop: 'receiveType'
+          prop: 'goodsBn',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '供应商款号',
-          prop: 'typeName'
+          prop: 'supplierNumber',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '所属分类',
-          prop: 'opCreator'
+          prop: 'categoryName',
+          search: {
+            type: 'cascader',
+            prop: 'categoryCode',
+            optionsProps: {
+              children: 'childrenList',
+              label: 'categoryName',
+              value: 'categoryCode',
+              checkStrictly: true
+            },
+            optionsList: []
+          }
         },
         {
           label: '内容完善状态',
-          prop: 'opCreator'
+          prop: 'perfectName',
+          search: {
+            label: '商品状态',
+            type: 'select',
+            prop: 'marketable',
+            optionsList: goodsStatusList
+          }
         },
-         {
+        {
           label: '创建人',
-          prop: 'opCreator'
+          prop: 'createbyName',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '上货人',
+          prop: 'publisher'
         },
         {
           label: '创建时间',
           prop: 'created'
         },
-         {
+        {
           label: '编辑人',
-          prop: 'opCreator'
+          prop: 'updatebyName'
         },
-         {
+        {
           label: '编辑时间',
-          prop: 'opCreator'
+          prop: 'updated'
         }
       ]
     }
   },
   activated() {
     this.fetchData()
+    this.getCategoryList()
+    this.getBrandList()
   },
   methods: {
+    getBrandList() {
+      this.isLoading = true
+      this.$api.basic
+        .brandList({
+          pageSize: 120,
+          pageNo: 1
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data } = res
+            this.brandList = data || []
+          } else {
+            this.brandList = res || []
+          }
+          this.setSearchOptionsList('brandCode', this.brandList.map((item) => {
+            return {
+              value: item.code,
+              label: item.name
+            }
+          }))
+        })
+    },
+    getCategoryList() {
+      this.$api.basic.queryCategory().then(res => {
+        this.setSearchOptionsList('categoryCode', res)
+      })
+    },
     /**
      * 获取表格数据
      */
     fetchData() {
-      const { dateTime, ...other } = this.searchObj
+      const { categoryCode, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dateTime)
+      const categoryVal = {
+        cateCodeFirst: categoryCode[0] || '',
+        cateCodeSecond: categoryCode[1] || '',
+        cateCodeThird: categoryCode[2] || '',
+      }
       this.isLoading = true
       this.$api.marketing.getSampleGoodsList({
-        ...searchDate,
+        ...categoryVal,
         ...other,
         ...page
       }).then(res => {
@@ -153,25 +224,7 @@ export default {
           this.tableList = res || []
         }
       })
-    },
-    /**
-     * 删除表格单条数据
-     *
-     * @param {*} curPromise
-     * @param {string} [msgTip='删除成功']
-     */
-    deleteData(param, msgTip = '删除成功') {
-      this.$api.marketing.deleteCouponRule(param).then(() => {
-        this.$msgTip(msgTip)
-        this.delResetData()
-      })
     }
   }
 }
 </script>
-
-<style lang="less" scoped>
-.form {
-  width: 90%;
-}
-</style>
