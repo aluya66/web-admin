@@ -21,68 +21,16 @@
         ></c-search>
       </template>
     </c-table>
-    <div v-if="dialogObj.isShow">
-      <c-dialog
-        :is-show="dialogObj.isShow"
-        :title="dialogObj.title"
-        close-btn
-        @before-close="dialogObj.isShow = false"
-        @on-submit="dialogConfirm"
-      >
-        <el-form
-          ref="formRef"
-          :model="formModel"
-          label-width="80px"
-          class="form"
-          label-position="right"
-          status-icon
-        >
-          <el-form-item prop="couponRemark">
-            <el-input
-              type="textarea"
-              placeholder="请输入备注说明"
-              v-model.trim="formModel.couponRemark"
-              rows="4"
-              maxlength="300"
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-        </el-form>
-      </c-dialog>
-    </div>
   </c-view>
 </template>
 
 <script>
-import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
-const goodsStatusList = [{
-  value: 1,
-  label: '上架'
-}, {
-  value: 2,
-  label: '下架'
-}]
+import mixinList from './mixin'
 export default {
-  name: 'ysspList',
-  mixins: [mixinTable],
-  components: {
-    CDialog
-  },
+  name: 'noPerfectList',
+  mixins: [mixinList],
   data(vm) {
     return {
-      formModel: {},
-      dialogObj: {}, // 对话框数据
-      tableInnerBtns: [
-        {
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            const { id } = row
-            vm.routerLink(`/goods/manage/detail/${id}`)
-          }
-        }
-      ],
       tableHeader: [
         {
           label: '商品主图',
@@ -134,7 +82,7 @@ export default {
             label: '商品状态',
             type: 'select',
             prop: 'marketable',
-            optionsList: goodsStatusList
+            optionsList: vm.goodsStatusList
           }
         },
         {
@@ -163,40 +111,7 @@ export default {
       ]
     }
   },
-  activated() {
-    this.fetchData()
-    this.getCategoryList()
-    this.getBrandList()
-  },
   methods: {
-    getBrandList() {
-      this.isLoading = true
-      this.$api.basic
-        .brandList({
-          pageSize: 120,
-          pageNo: 1
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data } = res
-            this.brandList = data || []
-          } else {
-            this.brandList = res || []
-          }
-          this.setSearchOptionsList('brandCode', this.brandList.map((item) => {
-            return {
-              value: item.code,
-              label: item.name
-            }
-          }))
-        })
-    },
-    getCategoryList() {
-      this.$api.basic.queryCategory().then(res => {
-        this.setSearchOptionsList('categoryCode', res)
-      })
-    },
     /**
      * 获取表格数据
      */
