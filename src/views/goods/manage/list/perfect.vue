@@ -45,8 +45,8 @@ export default {
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
-            const { couponId } = row
-            vm.routerLink(`/marketing/rule/ruleInfo/yssp/${couponId}`)
+            const { id } = row
+            vm.routerLink(`/goods/manage/detail/${id}`)
           }
         }
       ],
@@ -186,7 +186,7 @@ export default {
       const categoryVal = {
         cateCodeFirst: categoryCode[0] || '',
         cateCodeSecond: categoryCode[1] || '',
-        cateCodeThird: categoryCode[2] || '',
+        cateCodeThird: categoryCode[2] || ''
       }
       this.isLoading = true
       this.$api.goods.getPerfectGoodsList({
