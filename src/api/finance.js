@@ -165,7 +165,7 @@ export const querySettleOperateLog = params =>
   })
 
 /**
- * 导出分销结算列表
+ * 导出结算订单列表
  * @param {*} params
  */
 export const exportBusinesssettle = params =>
