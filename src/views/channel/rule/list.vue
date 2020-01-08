@@ -97,7 +97,7 @@ export default {
         prop: 'updated'
       }],
       tableInnerBtns: [{
-        width: 180,
+        width: '180',
         prop: {
           name: 'status', // 为0或1
           toggle: [{
@@ -127,7 +127,7 @@ export default {
         }
       }, {
         name: '删除',
-        icon: 'el-icon-detail',
+        icon: 'el-icon-delete',
         handle(row) {
           const { ruleId, ruleName } = row
           vm.confirmTip(`是否删除 ${ruleName} 渠道规则`, () => {

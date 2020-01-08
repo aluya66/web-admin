@@ -291,16 +291,6 @@ export const validater = {
     }
   },
   /**
-   * 中文字符英文字符校验
-   */
-  ChEnText (rule, value, callback) {
-    if (value && !/^[A-Za-z0-9]+$/.test(value)) {
-      callback(new Error('只能填写数字和英文字符'))
-    } else {
-      callback()
-    }
-  },
-  /**
    * 中文字符校验
    */
   cnText (rule, value, callback) {
@@ -318,8 +308,10 @@ export const validater = {
   /**
    * 只能输入英文或者数字
    */
-  enOrnunText (rule, value, callback) {
-    if (value && !/^[A-Za-z0-9]+$/.test(value)) {
+  enOrNumText (rule, value, callback) {
+    if (!value) {
+      callback(new Error('字段不能为空'))
+    } else if (!/^[A-Za-z0-9]+$/.test(value)) {
       callback(new Error('只能填写英文或者数字'))
     } else {
       callback()

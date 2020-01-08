@@ -131,7 +131,6 @@ export default {
         {
           name: '关联规则',
           icon: 'el-icon-connection',
-          notBtn: 'ruleInfos',
           handle(row) {
             vm.$api.channel.getChannelRule().then(res => {
               vm.isLoading = false
@@ -174,7 +173,7 @@ export default {
         },
         {
           name: '删除',
-          icon: 'el-icon-detail',
+          icon: 'el-icon-delete',
           handle(row) {
             const { channelId, channelName } = row
             vm.confirmTip(
@@ -225,7 +224,7 @@ export default {
             const list = row.ruleInfos && row.ruleInfos.length ? row.ruleInfos.map((item) => {
               return item.ruleName
             }) : []
-            return list.join(',')
+            return list.join('，')
           }
         },
         {

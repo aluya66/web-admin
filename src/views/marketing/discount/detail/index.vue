@@ -117,7 +117,7 @@ export default {
       isView: true,
       btnLoading: false,
       formModel: {
-        shopType: 1, // 门店类型
+        shopType: '', // 门店类型
         selectedGoodsList: [], // 指定商品
         selectedCustomerList: [], // 指定用户
         memberType: [],
@@ -180,7 +180,7 @@ export default {
     },
     // 更改渠道 同步店铺、商品list数据
     changeChannel(appCode) {
-      this.formModel.shopType = 1 // 门店类型 默认显示直营
+      this.formModel.shopType = '' // 门店类型 默认显示全部
       this.formModel.selectedGoodsList = [] // 指定商品
       this.formModel.selectedCustomerList = [] // 指定用户
       this.formModel.memberType = []
@@ -360,6 +360,9 @@ export default {
             })
             marketUseProductRule.useProductCodes = goodsList
             marketUseProductRule.useProductSkuCodes = skuList.flat()
+          } else {
+            marketUseProductRule.useProductCodes = []
+            marketUseProductRule.useProductSkuCodes = []
           }
           let userLeveIds = [] // 发券对象 指定会员等级 memberType中type===4
           let userLimitTypes = [customerType] // 发券对象， 单选的用户类型
