@@ -552,7 +552,7 @@ export default {
           // userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
           if (customerType === 16 && selectedCustomerList && selectedCustomerList.length) {
-            userIds = selectedCustomerList.map((item) => item.userId)
+            userIds = selectedCustomerList.map((item) => item.id)
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             userLimitTypes = [16]
           }
