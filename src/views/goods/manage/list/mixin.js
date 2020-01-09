@@ -5,6 +5,13 @@ export default {
   },
   activated() {
     this.fetchData()
+    this.getSampleGoodsSum()
+  },
+  props: {
+    noperfectCount: {
+      type: Number,
+      default: 0
+    }
   },
   data(vm) {
     return {
@@ -21,6 +28,16 @@ export default {
     }
   },
   methods: {
+    getSampleGoodsSum() {
+      this.$api.goods.getSampleGoodsSum().then(res => {
+        if (res && res.totalCount) {
+          const { data } = res
+          this.noperfectCount = data || 0
+        } else {
+          this.noperfectCount = res || 0
+        }
+      })
+    },
     getCategoryList() {
       this.$api.basic.queryCategory().then(res => {
         this.setSearchOptionsList('categoryCode', res)
