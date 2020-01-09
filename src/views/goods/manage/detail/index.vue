@@ -234,11 +234,11 @@ export default {
           isDefalut: item.isDefalut ? 1 : 0 // 是否默认
         }
       }) : []
-      if (type === 'confirmFinish') { // 确认完成需要信息填写完整
-        if (!operationName) return this.$msgTip('请填写运营名称', 'warning')
-        if (videoList.length === 0) return this.$msgTip('请填写商品视频', 'warning')
-        if (!intro) return this.$msgTip('请填写商品详情', 'warning')
-      }
+      // if (type === 'confirmFinish') { // 确认完成需要信息填写完整
+      //   if (!operationName) return this.$msgTip('请填写运营名称', 'warning')
+      //   if (videoList.length === 0) return this.$msgTip('请填写商品视频', 'warning')
+      //   if (!intro) return this.$msgTip('请填写商品详情', 'warning')
+      // }
       requestFun[type]({
         id, // 商品Id
         operationName, // 运营名称

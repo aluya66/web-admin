@@ -106,6 +106,10 @@ export default {
           }
         },
         {
+          label: '商品来源',
+          prop: 'originName'
+        },
+        {
           label: '样衣成本价',
           prop: 'sampleCostprice',
           search: {
@@ -119,11 +123,35 @@ export default {
           prop: 'costprice'
         },
         {
+          label: '成衣供货价(元)',
+          prop: 'supplyprice'
+        },
+        {
+          label: '成衣散批价(元)',
+          prop: 'wholesaleprice'
+        },
+        {
+          label: '成衣大批价(元)',
+          prop: 'largePrice'
+        },
+        {
+          label: '成衣会员价(元)',
+          prop: 'price'
+        },
+        {
+          label: '零售价(元)',
+          prop: 'tagprice'
+        },
+        {
           label: '库存',
           prop: 'stock',
           search: {
             type: 'min-max'
           }
+        },
+        {
+          label: '上架状态',
+          prop: 'marketableName'
         },
         {
           label: '创建时间',
@@ -132,6 +160,10 @@ export default {
             prop: 'createDateTime',
             type: 'dateTime'
           }
+        },
+        {
+          label: '更新时间',
+          prop: 'updated'
         }
       ]
     }

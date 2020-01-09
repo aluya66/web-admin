@@ -1,6 +1,6 @@
 import Http from '../utils/request'
 
-const context = process.env.VUE_APP_LOCALHOST
+const context = process.env.VUE_APP_CONSOLE_COMMON
 // VUE_APP_LOCALHOST VUE_APP_CONSOLE_COMMON
 // 添加商品
 export const add = params =>
@@ -25,6 +25,12 @@ export const editGoods = params =>
 // 商品已完善列表
 export const getPerfectGoodsList = params =>
   Http.fetch(`${context}/api/goods/perfectlist`, params, {
+    method: 'get'
+  })
+
+// 获取未完善商品 数量
+export const getSampleGoodsSum = params =>
+  Http.fetch(`${context}/api/goods/samplesum`, params, {
     method: 'get'
   })
 

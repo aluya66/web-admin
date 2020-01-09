@@ -5,7 +5,7 @@
         <el-tab-pane
           v-for="(item, index) in tabTitle"
           :key="index"
-          :label="item.label"
+          :label="index === 1 ? item.label + '(' + noperfectCount + ')' : item.label"
           :name="item.value"
         ></el-tab-pane>
       </el-tabs>
@@ -20,7 +20,7 @@
     </template>
     <div class="main__box">
       <keep-alive>
-        <component ref="childList" v-bind:is="activeName"></component>
+        <component ref="childList" v-bind:is="activeName" :noperfectCount.sync="noperfectCount"></component>
       </keep-alive>
     </div>
   </c-view>
@@ -37,6 +37,7 @@ export default {
   },
   data(vm) {
     return {
+      noperfectCount: 0, // 未完善商品数量
       activeName: 'perfect',
       tagTypeList: [], // 标签类型数据
       tabTitle: [

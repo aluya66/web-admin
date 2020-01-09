@@ -40,14 +40,21 @@ const perfectStatusList = [{
 export default {
   name: 'noPerfectList',
   mixins: [mixinList, mixinTable],
+  props:{
+    noperfectCount: {
+      type: Number,
+      default: 0
+    }
+  },
   data(vm) {
     return {
+      noperfectCount: 0,
       tableHeader: [
-         {
+        {
           label: '商品ID',
           prop: 'id',
           width: 100,
-          fixed: true,
+          fixed: true
         },
         {
           label: '商品主图',
@@ -93,6 +100,10 @@ export default {
           }
         },
         {
+          label: '上架状态',
+          prop: 'marketableName'
+        },
+        {
           label: '内容完善状态',
           prop: 'perfectName',
           search: {
@@ -128,7 +139,20 @@ export default {
       ]
     }
   },
+  activated() {
+    this.getSampleGoodsSum() 
+  },
   methods: {
+    getSampleGoodsSum() {
+      this.$api.goods.getSampleGoodsSum().then(res => {
+        if (res && res.totalCount) {
+          const { data } = res
+          this.noperfectCount = data || 0
+        } else {
+          this.noperfectCount = res || 0
+        }
+      })
+    },
     /**
      * 获取表格数据
      */
