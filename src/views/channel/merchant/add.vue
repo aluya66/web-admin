@@ -110,6 +110,7 @@
           <el-cascader
             clearable
             class="select-item"
+            :options="areaOptions"
             :props="optionsProps"
             v-model="formModel.companyAddressCode"
             placeholder="请选择省市区"
@@ -214,14 +215,9 @@ export default {
     return {
       areaOptions: [], // 地区列表
       optionsProps: {
-        expandTrigger: 'click',
-        lazy: true,
-        lazyLoad(node, resolve) {
-          vm.fetchAreaData(node, (data) => {
-            // 通过调用resolve将子节点数据返回，通知组件数据加载完成
-            resolve(data)
-          })
-        }
+        value: 'code',
+        label: 'name',
+        leaf: 2
       },
       businessCategoryList: dictObj.businessCategoryList, // 商户分类集合
       businessTypeList: dictObj.shopTypeList, // 商户类型集合
@@ -265,9 +261,8 @@ export default {
   created() {
     const { id } = this.$route.params
     this.isEdit = !!id
-    if (id) {
-      this.fetchData()
-    }
+    id && this.fetchData()
+    this.fetchAreaData()
   },
 
   methods: {
@@ -294,24 +289,10 @@ export default {
         isShow: true
       }
     },
-    fetchAreaData(node = {}, callBack) {
-      const { level, value } = node
-      this.$api.basic.queryAllRegion({
-        parentCode: value || 0
-      }).then(res => {
-        const data = res.totalCount ? res.data : res
-        let curData = []
-        if (data && data.length) {
-          curData = data.map(res => ({
-            leaf: level ? level >= 2 : 0,
-            value: res.code,
-            label: res.name
-          }))
-        }
-        if (value === 0) {
-          this.areaOptions = curData
-        } else {
-          typeof callBack === 'function' && callBack(curData)
+    fetchAreaData() {
+      this.$api.basic.getAllArea().then(res => {
+        if (res.length) {
+          this.areaOptions = res
         }
       })
     },
@@ -361,8 +342,6 @@ export default {
             companyAddressCode: [companyProvince, companyCity, companyDistrict],
             fileList: companyLicenseUrl ? [{ name: '图片', url: companyLicenseUrl }] : []
           }
-          // this.getInitArea(companyProvince)
-          console.log(this.formModel.companyAddressCode)
         }
       })
     },

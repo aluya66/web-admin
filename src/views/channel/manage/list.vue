@@ -108,7 +108,7 @@ export default {
       dialogObj: {},
       tableInnerBtns: [
         {
-          width: 150,
+          width: 180,
           name: '编辑',
           icon: 'el-icon-edit',
           handle({ channelId, channelCode, channelName, channelType, parentChannelId }) {
@@ -131,7 +131,6 @@ export default {
         {
           name: '关联规则',
           icon: 'el-icon-connection',
-          notBtn: 'ruleInfos',
           handle(row) {
             vm.$api.channel.getChannelRule().then(res => {
               vm.isLoading = false
@@ -150,50 +149,48 @@ export default {
               })
             })
           }
+        }, {
+          prop: {
+            name: 'status', // 为0或1
+            toggle: [{
+              icon: 'el-icon-open',
+              title: '开启'
+            }, {
+              icon: 'el-icon-close',
+              title: '关闭'
+            }]
+          },
+          handle(row) {
+            const { channelId, channelName, status } = row
+            const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
+            vm.confirmTip(
+              `是否${handleStatus === 0 ? '关闭' : '开启'} ${channelName} 渠道`,
+              () => {
+                vm.handleChannelStatus({ id: channelId, status: handleStatus })
+              }
+            )
+          }
+        },
+        {
+          name: '删除',
+          icon: 'el-icon-delete',
+          handle(row) {
+            const { channelId, channelName } = row
+            vm.confirmTip(
+              `是否删除 ${channelName}渠道`,
+              {
+                confirmHandle() {
+                  vm.deleteData({ id: channelId })
+                }
+              }
+            )
+          }
         }
-        //   {
-        //   prop: {
-        //     name: 'status', // 为0或1
-        //     toggle: [{
-        //       icon: 'el-icon-open',
-        //       title: '开启'
-        //     }, {
-        //       icon: 'el-icon-close',
-        //       title: '关闭'
-        //     }]
-        //   },
-        //   handle(row) {
-        //     const { channelId, channelName, status } = row
-        //     const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
-        //     vm.confirmTip(
-        //       `是否${handleStatus === 0 ? '关闭' : '开启'} ${channelName} 渠道`,
-        //       () => {
-        //         vm.handleChannelStatus({ id: channelId, status: handleStatus })
-        //       }
-        //     )
-        //   }
-        // },
-        // {
-        //   name: '删除',
-        //   icon: 'el-icon-detail',
-        //   handle(row) {
-        //     const { channelId, channelName } = row
-        //     vm.confirmTip(
-        //       `是否删除 ${channelName}渠道`,
-        //       {
-        //         confirmHandle() {
-        //           vm.deleteData({ id: channelId })
-        //         }
-        //       }
-        //     )
-        //   }
-        // }
       ],
       tableHeader: [
         {
           label: '渠道名称',
           prop: 'channelName',
-          isPopover: true,
           search: {
             type: 'input'
           }
@@ -227,7 +224,7 @@ export default {
             const list = row.ruleInfos && row.ruleInfos.length ? row.ruleInfos.map((item) => {
               return item.ruleName
             }) : []
-            return list.join(',')
+            return list.join('，')
           }
         },
         {
@@ -251,12 +248,10 @@ export default {
         },
         {
           label: '创建时间',
-          prop: 'created',
-          width: 100
+          prop: 'created'
         },
         {
           label: '更新时间',
-          width: 100,
           prop: 'updated'
         }
       ]

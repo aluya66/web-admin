@@ -11,7 +11,7 @@
       :model="formModel"
       :rules="rules"
       label-width="120px"
-      class="form"
+      class="detail-form"
       label-position="right"
 			status-icon
     >
@@ -28,14 +28,14 @@
 				></query-dict> -->
 			</el-form-item>
 			<!--  TODO... -->
-      <el-form-item class="form-btn">
+      <el-form-item class="button-item">
         <el-button
           :loading="btnLoading"
-          size="medium"
+          :size="size"
           type="primary"
           @click.native.prevent="submitHandle"
         >保存</el-button>
-        <el-button size="medium" @click.native.prevent="goBack">返回</el-button>
+        <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
     <div v-if="dialogObj.isShow">
@@ -119,20 +119,3 @@ export default {
   }
 }
 </script>
-
-<style lang='less' scoped>
-.form {
-  background-color: @white;
-  padding: 15px 15px;
-  .form-item {
-    width: 100%;
-  }
-  .select-item {
-		width: 30%;
-  }
-  .form-btn {
-    margin-left: 20px;
-    margin-top: 20px;
-  }
-}
-</style>

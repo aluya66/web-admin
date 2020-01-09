@@ -2,7 +2,10 @@
   <div class="customer-select">
     <div class="header">
       <div class="title title-left">用户列表</div>
-      <div class="title title-right">已选用户:【 {{checkedAttr.length}} 】</div>
+      <div class="title title-right">
+        已选用户:【 {{checkedAttr.length}} 】
+        <el-button @click="deleteAll">删除所有</el-button>
+      </div>
     </div>
     <div class="content">
       <div class="source">
@@ -46,6 +49,8 @@
 </template>
 <script>
 import mixinTable from 'mixins/table'
+import utils from 'utils'
+
 export default {
   name: 'customerSelect',
   mixins: [mixinTable],
@@ -58,7 +63,7 @@ export default {
       }
     },
     initChecked: {
-      // 编辑初始化goods选中值
+      // 编辑初始化用户选中值
       type: Array,
       default() {
         return []
@@ -67,23 +72,19 @@ export default {
   },
   mounted() {
     this.checkedAttr = this.initChecked
+    utils.setStore('cacheSelectedUserList', this.initChecked)
     this.fetchData()
   },
   data() {
     return {
+      finishChangePage: false, // 是否进行了翻页操作， 处理数据缓存合并
+      isPageChange: false, // 是否翻页
       tableHeader: [
         {
           label: '头像',
           prop: 'avatar',
           width: 100,
           isImage: true
-        },
-        {
-          label: '用户',
-          prop: 'name',
-          search: {
-            type: 'input'
-          }
         },
         {
           label: '昵称',
@@ -104,14 +105,44 @@ export default {
     }
   },
   methods: {
+    deleteAll() {
+      this.checkedAttr = []
+      utils.removeStore('cacheSelectedUserList')
+      this.$refs.customerTableRef.$refs.multipleTable.clearSelection()
+    },
+    changePagination(pageInfo) {
+      this.pageInfo.pageNo = pageInfo.page
+      this.pageInfo.pageSize = pageInfo.limit
+      this.fetchData()
+      if (utils.getStore('cacheSelectedUserList')) {
+        this.checkedAttr = utils.getStore('cacheSelectedUserList') // 翻页获取缓存已选择数据
+      }
+      this.finishChangePage = true
+    },
     handleSelect(rows) {
-      this.checkedAttr = rows
+      // 当前页选中行
+      let selectRows = rows ? rows.map(item => ({ ...item, isSelected: true })) : [] // 设置被选中标识
+      const pageCheckedArr = utils.getStore('cacheSelectedUserList') ? utils.getStore('cacheSelectedUserList') : []
+      if (this.finishChangePage || pageCheckedArr) {
+        if (pageCheckedArr.length) { // 有选择行，过滤重复
+          pageCheckedArr.forEach((item) => {
+            let idx = selectRows.findIndex(checkedItem => item.id === checkedItem.id)
+            idx !== -1 && selectRows.splice(idx, 1)
+          })
+        }
+        this.checkedAttr = pageCheckedArr.concat(selectRows)
+      } else { // 无翻页 当前页选中数据即是所有选中行
+        this.checkedAttr = selectRows
+      }
+      // 缓存已选择数据 有翻页操作时进行缓存选中数据
+      utils.setStore('cacheSelectedUserList', this.checkedAttr)
       this.$emit('handle-select', rows)
     },
     cancelSelect(index) {
-      const tableIdx = this.tableList.findIndex((item) => item.userId === this.checkedAttr[index].userId)
+      const tableIdx = this.tableList.findIndex((item) => item.id === this.checkedAttr[index].id)
       tableIdx !== -1 && this.$refs.customerTableRef.$refs.multipleTable.toggleRowSelection(this.tableList[tableIdx], false)
       this.checkedAttr.splice(index, 1)
+      utils.setStore('cacheSelectedUserList', this.checkedAttr)
     },
     fetchData() {
       if (this.paramsObj.appCode === '') {
@@ -120,29 +151,20 @@ export default {
       }
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.member.getMember({
+      this.$api.member.getMemberUserInfo({
         ...this.searchObj,
         ...this.paramsObj,
         ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
       })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } else {
-            this.tableList = res || []
-          }
-          this.checkedAttr.length && this.checkedAttr.forEach((checkedItem) => {
-            const idx = this.tableList.findIndex((item) => checkedItem.userId === item.userId)
-            if (idx !== -1) {
-              this.$nextTick(() => {
-                this.$refs.customerTableRef.$refs.multipleTable.toggleRowSelection(this.tableList[idx])
-              })
-            }
-          })
-        })
     }
   }
 }

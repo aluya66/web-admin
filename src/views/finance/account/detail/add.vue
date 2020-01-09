@@ -45,6 +45,7 @@
 <script>
 import dictObj from '@/store/dictData'
 import MixinForm from 'mixins/form'
+import utils from 'utils'
 
 export default {
   mixins: [MixinForm],
@@ -73,7 +74,7 @@ export default {
           { required: true, message: '交易类型不能为空', trigger: 'change' }
         ],
         orderNo: [
-          { required: true, message: '交易编号不能为空', trigger: 'blur' }
+          { required: true, validator: utils.validater.enOrNumText, trigger: 'blur' }
         ]
       }
     }
