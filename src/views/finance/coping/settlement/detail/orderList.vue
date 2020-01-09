@@ -89,7 +89,7 @@
             :size="size"
             :loading="btnGoodsLoading"
             @click="exportGoodsList"
-          >导出订单商品清单</el-button> -->
+          >导出订单商品清单</el-button>-->
         </div>
       </template>
     </c-table>
@@ -317,6 +317,11 @@ export default {
               this.queryData = res
               this.businessSettleId = res.detailBusinessSettleVo ? res.detailBusinessSettleVo.id : ''
               this.fetchData()
+              if (res.detailBusinessSettleVo) {
+                !res.detailBusinessSettleVo.sellOrderNum && !res.detailBusinessSettleVo.afterOrderNum && this.$msgTip('暂无匹配的订单数据', 'warning')
+              } else {
+                this.$msgTip('暂无匹配的订单数据', 'warning')
+              }
             }
           })
         } else {
