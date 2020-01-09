@@ -127,7 +127,7 @@ export default {
       pickerOptions: {
         disabledDate(time) {
           const curDate = new Date()
-          return time.getTime() > curDate.getTime() - 24 * 60 * 60 * 1000 || time.getTime() < new Date(vm.searchObj.settleStartDate).getTime()
+          return time.getTime() > curDate.getTime() - 24 * 60 * 60 * 1000 || time.getTime() < new Date(vm.searchObj.settleStartDate).getTime() - 24 * 60 * 60 * 1000
         }
       },
       businessSettleId: '', // 订单列表查询id
