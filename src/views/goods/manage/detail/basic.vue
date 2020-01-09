@@ -31,6 +31,17 @@
         />
         <span v-else>{{formModel.operationName}}</span>
       </el-form-item>
+      <el-form-item label="商品完善状态:">
+        <el-input
+          v-if="!isView"
+          class="select-item"
+          v-model.trim="formModel.isReadableCN"
+          :size="size"
+          disabled
+          clearable
+        />
+        <span v-else>{{formModel.isReadableCN}}</span>
+      </el-form-item>
       <el-form-item label="基础分类:">
         <el-cascader
           v-if="!isView"
@@ -375,6 +386,7 @@ export default {
       const {
         goodsName, // 商品图片
         operationName, // 运营名称
+        isReadableCN, // 商品完善状态
         categoryCode, // 分类code
         categoryName, // 分类名称
         goodsBn, // 商品款号
@@ -442,6 +454,7 @@ export default {
       this.formModel = {
         goodsName, // 商品图片
         operationName, // 运营名称
+        isReadableCN, // 商品完善状态
         categoryCode, // 分类code
         categoryName, // 分类名称
         goodsBn, // 商品款号

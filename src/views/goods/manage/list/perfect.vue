@@ -25,10 +25,19 @@
 </template>
 
 <script>
+import mixinTable from 'mixins/table'
 import mixinList from './mixin'
+import utils from 'utils'
+const goodsStatusList = [{
+  value: 1,
+  label: '上架'
+}, {
+  value: 2,
+  label: '下架'
+}]
 export default {
   name: 'perfectList',
-  mixins: [mixinList],
+  mixins: [mixinList, mixinTable],
   data(vm) {
     return {
       tableHeader: [
@@ -68,7 +77,7 @@ export default {
             label: '商品状态',
             type: 'select',
             prop: 'marketable',
-            optionsList: vm.goodsStatusList
+            optionsList: goodsStatusList
           }
         },
         {
@@ -110,6 +119,13 @@ export default {
           prop: 'costprice'
         },
         {
+          label: '库存',
+          prop: 'stock',
+          search: {
+            type: 'min-max'
+          }
+        },
+        {
           label: '创建时间',
           prop: 'created',
           search: {
@@ -125,7 +141,7 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { createDateTime, updateDateTime, categoryCode, ...other } = this.searchObj
+      const { createDateTime, updateDateTime, categoryCode, stock, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const createDate = this.getSearchDate(createDateTime, '', 'beginDate', 'endDate')
       const updateDate = this.getSearchDate(updateDateTime, '', 'updateBeginDate', 'updateEndDate')
@@ -134,13 +150,22 @@ export default {
         cateCodeSecond: categoryCode[1] || '',
         cateCodeThird: categoryCode[2] || ''
       }
+      if (utils.isInteger(stock[0]) || utils.isInteger(stock[1])) {
+        return this.$msgTip('商品库存请输入正整数', 'warning')
+      }
+      if (stock[0] > stock[1]) {
+        return this.$msgTip('库存最小值不能大于最大值', 'warning')
+      }
+
       this.isLoading = true
       this.$api.goods.getPerfectGoodsList({
         ...createDate,
         ...updateDate,
         ...categoryVal,
         ...other,
-        ...page
+        ...page,
+        minStock: stock[0] || '',
+        maxStock: stock[1] || ''
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {

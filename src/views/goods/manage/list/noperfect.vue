@@ -25,10 +25,21 @@
 </template>
 
 <script>
+import mixinTable from 'mixins/table'
 import mixinList from './mixin'
+const perfectStatusList = [{
+  value: 'UN_PERFECT',
+  label: '未完善'
+}, {
+  value: 'PERFECT',
+  label: '完善'
+}, {
+  value: 'PART_PERFECT',
+  label: '部分完善'
+}]
 export default {
   name: 'noPerfectList',
-  mixins: [mixinList],
+  mixins: [mixinList, mixinTable],
   data(vm) {
     return {
       tableHeader: [
@@ -79,10 +90,10 @@ export default {
           label: '内容完善状态',
           prop: 'perfectName',
           search: {
-            label: '商品状态',
+            label: '状态',
             type: 'select',
-            prop: 'marketable',
-            optionsList: vm.goodsStatusList
+            prop: 'perfectStatus',
+            optionsList: perfectStatusList
           }
         },
         {

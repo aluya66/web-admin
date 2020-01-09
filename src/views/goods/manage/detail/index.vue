@@ -57,12 +57,18 @@
         title="其他信息"
     ></g-other>-->
     <div class="btn-wrapper">
-      <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">部分完善</el-button>
+      <el-button
+        v-if="formModel.isReadableCN === '部分完善' || formModel.isReadableCN === '未完善'"
+        :loading="btnLoading"
+        type="primary"
+        @click.native.prevent="submitHandle('partFinish')"
+      >部分完善</el-button>
       <el-button
         :loading="btnLoading"
         type="primary"
-        @click.native.prevent="submitHandle('confirmFinish')"
-      >确认完成</el-button>
+        @click.native.prevent="submitHandle(formModel.isReadableCN === '已完善' ? 'edit' : 'confirmFinish')"
+      >{{ formModel.isReadableCN === '已完善' ? '保存' : '确认完成' }}</el-button>
+      <el-button @click.native.prevent="goBack">取消</el-button>
     </div>
     <div v-if="dialogObj.isShow">
       <el-dialog :visible.sync="dialogObj.isShow" v-if="dialogObj.imageUrl || dialogObj.videoUrl">
@@ -164,41 +170,69 @@ export default {
         })
       }
     },
-    handleData() {
-      const { goodsBn } = this.formModel
+    handleData(type) {
+      const requestFun = {
+        'edit': this.$api.goods.editGoods,
+        'partFinish': this.$api.goods.setPartPerfectGoods,
+        'confirmFinish': this.$api.goods.setPerfectGoods
+      }
+      const { id } = this.formModel
       const { operationName, marketable } = this.$refs.basicRef.formModel
-      const { mustQuantity, sampleCostPrice, costPrice, supplyPrice, wholesalePrice, largeBatchPrice, memberPrice, retailPrice, goodsSkus } = this.$refs.salesRef.formModel
+      const { mustQuantity } = this.$refs.salesRef.formModel
+      const { childProductArray, specification } = this.$refs.salesRef.$refs.skuWrapRef
+      if (childProductArray.length > 0) {
+        const arr = [{
+          value: 'supplyPrice',
+          tip: '成衣供货价'
+        }, {
+          value: 'memberPrice',
+          tip: '成衣会员价'
+        }, {
+          value: 'largeBatchPrice',
+          tip: '成衣大批价'
+        }, {
+          value: 'wholesalePrice',
+          tip: '成衣散批价'
+        }, {
+          value: 'retailPrice',
+          tip: '零售价'
+        }]
+        for (let i = 0, len = childProductArray.length; i < len; i++) {
+          for (let j = 0, len = arr.length; j < len; j++) {
+            if (childProductArray[i][arr[j].value] === '' || !Number(childProductArray[i][arr[j].value]) || childProductArray[i][arr[j].value] < 0) return this.$msgTip(`sku${arr[j].tip}不能为空，请填写大于0的数字`, 'warning')
+          }
+        }
+      }
       const { videoList, goodsImageList, intro } = this.$refs.paramsRef.formModel
-      const goodsStaticFiles = goodsImageList.map((item) => { return { imageUrl: item.url } })
+      const goodsStaticFiles = goodsImageList.map((item, index) => ({ imageUrl: item.url, isDefault: index === 0 ? 1 : 0 }))
       if (videoList.length) goodsStaticFiles.push(videoList.map((item) => { return { videoUrl: item.url } }))
-      const skuList = goodsSkus && goodsSkus.length ? goodsSkus.map((item) => {
+      const skus = childProductArray && childProductArray.length ? childProductArray.map((item, index) => {
+        let imgIndex = specification[0].value.length && specification[0].value.findIndex((colorItem) => colorItem === item.childProductSpec['颜色'] )
         return {
+          imageUrl: imgIndex !== -1 ? specification[0].posterUrl[imgIndex] : '', // 图片
           goodsSkuSn: item.goodsSkuSn, // 商品SKU码
-          garmentRetailPrice: item.memberPrice, // 会员价
-          garmentMarketPrice: item.retailPrice, // 零售价
-          garmentCostPrice: item.costPrice, // 成衣成本价
-          sampleCostPrice: item.sampleCostPrice, // 样衣成本价
-          garmentSupplyPrice: item.supplyPrice, // 供货价
-          garmentWholesalePrice: item.wholesalePrice, // 散批价
-          garmentLargePrice: item.largeBatchPrice, // 大批发价
-          isDefalut: item.isDefalut // 是否默认货品
+          memberPrice: item.memberPrice, // 会员价
+          retailPrice: item.retailPrice, // 零售价
+          costPrice: item.costPrice, // 成本价
+          supplyPrice: item.supplyPrice, // 供货价
+          wholesalePrice: item.wholesalePrice, // 散批价
+          largeBatchPrice: item.largeBatchPrice, // 大批发价
+          isDefalut: item.isDefalut ? 1 : 0 // 是否默认
         }
       }) : []
-      this.$api.goods.updateGoodsDetail({
-        goodsBn, // 商品编码SPU码
+      if (type === 'confirmFinish') { // 确认完成需要信息填写完整
+        if (!operationName) return this.$msgTip('请填写运营名称')  
+        if (videoList.length === 0) return this.$msgTip('请填写商品视频')  
+        if (!intro) return this.$msgTip('请填写商品详情')  
+      }
+      requestFun[type]({
+        id, // 商品Id
         operationName, // 运营名称
         marketable, // 是否可售
         mustQuantity, // 起订量
-        minGarmentCostPrice: sampleCostPrice, // 成衣成本价
-        costprice: costPrice, // 样衣成本价
-        minGarmentSupplyPrice: supplyPrice, // 供货价,
-        minGarmentWholesalePrice: wholesalePrice, // 散批价
-        minGarmentLargePrice: largeBatchPrice, // 大批价
-        minGarmentRetailPrice: retailPrice, // 零售价
         goodsStaticFiles, // 商品资源文件集合 【视频、商品图片】
         intro, // 富文本
-        price: memberPrice, // 会员价
-        goodsSkus: skuList // sku列表
+        skus // sku列表
       }).then(() => {
         this.$msgTip('编辑成功')
         this.closeCurrentTag()
@@ -206,21 +240,17 @@ export default {
     },
     submitHandle(type = '') {
       // 确认完成按钮，需要做必填项校验
-      if (type === 'confirmFinish') {
-        const salesForm = this.$refs.salesRef.$refs.salesFormRef
-        const paramsForm = this.$refs.paramsRef.$refs.paramsFormRef
-        Promise.all([salesForm, paramsForm].map(this.getFormPromise)).then(res => {
-          // 所有子表单是否校验通过
-          const validateResult = res.every(item => !!item)
-          if (validateResult) {
-            this.handleData()
-          } else {
-            console.log('未校验通过')
-          }
-        })
-      } else {
-        this.handleData()
-      }
+      const salesForm = this.$refs.salesRef.$refs.salesFormRef
+      const paramsForm = this.$refs.paramsRef.$refs.paramsFormRef
+      Promise.all([salesForm, paramsForm].map(this.getFormPromise)).then(res => {
+        // 所有子表单是否校验通过
+        const validateResult = res.every(item => !!item)
+        if (validateResult) {
+          this.handleData(type)
+        } else {
+          console.log('未校验通过')
+        }
+      })
     },
     reviewImage(file) {
       this.dialogObj = {
@@ -262,7 +292,6 @@ export default {
   right: 50px;
   top: 200px;
   z-index: 1005;
-  height: 300px;
   cursor: pointer;
   .point-item {
     display: flex;
@@ -304,6 +333,7 @@ export default {
 .btn-wrapper {
   display: flex;
   justify-content: center;
+  margin-bottom: 30px;
 }
 .video {
   max-height: 500px;

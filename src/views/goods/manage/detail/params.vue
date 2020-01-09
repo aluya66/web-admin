@@ -5,7 +5,7 @@
       :model="formModel"
       label-width="120px"
       class="form"
-      :rules="paramsForm"
+      :rules="rules"
       label-position="right"
     >
       <el-form-item label="识别图:">
@@ -37,8 +37,8 @@
         </div>
       </el-form-item>
       <el-form-item label="商品视频:" prop="videoList">
-        <el-button type="primary" @click="showDialog('video')" :disabled="isDisabled">上传视频</el-button>
-        <el-button type="primary" @click="deleteImg('videoList', 0)" :disabled="isDisabled">删除</el-button>
+        <el-button type="primary" :size="size" @click="showDialog('video')" :disabled="isDisabled">上传视频</el-button>
+        <el-button type="primary" v-if="formModel.videoList && formModel.videoList.length" :size="size" @click="deleteImg('videoList', 0)" :disabled="isDisabled">删除</el-button>
         <div class="resource-wrapper" v-if="formModel.videoList && formModel.videoList.length">
           <c-image
             class="coverImg"
@@ -51,53 +51,6 @@
       <el-form-item label="商品详情:">
         <c-wangEditor :is-view="isView || isDisabled" :content.sync="formModel.intro"></c-wangEditor>
       </el-form-item>
-      <!-- <el-form-item :label="item.label" v-for="(item, index) in curAttrs" :key="item.id">
-      <el-checkbox-group
-        v-if="item.paramType === '' || item.paramType === 'checkbox'"
-        v-model="item.checkedAttr"
-        @change="handleCheckedChange"
-      >
-        <el-checkbox
-          v-for="attr in item.attrs"
-          :label="attr.value"
-          :key="attr.value"
-          :disabled="isView || isDisabled"
-          @change="curIndex = index"
-        >{{attr.label}}</el-checkbox>
-      </el-checkbox-group>
-      <el-select
-        class="select-item"
-        v-if="item.paramType === 'select'"
-        v-model="item.checkedAttr"
-        :disabled="isView || isDisabled"
-        filterable
-        clearable
-        placeholder="请选择"
-        @change="handleCheckedChange"
-        @focus="curIndex = index"
-      >
-        <el-option
-          v-for="attr in item.attrs"
-          :key="attr.value"
-          :label="attr.label"
-          :value="attr.value"
-        ></el-option>
-      </el-select>
-      <el-radio-group
-        v-if="item.paramType === 'radio'"
-        v-model="item.checkedAttr"
-        @change="handleCheckedChange"
-      >
-        <el-radio
-          v-for="attr in item.attrs"
-          :key="attr.value"
-          :disabled="isView || isDisabled"
-          :label="attr.value"
-          @change="curIndex = index"
-        >{{attr.label}}</el-radio>
-      </el-radio-group>
-      </el-form-item>-->
-
       <div v-if="dialogObj.isShow">
         <c-dialog
           :is-show="dialogObj.isShow"
@@ -109,6 +62,7 @@
             <c-multi-upload
               ref="multiUpload"
               @upload="getFileList"
+              tip="只能上传MP4文件，且不超过5M"
               :limit="uploadLimit"
               :file-type="uploadType"
             ></c-multi-upload>
@@ -129,16 +83,15 @@ import CDialog from 'components/dialog'
 export default {
   data() {
     return {
-      paramsForm: {
-        goodsImageList: [{ required: true, trigger: 'change' }]
-      },
       uploadLimit: 9, // 上传数量
       uploadType: 'image', // 上传图片的类型  商品图片、视频
       dialogObj: false,
       curAttrs: [], // 全部商品参数
       curIndex: 0, // 一类商品参数下标
       checkAttrs: [], // 选中商品参数值[{1010:[212,3133]}]
-      formModel: {},
+      formModel: {
+        goodsImageList: []
+      },
       rules: {
         goodsImageList: [
           { required: true, message: '请选择商品图片', trigger: 'change' }
@@ -183,7 +136,7 @@ export default {
     showDialog(type) {
       this.dialogObj = {
         isShow: true,
-        title: '上传图片'
+        title: type === 'image' ? '上传图片' : '上传视频'
       }
       this.uploadLimit = type === 'image' ? 9 : 1
       this.uploadType = type

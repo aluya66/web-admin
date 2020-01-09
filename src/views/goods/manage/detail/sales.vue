@@ -32,89 +32,89 @@
         />
         <span v-else>{{formModel.sampleCostPrice}}</span>
       </el-form-item>
-      <el-form-item label="样衣成本价(元):" prop="sampleCostPrice">
+      <el-form-item label="样衣成本价(元):" prop="sampleCostprice">
         <el-input
           v-if="!isView"
           class="select-item"
-          :disabled="isDisabled"
-          v-model.trim="formModel.sampleCostPrice"
+          disabled
+          v-model.trim="formModel.sampleCostprice"
           :size="size"
           placeholder="请输入样衣成本价"
           clearable
         />
-        <span v-else>{{formModel.sampleCostPrice}}</span>
+        <span v-else>{{formModel.sampleCostprice}}</span>
       </el-form-item>
-      <el-form-item label="成衣成本价(元):" prop="costPrice">
+      <el-form-item label="成衣成本价(元):" prop="costprice">
         <el-input
           v-if="!isView"
           class="select-item"
-          :disabled="isDisabled"
-          v-model.trim="formModel.costPrice"
+          disabled
+          v-model.trim="formModel.costprice"
           :size="size"
           placeholder="请输入成衣成本价"
           clearable
         />
-        <span v-else>{{formModel.costPrice}}</span>
+        <span v-else>{{formModel.costprice}}</span>
       </el-form-item>
-      <el-form-item label="成衣供货价(元):" prop="supplyPrice">
+      <el-form-item label="成衣供货价(元):" prop="supplyprice">
         <el-input
           v-if="!isView"
           class="select-item"
-          :disabled="isDisabled"
-          v-model.trim="formModel.supplyPrice"
+          disabled
+          v-model.trim="formModel.supplyprice"
           :size="size"
           placeholder="请输入成衣供货价"
           clearable
         />
-        <span v-else>{{formModel.supplyPrice}}</span>
+        <span v-else>{{formModel.supplyprice}}</span>
       </el-form-item>
-      <el-form-item label="成衣散批价(元):" prop="wholesalePrice">
+      <el-form-item label="成衣散批价(元):" prop="wholesaleprice">
         <el-input
           v-if="!isView"
           class="select-item"
-          :disabled="isDisabled"
-          v-model.trim="formModel.wholesalePrice"
+          disabled
+          v-model.trim="formModel.wholesaleprice"
           :size="size"
           placeholder="请输入成衣散批价"
           clearable
         />
-        <span v-else>{{formModel.wholesalePrice}}</span>
+        <span v-else>{{formModel.wholesaleprice}}</span>
       </el-form-item>
-      <el-form-item label="成衣大批价(元):" prop="largeBatchPrice">
+      <el-form-item label="成衣大批价(元):" prop="largePrice">
         <el-input
           v-if="!isView"
           class="select-item"
-          :disabled="isDisabled"
-          v-model.trim="formModel.largeBatchPrice"
+          disabled
+          v-model.trim="formModel.largePrice"
           :size="size"
           placeholder="请输入成衣大批价"
           clearable
         />
-        <span v-else>{{formModel.largeBatchPrice}}</span>
+        <span v-else>{{formModel.largePrice}}</span>
       </el-form-item>
-      <el-form-item label="成衣会员价(元):" prop="memberPrice">
+      <el-form-item label="成衣会员价(元):" prop="price">
         <el-input
           v-if="!isView"
           class="select-item"
-          :disabled="isDisabled"
-          v-model.trim="formModel.memberPrice"
+          disabled
+          v-model.trim="formModel.price"
           :size="size"
           placeholder="请输入成衣会员价"
           clearable
         />
-        <span v-else>{{formModel.memberPrice}}</span>
+        <span v-else>{{formModel.price}}</span>
       </el-form-item>
-      <el-form-item label="零售价(元):" prop="retailPrice">
+      <el-form-item label="零售价(元):" prop="tagprice">
         <el-input
           v-if="!isView"
           class="select-item"
-          :disabled="isDisabled"
-          v-model.trim="formModel.retailPrice"
+          disabled
+          v-model.trim="formModel.tagprice"
           :size="size"
           placeholder="请输入零售价"
           clearable
         />
-        <span v-else>{{formModel.retailPrice}}</span>
+        <span v-else>{{formModel.tagprice}}</span>
       </el-form-item>
     </el-form>
   </c-card>
@@ -123,17 +123,7 @@
 import CCard from 'components/card'
 import SkuWrap from './sku-wrap.vue'
 import utils from 'utils'
-// const requiredKey = [ // 必填字段
-//   'sampleCostPrice',
-//   'supplyPrice',
-//   'sampleCostPrice',
-//   'supplyPrice',
-//   'largeBatchPrice',
-//   'costPrice',
-//   'memberPrice',
-//   'retailPrice',
-//   'wholesalePrice'
-// ]
+
 export default {
   data() {
     return {
@@ -173,18 +163,18 @@ export default {
     }
   },
   mounted() {
-    const { goodsBn, skus, mustQuantity, sampleCostprice, supplyprice, largePrice, costprice, mktprice, price, wholesaleprice } = this.dataObj
+    const { goodsBn, skus, mustQuantity, sampleCostprice, supplyprice, largePrice, costprice, tagprice, price, wholesaleprice } = this.dataObj
     this.formModel = {
       goodsBn,
       skus,
-      mustQuantity,
-      sampleCostPrice: sampleCostprice,
-      supplyPrice: supplyprice,
-      largeBatchPrice: largePrice,
-      costPrice: costprice,
-      memberPrice: mktprice,
-      retailPrice: price,
-      wholesalePrice: wholesaleprice
+      mustQuantity, // 起订量
+      sampleCostprice, // 成衣成本
+      supplyprice, // 供货价
+      largePrice, // 大批价
+      costprice, // 样衣成本
+      price, // 会员价
+      tagprice, // 零售价
+      wholesaleprice // 散批价
     }
   },
   created() {
@@ -192,7 +182,6 @@ export default {
   },
   methods: {
     validateSku(rule, value, callback) {
-      console.log(value)
       var text = /，/g
       if (text.test(value)) {
         callback(new Error('输入不可以包含“,”'))
@@ -201,7 +190,6 @@ export default {
       }
     },
     setMinPrice(val) {
-      console.log(val)
       let goodsSkus = this.$refs.skuWrapRef.childProductArray
       this.formModel = {
         ...this.formModel,
@@ -241,11 +229,11 @@ export default {
               }
             })
             this.rateValueObj = {
-              supplyRate,
-              largeBatchRate,
-              memberPriceRate,
-              retailPriceRate,
-              wholesalePriceRate
+              supplyRate: supplyRate || 1,
+              largeBatchRate: largeBatchRate || 1,
+              memberPriceRate: memberPriceRate || 1,
+              retailPriceRate: retailPriceRate || 1,
+              wholesalePriceRate: wholesalePriceRate || 1
             }
             this.curAttrs.push({ attrs, name: val.name, label: `${val.name}:`, id: val.id, checkedAttr: utils.uniqueArr(checkedAttr), posterUrl: colorPosters })
           })
