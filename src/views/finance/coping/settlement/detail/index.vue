@@ -56,7 +56,7 @@
           <!-- 付款记录 -->
           <el-divider content-position="left">付款记录：</el-divider>
           <div class="card-info">
-            <el-button size="small" type="primary" @click.native.prevent="showTypeDialog(3)" v-if="detailData.detailBusinessSettleVo.settleStatus === 2 && detailData.detailBusinessSettleVo.payStatus !== 3">添加付款记录</el-button>
+            <el-button size="small" type="primary" @click.native.prevent="showTypeDialog(3)" v-if="detailData.detailBusinessSettleVo.settleStatus === 2 && detailData.detailBusinessSettleVo.payStatus !== 3 && detailData.detailBusinessSettleVo.settleActualPay > 0">添加付款记录</el-button>
             <pay-log :settle-id="$route.params.id || ''" :change-time="changeTime"/>
           </div>
           <!-- 付款记录 -->
