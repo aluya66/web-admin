@@ -145,6 +145,13 @@ export const getAllArea = params =>
   })
 
 // 区域列表
+export const getAreaAll = params =>
+  Http.fetch(`${context}/api/area/all`, params, {
+    method: 'get',
+    cache: 'area'
+  })
+
+// 区域列表
 export const queryAllRegion = params =>
   Http.fetch(`${context}/api/area/childrens`, params, {
     method: 'get'

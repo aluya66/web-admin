@@ -47,7 +47,7 @@ export default {
     channelMerchantInfo: '商户详情',
     channelManage: '渠道管理',
     channelRule: '渠道规则',
-    channelDetail: '渠道详情',
+    shopDetail: '门店详情',
     memberCenter: '会员中心',
     memberManage: '会员管理',
     memberManageList: '会员列表',
