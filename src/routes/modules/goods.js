@@ -12,7 +12,7 @@ export default {
   children: [{
     path: '/goods/manage/list',
     name: 'goodsManage',
-    component: () => import('@/views/goods/manage/list'),
+    component: () => import('@/views/goods/manage/list/index'),
     meta: {
       title: 'goodsManage',
       icon: 'table',
@@ -20,7 +20,7 @@ export default {
     }
   },
   {
-    path: '/goods/manage/detail/:id?',
+    path: '/goods/manage/detail/:id/:type',
     name: 'goodsDetail',
     component: () => import('@/views/goods/manage/detail/index'),
     hidden: true,
@@ -31,6 +31,7 @@ export default {
       roles: ['admin']
     }
   },
+
   {
     path: '/goods/manage/label/:id',
     name: 'goodsLabelDetail',
