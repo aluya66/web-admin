@@ -175,7 +175,7 @@ export default {
     },
     // 当销售和售后都为零时，不能创建结算单
     isNotEmpty() {
-      return this.detailData.detailBusinessSettleVo.sellOrderNum && this.detailData.detailBusinessSettleVo.afterOrderNum
+      return this.detailData.detailBusinessSettleVo.sellOrderNum || this.detailData.detailBusinessSettleVo.afterOrderNum
     }
   },
   methods: {
