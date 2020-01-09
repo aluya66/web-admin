@@ -43,6 +43,12 @@ export default {
   data(vm) {
     return {
       tableHeader: [
+         {
+          label: '商品ID',
+          prop: 'id',
+          width: 100,
+          fixed: true,
+        },
         {
           label: '商品主图',
           prop: 'coverImg',

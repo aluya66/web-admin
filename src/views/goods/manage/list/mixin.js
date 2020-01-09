@@ -13,8 +13,8 @@ export default {
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
-            const { id } = row
-            vm.routerLink(`/goods/manage/detail/${id}/edit`)
+            const { id, perfectName } = row
+            vm.routerLink(`/goods/manage/detail/${id}/${perfectName}`)
           }
         }
       ]

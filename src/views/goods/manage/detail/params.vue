@@ -62,7 +62,7 @@
             <c-multi-upload
               ref="multiUpload"
               @upload="getFileList"
-              tip="只能上传MP4文件，且不超过5M"
+              :tip="uploadType === 'image' ? '只能上传jpg/png文件，且不超过5M' : '只能上传MP4文件，且不超过5M'"
               :limit="uploadLimit"
               :file-type="uploadType"
             ></c-multi-upload>

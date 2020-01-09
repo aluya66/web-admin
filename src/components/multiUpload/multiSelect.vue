@@ -3,6 +3,7 @@
     class="multi-upload"
     ref="upload"
     multiple
+    :tip="tip"
     :size="size"
     :limit="limit"
     :file-type="fileType"
@@ -26,6 +27,10 @@ export default create({
     fileType: {
       type: String,
       default: 'image'
+    },
+    tip: {
+      type: String,
+      default: ''
     },
     size: {
       type: Number,

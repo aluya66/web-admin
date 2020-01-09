@@ -30,10 +30,10 @@ import mixinList from './mixin'
 import utils from 'utils'
 const goodsStatusList = [{
   value: 1,
-  label: '上架'
+  label: '可销售'
 }, {
   value: 2,
-  label: '下架'
+  label: '不可销售'
 }]
 export default {
   name: 'perfectList',

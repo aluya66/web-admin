@@ -58,7 +58,7 @@
     ></g-other>-->
     <div class="btn-wrapper">
       <el-button
-        v-if="formModel.isReadableCN === '部分完善' || formModel.isReadableCN === '未完善'"
+        v-if="formModel.detailsType === '部分完善' || formModel.detailsType === '未完善'"
         :loading="btnLoading"
         type="primary"
         @click.native.prevent="submitHandle('partFinish')"
@@ -66,8 +66,8 @@
       <el-button
         :loading="btnLoading"
         type="primary"
-        @click.native.prevent="submitHandle(formModel.isReadableCN === '已完善' ? 'edit' : 'confirmFinish')"
-      >{{ formModel.isReadableCN === '已完善' ? '保存' : '确认完成' }}</el-button>
+        @click.native.prevent="submitHandle(formModel.detailsType === '已完善' || formModel.detailsType === '完善' ? 'edit' : 'confirmFinish')"
+      >{{ formModel.detailsType === '已完善' || formModel.detailsType === '完善' ? '保存' : '确认完成' }}</el-button>
       <el-button @click.native.prevent="goBack">取消</el-button>
     </div>
     <div v-if="dialogObj.isShow">
@@ -126,9 +126,22 @@ export default {
 
   created() {
     this.fetchData()
+    window.addEventListener('scroll', this.handleScroll)
   },
-
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   methods: {
+    handleScroll() {
+      const top = document.documentElement.scrollTop
+      if (top >= 0 && top < 900) {
+        this.currentPoint = 0
+      } else if (top >= 900 && top < 2500) {
+        this.currentPoint = 1
+      } else {
+        this.currentPoint = 2
+      }
+    },
     selectPoint(index) {
       this.currentPoint = index
     },
@@ -157,13 +170,14 @@ export default {
             let videoList = []; let goodsImageList = []
             res.goodsStaticFiles.forEach(item => {
               // 1.图片  2.视频
-              if (item.fileType === 1) {
-                goodsImageList.push(item.imageUrl)
-              } else {
-                videoList.push(item.videoUrl)
+              if (item.imageUrl) {
+                goodsImageList.push({ url: item.imageUrl })
+              }
+              if (item.videoUrl) {
+                videoList.push({ url: item.videoUrl })
               }
             }) // 图片、视频资源
-            this.formModel = { ...res, goodsImageList, videoList }
+            this.formModel = { ...res, goodsImageList, videoList, detailsType: params.type }
           } else {
             this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
           }
@@ -205,9 +219,9 @@ export default {
       }
       const { videoList, goodsImageList, intro } = this.$refs.paramsRef.formModel
       const goodsStaticFiles = goodsImageList.map((item, index) => ({ imageUrl: item.url, isDefault: index === 0 ? 1 : 0 }))
-      if (videoList.length) goodsStaticFiles.push(videoList.map((item) => { return { videoUrl: item.url } }))
+      if (videoList.length) goodsStaticFiles.push({ videoUrl: videoList[0].url })
       const skus = childProductArray && childProductArray.length ? childProductArray.map((item, index) => {
-        let imgIndex = specification[0].value.length && specification[0].value.findIndex((colorItem) => colorItem === item.childProductSpec['颜色'] )
+        let imgIndex = specification[0].value.length && specification[0].value.findIndex((colorItem) => colorItem === item.childProductSpec['颜色'])
         return {
           imageUrl: imgIndex !== -1 ? specification[0].posterUrl[imgIndex] : '', // 图片
           goodsSkuSn: item.goodsSkuSn, // 商品SKU码
@@ -221,9 +235,9 @@ export default {
         }
       }) : []
       if (type === 'confirmFinish') { // 确认完成需要信息填写完整
-        if (!operationName) return this.$msgTip('请填写运营名称')  
-        if (videoList.length === 0) return this.$msgTip('请填写商品视频')  
-        if (!intro) return this.$msgTip('请填写商品详情')  
+        if (!operationName) return this.$msgTip('请填写运营名称', 'warning')
+        if (videoList.length === 0) return this.$msgTip('请填写商品视频', 'warning')
+        if (!intro) return this.$msgTip('请填写商品详情', 'warning')
       }
       requestFun[type]({
         id, // 商品Id
@@ -236,6 +250,7 @@ export default {
       }).then(() => {
         this.$msgTip('编辑成功')
         this.closeCurrentTag()
+        this.goBack()
       })
     },
     submitHandle(type = '') {

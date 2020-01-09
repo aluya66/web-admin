@@ -31,16 +31,16 @@
         />
         <span v-else>{{formModel.operationName}}</span>
       </el-form-item>
-      <el-form-item label="商品完善状态:">
+      <el-form-item label="商品完善状态:" v-if="formModel.detailsType !== '已完善' && formModel.detailsType !== '完善'">
         <el-input
           v-if="!isView"
           class="select-item"
-          v-model.trim="formModel.isReadableCN"
+          v-model.trim="formModel.detailsType"
           :size="size"
           disabled
           clearable
         />
-        <span v-else>{{formModel.isReadableCN}}</span>
+        <span v-else>{{formModel.detailsType}}</span>
       </el-form-item>
       <el-form-item label="基础分类:">
         <el-cascader
@@ -184,7 +184,7 @@
       </el-form-item>
       <el-form-item label="商品是否可售:" prop="marketable" required>
         <el-radio-group v-model="formModel.marketable" :disabled="isDisabled">
-          <el-radio :label="0">否</el-radio>
+          <el-radio :label="2">否</el-radio>
           <el-radio :label="1">是</el-radio>
         </el-radio-group>
       </el-form-item>
@@ -386,7 +386,7 @@ export default {
       const {
         goodsName, // 商品图片
         operationName, // 运营名称
-        isReadableCN, // 商品完善状态
+        detailsType, // 商品完善状态
         categoryCode, // 分类code
         categoryName, // 分类名称
         goodsBn, // 商品款号
@@ -454,7 +454,7 @@ export default {
       this.formModel = {
         goodsName, // 商品图片
         operationName, // 运营名称
-        isReadableCN, // 商品完善状态
+        detailsType, // 商品完善状态
         categoryCode, // 分类code
         categoryName, // 分类名称
         goodsBn, // 商品款号
