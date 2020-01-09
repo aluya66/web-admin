@@ -419,7 +419,7 @@ export const sumPack = (arrNum, isNum, digits) => {
     }
   }
   let fltSum = intSum / multi
-  return isNum ? fltSum : fltSum.toFixed(digits)
+  return isNum ? fltSum : Number((fltSum).toFixed(digits))
 }
 
 export const Event = new Vue()

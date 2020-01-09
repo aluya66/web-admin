@@ -277,7 +277,6 @@ export default {
     return {
       memberTypeList: [],
       size: 'defalut',
-      platformListType: '',
       memberList: [], // 用户列表
       customerTypeList: [ // 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
         {
@@ -388,6 +387,7 @@ export default {
     },
     cancelSelect(index) {
       this.formModel.selectedCustomerList.splice(index, 1)
+      this.$forceUpdate()
     },
     // 拼接会员等级到会员分类列表 类型有 1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
     // 类型4为接口请求获得， 16为指定用户选中后保存时候添加
@@ -552,7 +552,7 @@ export default {
           // userLimitTypes = Array.from(new Set(userLimitTypes))
           let userIds = [] // 指定用户
           if (customerType === 16 && selectedCustomerList && selectedCustomerList.length) {
-            userIds = selectedCustomerList.map((item) => item.userId)
+            userIds = selectedCustomerList.map((item) => item.id)
             // 有指定用户 添加指定用户类型  1 全部用户 2 全部会员 4 会员等级 8 非会员 16指定用户
             userLimitTypes = [16]
           }

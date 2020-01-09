@@ -55,13 +55,16 @@ export default {
     const checkCheckNumber = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('实际结算金额不能为空'))
-      } else if ((/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) && Number(value)) {
-        if (Number(vm.formModel.settleWaitPay) < Number(value)) {
+      } else if ((/^(-)?([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(-)?(0{1})(\.\d{0,2})?$/.test(value)) && Number(value)) {
+        if (Number(vm.formModel.settleWaitPay) < Number(value) && Number(value) > 0) {
           return callback(new Error('实际结算金额不能大于应结算总金额'))
+        }
+        if (Number(vm.formModel.settleWaitPay) > Number(value) && Number(value) < 0) {
+          return callback(new Error('实际结算金额不能小于应结算总金额'))
         }
         callback()
       } else {
-        return callback(new Error('实际结算金额为大于0小于等于9999999.99，且最多两位小数的有效数字'))
+        return callback(new Error('实际结算金额为小于等于9999999.99，且最多两位小数的有效数字'))
       }
     }
 

@@ -76,20 +76,21 @@
           <p>1、点击【匹配订单数据】，系统会自动匹配符合该店铺在你设置的结算周期内可结算的订单以及售后订单</p>
           <p>2、数据加载需要时间，数据过大会有延时，可以喝口茶，等待一小会儿</p>
         </div>
-        <!-- <div class="header-btn" v-if="isEdit">
+        <div class="header-btn" v-if="isEdit">
           <el-button
             type="primary"
             :size="size"
-            :loading="btnLoading"
+            icon="el-icon-download"
+            :loading="exportLoading"
             @click="exportOrderList"
           >导出订单</el-button>
-          <el-button
+          <!-- <el-button
             type="primary"
             :size="size"
             :loading="btnGoodsLoading"
             @click="exportGoodsList"
-          >导出订单商品清单</el-button>
-        </div>-->
+          >导出订单商品清单</el-button>-->
+        </div>
       </template>
     </c-table>
   </c-view>
@@ -122,7 +123,7 @@ export default {
   data(vm) {
     return {
       btnLoading: false,
-      btnGoodsLoading: false,
+      exportLoading: false,
       pickerOptions: {
         disabledDate(time) {
           const curDate = new Date()
@@ -234,12 +235,31 @@ export default {
     }
   },
   methods: {
-    // exportGoodsList() {
-
-    // },
-    // exportOrderList() {
-
-    // },
+    /*
+     * 导出订单
+     */
+    exportOrderList() {
+      const { id } = this.$route.params
+      const { totalNum } = this.pageInfo
+      this.exportLoading = true
+      this.$api.finance.exportBusinesssettle({
+        id,
+        total: totalNum,
+        shopName: this.setTableColumnLabel(this.searchObj.shopId, this.shopList)
+      }).then(res => {
+        this.exportLoading = false
+        if (res) {
+          const { data, filename } = res
+          if (data && filename) {
+            utils.createBlobFile(data, filename)
+          } else {
+            this.$msgTip('导出数据异常', 'warning')
+          }
+        } else {
+          this.$msgTip('导出数据失败', 'warning')
+        }
+      })
+    },
     /**
      *  获取加盟开启的门店列表，
      */
@@ -297,6 +317,11 @@ export default {
               this.queryData = res
               this.businessSettleId = res.detailBusinessSettleVo ? res.detailBusinessSettleVo.id : ''
               this.fetchData()
+              if (res.detailBusinessSettleVo) {
+                !res.detailBusinessSettleVo.sellOrderNum && !res.detailBusinessSettleVo.afterOrderNum && this.$msgTip('暂无匹配的订单数据', 'warning')
+              } else {
+                this.$msgTip('暂无匹配的订单数据', 'warning')
+              }
             }
           })
         } else {

@@ -38,7 +38,6 @@
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
-        :table-inner-btns="tableInnerBtns"
         :page-info="pageInfo"
         @change-pagination="changePagination"
       >
@@ -91,6 +90,7 @@ export default {
       dialogObj: {},
       formModel: {},
       tableInnerBtns: [{
+        // :table-inner-btns="tableInnerBtns"
         width: 150,
         name: '编辑',
         icon: 'el-icon-edit',

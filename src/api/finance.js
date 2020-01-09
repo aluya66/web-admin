@@ -163,3 +163,14 @@ export const querySettleOperateLog = params =>
   Http.fetch(`${context}/api/businesssettle/querybusinesssettleoperatelogpage`, params, {
     method: 'get'
   })
+
+/**
+ * 导出结算订单列表
+ * @param {*} params
+ */
+export const exportBusinesssettle = params =>
+  Http.fetch(`${context}/api/businesssettle/export`, params, {
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
+  })

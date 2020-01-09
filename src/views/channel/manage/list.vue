@@ -173,7 +173,7 @@ export default {
         },
         {
           name: '删除',
-          icon: 'el-icon-detail',
+          icon: 'el-icon-delete',
           handle(row) {
             const { channelId, channelName } = row
             vm.confirmTip(

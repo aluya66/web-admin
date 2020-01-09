@@ -31,6 +31,14 @@ export default {
       }
     }
   },
+  methods: {
+    /**
+    * 返回
+    */
+    goBack() {
+      this.$router.go(-1)
+    }
+  },
   components: {
     CCard,
     QueryDict
