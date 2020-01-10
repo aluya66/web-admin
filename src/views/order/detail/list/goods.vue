@@ -9,7 +9,6 @@
       :loading="isLoading"
       :table-header="tableHeader"
       :table-list="tableList"
-      :table-inner-btns="tableInnerBtns"
       :page-info="pageInfo"
       @change-pagination="changePagination"
     ></c-table>
@@ -19,85 +18,90 @@
 <script>
 import mixinTable from 'mixins/table'
 import LineCard from '@/views/common/lineCard'
+import dictObj from '@/store/dictData'
+
+const salePriceTypeList = [{
+  value: 0,
+  label: '非会员零售价'
+}, {
+  value: 1,
+  label: '会员价'
+}, {
+  value: 2,
+  label: '供货价'
+}, {
+  value: 3,
+  label: '散批价'
+}, {
+  value: 4,
+  label: '大批价'
+}, {
+  value: 5,
+  label: '渠道价'
+}]
 
 export default {
   mixins: [mixinTable],
   props: {
-    orderId: {
-      type: String
-      // required: true
-    }
-    // changeTime: Number
+    orderCode: String
   },
   components: {
     LineCard
   },
-  // watch: {
-  //   changeTime(val) {
-  //     console.log(val)
-  //     if (val) {
-  //       this.pageInfo.pageNo = 1
-  //       this.fetchData()
-  //     }
-  //   }
-  // },
   created() {
-    this.orderId && this.fetchData()
+    this.orderCode && this.fetchData()
   },
   data(vm) {
     return {
-      tableInnerBtns: [{
-        name: '详情',
-        icon: 'el-icon-review',
-        handle(row) {
-          this.$emit('show-dialog', row)
-        }
-      }],
       tableHeader: [
         {
           label: 'spu款号',
           fixed: true,
-          prop: ''
+          prop: 'productCode'
         },
         {
           label: 'sku款号',
-          prop: ''
+          prop: 'productSkuCode'
         },
         {
           label: '商品图片',
-          prop: ''
+          prop: 'picturePath',
+          isImage: true
         },
         {
           label: '商品名称',
-          prop: ''
+          prop: 'productName'
         },
         {
           label: '商品规格',
-          prop: ''
+          prop: 'specifications'
         },
         {
           label: '购物方式',
-          prop: ''
+          prop: 'salePriceType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.salePriceType, salePriceTypeList)
+          }
         },
         {
           label: '商品金额(元)',
-          prop: ''
+          prop: 'salePrice'
         },
         {
           label: '数量',
-          prop: ''
+          prop: 'originalQuantity'
         },
         {
           label: '商品总金额(元)',
-          prop: ''
+          prop: 'totalProductAmount'
         },
         {
           label: '商品优惠金额(元)',
-          prop: ''
+          prop: 'totalFavourableAmount'
         },
         {
           label: '商品实付金额(元)',
-          prop: ''
+          prop: 'payAmount'
         },
         {
           label: '邀请码',
@@ -105,7 +109,10 @@ export default {
         },
         {
           label: '商品来源',
-          prop: ''
+          prop: 'appCode',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.appCode, dictObj.lobList)
+          }
         },
         {
           label: '分享者',
@@ -143,21 +150,21 @@ export default {
      * 获取支付记录
      */
     fetchData(id) {
-      // const { totalNum, ...page } = this.pageInfo
+      const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      // this.$api.finance.queryBusinessSettlePaymentLogPage({
-      //   businessSettleId: this.settleId,
-      //   ...page
-      // }).then(res => {
-      //   this.isLoading = false
-      //   if (res && res.totalCount) {
-      //     const { data, totalCount } = res
-      //     this.pageInfo.totalNum = totalCount
-      //     this.tableList = data || []
-      //   } else {
-      //     this.tableList = res || []
-      //   }
-      // })
+      this.$api.order.queryGoodsList({
+        orderCode: this.orderCode,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
     }
   }
 }

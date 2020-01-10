@@ -4,11 +4,11 @@
       ref="cTable"
       hasBorder
       noPage
-      :max-height="200"
+      :max-height="300"
       size="small"
       :loading="false"
       :table-header="tableHeader"
-      :table-list="tableList"
+      :table-list="logList"
     ></c-table>
   </line-card>
 </template>
@@ -17,18 +17,29 @@
 import mixinTable from 'mixins/table'
 import LineCard from '@/views/common/lineCard'
 
+const operationTypeList = [{
+  value: 1,
+  label: '订单日志'
+}, {
+  value: 2,
+  label: '退换货日志'
+}, {
+  value: 3,
+  label: '订单操作备注'
+}, {
+  value: 4,
+  label: '退换货操作备注'
+}]
+
 export default {
   mixins: [mixinTable],
   props: {
-    orderId: {
-      type: String
-      // required: true
-    }
+    logList: Array
   },
   components: {
     LineCard
   },
-  data() {
+  data(vm) {
     return {
       tableHeader: [
         {
@@ -37,41 +48,24 @@ export default {
         },
         {
           label: '操作人',
-          prop: 'opCreator'
+          prop: 'operatorName'
         },
         {
           label: '操作类型',
-          prop: ''
+          prop: 'operationType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.operationType, operationTypeList)
+          }
         },
         {
-          label: '描述',
-          prop: ''
+          label: '操作内容',
+          prop: 'operationName'
+        },
+        {
+          label: '操作日志',
+          prop: 'content'
         }
       ]
-    }
-  },
-  created() {
-    this.orderId && this.fetchData()
-  },
-  methods: {
-    /**
-     * 获取日志记录
-     */
-    fetchData() {
-      this.isLoading = true
-
-      // this.$api.finance.querySettleOperateLog({
-      //   businessSettleId: this.settleId,
-      //   pageNo: 1,
-      //   pageSize: 100
-      // }).then(res => {
-      //   this.isLoading = false
-      //   if (res && res.data) {
-      //     this.tableList = res.data || []
-      //   } else {
-      //     this.tableList = res || []
-      //   }
-      // })
     }
   }
 }

@@ -6,30 +6,15 @@
         :content="$route.meta.name || $t(`route.${$route.meta.title}`)"
       ></el-page-header>
     </template>
-    <el-form
-      ref="formRef"
-      :model="formModel"
-      :rules="rules"
-      label-width="120px"
-      class="detail-form"
-      label-position="right"
-      status-icon
-    >
-      <detail-info></detail-info>
-      <goods-list :order-Id="orderId"></goods-list>
-      <logistics-list :order-Id="orderId"></logistics-list>
-      <after-sale :order-Id="orderId"></after-sale>
-      <log-list :order-Id="orderId"></log-list>
-      <el-form-item class="button-item">
-        <el-button
-          :loading="btnLoading"
-          :size="size"
-          type="primary"
-          @click.native.prevent="submitHandle"
-        >保存</el-button>
-        <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
-      </el-form-item>
-    </el-form>
+      <div class="detail-form">
+        <detail-info :order-info="detailData"></detail-info>
+        <goods-list :order-code="$route.params.id"></goods-list>
+        <pay-list :pay-list="detailData.orderPayResp"></pay-list>
+        <refund-list :refund-list="detailData.orderRefundResp"></refund-list>
+        <logistics-list :delivery-list="detailData.deliveryResp"></logistics-list>
+        <after-sale :after-list="detailData.afterSalesRespList"></after-sale>
+        <log-list :log-list="detailData.orderLogRespList"></log-list>
+      </div>
     <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
@@ -55,6 +40,8 @@ import DetailInfo from './info'
 import DialogInfo from './dialogInfo'
 import LogisticsList from './list/logistics'
 import GoodsList from './list/goods'
+import payList from './list/pay'
+import refundList from './list/refund'
 import AfterSale from './list/afterSale'
 import LogList from './list/log'
 
@@ -67,13 +54,13 @@ export default {
     LogisticsList,
     GoodsList,
     AfterSale,
-    LogList
+    LogList,
+    refundList,
+    payList
   },
   data() {
     return {
-      formModel: {
-        // TODO... 初始化数据，需加备注
-      },
+      detailData: {},
       dialogObj: {},
       btnLoading: false,
       rules: {},
@@ -93,41 +80,16 @@ export default {
     },
     fetchData() {
       const { id } = this.$route.params
-      this.$api.order.queryOrderDetail({ id }).then(res => {
+      this.$api.order.queryOrderDetail({ orderCode: id }).then(res => {
         this.setTagsViewTitle()
         if (res) {
-          this.formModel = res
+          this.detailData = res
+          console.log(this.detailData)
         }
       })
     },
     dialogConfirm() {
       this.dialogObj.isShow = false
-    },
-    submitHandle() {
-      this.$refs.formRef.validate(valid => {
-        if (valid) {
-          const requestMethods = {
-            'add': this.$api.order.addOrder,
-            'edit': this.$api.order.editOrder
-          }
-          const { id } = this.$route.params
-          const request = id ? requestMethods['edit'] : requestMethods['add']
-
-          const params = {
-            // TODO...
-          }
-
-          request(params).then(() => {
-            this.$msgTip(id ? '更新成功' : '新增成功').then(() => {
-              this.closeCurrentTag()
-              this.goBack()
-            })
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
     }
   }
 }

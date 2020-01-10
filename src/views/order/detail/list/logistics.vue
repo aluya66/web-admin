@@ -3,14 +3,14 @@
     <c-table
       ref="cTable"
       hasBorder
+      noPage
       :max-height="300"
       :size="size"
       :auto-scroll="false"
       :loading="isLoading"
       :table-header="tableHeader"
-      :table-list="tableList"
+      :table-list="deliveryList"
       :table-inner-btns="tableInnerBtns"
-      :page-info="pageInfo"
     ></c-table>
   </line-card>
 </template>
@@ -22,26 +22,10 @@ import LineCard from '@/views/common/lineCard'
 export default {
   mixins: [mixinTable],
   props: {
-    orderId: {
-      type: String
-      // required: true
-    }
-    // changeTime: Number
+    deliveryList: Array
   },
   components: {
     LineCard
-  },
-  // watch: {
-  //   changeTime(val) {
-  //     console.log(val)
-  //     if (val) {
-  //       this.pageInfo.pageNo = 1
-  //       this.fetchData()
-  //     }
-  //   }
-  // },
-  created() {
-    this.orderId && this.fetchData()
   },
   data(vm) {
     return {
@@ -55,47 +39,25 @@ export default {
       tableHeader: [
         {
           label: '物流公司',
-          prop: ''
+          prop: 'deliveryName'
         },
         {
           label: '物流单号',
-          prop: ''
+          prop: 'deliveryNo'
         },
         {
           label: '发货时间',
-          prop: ''
+          prop: 'created'
         },
         {
           label: '发货数量',
-          prop: ''
+          prop: 'quantity'
         },
         {
           label: '物流费用(元)',
-          prop: ''
+          prop: 'freightAmount'
         }
       ]
-    }
-  },
-  methods: {
-    /**
-     * 获取支付记录
-     */
-    fetchData(id) {
-      // const { totalNum, ...page } = this.pageInfo
-      this.isLoading = true
-      // this.$api.finance.queryBusinessSettlePaymentLogPage({
-      //   businessSettleId: this.settleId,
-      //   ...page
-      // }).then(res => {
-      //   this.isLoading = false
-      //   if (res && res.totalCount) {
-      //     const { data, totalCount } = res
-      //     this.pageInfo.totalNum = totalCount
-      //     this.tableList = data || []
-      //   } else {
-      //     this.tableList = res || []
-      //   }
-      // })
     }
   }
 }

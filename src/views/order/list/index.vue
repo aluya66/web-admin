@@ -26,7 +26,7 @@
             @submit-form="searchSubmit"
             @reset-form="searchReset"
           ></c-search>
-          <el-radio-group v-model="orderStatus">
+          <el-radio-group v-model="searchObj.orderStatus">
             <el-radio-button
               v-for="(item, index) in statusTabList"
               :size="size"
@@ -49,7 +49,7 @@
               :key="index"
               :label="item.value"
             >{{item.label}}</el-radio-button>
-          </el-radio-group> -->
+          </el-radio-group>-->
         </template>
       </c-table>
     </div>
@@ -64,6 +64,7 @@
         <dialog-info
           ref="childRef"
           :init-data.sync="dialogObj.initData"
+          :area-options="areaOptions"
           :is-edit="dialogObj.isEdit"
         ></dialog-info>
       </c-dialog>
@@ -91,6 +92,7 @@ export default {
       dialogObj: {},
       listInfo: {}, // 列表统计数据
       orderStatus: '', // 订单状态
+      areaOptions: [], // 全部区域集合
       afterSaleStatus: '', // 售后状态
       statusTabList: [{
         value: '',
@@ -136,18 +138,24 @@ export default {
         name: '详情',
         icon: 'el-icon-view',
         handle(row) {
-          vm.routerLink(`/order/detail/${row.id}`)
+          vm.routerLink(`/order/detail/${row.orderCode}`)
         }
       },
       {
         name: '编辑',
-        icon: 'el-icon-delete',
+        icon: 'el-icon-edit',
         notBtn(row) {
           // 待付款和待发货显示
           return row.orderStatus !== 80 && row.orderStatus !== 81
         },
         handle(row) {
-
+          vm.showDialog({
+            initData: {
+              orderTotalAmount: row.orderTotalAmount,
+              orderCode: row.orderCode
+            },
+            isEdit: true
+          })
         }
       },
       {
@@ -158,9 +166,9 @@ export default {
           return row.orderStatus !== 80
         },
         handle(row) {
-          const { parentCode, id } = row
+          const { parentCode } = row
           vm.confirmTip(`是否确认取消【${parentCode}】订单`, () => {
-            vm.cancelHandle({ id })
+            vm.cancelHandle({ parentCode })
           })
         }
       }],
@@ -296,23 +304,72 @@ export default {
   created() {
     this.fetchData()
     this.getOrderInfo()
+    this.fetchAreaData()
   },
   watch: {
     afterSaleStatus(newVal, oldVal) {
       this.searchReset()
     },
-    orderStatus(newVal, oldVal) {
-      this.searchObj.orderStatus = newVal
+    'searchObj.orderStatus'(newVal, oldVal) {
+      // this.searchObj.orderStatus = newVal
       this.searchReset()
     }
   },
   methods: {
     dialogConfirm() {
-      this.dialogObj.isShow = false
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const { orderTotalAmount, addressCode, ...other } = childRef.formModel
+          this.$api.order.editAddressInfo({
+            provinceCode: addressCode[0],
+            cityCode: addressCode[1],
+            regionCode: addressCode[2],
+            ...other
+          }).then(() => {
+            this.responeHandle('更新成功')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
-    cancelHandle(id) {
-
+    /**
+     *  获取全部区域数据
+    */
+    fetchAreaData() {
+      this.$api.basic.getAllArea().then(res => {
+        if (res && res.length) {
+          this.areaOptions = res
+        }
+      })
     },
+    /**
+		 * 管理平台手动取消订单
+		 * @id {Number}
+		 */
+    cancelHandle(params) {
+      this.$api.order.cancelOrder(params).then(() => {
+        this.$msgTip('取消成功')
+        this.fetchData()
+      })
+    },
+    /**
+     * dialog对话框数据处理
+     * @opts {*}
+     */
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        isEdit: opts.isEdit || false,
+        title: opts.title || '编辑收货人信息',
+        initData: opts.initData
+      }
+    },
+    /*
+     *  获取统计信息
+     */
     getOrderInfo() {
       this.$api.order.queryOrderInfo().then(res => {
         if (res) {
@@ -350,7 +407,8 @@ export default {
           this.afterSalesTabList = this.afterSalesTabList.map(info => {
             let label = ''
             if (info.value === '') {
-              label = res.inAfterSaleQuantity && res.outAfterSaleQuantity ? `${info.label}${res.inAfterSaleQuantity + res.outAfterSaleQuantity}` : info.label
+              // label = res.inAfterSaleQuantity && res.outAfterSaleQuantity ? `${info.label}${res.inAfterSaleQuantity + res.outAfterSaleQuantity}` : info.label
+              label = info.label
             } else if (info.value === 1) {
               label = `${info.label}${res.inAfterSaleQuantity || ''}`
             } else {
@@ -368,7 +426,6 @@ export default {
 	   * 查询表格列表数据
 	   */
     fetchData() {
-      console.log(this.orderStatus, this.afterSalesStatus)
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
@@ -377,8 +434,8 @@ export default {
         ...searchDate,
         ...other,
         ...page,
-        afterSaleStatus: this.afterSaleStatus,
-        orderStatus: this.orderStatus
+        afterSaleStatus: this.afterSaleStatus
+        // orderStatus: orderStatus || this.orderStatus
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {
@@ -388,16 +445,6 @@ export default {
         } else {
           this.tableList = res || []
         }
-      })
-    },
-    /**
-		 * 删除单条表格数据
-		 * @id {Number}
-		 */
-    deleteHandle(params) {
-      this.$api.order.deleteOrder(params).then(() => {
-        this.$msgTip('删除成功')
-        this.delResetData()
       })
     }
   }

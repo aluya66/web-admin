@@ -27,7 +27,8 @@ export default {
     meta: {
       title: 'orderDetail',
       noCache: true,
-      activeMenu: '/order/list'
+      activeMenu: '/order/list',
+      roles: ['admin']
     }
   }
   ]

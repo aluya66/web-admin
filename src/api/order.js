@@ -39,12 +39,30 @@ export const queryAddressInfo = params =>
   })
 
 /**
+ * 编辑订单收货信息
+ * @param {*}
+ */
+export const editAddressInfo = params =>
+  Http.fetch(`${context}/api/order/editaddress`, params, {
+    method: 'put'
+  })
+
+/**
  * 发货订单列表
  * @param {*}
  */
 export const queryDeliveryList = params =>
   Http.fetch(`${context}/api/order/delivery`, params, {
     method: 'get'
+  })
+
+/**
+ * 取消订单
+ * @param {*}
+ */
+export const cancelOrder = params =>
+  Http.fetch(`${context}/api/order/cancel`, params, {
+    method: 'put'
   })
 
 /**
@@ -62,5 +80,59 @@ export const queryVipList = params =>
  */
 export const queryRefundList = params =>
   Http.fetch(`${context}/api/order/refund`, params, {
+    method: 'get'
+  })
+
+/**
+ * 查询订单支付列表
+ * @param {*}
+ */
+export const queryOrderpayList = params =>
+  Http.fetch(`${context}/api/orderpay/list`, params, {
+    method: 'get'
+  })
+
+/**
+ * 查询订单备注
+ * @param {*}
+ */
+export const queryOrderRemark = params =>
+  Http.fetch(`${context}/api/order/remark`, params, {
+    method: 'get'
+  })
+
+/**
+ * 更新订单备注
+ * @param {*}
+ */
+export const editOrderRemark = params =>
+  Http.fetch(`${context}/api/order/getremark`, params, {
+    method: 'put'
+  })
+
+/**
+ * 商品销量统计
+ * @param {*}
+ */
+export const queryGoodsStatistics = params =>
+  Http.fetch(`${context}/api/commoditysales/statistics`, params, {
+    method: 'get'
+  })
+
+/**
+ * 分页查询订单商品
+ * @param {*}
+ */
+export const queryGoodsList = params =>
+  Http.fetch(`${context}/api/order/detail`, params, {
+    method: 'get'
+  })
+
+/**
+ * 查询订单详情信息
+ * @param {*}
+ */
+export const queryShipDetail = params =>
+  Http.fetch(`${context}/api/ship/detail`, params, {
     method: 'get'
   })
