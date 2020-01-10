@@ -220,7 +220,8 @@ export default {
             params = {
               checkAmount: Number(other.checkAmount),
               checkServiceFee: Number(other.checkServiceFee),
-              serialNumber: Number(other.serialNumber)
+              serialNumber: Number(other.serialNumber),
+              checkReason
             }
           } else {
             tipMsg = '驳回申请'
