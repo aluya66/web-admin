@@ -72,12 +72,12 @@ export default {
       if (!value) {
         return callback(new Error('手续费不能为空'))
       } else if (/^([1-9]{1}\d{0,6})(\.\d{0,2})?$/.test(value) || /^(0{1})(\.\d{0,2})?$/.test(value)) {
-        if (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < Number(value)) {
-          return callback(new Error('手续费不能大于应结算总金额减去已结算总金额的额度'))
-        }
-        if (vm.formModel.payAmount && (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.payAmount]))) {
-          return callback(new Error('手续费与付款金额之和不能大于应结算金额减去已结算金额的额度'))
-        }
+        // if (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < Number(value)) {
+        //   return callback(new Error('手续费不能大于应结算总金额减去已结算总金额的额度'))
+        // }
+        // if (vm.formModel.payAmount && (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.payAmount]))) {
+        //   return callback(new Error('手续费与付款金额之和不能大于应结算金额减去已结算金额的额度'))
+        // }
         callback()
       } else {
         return callback(new Error('手续费为0～9999999.99，且最多两位小数的有效数字'))
@@ -91,9 +91,9 @@ export default {
         if (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < Number(value)) {
           return callback(new Error('付款金额不能大于应结算总金额减去已结算总金额的额度'))
         }
-        if ((vm.formModel.serviceFee || Number(vm.formModel.serviceFee) === 0) && (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.serviceFee]))) {
-          return callback(new Error('付款金额与手续费之和不能大于应结算总金额减去已结算总金额的额度'))
-        }
+        // if ((vm.formModel.serviceFee || Number(vm.formModel.serviceFee) === 0) && (utils.sumPack([vm.formModel.settleActualPay, -vm.formModel.curPayAmount]) < utils.sumPack([value, vm.formModel.serviceFee]))) {
+        //   return callback(new Error('付款金额与手续费之和不能大于应结算总金额减去已结算总金额的额度'))
+        // }
         callback()
       } else {
         return callback(new Error('付款金额为大于0小于等于9999999.99，且最多两位小数的有效数字'))

@@ -213,7 +213,15 @@ export default {
 
   watch: {
     'searchObj.shopId'(val) {
-      !this.isEdit && val && this.queryDate(val)
+      if (val && !this.isEdit) {
+        this.queryDate(val)
+        this.searchObj.settleEndDate = ''
+        this.queryData = {
+          detailBusinessSettleVo: {},
+          businessResp: {}
+        }
+        this.tableList = []
+      }
     },
     queryData(val) {
       const { id } = this.$route.params
