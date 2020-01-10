@@ -40,6 +40,25 @@ export default {
   mixins: [mixinList, mixinTable],
   data(vm) {
     return {
+      tableInnerBtns: [{
+        width: 150,
+        name: '编辑',
+        icon: 'el-icon-edit',
+        handle(row) {
+          const {
+            id,
+            perfectName
+          } = row
+          vm.routerLink(`/goods/manage/detail/${id}/${perfectName}`)
+        }
+      },
+      {
+        name: '关联属性',
+        icon: 'el-icon-plus',
+        handle(row) {
+          vm.routerLink(`/goods/manage/label/${row.id}`)
+        }
+      }],
       tableHeader: [
         {
           label: '商品ID',

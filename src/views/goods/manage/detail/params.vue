@@ -17,7 +17,7 @@
         ></c-image>
       </el-form-item>
       <el-form-item class="img-form-item" label="商品图片:" prop="goodsImageList">
-        <el-button type="primary" @click="showDialog('image')" :disabled="isDisabled">上传图片</el-button>
+        <el-button :size="size" type="primary" @click="showDialog('image')" :disabled="isDisabled">上传图片</el-button>
         <div
           class="resource-wrapper"
           v-if="formModel.goodsImageList && formModel.goodsImageList.length"
