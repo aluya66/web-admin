@@ -193,7 +193,6 @@ export default {
         {
           label: '渠道名称',
           prop: 'channelName',
-          isPopover: true,
           search: {
             type: 'input'
           }
@@ -227,7 +226,7 @@ export default {
             const list = row.ruleInfos && row.ruleInfos.length ? row.ruleInfos.map((item) => {
               return item.ruleName
             }) : []
-            return list.join(',')
+            return list.join('，')
           }
         },
         {

@@ -87,13 +87,6 @@ export default {
           isImage: true
         },
         {
-          label: '用户',
-          prop: 'name',
-          search: {
-            type: 'input'
-          }
-        },
-        {
           label: '昵称',
           prop: 'nickname',
           search: {
@@ -129,12 +122,11 @@ export default {
     handleSelect(rows) {
       // 当前页选中行
       let selectRows = rows ? rows.map(item => ({ ...item, isSelected: true })) : [] // 设置被选中标识
-      console.log(utils.getStore('cacheSelectedUserList'))
       const pageCheckedArr = utils.getStore('cacheSelectedUserList') ? utils.getStore('cacheSelectedUserList') : []
       if (this.finishChangePage || pageCheckedArr) {
         if (pageCheckedArr.length) { // 有选择行，过滤重复
           pageCheckedArr.forEach((item) => {
-            let idx = selectRows.findIndex(checkedItem => item.userId === checkedItem.userId)
+            let idx = selectRows.findIndex(checkedItem => item.id === checkedItem.id)
             idx !== -1 && selectRows.splice(idx, 1)
           })
         }
@@ -147,9 +139,10 @@ export default {
       this.$emit('handle-select', rows)
     },
     cancelSelect(index) {
-      const tableIdx = this.tableList.findIndex((item) => item.userId === this.checkedAttr[index].userId)
+      const tableIdx = this.tableList.findIndex((item) => item.id === this.checkedAttr[index].id)
       tableIdx !== -1 && this.$refs.customerTableRef.$refs.multipleTable.toggleRowSelection(this.tableList[tableIdx], false)
       this.checkedAttr.splice(index, 1)
+      utils.setStore('cacheSelectedUserList', this.checkedAttr)
     },
     fetchData() {
       if (this.paramsObj.appCode === '') {
@@ -158,7 +151,7 @@ export default {
       }
       const { totalNum, ...page } = this.pageInfo
       this.isLoading = true
-      this.$api.member.getMember({
+      this.$api.member.getMemberUserInfo({
         ...this.searchObj,
         ...this.paramsObj,
         ...page

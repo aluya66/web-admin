@@ -33,7 +33,7 @@
             <span>{{initData.branchBankName}}</span>
           </li>
           <li v-if="showType === 3 && initData.checkReason">
-            <span>拒绝原因：</span>
+            <span>备注信息：</span>
             <span>{{initData.checkReason}}</span>
           </li>
         </ul>
@@ -43,7 +43,7 @@
             ref="formRef"
             class="check-form"
             :model="formModel"
-            :inline="true"
+            label-width="140px"
             :rules="rules"
           >
             <el-form-item label="审核金额(元)：" prop="checkAmount">
@@ -67,6 +67,18 @@
                 v-model.trim="formModel.serialNumber"
                 placeholder="请输入交易流水号"
                 :size="size"
+                clearable
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="备注说明：">
+              <el-input
+                :rows="3"
+                type="textarea"
+                class="remark"
+                v-model="formModel.checkReason"
+                placeholder="请输入备注说明"
+                maxlength="300"
+                show-word-limit
                 clearable
               ></el-input>
             </el-form-item>
@@ -134,7 +146,6 @@ export default {
       }
     }
     return {
-      size: 'small',
       formModel: {
         checkAmount: '',
         checkServiceFee: '',
@@ -188,7 +199,7 @@ export default {
     }
   }
   .check-form {
-    padding: 10px 0 15px 15px;
+    padding: 10px 50px 10px 0;
     border: 1px solid @border-default;
     border-radius: 4px;
   }

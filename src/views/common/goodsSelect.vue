@@ -282,6 +282,7 @@ export default {
           }
         }
       }
+      utils.setStore('cacheSelectedGoodsList', this.checkedAttr)
     },
     handleSelect(rows) {
       // 当前页选中行

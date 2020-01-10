@@ -38,7 +38,6 @@
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
-        :table-inner-btns="tableInnerBtns"
         :page-info="pageInfo"
         @change-pagination="changePagination"
       >
@@ -49,7 +48,7 @@
             @submit-form="searchSubmit"
             @reset-form="searchReset"
           ></c-search>
-          <div class="opt-btn">
+          <div class="header-btn">
             <el-button type="primary" icon="el-icon-plus" :size="size" @click="showDialog">新增交易明细</el-button>
             <!-- <el-button :size="size" disabled icon="el-icon-download" @click="exportFile">导出</el-button> -->
           </div>
@@ -91,6 +90,7 @@ export default {
       dialogObj: {},
       formModel: {},
       tableInnerBtns: [{
+        // :table-inner-btns="tableInnerBtns"
         width: 150,
         name: '编辑',
         icon: 'el-icon-edit',
@@ -276,7 +276,7 @@ export default {
   }
   .list-table {
     min-height: 670px;
-    .opt-btn {
+    .header-btn {
       margin-top: -10px;
       margin-bottom: 10px;
     }
