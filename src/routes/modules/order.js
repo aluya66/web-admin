@@ -20,6 +20,16 @@ export default {
     }
   },
   {
+    path: '/order/send',
+    name: 'orderSend',
+    component: () => import('@/views/order/send/index'),
+    meta: {
+      title: 'orderSend',
+      icon: 'table'
+      // roles: ['admin']
+    }
+  },
+  {
     path: '/order/detail/:id?',
     name: 'orderDetail',
     hidden: true,
