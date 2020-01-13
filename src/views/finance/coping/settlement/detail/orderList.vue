@@ -3,14 +3,17 @@
     <c-table
       ref="cTable"
       hasBorder
+      :stripe="false"
       :max-height="400"
       :size="size"
       :auto-scroll="false"
+      :highlight-current-row="false"
       :loading="isLoading"
       :table-header="tableHeader"
       :table-list="tableList"
       :table-inner-btns="tableInnerBtns"
       :page-info="pageInfo"
+      :row-class-name="tableRowClassName"
       @change-pagination="changePagination"
     >
       <template v-slot:header>
@@ -243,6 +246,15 @@ export default {
     }
   },
   methods: {
+    /*
+     *  表格条件行样式
+     */
+    tableRowClassName(val) {
+      const { row } = val
+      if (row.orderType === 2) {
+        return 'tabel-tr'
+      }
+    },
     /*
      * 导出订单
      */
