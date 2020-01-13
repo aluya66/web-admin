@@ -9,7 +9,7 @@ export default {
     icon: 'nested'
   },
   children: [{
-    path: '/marketing/ticket/list',
+    path: '/marketing/ticket',
     name: 'marketingTicket',
     component: () => import('@/views/common/index'),
     redirect: '/marketing/ticket/list',
@@ -19,7 +19,7 @@ export default {
     },
     children: [
       {
-        path: '/marketing/ticket/list/index',
+        path: '/marketing/ticket/list',
         name: 'ticketList',
         component: () => import('@/views/marketing/ticket/list/index'),
         meta: {
@@ -28,9 +28,9 @@ export default {
           roles: ['admin']
         }
       }, {
-        path: '/marketing/ticket/list/detailsList',
+        path: '/marketing/ticket/list/details',
         name: 'ticketDetailsList',
-        component: () => import('@/views/marketing/ticket/list/detailsList'),
+        component: () => import('@/views/marketing/ticket/list/details'),
         meta: {
           title: 'ticketDetailsList',
           icon: 'table',
@@ -93,17 +93,17 @@ export default {
       roles: ['admin']
     }
   }, {
-    path: '/marketing/starGoCard/list',
+    path: '/marketing/starGoCard',
     name: 'starGoCard',
     component: () => import('@/views/common/index'),
-    redirect: '/marketing/starGoCard/list/index',
+    redirect: '/marketing/starGoCard/list',
     meta: {
       title: 'starGoCard',
       icon: 'nested'
     },
     children: [
       {
-        path: '/marketing/starGoCard/list/index',
+        path: '/marketing/starGoCard/list',
         name: 'starGoCardList',
         component: () => import('@/views/marketing/starGoCard/list/index'),
         meta: {
@@ -112,9 +112,9 @@ export default {
           roles: ['admin']
         }
       }, {
-        path: '/marketing/starGoCard/list/rechargeList',
+        path: '/marketing/starGoCard/list/recharge',
         name: 'starGoCardRechargeList',
-        component: () => import('@/views/marketing/starGoCard/list/rechargeList'),
+        component: () => import('@/views/marketing/starGoCard/list/recharge'),
         meta: {
           title: 'starGoCardRechargeList',
           icon: 'table',

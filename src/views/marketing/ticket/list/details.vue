@@ -130,9 +130,9 @@ export default {
         {
           label: '券内容',
           formatter(row) { // 卡券类型 5现金券 1折扣券 3兑换券
-            const marketPreferentialRules = row.coupon.marketPreferentialRules && row.marketPreferentialRules[0] ? row.marketPreferentialRules[0] : {}
-            const { preferentialLevel, preferentialValue } = marketPreferentialRules
-            switch (row.preferentialType) {
+            const marketPreferentialRules = row.couponRule.marketPreferentialRules && row.couponRule.marketPreferentialRules[0] ? row.couponRule.marketPreferentialRules[0] : {}
+            const { preferentialLevel, preferentialValue, preferentialType } = marketPreferentialRules
+            switch (preferentialType) {
               case 1:
                 return `满${preferentialLevel || ''}件享${preferentialValue || ''}折`
               case 3:
