@@ -81,8 +81,8 @@
           :src="dialogObj.imageUrl"
           v-if="dialogObj.fileType === 1"
           style="object-fit: contain;"
-          alt=""
-        >
+          alt
+        />
         <video
           class="video"
           controls
@@ -182,7 +182,7 @@ export default {
               }
             }) // 图片、视频资源
             res.operationName = res.operationName ? res.operationName : res.goodsName // 默认首次同步样衣时，将运营名称设置为商品名称
-            this.formModel = { ...res, goodsImageList, videoList, detailsType: params.type }
+            this.formModel = { ...res, goodsImageList, videoList }
           } else {
             this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
           }
@@ -201,6 +201,9 @@ export default {
       const { childProductArray, specification } = this.$refs.salesRef.$refs.skuWrapRef
       if (childProductArray.length > 0) {
         const arr = [{
+          value: 'costPrice',
+          tip: '成衣成本价'
+        }, {
           value: 'supplyPrice',
           tip: '成衣供货价'
         }, {
@@ -239,6 +242,7 @@ export default {
           isDefalut: item.isDefalut ? 1 : 0 // 是否默认
         }
       }) : []
+      if (skus.some((item) => !item.imageUrl)) return this.$msgTip('sku图片不能为空', 'warning') // 判断sku是否都有图片
       // if (type === 'confirmFinish') { // 确认完成需要信息填写完整
       //   if (!operationName) return this.$msgTip('请填写运营名称', 'warning')
       //   if (videoList.length === 0) return this.$msgTip('请填写商品视频', 'warning')

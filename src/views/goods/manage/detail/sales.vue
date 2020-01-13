@@ -190,14 +190,13 @@ export default {
       }
     },
     setMinPrice(val) {
-      console.log(val)
       let goodsSkus = this.$refs.skuWrapRef.childProductArray
       this.formModel = {
         ...this.formModel,
         goodsSkus,
         ...val
       }
-      this.formModel = JSON.parse(JSON.stringify(this.formModel))
+      // this.formModel = JSON.parse(JSON.stringify(this.formModel))
     },
     getAttrs() {
       this.$api.basic.getGoodsattrval({
