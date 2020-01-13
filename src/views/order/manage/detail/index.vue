@@ -11,7 +11,7 @@
         <goods-list :order-code="$route.params.id"></goods-list>
         <pay-list :pay-list="detailData.orderPayResp"></pay-list>
         <refund-list :refund-list="detailData.orderRefundResp"></refund-list>
-        <logistics-list :delivery-list="detailData.deliveryResp"></logistics-list>
+        <logistics-list :delivery-list="detailData.deliveryResp" @show-dialog="showDialog"></logistics-list>
         <after-sale :after-list="detailData.afterSalesRespList"></after-sale>
         <log-list :log-list="detailData.orderLogRespList"></log-list>
       </div>
@@ -75,8 +75,13 @@ export default {
   },
 
   methods: {
-    showDialog(row) {
-
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        isEdit: opts.isEdit || false,
+        title: opts.title || '订单详情',
+        initData: opts.initData
+      }
     },
     fetchData() {
       const { id } = this.$route.params

@@ -33,7 +33,11 @@ export default {
         name: '详情',
         icon: 'el-icon-review',
         handle(row) {
-          this.$emit('show-dialog', row)
+          vm.$emit('show-dialog', {
+            isEdit: true,
+            initData: row,
+            title: '物流详情'
+          })
         }
       }],
       tableHeader: [

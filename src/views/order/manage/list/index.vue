@@ -34,7 +34,7 @@
               :label="item.value"
             >{{item.label}}</el-radio-button>
           </el-radio-group>
-          <el-radio-group v-model="afterSaleStatus">
+          <el-radio-group v-model="afterSaleStatus" class="radio-list">
             <el-radio-button
               v-for="(item, index) in afterSalesTabList"
               :size="size"
@@ -80,7 +80,7 @@ import DialogInfo from './dialogInfo'
 import dictObj from '@/store/dictData'
 
 export default {
-  name: 'orderList',
+  name: 'orderManageList',
   mixins: [mixinTable],
   components: {
     OrderInfo,
@@ -138,7 +138,7 @@ export default {
         name: '详情',
         icon: 'el-icon-view',
         handle(row) {
-          vm.routerLink(`/order/detail/${row.orderCode}`)
+          vm.routerLink(`/order/manage/detail/${row.orderCode}`)
         }
       },
       {
@@ -457,5 +457,8 @@ export default {
   .el-tabs__content {
     padding: 0;
   }
+}
+.radio-list {
+  margin-left: 10px;
 }
 </style>

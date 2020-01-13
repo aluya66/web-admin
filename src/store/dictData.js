@@ -353,22 +353,23 @@ const orderStatusList = [{
 }, {
   label: '已完成',
   value: 60
-}, {
-  label: '未审核',
-  value: 10
-}, {
-  label: '审核通过',
-  value: 20
-}, {
-  label: '待复核',
-  value: 30
-}, {
-  label: '审核不通过',
-  value: 40
-}, {
-  label: '订单完结',
-  value: 70
 }
+// , {
+//   label: '未审核',
+//   value: 10
+// }, {
+//   label: '审核通过',
+//   value: 20
+// }, {
+//   label: '待复核',
+//   value: 30
+// }, {
+//   label: '审核不通过',
+//   value: 40
+// }, {
+//   label: '订单完结',
+//   value: 70
+// }
 ]
 
 // 售后状态
@@ -484,6 +485,30 @@ const deliveryTimeTypeList = [{
   value: 2
 }]
 
+// 订单业务类型，单据类型
+const orderBusinessTypeList = [{
+  label: '团购',
+  value: 1
+}, {
+  label: '普通订单',
+  value: 2
+}, {
+  label: '秒杀',
+  value: 3
+}, {
+  label: '购券',
+  value: 4
+}, {
+  label: '充值',
+  value: 5
+}, {
+  label: 'VIP订单',
+  value: 6
+}, {
+  label: '星购卡订单',
+  value: 7
+}]
+
 export default {
   payStatusList,
   settleStatusList,
@@ -514,5 +539,6 @@ export default {
   evaluateStatusList,
   payTypeList,
   orderSettleStatusList,
-  deliveryTimeTypeList
+  deliveryTimeTypeList,
+  orderBusinessTypeList
 }
