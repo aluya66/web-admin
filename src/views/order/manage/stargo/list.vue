@@ -13,7 +13,6 @@
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
-        :table-inner-btns="tableInnerBtns"
         :page-info="pageInfo"
         @change-pagination="changePagination"
       >
