@@ -168,10 +168,10 @@ export default {
       goodsBn,
       skus,
       mustQuantity, // 起订量
-      sampleCostprice, // 成衣成本
+      sampleCostprice, // 样衣成本
       supplyprice, // 供货价
       largePrice, // 大批价
-      costprice, // 样衣成本
+      costprice, // 成衣成本
       price, // 会员价
       tagprice, // 零售价
       wholesaleprice // 散批价
@@ -190,12 +190,14 @@ export default {
       }
     },
     setMinPrice(val) {
+      console.log(val)
       let goodsSkus = this.$refs.skuWrapRef.childProductArray
       this.formModel = {
         ...this.formModel,
         goodsSkus,
         ...val
       }
+      this.formModel = JSON.parse(JSON.stringify(this.formModel))
     },
     getAttrs() {
       this.$api.basic.getGoodsattrval({
