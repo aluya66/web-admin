@@ -1,0 +1,264 @@
+<template>
+  <c-view>
+    <template v-slot:header>
+      <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
+      <div class="header-btn">
+        <div class="header-btn">
+          <el-button :size="size" type="primary" icon="el-icon-plus" @click="showDialog">新增</el-button>
+        </div>
+      </div>
+    </template>
+    <div class="main__box">
+      <c-table
+        ref="cTable"
+        selection
+        hasBorder
+        :size="size"
+        :max-height="730"
+        :loading="isLoading"
+        :table-header="tableHeader"
+        :table-list="tableList"
+        :page-info="pageInfo"
+        :table-inner-btns="tableInnerBtns"
+        @change-pagination="changePagination"
+      >
+        <template v-slot:header>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
+        </template>
+      </c-table>
+    </div>
+    <!-- 渠道规则新增、编辑弹窗 -->
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        :no-btn="dialogObj.noBtn"
+        @before-close="dialogObj.isShow = false"
+        @on-submit="submitHandle"
+      >
+        <channel-add ref="childRef" :is-edit="dialogObj.isEdit" :init-data="dialogObj.initData"></channel-add>
+      </c-dialog>
+    </div>
+  </c-view>
+</template>
+
+<script>
+import mixinTable from 'mixins/table'
+import CDialog from 'components/dialog'
+import ChannelAdd from './add'
+
+export default {
+  name: 'channelRule',
+  mixins: [mixinTable],
+  components: {
+    CDialog,
+    ChannelAdd
+  },
+  data(vm) {
+    return {
+      dialogObj: {},
+      tableHeader: [{
+        label: '规则名称',
+        prop: 'ruleName',
+        search: {
+          type: 'input'
+        }
+      }, {
+        label: '渠道状态',
+        prop: 'status',
+        formatter(row) {
+          return row.status === 0 ? '关闭' : '开启'
+        },
+        search: {
+          type: 'select',
+          optionsList: [{
+            value: 0,
+            label: '关闭'
+          }, {
+            value: 1,
+            label: '开启'
+          }]
+        }
+      }, {
+        label: '创建时间',
+        prop: 'created',
+        search: {
+          type: 'dateTime',
+          prop: 'dateTime'
+        }
+      }, {
+        label: '更新时间',
+        prop: 'updated'
+      }],
+      tableInnerBtns: [{
+        width: '180',
+        prop: {
+          name: 'status', // 为0或1
+          toggle: [{
+            icon: 'el-icon-open',
+            title: '开启'
+          }, {
+            icon: 'el-icon-close',
+            title: '关闭'
+          }]
+        },
+        handle(row) {
+          const { ruleId, ruleName, status } = row
+          const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
+          vm.confirmTip(
+            `是否${handleStatus === 0 ? '关闭' : '开启'} ${ruleName} 渠道规则`,
+            () => {
+              vm.handleRuleStatus({ id: ruleId, status: handleStatus })
+            }
+          )
+        }
+      }, {
+        name: '编辑',
+        icon: 'el-icon-edit',
+        handle(row) {
+          const { ruleId } = row
+          vm.getRuleDetails(ruleId)
+        }
+      }, {
+        name: '删除',
+        icon: 'el-icon-delete',
+        handle(row) {
+          const { ruleId, ruleName } = row
+          vm.confirmTip(`是否删除 ${ruleName} 渠道规则`, () => {
+            vm.deleteRule({ id: ruleId })
+          })
+        }
+      }]
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || '新增渠道规则',
+        isEdit: opts.isEdit || false,
+        noBtn: opts.noBtn || false,
+        initData: opts.initData
+      }
+    },
+    getRuleDetails(id) {
+      this.$api.channel.getRuleInfo({ id }).then((res) => {
+        const {
+          ruleCode,
+          ruleName,
+          ruleBrandResps,
+          // payment,
+          costPrice,
+          largeBatchPrice,
+          memberPrice,
+          retailPrice,
+          supplyPrice,
+          wholesalePrice
+          // store
+        } = res
+        let brands = ruleBrandResps && ruleBrandResps.length ? ruleBrandResps.map(item => ({
+          name: item.brandName,
+          id: item.id,
+          code: item.brandCode
+        })) : ''
+        this.showDialog({
+          title: '查看渠道规则',
+          initData: {
+            ruleId: id,
+            ruleCode,
+            ruleName,
+            brands,
+            // payment: [1, 2, 4],
+            costPrice,
+            largeBatchPrice,
+            memberPrice,
+            retailPrice,
+            supplyPrice,
+            wholesalePrice
+            // store
+          },
+          isEdit: true
+        })
+      })
+    },
+    // 提交渠道规则
+    submitHandle() {
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
+        const childFormModel = childRef.formModel
+        if (valid) {
+          const requestType = this.dialogObj.isEdit ? 'edit' : 'add' // 接口请求类型， add新增、edit编辑
+          this.handleRule(childFormModel, requestType)
+        }
+      })
+    },
+    handleRule(childFormModel, requestType) {
+      const requestObj = {
+        add: this.$api.channel.addRule,
+        edit: this.$api.channel.editRule
+      }
+      const { brands, submitPriceObj, priceList, ruleCode, ...other } = childFormModel
+      const curBrands = childFormModel.brands.map(item => ({
+        brandCode: item.code,
+        brandName: item.name,
+        ruleCode
+      }))
+      requestObj[requestType]({
+        ruleCode,
+        brands: curBrands,
+        ...other,
+        ...submitPriceObj
+      }).then(() => {
+        const msg = requestType === 'edit' ? '编辑成功' : '新增成功'
+        this.$msgTip(msg)
+        this.fetchData()
+        this.dialogObj.isShow = false
+      })
+    },
+    // 删除渠道
+    deleteRule(params, msgTip = '删除成功') {
+      this.$api.channel.deleteRule(params).then(() => {
+        this.$msgTip(msgTip)
+        this.fetchData()
+      })
+    },
+    // 开启、关闭渠道规则
+    handleRuleStatus({ id, status }) {
+      this.$api.channel.handleRuleStatus({ id, status }).then(() => {
+        const msg = status === 0 ? '已关闭' : '已开启'
+        this.$msgTip(msg)
+        this.fetchData()
+      })
+    },
+    fetchData() {
+      const { totalNum, ...page } = this.pageInfo
+      const { dateTime, ...other } = this.searchObj
+      const searchDate = this.getSearchDate(dateTime)
+      this.isLoading = true
+      this.$api.channel.getChannelRule({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
+    }
+  }
+}
+</script>

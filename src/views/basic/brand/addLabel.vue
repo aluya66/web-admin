@@ -9,72 +9,91 @@
     <el-form
       ref="formRef"
       :model="formModel"
-      :rules="rules"
       label-width="120px"
       class="form"
       label-position="right"
       status-icon
     >
-     <el-form-item label="品牌名称" prop="name">
-        <el-input v-model.trim="formModel.name" :disabled="isDisabled" class="select-item"/>
-      </el-form-item>
-      <el-form-item label="品牌别名">
-        <el-input v-model.trim="formModel.ename" :disabled="isDisabled" class="select-item"/>
-      </el-form-item>
-      <el-form-item label="品牌国家">
-        <el-input v-model.trim="formModel.country" :disabled="isDisabled" class="select-item"/>
-      </el-form-item>
-      <el-form-item label="消费人群" prop="consumer">
-        <el-input v-model.trim="formModel.consumer" :disabled="isDisabled" class="select-item"/>
-      </el-form-item>
+      <c-card name="基础信息" class="form-card">
+        <el-form-item label="品牌名称:" prop="name">
+          <span>{{formModel.name}}</span>
+        </el-form-item>
+        <el-form-item label="品牌code:" prop="code">
+          <span>{{formModel.code}}</span>
+        </el-form-item>
+        <el-form-item label="品牌logo:">
+          <c-image
+            class="coverImg"
+            :url="formModel.logo"
+            fit="contain"
+            :preview-src-list="[formModel.logo]"
+          ></c-image>
+        </el-form-item>
+      </c-card>
+      <brand-params
+        :is-view="false"
+        :is-disabled="isDisabled"
+        :data-obj="curTags"
+        :size="size"
+        ref="paramsRef"
+        title="标签信息"
+        @set-tag="setTagValue"
+      ></brand-params>
       <el-form-item class="form-btn" v-if="!isDisabled">
-        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+        <el-button :size="size" :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+        <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <multi-select
+          ref="childRef"
+          :is-edit="dialogObj.isEdit"
+          :source-list="dialogObj.initData"
+          :init-checked="dialogObj.initChecked"
+        ></multi-select>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
 import MixinForm from 'mixins/form'
+import BrandParams from '@/views/goods/manage/label/params'
+import MultiSelect from '@/views/common/multiSelect'
+import CImage from 'components/image'
+import CCard from 'components/card'
+import CDialog from 'components/dialog'
+import utils from 'utils'
+
 export default {
   name: 'brandLabel',
   mixins: [MixinForm],
+  components: {
+    MultiSelect,
+    CImage,
+    BrandParams,
+    CCard,
+    CDialog
+  },
   data() {
     return {
       btnLoading: false,
       formModel: {
-        country: '',
         name: '',
-        ename: '',
-        consumer: '',
         logo: '',
-        intro: '',
-        description: ''
+        code: ''
       },
       isDisabled: false,
-      rules: {
-        country: [
-          { required: true, message: '请填写品牌国家', trigger: 'blur' }
-        ],
-        name: [
-          { required: true, message: '请填写品牌名称', trigger: 'blur' }
-        ],
-        ename: [
-          { required: true, message: '请填写品牌别名', trigger: 'blur' }
-        ],
-        consumer: [
-          { required: true, message: '请填写消费人群', trigger: 'blur' }
-        ],
-        logo: [
-          { required: true, message: '请填写品牌LOGO的URL地址', trigger: 'blur' }
-        ],
-        intro: [
-          { required: true, message: '请填写品牌介绍', trigger: 'blur' }
-        ],
-        description: [
-          { required: true, message: '请填写品牌描述', trigger: 'blur' }
-        ]
-      }
+      dialogObj: {},
+      curTags: [], // 所有标签集合
+      tagIndex: '' // 标签下标
     }
   },
   created() {
@@ -85,44 +104,125 @@ export default {
     fetchData() {
       const { id } = this.$route.params
       if (id) {
-        this.isDisabled = true
         this.$api.basic.getBrandById({ id }).then(res => {
           this.setTagsViewTitle()
-          this.formModel = {
-            ...this.formModel,
-            ...res
+          if (res) {
+            this.formModel = res
+            this.getAttrs()
+          } else {
+            this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
           }
         })
       }
     },
+    getCheckedTags() {
+      const { code } = this.formModel
+      this.$api.settings.getTagbrand({
+        brandCode: code
+      }).then(res => {
+        if (res && res.length) {
+          this.curTags.forEach((tag, index) => {
+            let curCheckedTags = []
+            tag.attrs.forEach(val => {
+              res.some(item => {
+                if (tag.id === item.tagId) {
+                  if (val.value === item.tagValueId) {
+                    if (tag.operateType === 2) {
+                      curCheckedTags.push(item.tagValueId)
+                    } else {
+                      curCheckedTags = item.tagValueId
+                    }
+                  }
+                }
+              })
+            })
+            this.curTags[index].checkedTag = curCheckedTags
+          })
+        }
+      })
+    },
+    getAttrs() {
+      this.$api.settings.getAllTab({
+        categoryType: 2 // 标签类
+      }).then(data => {
+        if (data && data.length) {
+          this.getCheckedTags() // 获取已选中的标签
+          let brandTags = []
+          data.forEach((val, index) => {
+            if (val.categoryName === '消费偏好' || val.categoryName === '年龄') { // 品牌只显示这两类标签
+              const index = val.categoryName === '消费偏好' ? 0 : 1
+              if (!brandTags[index]) {
+                brandTags[index] = {
+                  attrs: []
+                }
+              }
+              brandTags[index] = {
+                ...brandTags[index],
+                operateType: val.operateType,
+                id: val.categoryId,
+                label: `${val.categoryName}:`,
+                name: val.categoryName,
+                checkedTag: val.operateType === 2 ? [] : ''
+              }
+              brandTags[index].attrs.push({ value: val.id, label: val.tagName })
+            }
+          })
+          this.curTags = brandTags
+        }
+      })
+    },
+    dialogConfirm() {
+      const checkedTagsList = this.$refs.childRef.checkedAttr
+      this.$set(this.curTags[this.tagIndex], 'checkedTag', checkedTagsList)
+      this.dialogObj.isShow = false
+    },
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          const formModel = this.formModel
-          if (!this.dialogObj.isEdit) {
-            this.addHandle(formModel)
-          } else {
-            this.editHandle(formModel)
-          }
+          const { code } = this.formModel
+          const tags = []
+          this.curTags.forEach(res => {
+            if (utils.isArray(res.checkedTag)) {
+              res.checkedTag.forEach(val => {
+                tags.push({
+                  tagId: res.id,
+                  tagName: res.name,
+                  tagValueId: val,
+                  brandCode: code
+                })
+              })
+            } else if (res.checkedTag) {
+              tags.push({
+                tagId: res.id,
+                tagName: res.name,
+                tagValueId: res.checkedTag,
+                brandCode: code
+              })
+            }
+          })
+          this.$api.settings.addTagbrand({
+            tags,
+            brandCode: code
+          }).then(res => {
+            this.$msgTip('保存成功').then(() => {
+              this.goBack()
+            })
+          })
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    addHandle(formModel) {
-      this.$api.basic.addBrand(formModel).then(res => {
-        this.dialogObj.isShow = false
-        this.$msgTip('添加成功')
-        this.fetchData()
-      })
-    },
-    editHandle(formModel) {
-      this.$api.basic.updateBrand(formModel).then(res => {
-        this.dialogObj.isShow = false
-        this.$msgTip('修改成功')
-        this.fetchData()
-      })
+    setTagValue(val, checkedList, index) {
+      this.tagIndex = index
+      this.dialogObj = {
+        title: '请选择',
+        isShow: true,
+        initData: val,
+        initChecked: checkedList,
+        isEdit: true
+      }
     }
   }
 }
@@ -137,6 +237,9 @@ export default {
   .form-btn {
     margin-left: 20px;
     margin-top: 20px;
+  }
+  .coverImg{
+    width: 60px;
   }
 }
 </style>

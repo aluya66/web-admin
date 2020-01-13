@@ -99,15 +99,17 @@ export const validater = {
     return reg.test(str)
   },
 
-  /* 大写字母 */
-  validateUpperCase (str) {
-    const reg = /^[A-Z]+$/
+  /* 大写字母 num位数限制 【例： '{2,20}'】 */
+  validateUpperCase (str, num) {
+    const reg = new RegExp('^[A-Z]' + (num || '+') + '$')
+    // const reg = /^[A-Z]+$/
     return reg.test(str)
   },
 
-  /* 大小写字母 */
-  validateAlphabets (str) {
-    const reg = /^[A-Za-z]+$/
+  /* 大小写字母 num位数限制 【例： '{2,20}'】 */
+  validateAlphabets (str, num) {
+    // const reg = /^[A-Za-z]+$/
+    const reg = new RegExp('^[A-Za-z]' + (num || '+') + '$')
     return reg.test(str)
   },
   /**
@@ -154,15 +156,12 @@ export const validater = {
    * @param {*} callback
    */
   validateEmail (rule, value, callback) {
-    if (value === '') {
-      callback(new Error('请输入邮箱地址'))
+    // if (value === '') {
+    //   callback(new Error('请输入邮箱地址'))
+    // } else
+    if (value && !/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value)) {
+      callback(new Error('请输入有效的邮箱'))
     } else {
-      if (value !== '') {
-        const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-        if (!reg.test(value)) {
-          callback(new Error('请输入有效的邮箱'))
-        }
-      }
       callback()
     }
   },
@@ -190,12 +189,9 @@ export const validater = {
    * 手机号码校验
    */
   phoneNumber (rule, value, callback) {
-    if (
-      value &&
-      (!/^[1][34578]\d{9}$/.test(value) ||
-        !/^[1-9]\d*$/.test(value) ||
-        value.length !== 11)
-    ) {
+    if (!value) {
+      callback(new Error('手机号码不能为空'))
+    } else if (value && (!/^[1][34578]\d{9}$/.test(value) || !/^[1-9]\d*$/.test(value) || value.length !== 11)) {
       callback(new Error('手机号码不符合规范'))
     } else {
       callback()
@@ -295,16 +291,6 @@ export const validater = {
     }
   },
   /**
-   * 中文字符英文字符校验
-   */
-  ChEnText (rule, value, callback) {
-    if (value && !/^[A-Za-z0-9]+$/.test(value)) {
-      callback(new Error('只能填写数字和英文字符'))
-    } else {
-      callback()
-    }
-  },
-  /**
    * 中文字符校验
    */
   cnText (rule, value, callback) {
@@ -322,8 +308,10 @@ export const validater = {
   /**
    * 只能输入英文或者数字
    */
-  enOrnunText (rule, value, callback) {
-    if (value && !/^[A-Za-z0-9]+$/.test(value)) {
+  enOrNumText (rule, value, callback) {
+    if (!value) {
+      callback(new Error('字段不能为空'))
+    } else if (!/^[A-Za-z0-9]+$/.test(value)) {
       callback(new Error('只能填写英文或者数字'))
     } else {
       callback()
@@ -365,7 +353,6 @@ export const validater = {
       callback(new Error('只能填写正整数'))
     } else {
       const codeLen = value.toString().length
-      console.log(codeLen)
       if (codeLen > 0 && codeLen % 3 !== 0) {
         callback(new Error('输入的长度必须是3的倍数'))
       } else if (codeLen > 18) {

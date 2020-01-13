@@ -16,7 +16,8 @@ html {
 
 body {
 	height: 100%;
-	min-width: 1200px;
+	min-width: 1400px;
+	overflow: auto;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
@@ -142,6 +143,7 @@ code {
 	}
 }
 
+// 表单元素后面提示info信息
 .input-info {
 	color: @danger;
 	font-size: @f12;
@@ -150,6 +152,39 @@ code {
 	line-height: 14px;
 	vertical-align: middle;
 }
+
+// 详情页面通用form样式
+.detail-form {
+	background-color: @white;
+	padding: 15px 15px;
+
+	.input-item {
+		width: 100%;
+	}
+
+	.select-item {
+		width: 30%;
+	}
+
+	.button-item {
+		margin-left: 20px;
+		margin-top: 20px;
+	}
+}
+
+.dialog-form {
+	width: 90%;
+
+	.input-item {
+		width: 100%;
+	}
+
+	.select-item {
+		width: 50%;
+	}
+}
+
+
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {

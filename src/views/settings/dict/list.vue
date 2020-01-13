@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -21,75 +22,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="字典编码">
-              <el-input
-                v-model="searchObj.dictName"
-                class="search-item"
-                :size="size"
-                placeholder="字典编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="字典编码">
-              <el-input
-                v-model="searchObj.dictCode"
-                class="search-item"
-                :size="size"
-                placeholder="字典编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="业务线编码">
-              <el-input
-                v-model="searchObj.dictLob"
-                class="search-item"
-                :size="size"
-                placeholder="业务线编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="字典值">
-              <el-input
-                v-model="searchObj.dictValue"
-                class="search-item"
-                :size="size"
-                placeholder="字典值"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="状态">
-              <el-select
-                v-model="searchObj.status"
-                :size="size"
-                class="search-item"
-                placeholder="请选择"
-                clearable
-              >
-                <el-option
-                  v-for="item in statusList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-              <!-- <query-dict
-                :dict-list="dictData[dictOpts.codes[0]]"
-                class="search-item"
-                :size="size"
-                :value.sync="searchObj.status"
-              ></query-dict> -->
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
           <!-- <div class="check-list" v-if="tableCheckedList.length > 1">
             您已选中 {{ tableCheckedList.length }} 条数据
             <span @click="deleteData">批量删除</span>
@@ -114,7 +52,7 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import EnumAdd from './add'
-// import utils from 'utils'
+import dictObj from '@/store/dictData'
 
 export default {
   name: 'dictList',
@@ -125,29 +63,11 @@ export default {
   },
   data(vm) {
     return {
-      dictOpts: { // 字典参数, 路由页面需要配置
-        codes: [], // ['disabled']
-        dictLob: ''
-      },
+      // dictOpts: { // 字典参数, 路由页面需要配置
+      //   codes: [], // ['disabled']
+      //   dictLob: ''
+      // },
       dialogObj: {}, // 对话框数据
-      searchObj: {
-        dictCode: '', // 字典编码
-        dictName: '', // 字典名称
-        dictLob: '', // 字典业务线
-        dictValue: '', // 字典值
-        status: '' // 字典状态
-      },
-      statusList: [
-        {
-          value: 0,
-          label: '禁用'
-        },
-        {
-          value: 1,
-          label: '启用'
-        }
-      ],
-      tableList: [],
       tableInnerBtns: [
         {
           width: 130,
@@ -176,22 +96,39 @@ export default {
         {
           label: '字典名称',
           prop: 'dictName',
-          fixed: true
+          fixed: true,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '字典编码',
-          prop: 'dictCode'
+          prop: 'dictCode',
+          search: {
+            type: 'input'
+          }
         },
         {
-          label: '业务线编码',
-          prop: 'dictLob'
+          label: '业务线',
+          prop: 'dictLob',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.dictLob, 'lobListAll')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.lobListAll
+          }
         },
         {
           label: '字典值',
           prop: 'values',
           width: 400,
           formatter(row) {
-            return row.values.map(item => `[${item.id}] ${item.dictValue}`).join('; ')
+            return row.values.map(item => item.dictValue).join('/')
+          },
+          search: {
+            type: 'input',
+            prop: 'dictValue'
           }
         },
         {
@@ -202,8 +139,12 @@ export default {
           label: '状态',
           prop: 'status',
           width: 100,
-          formatter(row, index) {
-            return vm.statusList[row.status].label
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.status, 'disStatus')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.disStatus
           }
         }
       ]
@@ -214,9 +155,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.settings.getDictList({
         ...searchDate,
@@ -270,7 +211,7 @@ export default {
       const { values, ...other } = formModel
       this.$api.settings.updateDict({
         ...other,
-        updata: values,
+        update: values,
         del: delArr
       }).then(res => {
         this.$msgTip('修改成功')

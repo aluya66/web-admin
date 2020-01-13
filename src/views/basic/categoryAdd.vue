@@ -18,21 +18,21 @@
 
     <!-- <el-form-item label="图片:">
       <c-upload
-        ref="curUpload"
-        class="pic"
-        :fileList="formModel.imageUrl"
-        is-auto
-        :size="20"
-        :limit="5"
-        action-path="/auth/uploadFile"
-        upload-style="picture-card"
-        @upload-success="uploadSuccess"
-        @upload-remove="uploadRemove"
-        @upload-review="uploadReview"
-      >
-        <i class="el-icon-plus"></i>
-        <div class="info">上传图片/视频应小于20M</div>
-      </c-upload>
+          ref="curUpload"
+          class="pic"
+          auto-upload
+          action="/api/upload/file"
+          list-type="picture-card"
+          :size="20"
+          :limit="5"
+          :fileList="formModel.imageUrl"
+          :on-success="uploadSuccess"
+          :on-remove="uploadRemove"
+          :on-preview="uploadReview"
+        >
+          <i class="el-icon-plus"></i>
+          <div class="info">上传图片/视频应小于20M</div>
+        </c-upload>
     </el-form-item> -->
 
     <el-form-item label="父级分类编码:" prop="parentCode" v-if="categoryEdit === false">

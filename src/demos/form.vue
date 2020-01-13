@@ -76,7 +76,21 @@
         <el-input type="textarea" v-model="ruleForm.desc"></el-input>
       </el-form-item>
       <el-form-item label="活动形式" prop="desc">
-        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+        <el-button type="primary" @click="showDialog">上传图片</el-button>
+      </el-form-item>
+      <el-form-item label="活动形式" prop="desc">
+        <c-upload
+          ref="upload"
+          action="/api/upload/file"
+          list-type="picture-card"
+          :http-request="uploadHandle"
+          :size="20"
+          :limit="5"
+          :file-list.sync="ruleForm.fileList"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+        >
+        </c-upload>
       </el-form-item>
       <el-form-item label="活动区域" prop="region">
         <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
@@ -110,13 +124,35 @@
         <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
+      >
+        <template v-slot:header>
+          <c-multi-upload ref="multiUpload"></c-multi-upload>
+        </template>
+      </c-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+import CUpload from 'components/upload'
+import CMultiUpload from 'components/multiUpload'
+import CDialog from 'components/dialog'
+
 export default {
+  components: {
+    CUpload,
+    CMultiUpload,
+    CDialog
+  },
   data() {
     return {
+      dialogObj: {}, // 对话框数据
       ruleForm: {
         name: '',
         region: '',
@@ -135,9 +171,11 @@ export default {
         delivery: false,
         type: [],
         resource: '',
-        desc: ''
+        desc: '',
+        fileList: []
       },
-      dialogFormVisible: true,
+      files: [],
+      dialogFormVisible: false,
       formLabelWidth: '120px',
       rules: {
         name: [
@@ -165,7 +203,27 @@ export default {
       }
     }
   },
+  computed: {
+    headers() {
+      const { token } = this.$store.getters.userInfo
+      return {
+        token
+      }
+    }
+  },
   methods: {
+    dialogConfirm() {
+      // const curList = this.$refs.multiUpload.submitHandle()
+      this.dialogObj.isShow = false
+    },
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || '上传图片',
+        isEdit: opts.isEdit || false,
+        initData: opts.initData
+      }
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -178,6 +236,18 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
+    },
+    handlePreview() {
+
+    },
+    handleRemove() {
+
+    },
+    uploadHandle(file) {
+      this.$refs.upload.customUpload(file)
     }
   }
 }

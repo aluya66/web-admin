@@ -9,7 +9,7 @@
           v-model="searchValue"
         ></el-input>
       </div>
-      <div class="title">已选择:【 {{distList.length}} 】</div>
+      <div class="title"><el-checkbox v-model="checkAll" @change="handleCheckAllChange" v-if="checkedAttr.length"></el-checkbox>已选择:【 {{distList.length}} 】</div>
     </div>
     <div class="content">
       <div class="source">
@@ -55,7 +55,8 @@ export default {
   data() {
     return {
       searchValue: '', // 搜索关键字
-      checkedAttr: [] // 选中的值
+      checkedAttr: [], // 选中的值
+      checkAll: true // 已选择值默认全选
     }
   },
   computed: {
@@ -78,6 +79,12 @@ export default {
   },
   mounted() {
     this.checkedAttr = this.initChecked
+  },
+  methods: {
+    handleCheckAllChange(val) {
+      this.checkedAttr = []
+      this.checkAll = !val
+    }
   }
 }
 </script>
@@ -105,6 +112,9 @@ export default {
       font-weight: bold;
       padding: 16px 0;
       text-align: center;
+      .el-checkbox {
+        margin-right: 10px;
+      }
     }
   }
   .content {
@@ -119,7 +129,7 @@ export default {
         margin: 20px 20px;
         .el-checkbox {
           margin: 5px 12px;
-          width: 85px;
+          min-width: 85px;
         }
       }
     }
@@ -132,7 +142,7 @@ export default {
         margin: 20px 15px;
         .el-checkbox {
           margin: 5px 10px;
-          width: 80px;
+          min-width: 80px;
         }
       }
     }

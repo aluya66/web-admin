@@ -15,8 +15,10 @@ export default (err, callBackFun, duration) => {
   console.log('err', err)
   switch (errCode) {
     case 8:
+    case 3:
     case 9:
-      utils.removeStore('SET_USERINFO')
+      errMsg = 'token异常，请重新登录'
+      window.globalVue.$store.dispatch('user/resetToken')
       utils.goToLogin()
       break
     case 102:

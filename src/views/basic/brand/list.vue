@@ -14,11 +14,12 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
         :loading="isLoading"
-        :max-height="730"
+        :max-height="maxHeight"
         :table-header="tableHeader"
         :table-list="tableList"
         :page-info="pageInfo"
@@ -26,72 +27,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <!-- <el-form-item label="品牌国家">
-              <el-input
-                v-model="searchObj.country"
-                class="search-item"
-                :size="size"
-                placeholder="请输入品牌国家"
-                clearable
-              />
-            </el-form-item>-->
-            <el-form-item label="品牌名称">
-              <el-input
-                v-model="searchObj.name"
-                class="search-item"
-                :size="size"
-                placeholder="请输入品牌名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="品牌状态">
-              <el-select
-                v-model="searchObj.status"
-                :size="size"
-                class="search-item"
-                placeholder="请选择状态"
-                clearable
-              >
-                <el-option
-                  v-for="item in statusSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="品牌别名">
-              <el-input
-                v-model="searchObj.ename"
-                class="search-item"
-                :size="size"
-                placeholder="请输入品牌别名"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="创建时间">
-              <el-date-picker
-                :size="size"
-                v-model="searchObj.dataTime"
-                type="daterange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                :default-time="['00:00:00', '23:59:59']"
-              >align="right"></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -99,69 +40,67 @@
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import utils from 'utils'
+
+const statusSelect = [{
+  value: 1,
+  label: '启用'
+}, {
+  value: 2,
+  label: '禁用'
+}]
 
 export default {
   name: 'brand',
   mixins: [mixinTable],
   data(vm) {
     return {
-      searchObj: {
-        country: '',
-        name: '',
-        ename: '',
-        dataTime: '',
-        status: ''
-      },
-      statusSelect: [{
-        value: 1,
-        label: '启用'
-      }, {
-        value: 2,
-        label: '禁用'
-      }],
-      pickerOptions: utils.pickerOptions,
       tableInnerBtns: [
-        {
-          width: 150,
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            vm.routerLink(`/basic/brandInfo/${row.id}`)
-          }
-        },
+        // {
+        //   width: 150,
+        //   name: '编辑',
+        //   icon: 'el-icon-edit',
+        //   handle(row) {
+        //     vm.routerLink(`/basic/brandInfo/${row.id}`)
+        //   }
+        // },
         {
           name: '添加标签',
           icon: 'el-icon-plus',
           handle(row) {
             vm.routerLink(`/basic/brandLabel/${row.id}`)
           }
-        },
-        {
-          name: '删除',
-          icon: 'el-icon-delete',
-          handle(row) {
-            const { name, id } = row
-            vm.confirmTip(`确认删除${name}品牌信息`, () => {
-              vm.deleteData({ id })
-            })
-          }
         }
+        // {
+        //   name: '删除',
+        //   icon: 'el-icon-delete',
+        //   handle(row) {
+        //     const { name, id } = row
+        //     vm.confirmTip(`确认删除${name}品牌信息`, () => {
+        //       vm.deleteData({ id })
+        //     })
+        //   }
+        // }
       ],
       tableHeader: [
         {
           label: '品牌LOGO',
           prop: 'logo',
-          isImage: true,
-          fixed: true
+          width: 100,
+          isImage: true
         },
         {
           label: '品牌名称',
-          prop: 'name'
+          prop: 'name',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '品牌别名',
-          prop: 'ename'
+          prop: 'ename',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '品牌描述',
@@ -174,7 +113,10 @@ export default {
         {
           label: '品牌国家',
           prop: 'country',
-          width: 120
+          width: 120,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '封面图',
@@ -190,16 +132,16 @@ export default {
         {
           label: '品牌状态',
           prop: 'statusCN',
-          width: 100
+          width: 100,
+          search: {
+            type: 'dict',
+            prop: 'status',
+            optionsList: statusSelect
+          }
         },
         {
           label: '消费人群',
           prop: 'consumer',
-          width: 100
-        },
-        {
-          label: '品牌排序',
-          prop: 'sort',
           width: 100
         },
         // {
@@ -215,7 +157,11 @@ export default {
         {
           label: '创建时间',
           prop: 'created',
-          width: 100
+          width: 100,
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
         },
         {
           label: '更新时间',
@@ -230,9 +176,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.basic
         .brandList({

@@ -46,14 +46,14 @@
       <table class="el-table sku-table content-box" cellspacing="0" cellpadding="0">
         <thead>
           <tr>
-            <th>主图</th>
+            <th style="width: 80px;">主图</th>
             <th v-for="(item, index) in specification" :key="index">{{item.name}}</th>
             <th style="width: 150px;">sku款号</th>
             <th
               v-for="(item, index) in batchList"
               :key="'th_'+index"
               :title="item.name"
-            >{{item.name !== 'stock' ? item.label + '(元)': item.label}}</th>
+            >{{item.name !== 'skuStock' ? item.label + '(元)': item.label}}</th>
             <th>是否启用</th>
             <th>是否主sku</th>
           </tr>
@@ -71,15 +71,15 @@
                   v-if="!specification[specIndex].posterUrl[index/countSum(specIndex + 1)]"
                   :ref="'spec_'+index/countSum(specIndex + 1)"
                   class="pic"
-                  :fileList="specification[specIndex].fileList"
-                  is-auto
-                  :disabled="isView"
+                  auto-upload
+                  action="/api/upload/file"
                   :size="10"
                   :limit="1"
-                  action-path="/auth/uploadFile"
-                  @upload-success="uploadSuccess"
-                  @upload-remove="uploadRemove"
-                  @upload-review="uploadReview"
+                  :fileList="specification[specIndex].fileList"
+                  :disabled="isView"
+                  :on-success="uploadSuccess"
+                  :on-remove="uploadRemove"
+                  :on-preview="uploadReview"
                   @on-change="uploadIndex = specIndex"
                 >
                   <el-button size="small" type="primary">点击上传</el-button>
@@ -243,7 +243,7 @@ export default {
       }, {
         label: '成衣库存',
         value: '',
-        name: 'stock'
+        name: 'skuStock'
       }]
     }
   },
@@ -387,7 +387,7 @@ export default {
         wholesalePrice: '', // 成衣散批价
         retailPrice: '', // 零售价
         memberPrice: '', // 成衣会员价
-        stock: 0, // 成衣库存
+        skuStock: 0, // 成衣库存
         isUse: true, // 是否有用sku
         isDefalut: false // 是否默认SKU
       }
@@ -407,7 +407,7 @@ export default {
           largeBatchPrice: curSkuInfo.largeBatchPrice, // 成衣大批价
           retailPrice: curSkuInfo.retailPrice, // 零售价
           memberPrice: curSkuInfo.memberPrice, // 成衣会员价
-          stock: curSkuInfo.stock, // 成衣库存
+          skuStock: curSkuInfo.skuStock, // 成衣库存
           isDefalut: curSkuInfo.isDefalut === 1
         }
       }

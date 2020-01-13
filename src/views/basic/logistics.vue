@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -20,35 +21,12 @@
         @change-pagination="changePagination"
       >
         <template v-slot:header>
-          <el-form :inline="true" :model="searchObj" label-width="100px" class="search-form">
-            <el-form-item label="物流名称">
-              <el-input
-                v-model="searchObj.logiName"
-                class="search-item"
-                :size="size"
-                placeholder="请输入物流名称"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item label="物流编码">
-              <el-input
-                v-model="searchObj.logiCode"
-                class="search-item"
-                :size="size"
-                placeholder="请输入物流编码"
-                clearable
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                class="search-btn"
-                :size="size"
-                icon="el-icon-search"
-                @click="searchSubmit"
-              >查询</el-button>
-            </el-form-item>
-          </el-form>
+          <c-search
+            :form-model="searchObj"
+            :form-items="searchItems"
+            @submit-form="searchSubmit"
+            @reset-form="searchReset"
+          ></c-search>
         </template>
       </c-table>
     </div>
@@ -68,7 +46,6 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import utils from 'utils'
 import CDialog from 'components/dialog'
 import LogisticsAdd from './logisticsAdd'
 
@@ -83,13 +60,6 @@ export default {
     return {
       isEdit: false,
       dialogObj: {}, // 对话框数据
-      searchObj: {
-        logiName: '',
-        logiCode: ''
-      },
-      marketableSelect: [],
-      pickerOptions: utils.pickerOptions,
-      tableList: [],
       tableInnerBtns: [
         {
           width: 130,
@@ -117,11 +87,17 @@ export default {
         {
           label: '物流名称',
           prop: 'logiName',
-          fixed: true
+          fixed: true,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '物流编码',
-          prop: 'logiCode'
+          prop: 'logiCode',
+          search: {
+            type: 'input'
+          }
         }
       ]
     }
@@ -134,9 +110,9 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.basic
         .getLogistics({
@@ -213,11 +189,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
 .selectWidth {
   width: 200px;
 }

@@ -8,6 +8,7 @@
     </template>
     <div class="main__box">
       <c-table
+        ref="cTable"
         selection
         hasBorder
         :size="size"
@@ -81,7 +82,7 @@
             <el-form-item label="创建时间">
               <el-date-picker
                 :size="size"
-                v-model="searchObj.dataTime"
+                v-model="searchObj.dateTime"
                 type="daterange"
                 :picker-options="pickerOptions"
                 range-separator="至"
@@ -137,7 +138,7 @@ export default {
         name: '',
         type: '',
         isDelete: '',
-        dataTime: '',
+        dateTime: '',
         paramType: ''
       },
       parameterSelect: [
@@ -267,9 +268,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const { dataTime, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dataTime)
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
       this.$api.basic.getGoodsattrval({
         ...searchDate,
@@ -346,10 +347,3 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-</style>
