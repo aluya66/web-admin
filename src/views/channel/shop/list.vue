@@ -2,14 +2,6 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
-      <div class="header-btn">
-        <el-button
-          type="primary"
-          :size="size"
-          icon="el-icon-plus"
-          @click="routerLink('/channel/shop/detail')"
-        >新增</el-button>
-      </div>
     </template>
     <div class="main__box">
       <c-table
@@ -22,7 +14,6 @@
         :table-header="tableHeader"
         :table-list="tableList"
         :page-info="pageInfo"
-        :table-inner-btns="tableInnerBtns"
         @change-pagination="changePagination"
       >
         <template v-slot:header>
@@ -44,7 +35,7 @@ const shopTypeSelect = [{
   label: '自营',
   value: 1
 }, {
-  label: '加盟',
+  label: '合作',
   value: 2
 }]
 const shopStatusSelect = [
@@ -70,16 +61,6 @@ export default {
       dialogObj: {}, // 对话框数据
       tableList: [],
       isLoading: false,
-      tableInnerBtns: [
-        {
-          width: 100,
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            vm.routerLink(`/channel/shop/detail/${row.shopId}`)
-          }
-        }
-      ],
       tableHeader: [
         {
           label: 'LOGO',
@@ -88,18 +69,24 @@ export default {
           width: 100
         },
         {
-          label: '门店名称',
+          label: '店招',
+          prop: 'shopImage',
+          isImage: true,
+          width: 100
+        },
+        {
+          label: '店铺名称',
           prop: 'shopName',
           search: {
             type: 'input'
           }
         },
         {
-          label: '门店风格',
+          label: '店铺风格',
           prop: 'styleName'
         },
         {
-          label: '经营方式',
+          label: '店铺类型',
           prop: 'shopType',
           search: {
             type: 'select',
@@ -110,11 +97,7 @@ export default {
           }
         },
         {
-          label: '关联商户',
-          prop: 'businessName'
-        },
-        {
-          label: '门店地址',
+          label: '店铺地址',
           prop: 'address',
           isPopover: true
         },
