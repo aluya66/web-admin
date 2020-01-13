@@ -32,7 +32,7 @@
 <script>
 import mixinTable from 'mixins/table'
 // import utils from 'utils'
-import dictObj from '@/store/dictData'
+// import dictObj from '@/store/dictData'
 const statusList = [{
   label: '未激活',
   value: 0
