@@ -34,7 +34,7 @@
               :label="item.value"
             >{{item.label}}</el-radio-button>
           </el-radio-group>
-          <el-radio-group v-model="afterSaleStatus">
+          <el-radio-group v-model="afterSaleStatus" class="radio-list">
             <el-radio-button
               v-for="(item, index) in afterSalesTabList"
               :size="size"
@@ -457,5 +457,8 @@ export default {
   .el-tabs__content {
     padding: 0;
   }
+}
+.radio-list {
+  margin-left: 10px;
 }
 </style>
