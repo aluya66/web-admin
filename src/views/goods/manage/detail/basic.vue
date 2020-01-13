@@ -80,12 +80,12 @@
             v-if="!isView"
             class="select-item"
             disabled
-            v-model.trim="formModel.supplierCode"
+            v-model.trim="formModel.supplierNumber"
             :size="size"
             placeholder="请输入供应商款号"
             clearable
           />
-          <span v-else>{{formModel.supplierCode}}</span>
+          <span v-else>{{formModel.supplierNumber}}</span>
         </el-form-item>
         <el-form-item label="供应商:">
           <el-input
@@ -164,12 +164,12 @@
             v-if="!isView"
             class="select-item"
             disabled
-            v-model.trim="formModel.updatebyName"
+            v-model.trim="formModel.publisher"
             :size="size"
             placeholder="请输入上货人"
             clearable
           />
-          <span v-else>{{formModel.updatebyName}}</span>
+          <span v-else>{{formModel.publisher}}</span>
         </el-form-item>
         <el-form-item label="创建时间:" prop="created">
           <el-date-picker
@@ -292,7 +292,7 @@ export default {
         categoryCode, // 分类code
         categoryName, // 分类名称
         goodsBn, // 商品款号
-        supplierCode, // 供应商款号
+        supplierNumber, // 供应商款号
         supplierName, // 供应商
         brandName, // 商品品牌
         goodsStyleName, // 款式来源
@@ -301,7 +301,7 @@ export default {
         sourceSupplierName, // 货源商
         coverImg, // 识别图/封面图
         marketable, // 是否可售
-        updatebyName, // 上货人
+        publisher, // 上货人
         businessValue, // 经营类型
         skus,
         updated,
@@ -346,7 +346,7 @@ export default {
         categoryCode, // 分类code
         categoryName, // 分类名称
         goodsBn, // 商品款号
-        supplierCode, // 供应商款号
+        supplierNumber, // 供应商款号
         supplierName, // 供应商
         brandName, // 商品品牌
         goodsStyleName, // 款式来源
@@ -355,8 +355,8 @@ export default {
         sourceSupplierName, // 货源商
         coverImg, // 识别图/封面图
         marketable: marketable || 0, // 是否可售
-        updatebyName,
         businessValue,
+        publisher,
         skus,
         skuList,
         updated,

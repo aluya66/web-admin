@@ -7,14 +7,9 @@ export default {
     this.fetchData()
     this.getSampleGoodsSum()
   },
-  props: {
-    noperfectCount: {
-      type: Number,
-      default: 0
-    }
-  },
   data(vm) {
     return {
+      count: 0,
       tableInnerBtns: [{
         name: '编辑',
         icon: 'el-icon-edit',
@@ -33,10 +28,11 @@ export default {
       this.$api.goods.getSampleGoodsSum().then(res => {
         if (res && res.totalCount) {
           const { data } = res
-          this.noperfectCount = data || 0
+          this.count = data || 0
         } else {
-          this.noperfectCount = res || 0
+          this.count = res || 0
         }
+        this.$emit('update-count', this.count)
       })
     },
     getCategoryList() {

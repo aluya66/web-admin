@@ -2,6 +2,24 @@ import Http from '../utils/request'
 
 const context = process.env.VUE_APP_CONSOLE_COMMON
 
+// 优惠券明细列表
+export const getTicketDetailsList = params =>
+  Http.fetch(`${context}/api/mks/user/coupon`, params, {
+    method: 'get'
+  })
+
+// 星购卡 充值列表
+export const starGoCardRechargeList = params =>
+  Http.fetch(`${context}/api/mks/user/card`, params, {
+    method: 'get'
+  })
+
+// 优惠券明细 核销
+export const writeOffTicket = params =>
+  Http.fetch(`${context}/api/mks/user/coupon/writeoff`, params, {
+    method: 'post'
+  })
+
 // 发放星go券
 export const addCouponAboutStarGo = params =>
   Http.fetch(`${context}/api/mks/coupon/stargo`, params, {

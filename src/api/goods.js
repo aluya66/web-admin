@@ -12,6 +12,14 @@ export const setPartPerfectGoods = params =>
     method: 'put'
   })
 
+// 商品 导出
+export const exportGoods = params =>
+  Http.fetch(`${context}/api/goods/export`, params, {
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
+  })
+
 // 商品 完善
 export const setPerfectGoods = params =>
   Http.fetch(`${context}/api/goods/perfect`, params, {

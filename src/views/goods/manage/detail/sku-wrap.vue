@@ -28,7 +28,7 @@
             size="mini"
             class="rate-set"
             :disabled="isView"
-            v-model.number="item.value"
+            v-model="item.value"
             @focus="rateIndex = index"
             @blur="setRate"
             clearable
@@ -47,14 +47,14 @@
       <div class="content-box">
         <template>
           <el-input
-            v-for="(item, index) in batchList.slice(2)"
+            v-for="(item, index) in batchList.slice(1)"
             :key="index"
-            v-show="item.name !== 'stock'"
+            v-show="item.name !== 'skuStock'"
             size="mini"
             class="batch-set"
             :disabled="isView"
             v-model="item.value"
-            @focus="batchIndex = index + 2"
+            @focus="batchIndex = index + 1"
             @change="setBatch"
             clearable
             placeholder="批量设置"
@@ -79,7 +79,7 @@
               v-for="(item, index) in batchList"
               :key="'th_'+index"
               :title="item.name"
-            >{{item.name !== 'stock' ? item.label + '(元)': item.label}}</th>
+            >{{item.name !== 'skuStock' ? item.label + '(元)': item.label}}</th>
             <!-- <th>是否启用</th> -->
             <th>是否主sku</th>
           </tr>
@@ -132,7 +132,7 @@
                 v-if="childProductArray[index]"
                 v-model.number="childProductArray[index][tdItem.name]"
                 :placeholder="tdItem.label"
-                :disabled="childProductArray[index].isDefalut || tdItem.name === 'costPrice' || tdItem.name === 'sampleCostPrice' || tdItem.name === 'stock'"
+                :disabled="tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
               ></el-input>
             </td>
             <!-- <td>
@@ -248,13 +248,13 @@ export default {
         value: '',
         name: 'supplyRate'
       }, {
-        label: '大批价格倍率',
-        value: '',
-        name: 'largeBatchRate'
-      }, {
         label: '散批价倍率',
         value: '',
         name: 'wholesalePriceRate'
+      }, {
+        label: '大批价格倍率',
+        value: '',
+        name: 'largeBatchRate'
       }, {
         label: '会员价倍率',
         value: '',
@@ -265,13 +265,13 @@ export default {
         name: 'retailPriceRate'
       }],
       batchList: [{
-        label: '成衣成本价',
-        value: '',
-        name: 'costPrice'
-      }, {
         label: '样衣成本价',
         value: '',
         name: 'sampleCostPrice'
+      }, {
+        label: '成衣成本价',
+        value: '',
+        name: 'costPrice'
       }, {
         label: '成衣供货价',
         value: '',
@@ -295,7 +295,7 @@ export default {
       }, {
         label: '成衣库存',
         value: '',
-        name: 'stock'
+        name: 'skuStock'
       }]
     }
   },
@@ -457,7 +457,7 @@ export default {
         wholesalePrice: '', // 成衣散批价
         retailPrice: '', // 零售价
         memberPrice: '', // 成衣会员价
-        stock: 0, // 成衣库存
+        skuStock: 0, // 成衣库存
         // isUse: true, // 是否有用sku
         isDefalut: false // 是否默认SKU
       }
@@ -476,7 +476,7 @@ export default {
           largeBatchPrice: curSkuInfo.largeBatchPrice, // 成衣大批价
           retailPrice: curSkuInfo.retailPrice, // 零售价
           memberPrice: curSkuInfo.memberPrice, // 成衣会员价
-          stock: curSkuInfo.stock || 0, // 成衣库存
+          skuStock: curSkuInfo.skuStock || 0, // 成衣库存
           isDefalut: curSkuInfo.isDefalut === 1
         }
       }
@@ -517,21 +517,14 @@ export default {
     // },
     // 设置是否为主sku
     handleDefaultChange(index, value) {
-      // this.childProductArray.forEach((res, num) => {
-      //   if (index === num) {
-      //     this.$set(this.childProductArray, 'isDefalut', value)
-      //   } else if (res.isDefalut === value) {
-      //     this.$set(this.childProductArray, 'isDefalut', !value)
+      if (!value) return
+      // this.childProductArray.forEach((item, cindex) => {
+      //   if (cindex !== index) {
+      //     this.$set(this.childProductArray[cindex], 'isDefalut', false)
+      //   } else {
+      //     this.$set(this.childProductArray[index], 'isDefalut', true)
       //   }
       // })
-      if (!value) return
-      this.childProductArray.forEach((item, cindex) => {
-        if (cindex !== index) {
-          this.$set(this.childProductArray[cindex], 'isDefalut', false)
-        } else {
-          this.$set(this.childProductArray[index], 'isDefalut', true)
-        }
-      })
       const target = this.childProductArray[index]
       const minObj = {
         supplyprice: target.supplyPrice, // 供货价
@@ -552,34 +545,40 @@ export default {
         })
         return
       }
+      this.rateList[this.rateIndex].value = Number(this.rateList[this.rateIndex].value).toFixed(2) // 保留2位小数
       const name = this.rateList[this.rateIndex].name // 当前设置得倍率
       let value // 倍率对应得价格
       let target // sku列表得input
       switch (name) { // 供货倍率、大批价格倍率、 散批价倍率、 会员价倍率、零售倍率
-        case 'supplyRate':
+        case 'supplyRate': // 供货
           value = this.batchList[2].value
           target = 'supplyPrice'
           break
-        case 'largeBatchRate':
-          value = this.batchList[4].value
-          target = 'largeBatchPrice'
-          break
-        case 'wholesalePriceRate':
+        case 'wholesalePriceRate': // 散批价
           value = this.batchList[3].value
           target = 'wholesalePrice'
           break
-        case 'memberPriceRate':
+        case 'largeBatchRate': // 大批价格
+          value = this.batchList[4].value
+          target = 'largeBatchPrice'
+          break
+        case 'memberPriceRate': // 会员价
           value = this.batchList[5].value
           target = 'memberPrice'
           break
-        case 'retailPriceRate':
+        case 'retailPriceRate': // 零售
           value = this.batchList[6].value
           target = 'retailPrice'
           break
       }
       this.childProductArray.forEach(item => {
         if (value) {
-          item[target] = (value * this.rateList[this.rateIndex].value).toFixed(2)
+          if (target === 'memberPrice' || target === 'retailPrice') {
+            this.batchSameTypePrice(target, value, this.rateList[this.rateIndex].value, 'handlePrice')
+          } else {
+            this.batchSameTypePrice(target, value, this.rateList[this.rateIndex].value)
+          }
+          // item[target] = (value * this.rateList[this.rateIndex].value).toFixed(2)
         }
       })
       // this.setMinPrice()
@@ -610,29 +609,53 @@ export default {
       // const list = this.batchList.filter((item) => item.name !== 'costPrice')
       // const list = this.batchList
       switch (name) {
+        case 'costPrice': // 成衣成本价 根据价格类型的倍率设置全部价格
+          this.batchList.slice(1).forEach((item) => {
+            switch (item.name) {
+              case 'costPrice':
+                this.batchSameTypePrice('costPrice', curPrice, 1)
+                break
+              case 'supplyPrice': // 成衣供货价
+                rate = this.rateList[0].value // 供货价倍率
+                this.batchSameTypePrice('supplyPrice', curPrice, rate)
+                break
+              case 'wholesalePrice': // 成衣散批价
+                rate = this.rateList[1].value // 成衣散批价倍率
+                this.batchSameTypePrice('wholesalePrice', curPrice, rate)
+                break
+              case 'largeBatchPrice': // 成衣大批价
+                rate = this.rateList[2].value // 成衣大批价倍率
+                this.batchSameTypePrice('largeBatchPrice', curPrice, rate)
+                break
+              case 'memberPrice': // 成衣会员价
+                rate = this.rateList[3].value // 成衣会员价倍率
+                this.batchSameTypePrice('memberPrice', curPrice, rate, 'handlePrice')
+                break
+              case 'retailPrice': // 零售价
+                rate = this.rateList[4].value // 零售价倍率
+                this.batchSameTypePrice('retailPrice', curPrice, rate, 'handlePrice')
+                break
+            }
+          })
+          break
         case 'supplyPrice': // 成衣供货价
           rate = this.rateList[0].value // 供货价倍率
-          // this.batchList[2].value = this.getPrice(curPrice, rate)
           this.batchSameTypePrice('supplyPrice', curPrice, rate)
           break
         case 'wholesalePrice': // 成衣散批价
-          rate = this.rateList[2].value // 成衣散批价倍率
-          // this.batchList[3].value = this.getPrice(curPrice, rate)
+          rate = this.rateList[1].value // 成衣散批价倍率
           this.batchSameTypePrice('wholesalePrice', curPrice, rate)
           break
         case 'largeBatchPrice': // 成衣大批价
-          rate = this.rateList[1].value // 成衣大批价倍率
-          // this.batchList[4].value = this.getPrice(curPrice, rate)
+          rate = this.rateList[2].value // 成衣大批价倍率
           this.batchSameTypePrice('largeBatchPrice', curPrice, rate)
           break
         case 'memberPrice': // 成衣会员价
           rate = this.rateList[3].value // 成衣会员价倍率
-          // this.batchList[5].value = this.getPrice(curPrice, rate, 'handlePrice')
           this.batchSameTypePrice('memberPrice', curPrice, rate, 'handlePrice')
           break
         case 'retailPrice': // 零售价
           rate = this.rateList[4].value // 零售价倍率
-          // this.batchList[6].value = this.getPrice(curPrice, rate, 'handlePrice')
           this.batchSameTypePrice('retailPrice', curPrice, rate, 'handlePrice')
           break
       }

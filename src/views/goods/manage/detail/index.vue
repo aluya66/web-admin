@@ -181,6 +181,7 @@ export default {
                 videoList.push({ url: item.videoUrl })
               }
             }) // 图片、视频资源
+            res.operationName = res.operationName ? res.operationName : res.goodsName // 默认首次同步样衣时，将运营名称设置为商品名称
             this.formModel = { ...res, goodsImageList, videoList, detailsType: params.type }
           } else {
             this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
