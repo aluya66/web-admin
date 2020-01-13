@@ -65,12 +65,12 @@
         <el-divider content-position="left">收款账号信息：</el-divider>
         <div class="card-info">
           <div class="row">
-            <span>银行开户名：{{detailData.businessResp.bankOfDeposit}}</span>
-            <span>银行卡号：{{detailData.businessResp.bankCardNo}}</span>
+            <span>银行开户名：{{detailData.businessResp && detailData.businessResp.bankOfDeposit}}</span>
+            <span>银行卡号：{{detailData.businessResp && detailData.businessResp.bankCardNo}}</span>
           </div>
           <div class="row">
-            <span>开户支行名称：{{detailData.businessResp.bankBranchName}}</span>
-            <span>开户银行地址：{{detailData.businessResp.bankBranchRegion}}</span>
+            <span>开户支行名称：{{detailData.businessResp && detailData.businessResp.bankBranchName}}</span>
+            <span>开户银行地址：{{detailData.businessResp && detailData.businessResp.bankBranchRegion}}</span>
           </div>
           <div class="row">
             <span>备注：{{detailData.detailBusinessSettleVo.remark}}</span>
