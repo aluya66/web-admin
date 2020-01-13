@@ -136,3 +136,12 @@ export const queryShipDetail = params =>
   Http.fetch(`${context}/api/ship/detail`, params, {
     method: 'get'
   })
+
+/**
+ * 查询订单详情信息
+ * @param {*}
+ */
+export const queryStargoList = params =>
+  Http.fetch(`${context}/api/stargo/list`, params, {
+    method: 'get'
+  })

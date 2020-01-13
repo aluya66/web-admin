@@ -35,7 +35,8 @@ export default {
         handle(row) {
           vm.$emit('show-dialog', {
             isEdit: true,
-            initData: row
+            initData: row,
+            title: '物流详情'
           })
         }
       }],

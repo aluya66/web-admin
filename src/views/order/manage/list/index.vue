@@ -80,7 +80,7 @@ import DialogInfo from './dialogInfo'
 import dictObj from '@/store/dictData'
 
 export default {
-  name: 'orderList',
+  name: 'orderManageList',
   mixins: [mixinTable],
   components: {
     OrderInfo,
@@ -138,7 +138,7 @@ export default {
         name: '详情',
         icon: 'el-icon-view',
         handle(row) {
-          vm.routerLink(`/order/detail/${row.orderCode}`)
+          vm.routerLink(`/order/manage/detail/${row.orderCode}`)
         }
       },
       {
