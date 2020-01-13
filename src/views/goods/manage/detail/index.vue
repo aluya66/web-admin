@@ -22,53 +22,57 @@
         <div class="point-name">{{item.name}}</div>
       </div>
     </div>
-    <g-basic
-      :is-view="isView"
-      :is-disabled="isDisabled"
-      :data-obj="formModel"
-      v-if="formModel.id"
-      ref="basicRef"
-      title="基础信息"
-      @show-image="reviewImage"
-    ></g-basic>
-    <g-sales
-      :is-view="isView"
-      :is-disabled="isDisabled"
-      v-if="formModel.id"
-      :data-obj="formModel"
-      ref="salesRef"
-      title="销售信息"
-    ></g-sales>
-    <g-params
-      :is-view="isView"
-      :is-disabled="isDisabled"
-      v-if="formModel.id"
-      :data-obj="formModel"
-      @show-image="reviewImage"
-      ref="paramsRef"
-      title="商品信息"
-    ></g-params>
-    <!-- <g-other
+    <div class="detail-form">
+      <g-basic
+        :is-view="isView"
+        :is-disabled="isDisabled"
+        :data-obj="formModel"
+        v-if="formModel.id"
+        ref="basicRef"
+        title="基础信息"
+        @show-image="reviewImage"
+      ></g-basic>
+      <g-sales
+        :is-view="isView"
+        :is-disabled="isDisabled"
+        v-if="formModel.id"
+        :data-obj="formModel"
+        ref="salesRef"
+        title="销售信息"
+      ></g-sales>
+      <g-params
+        :is-view="isView"
+        :is-disabled="isDisabled"
+        v-if="formModel.id"
+        :data-obj="formModel"
+        @show-image="reviewImage"
+        ref="paramsRef"
+        title="商品信息"
+      ></g-params>
+      <!-- <g-other
         :is-view="isView"
         :is-disabled="isDisabled"
         v-if="formModel.id"
         :data-obj="formModel"
         ref="otherRef"
         title="其他信息"
-    ></g-other>-->
-    <div class="btn-wrapper">
-      <el-button
-        v-if="formModel.detailsType === '部分完善' || formModel.detailsType === '未完善'"
-        :loading="btnLoading"
-        type="primary"
-        @click.native.prevent="submitHandle('partFinish')"
-      >部分完善</el-button>
-      <el-button
-        :loading="btnLoading"
-        type="primary"
-        @click.native.prevent="submitHandle(formModel.detailsType === '已完善' || formModel.detailsType === '完善' ? 'edit' : 'confirmFinish')"
-      >{{ formModel.detailsType === '已完善' || formModel.detailsType === '完善' ? '保存' : '确认完成' }}</el-button>
-      <el-button @click.native.prevent="goBack">取消</el-button>
+      ></g-other>-->
+      <div class="btn-wrapper" v-if="formModel.id">
+        <el-button
+          v-if="formModel.detailsType === '部分完善' || formModel.detailsType === '未完善'"
+          :loading="btnLoading"
+          type="primary"
+          :size="size"
+          @click.native.prevent="submitHandle('partFinish')"
+        >部分完善</el-button>
+        <el-button
+          :loading="btnLoading"
+          type="primary"
+          :size="size"
+          @click.native.prevent="submitHandle(formModel.detailsType === '已完善' || formModel.detailsType === '完善' ? 'edit' : 'confirmFinish')"
+        >{{ formModel.detailsType === '已完善' || formModel.detailsType === '完善' ? '保存' : '确认完成' }}</el-button>
+        <el-button :size="size" @click.native.prevent="goBack">取消</el-button>
+      </div>
     </div>
     <div v-if="dialogObj.isShow">
       <el-dialog :visible.sync="dialogObj.isShow" v-if="dialogObj.imageUrl || dialogObj.videoUrl">
@@ -77,8 +81,8 @@
           :src="dialogObj.imageUrl"
           v-if="dialogObj.fileType === 1"
           style="object-fit: contain;"
-          alt
-        />
+          alt=""
+        >
         <video
           class="video"
           controls
@@ -177,6 +181,7 @@ export default {
                 videoList.push({ url: item.videoUrl })
               }
             }) // 图片、视频资源
+            res.operationName = res.operationName ? res.operationName : res.goodsName // 默认首次同步样衣时，将运营名称设置为商品名称
             this.formModel = { ...res, goodsImageList, videoList, detailsType: params.type }
           } else {
             this.$msgTip('接口数据异常，请稍后重新尝试', 'warning')
@@ -346,9 +351,7 @@ export default {
   }
 }
 .btn-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
+  margin: 20px 0 15px 140px;
 }
 .video {
   max-height: 500px;

@@ -7,24 +7,20 @@ export default {
     this.fetchData()
     this.getSampleGoodsSum()
   },
-  props: {
-    noperfectCount: {
-      type: Number,
-      default: 0
-    }
-  },
   data(vm) {
     return {
-      tableInnerBtns: [
-        {
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-            const { id, perfectName } = row
-            vm.routerLink(`/goods/manage/detail/${id}/${perfectName}`)
-          }
+      count: 0,
+      tableInnerBtns: [{
+        name: '编辑',
+        icon: 'el-icon-edit',
+        handle(row) {
+          const {
+            id,
+            perfectName
+          } = row
+          vm.routerLink(`/goods/manage/detail/${id}/${perfectName}`)
         }
-      ]
+      }]
     }
   },
   methods: {
@@ -32,10 +28,11 @@ export default {
       this.$api.goods.getSampleGoodsSum().then(res => {
         if (res && res.totalCount) {
           const { data } = res
-          this.noperfectCount = data || 0
+          this.count = data || 0
         } else {
-          this.noperfectCount = res || 0
+          this.count = res || 0
         }
+        this.$emit('update-count', this.count)
       })
     },
     getCategoryList() {
@@ -45,26 +42,22 @@ export default {
     },
     getBrandList() {
       this.isLoading = true
-      this.$api.basic
-        .brandList({
-          pageSize: 120,
-          pageNo: 1
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data } = res
-            this.brandList = data || []
-          } else {
-            this.brandList = res || []
-          }
-          this.setSearchOptionsList('brandCode', this.brandList.map((item) => {
-            return {
-              value: item.code,
-              label: item.name
-            }
-          }))
-        })
+      this.$api.basic.brandList({
+        pageSize: 120,
+        pageNo: 1
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data } = res
+          this.brandList = data || []
+        } else {
+          this.brandList = res || []
+        }
+        this.setSearchOptionsList('brandCode', this.brandList.map(item => ({
+          value: item.code,
+          label: item.name
+        })))
+      })
     }
   }
 }
