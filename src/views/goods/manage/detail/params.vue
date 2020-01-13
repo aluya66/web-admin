@@ -11,9 +11,9 @@
       <el-form-item label="识别图:">
         <c-image
           class="coverImg"
-          :url="formModel.coverImg"
+          :url="formModel.identificationImg"
           fit="contain"
-          :preview-src-list="[formModel.coverImg]"
+          :preview-src-list="[formModel.identificationImg]"
         ></c-image>
       </el-form-item>
       <el-form-item class="img-form-item" label="商品图片:" prop="goodsImageList">

@@ -191,6 +191,16 @@
             placeholder="选择日期"
           ></el-date-picker>
         </el-form-item>
+         <el-form-item label="上新时间:" prop="newTime">
+          <el-date-picker
+            disabled
+            v-model="formModel.newTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="dateTime"
+            class="select-item"
+            placeholder="选择日期"
+          ></el-date-picker>
+        </el-form-item>
         <el-form-item label="商品是否可售:" prop="marketable" required>
           <el-radio-group v-model="formModel.marketable" :disabled="isDisabled">
             <el-radio :label="2">否</el-radio>
@@ -299,11 +309,12 @@ export default {
         saleYear, // 年份
         season, // 季节
         sourceSupplierName, // 货源商
-        coverImg, // 识别图/封面图
+        coverImg, // 封面图
         marketable, // 是否可售
         publisher, // 上货人
         businessValue, // 经营类型
         skus,
+        newTime, // 上新时间
         updated,
         created
       } = this.dataObj
@@ -359,6 +370,7 @@ export default {
         publisher,
         skus,
         skuList,
+        newTime, // 上新时间
         updated,
         created
       }

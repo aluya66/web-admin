@@ -132,6 +132,7 @@
                 v-if="childProductArray[index]"
                 v-model.number="childProductArray[index][tdItem.name]"
                 :placeholder="tdItem.label"
+                @change="(val) => { changeSkuPrice(val, index, tdItem.name) }"
                 :disabled="tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
               ></el-input>
             </td>
@@ -518,15 +519,20 @@ export default {
     // 设置是否为主sku
     handleDefaultChange(index, value) {
       if (!value) return
-      // this.childProductArray.forEach((item, cindex) => {
-      //   if (cindex !== index) {
-      //     this.$set(this.childProductArray[cindex], 'isDefalut', false)
-      //   } else {
-      //     this.$set(this.childProductArray[index], 'isDefalut', true)
-      //   }
-      // })
+      this.childProductArray.forEach((item, cindex) => {
+        if (cindex !== index) {
+          this.$set(this.childProductArray[cindex], 'isDefalut', false)
+        } else {
+          this.$set(this.childProductArray[index], 'isDefalut', true)
+        }
+      })
       const target = this.childProductArray[index]
+      this.handleMinPrice(target)
+    },
+    // sku默认选中 则为最新价 【target: 选中的sku】
+    handleMinPrice(target) {
       const minObj = {
+        costprice: target.costPrice, // 成衣成本价
         supplyprice: target.supplyPrice, // 供货价
         wholesaleprice: target.wholesalePrice, // 散批价
         largePrice: target.largeBatchPrice, // 大批价
@@ -534,6 +540,12 @@ export default {
         tagprice: target.retailPrice // 零售价
       }
       this.$emit('set-min-price', minObj)
+    },
+    changeSkuPrice(val, index, priceType) {
+      if (val) {
+        this.$set(this.childProductArray[index], priceType, Number(val).toFixed(2))
+        this.childProductArray[index].isDefalut && this.handleMinPrice(this.childProductArray[index])
+      }
     },
     // 倍率设置
     setRate() {
