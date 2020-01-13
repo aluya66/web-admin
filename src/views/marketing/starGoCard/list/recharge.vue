@@ -34,7 +34,7 @@ import mixinTable from 'mixins/table'
 // import utils from 'utils'
 // import dictObj from '@/store/dictData'
 const statusList = [{
-  label: '未激活',
+  label: '待激活',
   value: 0
 }, {
   label: '已激活',
@@ -44,22 +44,19 @@ const statusList = [{
   value: 2
 }, {
   label: '已使用',
-  value: 3
-}, {
-  label: '过期',
   value: 4
-}, {
-  label: '删除',
-  value: 5
-}, {
-  label: '失效',
-  value: 6
-}, {
-  label: '使用完成',
-  value: 7
 }, {
   label: '过期',
   value: 8
+}, {
+  label: '删除',
+  value: 16
+}, {
+  label: '失效',
+  value: 32
+}, {
+  label: '不在有效期',
+  value: 64
 }]
 export default {
   name: 'starGoCardRechargeList',
@@ -107,7 +104,7 @@ export default {
           label: '类型',
           prop: 'status',
           formatter(row) {
-            return row.status ? statusList[row.status - 1].label : ''
+            return row.status ? statusList[row.status].label : ''
           },
           search: {
             type: 'select',

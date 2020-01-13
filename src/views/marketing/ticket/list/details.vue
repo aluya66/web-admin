@@ -34,7 +34,7 @@ import mixinTable from 'mixins/table'
 // import utils from 'utils'
 // import dictObj from '@/store/dictData'
 const statusList = [{
-  label: '未激活',
+  label: '待激活',
   value: 0
 }, {
   label: '已激活',
@@ -44,22 +44,19 @@ const statusList = [{
   value: 2
 }, {
   label: '已使用',
-  value: 3
-}, {
-  label: '过期',
   value: 4
-}, {
-  label: '删除',
-  value: 5
-}, {
-  label: '失效',
-  value: 6
-}, {
-  label: '使用完成',
-  value: 7
 }, {
   label: '过期',
   value: 8
+}, {
+  label: '删除',
+  value: 16
+}, {
+  label: '失效',
+  value: 32
+}, {
+  label: '不在有效期',
+  value: 64
 }]
 export default {
   name: 'ticketDetailsList',
@@ -114,7 +111,7 @@ export default {
         {
           label: '券号',
           formatter(row) {
-            return row.coupon.couponStoreNo
+            return row.couponStoreNo
           },
           search: {
             prop: 'couponStoreNo',
@@ -152,7 +149,7 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? statusList[row.status - 1].label : ''
+            return row.status ? statusList[row.status].label : ''
           },
           search: {
             type: 'select',
@@ -162,7 +159,7 @@ export default {
         {
           label: '使用时间',
           formatter(row) {
-            return row.useTimeStart ? row.useTimeStart : '' + '~' + row.useTimeEnd ? row.useTimeEnd : ''
+            return row.useCouponTimeStart ? row.useCouponTimeStart : '' + '~' + row.useCouponTimeEnd ? row.useCouponTimeEnd : ''
           },
           search: {
             type: 'dateTime',
@@ -194,7 +191,7 @@ export default {
     fetchData() {
       const { useTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const useTimeObj = this.getSearchDate(useTime, 'dateTime', 'useTimeStart', 'useTimeEnd')
+      const useTimeObj = this.getSearchDate(useTime, 'dateTime', 'useCouponTimeStart', 'useCouponTimeEnd')
       this.isLoading = true
       this.$api.marketing
         .getTicketDetailsList({

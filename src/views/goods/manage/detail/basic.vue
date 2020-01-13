@@ -34,17 +34,17 @@
         </el-form-item>
         <el-form-item
           label="商品完善状态:"
-          v-if="formModel.detailsType !== '已完善' && formModel.detailsType !== '完善'"
+          v-if="formModel.perfectName !== '已完善' && formModel.perfectName !== '完善'"
         >
           <el-input
             v-if="!isView"
             class="select-item"
-            v-model.trim="formModel.detailsType"
+            v-model.trim="formModel.perfectName"
             :size="size"
             disabled
             clearable
           />
-          <span v-else>{{formModel.detailsType}}</span>
+          <span v-else>{{formModel.perfectName}}</span>
         </el-form-item>
       </template>
       <template v-else>
@@ -202,7 +202,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="商品是否可售:" prop="marketable" required>
-          <el-radio-group v-model="formModel.marketable" :disabled="isDisabled">
+          <el-radio-group v-model="formModel.marketable" :disabled="formModel.perfectName !== '已完善' && formModel.perfectName !== '完善'">
             <el-radio :label="2">否</el-radio>
             <el-radio :label="1">是</el-radio>
           </el-radio-group>
@@ -298,7 +298,7 @@ export default {
       const {
         goodsName, // 商品图片
         operationName, // 运营名称
-        detailsType, // 商品完善状态
+        perfectName, // 商品完善状态
         categoryCode, // 分类code
         categoryName, // 分类名称
         goodsBn, // 商品款号
@@ -353,7 +353,7 @@ export default {
       this.formModel = {
         goodsName, // 商品图片
         operationName, // 运营名称
-        detailsType, // 商品完善状态
+        perfectName, // 商品完善状态
         categoryCode, // 分类code
         categoryName, // 分类名称
         goodsBn, // 商品款号
@@ -365,7 +365,7 @@ export default {
         season: seasonCN, // 季节
         sourceSupplierName, // 货源商
         coverImg, // 识别图/封面图
-        marketable: marketable || 0, // 是否可售
+        marketable, // 是否可售
         businessValue,
         publisher,
         skus,
