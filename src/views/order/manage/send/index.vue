@@ -27,15 +27,34 @@
         </template>
       </c-table>
     </div>
-    <div>dfdfdfdf</div>
+    <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        no-btn
+        @before-close="dialogObj.isShow = false"
+      >
+        <send-detail
+          ref="childRef"
+          :init-data.sync="dialogObj.initData"
+          :is-edit="dialogObj.isEdit"
+        ></send-detail>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import dictObj from '@/store/dictData'
+import CDialog from 'components/dialog'
+import sendDetail from './detail'
 export default {
-  name: 'orderSend',
+  name: 'orderManageSend',
   mixins: [mixinTable],
+  components: {
+    CDialog,
+    sendDetail
+  },
   data(vm) {
     return {
       // 对话框对象
@@ -47,7 +66,7 @@ export default {
           icon: 'el-icon-view',
           handle(row) {
             vm.showDialog({
-              title: '支付单明细',
+              title: '发货单明细',
               initData: row
             })
           }
@@ -72,21 +91,27 @@ export default {
         {
           label: '用户名',
           prop: 'buyerNick',
-          search:{
-            label:'收货人手机号',
-            prop:'mobile',
-            type:'input'
+          search: {
+            label: '收货人手机号',
+            prop: 'mobile',
+            type: 'input'
           }
         },
         {
           label: '物流公司',
-          prop: 'deliveryName',
+          prop: 'deliveryName'
         },
         {
           label: '物流单号',
           prop: 'deliveryNo',
           search: {
             type: 'input'
+          }
+        },
+        {
+          label: '收货地址',
+          formatter(row) {
+            return row.provinceName + ' ' + row.cityName + ' ' + row.regionName + ' ' + row.address
           }
         },
         {
@@ -104,8 +129,8 @@ export default {
   created() {
     this.fetchData()
   },
-  methods:{
-      /*
+  methods: {
+    /*
 		 * 查询表格列表数据
 		 */
     fetchData() {
@@ -128,7 +153,7 @@ export default {
         }
       })
     },
-     /**
+    /**
      * dialog对话框数据处理
      * @opts {*}
      */
