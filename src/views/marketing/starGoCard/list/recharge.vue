@@ -141,7 +141,7 @@ export default {
     fetchData() {
       const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
-      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'createdBegin', 'createdEnd')
+      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'createdTimeBegin', 'createdTimeEnd')
       this.isLoading = true
       this.$api.marketing
         .starGoCardRechargeList({
