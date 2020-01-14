@@ -245,7 +245,7 @@ export default {
       }) : []
       if (skus.some((item) => !item.imageUrl)) return this.$msgTip('sku图片不能为空', 'warning') // 判断sku是否都有图片
       if (type === 'confirmFinish' || type === 'edit') { // 编辑、确认完成需要 有默认主sku
-        if (!skus.some((item) => item.isDefalut === 1)) return this.$msgTip('请选择一个作为主sku', 'warning')  
+        if (!skus.some((item) => item.isDefalut === 1)) return this.$msgTip('请选择一个作为主sku', 'warning')
       }
       requestFun[type]({
         id, // 商品Id

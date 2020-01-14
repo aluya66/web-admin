@@ -5,6 +5,7 @@ export default {
     bussiness: '业务线',
     area: '区域管理',
     version: '版本管理',
+    exportList: '导出列表',
     category: '商品类目',
     brand: '品牌管理',
     brandInfo: '品牌信息',
