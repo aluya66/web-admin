@@ -21,6 +21,15 @@
     <div class="sku-box">
       <div class="label">倍率:</div>
       <div class="content-box">
+        <el-input
+          size="mini"
+          class="rate-set hidden"
+          disabled
+          clearable
+          placeholder="123"
+        >
+          <template slot="prepend">123</template>
+        </el-input>
         <template>
           <el-input
             v-for="(item, index) in rateList"
@@ -36,12 +45,15 @@
           >
             <template slot="prepend">{{item.label}}</template>
           </el-input>
-          <!-- <el-button type="primary" size="mini" @click="setBatch">
-            <i class="set-btn blue el-icon-check"></i>批量设置
-          </el-button>-->
+          <!-- <el-button type="primary" size="mini" @click="setBatch">计算</el-button> -->
         </template>
       </div>
     </div>
+    <!-- <div class="sku-box">
+      <p
+        class="rate-text"
+      >当前品牌倍率为：供货价: {{rateListFromPort[0].value}}倍;散批价:{{rateListFromPort[1].value}}倍;大批价:{{rateListFromPort[2].value}}倍;会员价:{{rateListFromPort[3].value}}倍;零售价:{{rateListFromPort[4].value}}倍;</p>
+    </div>-->
     <div class="sku-box">
       <div class="label">SKU批量填充:</div>
       <div class="content-box">
@@ -61,9 +73,7 @@
           >
             <template slot="prepend">{{item.label}}</template>
           </el-input>
-          <!-- <el-button type="primary" size="mini" @click="setBatch">
-            <i class="set-btn blue el-icon-check"></i>批量设置
-          </el-button>-->
+          <!-- <el-button type="primary" size="mini" @click="setBatch">确认</el-button> -->
         </template>
       </div>
     </div>
@@ -101,13 +111,13 @@
                   action="/api/upload/file"
                   :http-request="uploadHandle"
                   :size="10"
-                  :limit="1"
-                  :fileList="specification[specIndex].fileList"
+                  :limit="2"
+                  :fileList="specification[specIndex].fileList[index/countSum(specIndex + 1)]"
                   @on-success="uploadSuccess"
-                  :on-remove="uploadRemove"
+                  :on-remove="(file, fileList) => { uploadIndex=index/countSum(specIndex + 1); uploadRemove(file, fileList) }"
                   :on-preview="uploadReview"
-                  @on-change="uploadIndex=specIndex"
                 >
+                  <!-- @on-change="uploadIndex=specIndex" -->
                   <el-button size="small" type="primary" @click="changeSku(index, specIndex)">点击上传</el-button>
                   <div slot="tip" class="el-upload__tip">只能上传图片png/jepg后缀文件，且不超过10M</div>
                 </c-upload>
@@ -244,6 +254,7 @@ export default {
       uploadIndex: '', // sku 列表属性
       batchIndex: '', // 批量设置下标
       rateIndex: '', // 倍率下标
+      rateListFromPort: [], // 接口返回的倍率
       rateList: [{ // 倍率列表
         label: '供货倍率',
         value: '',
@@ -328,6 +339,8 @@ export default {
         // this.specification[i].posterUrl = this.skuAttrs[i].posterUrl || [] // 从颜色那个规格取图片
         if (i === 0) {
           this.specification[i].posterUrl = this.skuAttrs[i].posterUrl // 从颜色那个规格取图片
+          this.specification[i].fileList = this.skuAttrs[i].posterUrl.map((item) => ([{ url: item }])) // 从颜色那个规格取图片
+          console.log(this.specification[i].fileList)
         }
         // 缓存按钮键值
         this.cacheSpecification[i].status = false
@@ -345,16 +358,19 @@ export default {
           }
         })
       })
+      // this.rateListFromPort = JSON.parse(JSON.stringify(this.rateList))
     },
     // 上传图片成功
     uploadSuccess(response, file, fileList) {
-      this.specification[this.uploadIndex].fileList = [fileList[fileList.length - 1]] // 获取最后一张覆盖原图
+      this.specification[0].fileList[this.uploadIndex] = [fileList[fileList.length - 1]] // 获取最后一张覆盖原图
       this.specification[0].posterUrl[this.uploadIndex] = fileList[fileList.length - 1].url
       this.specification = JSON.parse(JSON.stringify(this.specification))
     },
     // 删除图片
     uploadRemove(file, fileList) {
-      this.specification[this.uploadIndex].fileList = fileList
+      this.specification[0].posterUrl[this.uploadIndex] = ''
+      this.specification[0].fileList[this.uploadIndex] = fileList
+      this.specification = JSON.parse(JSON.stringify(this.specification))
     },
     // 预览图片
     uploadReview(file) {
@@ -740,6 +756,13 @@ export default {
         padding-right: 5px;
         width: 200px;
       }
+      .hidden {
+        margin-right: -5px;
+        visibility: hidden;
+      }
+    }
+    .rate-text {
+      color: blue;
     }
   }
   .pic {

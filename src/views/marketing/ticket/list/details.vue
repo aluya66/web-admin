@@ -75,9 +75,9 @@ export default {
             }]
           },
           handle(row) {
-            const { couponRuleId, coupon } = row
+            const { userCouponId, coupon } = row
             vm.confirmTip(`确认核销  ${coupon.couponName ? coupon.couponName : ''}  劵信息, 操作不可撤回!`, () => {
-              vm.verifyData({ couponRuleId })
+              vm.verifyData({ userCouponId })
             })
           }
         }
@@ -141,15 +141,13 @@ export default {
         },
         {
           label: '券金额',
-          formatter(row) {
-            return row.coupon.couponAmount
-          }
+          prop: 'couponAmount'
         },
         {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? statusList[row.status].label : ''
+            return row && vm.setTableColumnLabel(row.status, statusList)
           },
           search: {
             type: 'select',
@@ -158,9 +156,7 @@ export default {
         },
         {
           label: '使用时间',
-          formatter(row) {
-            return row.useCouponTimeStart ? row.useCouponTimeStart : '' + '~' + row.useCouponTimeEnd ? row.useCouponTimeEnd : ''
-          },
+          prop: 'useTime',
           search: {
             type: 'dateTime',
             prop: 'useTime'

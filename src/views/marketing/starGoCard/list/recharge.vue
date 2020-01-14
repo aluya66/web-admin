@@ -87,7 +87,7 @@ export default {
         },
         {
           label: '手机号',
-          prop: 'mobile',
+          prop: 'phoneNumber',
           search: {
             type: 'input'
           }
@@ -104,7 +104,7 @@ export default {
           label: '类型',
           prop: 'status',
           formatter(row) {
-            return row.status ? statusList[row.status].label : ''
+            return row && vm.setTableColumnLabel(row.status, statusList)
           },
           search: {
             type: 'select',
