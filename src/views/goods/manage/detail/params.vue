@@ -17,7 +17,12 @@
         ></c-image>
       </el-form-item>
       <el-form-item class="img-form-item" label="商品图片:" prop="goodsImageList">
-        <el-button :size="size" type="primary" @click="showDialog('image')" :disabled="isDisabled">上传图片</el-button>
+        <el-button
+          :size="size"
+          type="primary"
+          @click="showDialog('image')"
+          :disabled="isDisabled"
+        >上传图片</el-button>
         <div
           class="resource-wrapper"
           v-if="formModel.goodsImageList && formModel.goodsImageList.length"
@@ -37,8 +42,19 @@
         </div>
       </el-form-item>
       <el-form-item label="商品视频:" prop="videoList">
-        <el-button type="primary" :size="size" @click="showDialog('video')" :disabled="isDisabled">上传视频</el-button>
-        <el-button type="primary" v-if="formModel.videoList && formModel.videoList.length" :size="size" @click="deleteImg('videoList', 0)" :disabled="isDisabled">删除</el-button>
+        <el-button
+          type="primary"
+          :size="size"
+          @click="showDialog('video')"
+          :disabled="isDisabled"
+        >上传视频</el-button>
+        <el-button
+          type="primary"
+          v-if="formModel.videoList && formModel.videoList.length"
+          :size="size"
+          @click="deleteImg('videoList', 0)"
+          :disabled="isDisabled"
+        >删除</el-button>
         <div class="resource-wrapper" v-if="formModel.videoList && formModel.videoList.length">
           <c-image
             class="coverImg"
@@ -226,6 +242,7 @@ export default {
       display: flex;
       justify-content: center;
       flex-direction: column;
+      margin-right: 10px;
       width: 200px;
       height: 200px;
       .image {

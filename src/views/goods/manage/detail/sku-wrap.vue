@@ -112,7 +112,7 @@
                   :http-request="uploadHandle"
                   :size="10"
                   :limit="2"
-                  :fileList="specification[specIndex].fileList[index/countSum(specIndex + 1)]"
+                  :fileList="[]"
                   @on-success="uploadSuccess"
                   :on-remove="(file, fileList) => { uploadIndex=index/countSum(specIndex + 1); uploadRemove(file, fileList) }"
                   :on-preview="uploadReview"
@@ -339,8 +339,7 @@ export default {
         // this.specification[i].posterUrl = this.skuAttrs[i].posterUrl || [] // 从颜色那个规格取图片
         if (i === 0) {
           this.specification[i].posterUrl = this.skuAttrs[i].posterUrl // 从颜色那个规格取图片
-          this.specification[i].fileList = this.skuAttrs[i].posterUrl.map((item) => ([{ url: item }])) // 从颜色那个规格取图片
-          console.log(this.specification[i].fileList)
+          // this.specification[i].fileList = this.skuAttrs[i].posterUrl.map((item, index) => ([{ url: item, name: `sku图片${index + 1 }`}])) // 从颜色那个规格取图片
         }
         // 缓存按钮键值
         this.cacheSpecification[i].status = false
@@ -362,14 +361,14 @@ export default {
     },
     // 上传图片成功
     uploadSuccess(response, file, fileList) {
-      this.specification[0].fileList[this.uploadIndex] = [fileList[fileList.length - 1]] // 获取最后一张覆盖原图
+      // this.specification[0].fileList[this.uploadIndex] = [fileList[fileList.length - 1]] // 获取最后一张覆盖原图
       this.specification[0].posterUrl[this.uploadIndex] = fileList[fileList.length - 1].url
       this.specification = JSON.parse(JSON.stringify(this.specification))
     },
     // 删除图片
     uploadRemove(file, fileList) {
       this.specification[0].posterUrl[this.uploadIndex] = ''
-      this.specification[0].fileList[this.uploadIndex] = fileList
+      // this.specification[0].fileList[this.uploadIndex] = fileList
       this.specification = JSON.parse(JSON.stringify(this.specification))
     },
     // 预览图片
