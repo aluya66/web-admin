@@ -176,8 +176,8 @@ export default {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
           this.tableList = data.orderVipResp || []
-          this.totalSellPrice = data.orderDataCountResp.confirmPaidAmount
-          this.totalEarnings = data.orderDataCountResp.orderQuantity
+          this.totalSellPrice = data.orderDataCountResp.orderQuantity
+          this.totalEarnings = data.orderDataCountResp.confirmPaidAmount
         } else {
           this.tableList = res || []
           this.totalSellPrice = '0.00'
