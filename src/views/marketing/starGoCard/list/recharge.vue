@@ -104,7 +104,7 @@ export default {
           label: '类型',
           prop: 'status',
           formatter(row) {
-            return row.status ? statusList[row.status].label : ''
+            return row && vm.setTableColumnLabel(row.status, statusList)
           },
           search: {
             type: 'select',
@@ -152,6 +152,7 @@ export default {
         })
         .then(res => {
           this.isLoading = false
+          console.log(res, 999999)
           if (res && res.totalCount) {
             const { data, totalCount } = res
             this.pageInfo.totalNum = totalCount

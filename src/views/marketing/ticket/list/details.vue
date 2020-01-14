@@ -90,7 +90,7 @@ export default {
           fixed: true,
           search: {
             type: 'dateTime',
-            prop: 'createTime'
+            prop: 'activateTime'
           }
         },
         {
@@ -149,7 +149,7 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? statusList[row.status].label : ''
+            return row && vm.setTableColumnLabel(row.status, statusList)
           },
           search: {
             type: 'select',
@@ -189,13 +189,15 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { useTime, ...other } = this.searchObj
+      const { useTime, activateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const useTimeObj = this.getSearchDate(useTime, 'dateTime', 'useCouponTimeStart', 'useCouponTimeEnd')
+      const activateTimeObj = this.getSearchDate(activateTime, 'dateTime', 'activateCouponTimeStart', 'activateCouponTimeEnd')
       this.isLoading = true
       this.$api.marketing
         .getTicketDetailsList({
           ...useTimeObj,
+          ...activateTimeObj,
           ...page,
           ...other
         })
