@@ -146,7 +146,6 @@ export default {
         {
           label: '支付时间',
           prop: 'created',
-          width: 100,
           search: {
             type: 'dateTime',
             prop: 'dateTime'

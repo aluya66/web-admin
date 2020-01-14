@@ -353,6 +353,9 @@ const orderStatusList = [{
 }, {
   label: '已完成',
   value: 60
+}, {
+  label: '订单完结',
+  value: 70
 }
 // , {
 //   label: '未审核',
@@ -366,10 +369,7 @@ const orderStatusList = [{
 // }, {
 //   label: '审核不通过',
 //   value: 40
-// }, {
-//   label: '订单完结',
-//   value: 70
-// }
+// },
 ]
 
 // 售后状态

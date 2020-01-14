@@ -47,6 +47,7 @@ export default {
     orderManageDetail: '订单详情',
     orderManageStargo: '星购卡列表',
     orderManagePay: '支付单列表',
+    orderManageStatistics: '商品统计',
     channel: '分销渠道',
     channelList: '店铺列表',
     channelMerchant: '商户管理',
