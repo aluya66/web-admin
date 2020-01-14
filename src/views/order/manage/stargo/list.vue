@@ -54,15 +54,15 @@ export default {
           }
         },
         {
-          label: '星购卡金额',
+          label: '星购卡金额(元)',
           prop: 'thirdPartyPaycode'
         },
         {
-          label: '星购卡金额',
+          label: '星购卡金额(元)',
           prop: 'denominationAmount'
         },
         {
-          label: '赠送金额',
+          label: '赠送金额(元)',
           prop: 'giveAmount'
         },
         {
@@ -80,8 +80,9 @@ export default {
           label: '购卡时间',
           prop: 'created',
           search: {
+            prop: 'dateTime',
             type: 'dateTime',
-            prop: 'dateTime'
+            dateType: 'datetimerange'
           }
         }
       ]
@@ -97,7 +98,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, '', 'orderPayStartTime', 'orderPayEndTime')
+      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'orderPayStartTime', 'orderPayEndTime')
       this.isLoading = true
       this.$api.order.queryStargoList({
         ...searchDate,

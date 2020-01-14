@@ -96,7 +96,7 @@ export default {
           label: '支付状态',
           prop: 'payStatus',
           formatter(row) {
-            return row.payStatus || vm.setTableColumnLabel(row.payStatus, 'payStatusList')
+            return row.payStatus || vm.setTableColumnLabel(row.payStatus, payStatusList)
           },
           search: {
             type: 'dict',
@@ -114,6 +114,7 @@ export default {
           label: '第三方支付流水号',
           prop: 'thirdPartyPayCode',
           search: {
+            labelWidth:'150px',
             type: 'input'
           }
         },
@@ -129,7 +130,7 @@ export default {
           label: '开通类型',
           prop: 'orderSourceWay',
           formatter(row) {
-            return row.orderSourceWay || vm.setTableColumnLabel(row.orderSourceWay, 'orderSourceWayList')
+            return row.orderSourceWay || vm.setTableColumnLabel(row.orderSourceWay, orderSourceWayList)
           },
           search: {
             type: 'dict',
@@ -149,7 +150,7 @@ export default {
           search: {
             type: 'input'
           }
-        },
+        }
       ]
     }
   },
