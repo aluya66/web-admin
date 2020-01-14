@@ -71,6 +71,16 @@ export default {
         roles: ['admin']
       }
     },
+    {
+      path: '/order/manage/viplist',
+      name: 'orderManageSend',
+      component: () => import('@/views/order/manage/viplist/index'),
+      meta: {
+        title: 'orderManageVip',
+        icon: 'table',
+        roles: ['admin']
+      }
+    }
     // {
     //   path: '/order/manage/sendDetail/:id?',
     //   name: 'orderManageSendDetail',

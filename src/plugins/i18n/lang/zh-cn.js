@@ -42,6 +42,7 @@ export default {
     order: '订单中心',
     orderManage: '订单管理',
     orderManageSend: '发货单列表',
+    orderManageVip:'VIP会员订单列表',
     orderManageList: '订单列表',
     orderManageDetail: '订单详情',
     orderManageStargo: '星购卡列表',
