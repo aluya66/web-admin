@@ -3,6 +3,15 @@ import Http from '../utils/request'
 const context = process.env.VUE_APP_CONSOLE_COMMON
 
 /**
+ * 导出列表
+ * @param {*} params
+ */
+export const getExportList = params =>
+  Http.fetch(`${context}/api/down/documentlist`, params, {
+    method: 'get'
+  })
+
+/**
  * 添加业务线
  * @param {*} params
  */

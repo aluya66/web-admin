@@ -12,12 +12,10 @@ export const setPartPerfectGoods = params =>
     method: 'put'
   })
 
-// 商品 导出
+// 商品 数据上传
 export const exportGoods = params =>
   Http.fetch(`${context}/api/goods/export`, params, {
-    method: 'get',
-    responseType: 'arraybuffer',
-    hasErrMsg: true
+    method: 'get'
   })
 
 // 商品 完善
