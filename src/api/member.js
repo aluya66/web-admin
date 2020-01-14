@@ -11,6 +11,22 @@ export const getMember = params =>
     mockFile: 'member-list'
   })
 
+/**
+ * @param {*} 后台开通会员
+ */
+export const addMember = params =>
+  Http.fetch(`${context}/api/member`, params, {
+    method: 'post'
+  })
+
+/**
+ * @param {*} 后台开通会员
+ */
+export const cancelMember = params =>
+  Http.fetch(`${context}/api/member/cancel`, params, {
+    method: 'put'
+  })
+
 // 修改会员
 export const updateMember = params =>
   Http.fetch(`${context}/api/member`, params, {
