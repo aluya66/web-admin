@@ -21,6 +21,15 @@
     <div class="sku-box">
       <div class="label">倍率:</div>
       <div class="content-box">
+        <el-input
+          size="mini"
+          class="rate-set hidden"
+          disabled
+          clearable
+          placeholder="123"
+        >
+          <template slot="prepend">123</template>
+        </el-input>
         <template>
           <el-input
             v-for="(item, index) in rateList"
@@ -44,7 +53,7 @@
       <p
         class="rate-text"
       >当前品牌倍率为：供货价: {{rateListFromPort[0].value}}倍;散批价:{{rateListFromPort[1].value}}倍;大批价:{{rateListFromPort[2].value}}倍;会员价:{{rateListFromPort[3].value}}倍;零售价:{{rateListFromPort[4].value}}倍;</p>
-    </div> -->
+    </div>-->
     <div class="sku-box">
       <div class="label">SKU批量填充:</div>
       <div class="content-box">
@@ -746,6 +755,10 @@ export default {
         margin-top: 8px;
         padding-right: 5px;
         width: 200px;
+      }
+      .hidden {
+        margin-right: -5px;
+        visibility: hidden;
       }
     }
     .rate-text {

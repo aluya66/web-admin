@@ -147,7 +147,7 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? statusList[row.status].label : ''
+            return row && vm.setTableColumnLabel(row.status, statusList)
           },
           search: {
             type: 'select',
