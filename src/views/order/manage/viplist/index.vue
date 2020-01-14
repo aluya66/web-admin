@@ -96,7 +96,7 @@ export default {
           label: '支付状态',
           prop: 'payStatus',
           formatter(row) {
-            return row.payStatus || vm.setTableColumnLabel(row.payStatus, payStatusList)
+            return row&&vm.setTableColumnLabel(row.payStatus, payStatusList)
           },
           search: {
             type: 'dict',
@@ -130,7 +130,7 @@ export default {
           label: '开通类型',
           prop: 'orderSourceWay',
           formatter(row) {
-            return row.orderSourceWay || vm.setTableColumnLabel(row.orderSourceWay, orderSourceWayList)
+            return row&&vm.setTableColumnLabel(row.orderSourceWay, orderSourceWayList)
           },
           search: {
             type: 'dict',
@@ -176,8 +176,8 @@ export default {
           const { data, totalCount } = res
           this.pageInfo.totalNum = totalCount
           this.tableList = data.orderVipResp || []
-          this.totalSellPrice = data.confirmPaidAmount
-          this.totalEarnings = data.orderQuantity
+          this.totalSellPrice = data.orderDataCountResp.confirmPaidAmount
+          this.totalEarnings = data.orderDataCountResp.orderQuantity
         } else {
           this.tableList = res || []
           this.totalSellPrice = '0.00'
@@ -188,3 +188,23 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.over-view {
+  border: 1px solid @light_gray;
+  padding: 20px 20px;
+  display: flex;
+  div {
+    text-align: center;
+    min-width: 200px;
+    &:first-child {
+      border-right: 1px solid @border-default;
+    }
+    span {
+      display: block;
+      &:first-child {
+        color: @active;
+      }
+    }
+  }
+}
+</style>
