@@ -8,7 +8,7 @@
       :rules="salesForm"
       label-position="right"
     >
-      <el-form-item label="商品规格:">
+      <el-form-item label="">
         <sku-wrap
           ref="skuWrapRef"
           :is-view="isView || isDisabled"

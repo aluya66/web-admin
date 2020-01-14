@@ -138,9 +138,10 @@ export default {
   methods: {
     handleScroll() {
       const top = document.documentElement.scrollTop
+      console.log(top)
       if (top >= 0 && top < 900) {
         this.currentPoint = 0
-      } else if (top >= 900 && top < 2500) {
+      } else if (top >= 900 && top < 1800) {
         this.currentPoint = 1
       } else {
         this.currentPoint = 2
@@ -243,11 +244,9 @@ export default {
         }
       }) : []
       if (skus.some((item) => !item.imageUrl)) return this.$msgTip('sku图片不能为空', 'warning') // 判断sku是否都有图片
-      // if (type === 'confirmFinish') { // 确认完成需要信息填写完整
-      //   if (!operationName) return this.$msgTip('请填写运营名称', 'warning')
-      //   if (videoList.length === 0) return this.$msgTip('请填写商品视频', 'warning')
-      //   if (!intro) return this.$msgTip('请填写商品详情', 'warning')
-      // }
+      if (type === 'confirmFinish' || type === 'edit') { // 编辑、确认完成需要 有默认主sku
+        if (!skus.some((item) => item.isDefalut === 1)) return this.$msgTip('请选择一个作为主sku', 'warning')
+      }
       requestFun[type]({
         id, // 商品Id
         operationName, // 运营名称

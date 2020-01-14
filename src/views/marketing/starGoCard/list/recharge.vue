@@ -89,6 +89,7 @@ export default {
           label: '手机号',
           prop: 'phoneNumber',
           search: {
+            prop: 'mobile',
             type: 'input'
           }
         },
