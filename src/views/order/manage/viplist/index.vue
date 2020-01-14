@@ -4,16 +4,6 @@
       <div class="title">{{$route.meta.name || $t(`route.${$route.meta.title}`)}}</div>
     </template>
     <div class="main__box">
-      <div class="over-view">
-        <div>
-          <span>{{totalSellPrice}}</span>
-          <span>订单总数</span>
-        </div>
-        <div>
-          <span>{{totalEarnings}}</span>
-          <span>订单实付金额(元)</span>
-        </div>
-      </div>
       <c-table
         ref="cTable"
         selection
@@ -34,6 +24,16 @@
             @submit-form="searchSubmit"
             @reset-form="searchReset"
           ></c-search>
+          <div class="header-btn over-view">
+            <div>
+              <span>{{totalSellPrice}}</span>
+              <span>订单总数</span>
+            </div>
+            <div>
+              <span>{{totalEarnings}}</span>
+              <span>订单实付金额(元)</span>
+            </div>
+          </div>
         </template>
       </c-table>
     </div>
@@ -71,18 +71,10 @@ export default {
       // 表格内操作按钮
       tableHeader: [
         {
-          label: '订单号',
+          label: '订单编号',
           prop: 'orderCode',
           search: {
             type: 'input'
-          }
-        },
-        {
-          label: '下单时间',
-          prop: 'beginTime',
-          search: {
-            type: 'dateTime',
-            prop: 'dateTime'
           }
         },
         {
@@ -96,7 +88,7 @@ export default {
           label: '支付状态',
           prop: 'payStatus',
           formatter(row) {
-            return row&&vm.setTableColumnLabel(row.payStatus, payStatusList)
+            return row && vm.setTableColumnLabel(row.payStatus, payStatusList)
           },
           search: {
             type: 'dict',
@@ -111,26 +103,17 @@ export default {
           }
         },
         {
-          label: '第三方支付流水号',
+          label: '第三方流水号',
           prop: 'thirdPartyPayCode',
           search: {
-            labelWidth:'150px',
             type: 'input'
-          }
-        },
-        {
-          label: '支付时间',
-          prop: 'payBeginTime',
-          search: {
-            type: 'dateTime',
-            prop: 'dateTime'
           }
         },
         {
           label: '开通类型',
           prop: 'orderSourceWay',
           formatter(row) {
-            return row&&vm.setTableColumnLabel(row.orderSourceWay, orderSourceWayList)
+            return row && vm.setTableColumnLabel(row.orderSourceWay, orderSourceWayList)
           },
           search: {
             type: 'dict',
@@ -150,6 +133,21 @@ export default {
           search: {
             type: 'input'
           }
+        },
+        {
+          label: '下单时间',
+          prop: 'beginTime',
+          search: {
+            type: 'dateTime',
+            prop: 'dateTime'
+          }
+        },
+        {
+          label: '支付时间',
+          prop: 'payBeginTime',
+          search: {
+            type: 'dateTime'
+          }
         }
       ]
     }
@@ -163,11 +161,13 @@ export default {
    */
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
-      const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime)
+      const { dateTime, payBeginTime, ...other } = this.searchObj
+      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
+      const paySearchDate = this.getSearchDate(dateTime, '', 'payBeginTime', 'payEndTime')
       this.isLoading = true
       this.$api.order.queryVipList({
         ...searchDate,
+        ...paySearchDate,
         ...other,
         ...page
       }).then(res => {

@@ -117,7 +117,6 @@ export default {
         {
           label: '创建时间',
           prop: 'created',
-          width: 100,
           search: {
             type: 'dateTime',
             prop: 'dateTime'
