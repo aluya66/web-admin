@@ -35,10 +35,32 @@ import mixinTable from 'mixins/table'
 export default {
   name: 'orderSend',
   mixins: [mixinTable],
-  data() {
+  data(vm) {
     return {
+      // 对话框对象
+      dialogObj: {},
+      // 表格内操作按钮
+      tableInnerBtns: [
+        {
+          name: '明细',
+          icon: 'el-icon-view',
+          handle(row) {
+            vm.showDialog({
+              title: '支付单明细',
+              initData: row
+            })
+          }
+        }
+      ],
       // 表格内操作按钮
       tableHeader: [
+        {
+          label: '发货单号',
+          prop: 'outboundCode',
+          search: {
+            type: 'input'
+          }
+        },
         {
           label: '订单号',
           prop: 'orderCode',
@@ -47,21 +69,27 @@ export default {
           }
         },
         {
-          label: '支付单号',
-          prop: 'flowCode',
+          label: '用户名',
+          prop: 'buyerNick',
+          search: {
+            label: '收货人手机号',
+            prop: 'mobile',
+            type: 'input'
+          }
+        },
+        {
+          label: '物流公司',
+          prop: 'deliveryName'
+        },
+        {
+          label: '物流单号',
+          prop: 'deliveryNo',
           search: {
             type: 'input'
           }
         },
         {
-          label: '客户手机号',
-          prop: 'buyerMobile',
-          search: {
-            type: 'input'
-          }
-        },
-        {
-          label: '支付时间',
+          label: '创建时间',
           prop: 'created',
           width: 100,
           search: {
@@ -69,8 +97,47 @@ export default {
             prop: 'dateTime'
           }
         }
-
       ]
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    /*
+		 * 查询表格列表数据
+		 */
+    fetchData() {
+      const { totalNum, ...page } = this.pageInfo
+      const { dateTime, ...other } = this.searchObj
+      const searchDate = this.getSearchDate(dateTime, '', 'orderCreateStartTime', 'orderCreateEndTime')
+      this.isLoading = true
+      this.$api.order.queryDeliveryList({
+        ...searchDate,
+        ...other,
+        ...page
+      }).then(res => {
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        } else {
+          this.tableList = res || []
+        }
+      })
+    },
+    /**
+     * dialog对话框数据处理
+     * @opts {*}
+     */
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        isEdit: opts.isEdit || false,
+        title: opts.title || '新增',
+        initData: opts.initData
+      }
     }
   }
 }
