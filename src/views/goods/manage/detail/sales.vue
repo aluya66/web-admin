@@ -167,7 +167,7 @@ export default {
     this.formModel = {
       goodsBn,
       skus,
-      mustQuantity, // 起订量
+      mustQuantity: mustQuantity || 1, // 起订量 没返回默认1
       sampleCostprice, // 样衣成本
       supplyprice, // 供货价
       largePrice, // 大批价
