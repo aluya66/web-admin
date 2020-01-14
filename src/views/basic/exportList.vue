@@ -61,10 +61,6 @@ export default {
           prop: 'appCode',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.appCode, 'lobList')
-          },
-          search: {
-            type: 'dict',
-            optionsList: dictObj.lobList
           }
         },
         {
