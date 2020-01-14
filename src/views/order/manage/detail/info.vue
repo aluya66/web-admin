@@ -4,7 +4,7 @@
       <div class="row">
         <span>订单号：{{orderInfo.orderNewResp.parentCode}}</span>
         <span>子订单：{{orderInfo.orderNewResp.orderCode}}</span>
-        <span>订单类型：{{setEnumValue(orderInfo.orderNewResp.orderCategory, shopTypeList)}}</span>
+        <span>订单类型：{{setEnumValue(orderInfo.orderNewResp.orderType, orderTypeList)}}</span>
         <span>订单渠道：{{setEnumValue(orderInfo.orderNewResp.appCode, lobList)}}</span>
       </div>
       <div class="row">
@@ -60,6 +60,7 @@
         <span>发票类型：{{orderInfo.orderInvoiceDto.invoiceType}}</span>
       </div>
       <div class="row">
+        <span>收票人邮箱：{{orderInfo.orderInvoiceDto.recipientMail}}</span>
         <span>发票内容：{{orderInfo.orderInvoiceDto.content}}</span>
       </div>
     </line-card>
@@ -120,6 +121,17 @@ export default {
   },
   data() {
     return {
+      // 订单类型
+      orderTypeList: [{
+        label: '父订单',
+        value: 0
+      }, {
+        label: '商品订单',
+        value: 1
+      }, {
+        label: '虚拟订单',
+        value: 2
+      }],
       orderSourceWayList: [{
         label: '线上订单',
         value: 1
@@ -130,8 +142,7 @@ export default {
       lobList: dictObj.lobList,
       payStatusList: dictObj.payStatusList,
       settleStatusList: dictObj.settleStatusList,
-      orderStatusList: dictObj.orderStatusList,
-      shopTypeList: dictObj.shopTypeList
+      orderStatusList: dictObj.orderStatusList
     }
   },
   components: {

@@ -55,10 +55,6 @@ export default {
         },
         {
           label: '星购卡金额(元)',
-          prop: 'thirdPartyPaycode'
-        },
-        {
-          label: '星购卡金额(元)',
           prop: 'denominationAmount'
         },
         {
@@ -98,7 +94,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'orderPayStartTime', 'orderPayEndTime')
+      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'beginTime', 'endTime')
       this.isLoading = true
       this.$api.order.queryStargoList({
         ...searchDate,

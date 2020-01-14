@@ -47,7 +47,7 @@ export default {
         },
         {
           label: '第三方流水号',
-          prop: 'flowCode'
+          prop: 'thirdPartyPaycode'
         },
         {
           label: '支付金额(元)',

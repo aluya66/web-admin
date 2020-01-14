@@ -136,11 +136,11 @@ export default {
         },
         {
           label: '可售后数量',
-          prop: ''
+          prop: 'canAfterSalesQuantity'
         },
         {
           label: '可发货数量',
-          prop: ''
+          prop: 'canShipQuantity'
         }
       ]
     }
