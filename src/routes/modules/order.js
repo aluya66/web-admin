@@ -62,6 +62,16 @@ export default {
       }
     },
     {
+      path: '/order/manage/goodstatistics',
+      name: 'orderManageStatistics',
+      component: () => import('@/views/order/manage/goodstatistics/list'),
+      meta: {
+        title: 'orderManageStatistics',
+        icon: 'table',
+        roles: ['admin']
+      }
+    },
+    {
       path: '/order/manage/send',
       name: 'orderManageSend',
       component: () => import('@/views/order/manage/send/index'),
@@ -70,7 +80,7 @@ export default {
         icon: 'table',
         roles: ['admin']
       }
-    },
+    }
     // {
     //   path: '/order/manage/sendDetail/:id?',
     //   name: 'orderManageSendDetail',

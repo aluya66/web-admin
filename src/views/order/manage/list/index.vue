@@ -295,7 +295,8 @@ export default {
           search: {
             label: '下单时间',
             prop: 'dateTime',
-            type: 'dateTime'
+            type: 'dateTime',
+            dateType: 'datetimerange'
           }
         }
       ]
@@ -428,7 +429,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime)
+      const searchDate = this.getSearchDate(dateTime, 'dateTime')
       this.isLoading = true
       this.$api.order.queryOrderList({
         ...searchDate,
