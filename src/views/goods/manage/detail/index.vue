@@ -59,7 +59,7 @@
       ></g-other>-->
       <div class="btn-wrapper" v-if="formModel.id">
         <el-button
-          v-if="formModel.detailsType === '部分完善' || formModel.detailsType === '未完善'"
+          v-if="formModel.perfectName === '部分完善' || formModel.perfectName === '未完善'"
           :loading="btnLoading"
           type="primary"
           :size="size"
@@ -69,8 +69,8 @@
           :loading="btnLoading"
           type="primary"
           :size="size"
-          @click.native.prevent="submitHandle(formModel.detailsType === '已完善' || formModel.detailsType === '完善' ? 'edit' : 'confirmFinish')"
-        >{{ formModel.detailsType === '已完善' || formModel.detailsType === '完善' ? '保存' : '确认完成' }}</el-button>
+          @click.native.prevent="submitHandle(formModel.perfectName === '已完善' || formModel.perfectName === '完善' ? 'edit' : 'confirmFinish')"
+        >{{ formModel.perfectName === '已完善' || formModel.perfectName === '完善' ? '保存' : '确认完成' }}</el-button>
         <el-button :size="size" @click.native.prevent="goBack">取消</el-button>
       </div>
     </div>
