@@ -57,7 +57,17 @@
           :init-data.sync="dialogObj.initData"
         ></edit-balance>
         <edit-point v-if="dialogObj.type === 4" ref="childRef" :init-data.sync="dialogObj.initData"></edit-point>
-        <edit-profit v-if="dialogObj.type === 5" ref="childRef" :init-data.sync="dialogObj.initData"></edit-profit>
+        <edit-profit
+          v-if="dialogObj.type === 5"
+          ref="childRef"
+          :init-data.sync="dialogObj.initData"
+        ></edit-profit>
+        <add-member v-if="dialogObj.type === 6" ref="childRef" :init-data.sync="dialogObj.initData"></add-member>
+        <cancel-member
+          v-if="dialogObj.type === 7"
+          ref="childRef"
+          :init-data.sync="dialogObj.initData"
+        ></cancel-member>
       </c-dialog>
     </div>
   </c-view>
@@ -71,6 +81,8 @@ import EditMember from './editMember'
 import EditBalance from './editBalance'
 import EditPoint from './editPoint'
 import EditProfit from './editProfit'
+import AddMember from './addMember'
+import CancelMember from './cancelMember'
 import dictObj from '@/store/dictData'
 import utils from 'utils'
 
@@ -114,6 +126,8 @@ export default {
     EditPoint,
     ReviewMember,
     EditProfit,
+    AddMember,
+    CancelMember,
     CDialog
   },
   data(vm) {
@@ -136,7 +150,7 @@ export default {
       memberTypeSelect: [],
       tableInnerBtns: [
         {
-          width: 180,
+          width: 200,
           name: '查看',
           icon: 'el-icon-view',
           handle(row) {
@@ -225,6 +239,50 @@ export default {
                 userId,
                 appCode,
                 earnings
+              }
+            })
+          }
+        },
+        {
+          name: '开通',
+          icon: 'el-icon-open',
+          notBtn: row => row.isVip === 0,
+          handle(row) {
+            const {
+              appCode,
+              userId,
+              type
+            } = row
+            vm.showDialog({
+              title: '开通会员',
+              type: 6,
+              initData: {
+                userId,
+                appCode,
+                memberTypeList: vm.memberTypeSelect,
+                type
+              }
+            })
+          }
+        },
+        {
+          name: '取消',
+          icon: 'el-icon-turn-off',
+          notBtn: row => row.isVip === 1,
+          handle(row) {
+            const {
+              userId,
+              appCode,
+              memberTypeId
+            } = row
+            vm.showDialog({
+              title: '取消会员',
+              type: 7,
+              initData: {
+                memberTypeId: Number(memberTypeId),
+                userId,
+                appCode,
+                memberTypeList: vm.memberTypeSelect
               }
             })
           }
@@ -435,28 +493,50 @@ export default {
       })
     },
     reviewAndEditHandle(childFormModel, type) {
-      if (type === 2) {
-        // 编辑会员
-        const { appCode, birthday, isEnable, shareStatus, userId } = childFormModel
-        this.$api.member.updateMember({ appCode, birthday, isEnable, shareStatus, userId }).then(res => {
-          this.responeHandle('修改成功')
-        })
-      } else if (type === 3) {
-        // 编辑余额
-        const { appCode, userId, balance } = childFormModel
-        this.$api.member.updateBalance({ appCode, userId, balance }).then(res => {
-          this.responeHandle('修改余额成功')
-        })
-      } else if (type === 4) {
-        // 编辑积分
-        const { appCode, userId, point } = childFormModel
-        this.$api.member.updatePoint({ appCode, userId, point }).then(res => {
-          this.responeHandle('修改积分成功')
-        })
-      } else if (type === 5) {
-        this.$api.member.updateEarning(childFormModel).then(res => {
-          this.responeHandle('修改收益成功')
-        })
+      const { appCode, userId, ...other } = childFormModel
+      switch (type) {
+        case 2:
+          // 编辑会员
+          const { birthday, isEnable, shareStatus } = other
+          this.$api.member.updateMember({ appCode, birthday, isEnable, shareStatus, userId }).then(res => {
+            this.responeHandle('修改成功')
+          })
+          break
+        case 3:
+          // 编辑余额
+          const { balance } = other
+          this.$api.member.updateBalance({ appCode, userId, balance }).then(res => {
+            this.responeHandle('修改余额成功')
+          })
+          break
+        case 4:
+          // 编辑积分
+          const { point } = other
+          this.$api.member.updatePoint({ appCode, userId, point }).then(res => {
+            this.responeHandle('修改积分成功')
+          })
+          break
+        case 5:
+          // 修改收益
+          this.$api.member.updateEarning(childFormModel).then(res => {
+            this.responeHandle('修改收益成功')
+          })
+          break
+        case 6:
+          // 开通会员
+          const { memberTypeList, dateTime, ...params } = other
+          const searchDate = this.getSearchDate(dateTime, 'dateTime')
+          this.$api.member.addMember({ appCode, userId, ...params, ...searchDate }).then(res => {
+            this.responeHandle('开通会员成功')
+          })
+          break
+        case 7:
+          // 取消会员
+          const { memberTypeId } = other
+          this.$api.member.cancelMember({ appCode, userId, memberTypeId }).then(res => {
+            this.responeHandle('取消会员成功')
+          })
+          break
       }
     },
     showDialog(opts) {
