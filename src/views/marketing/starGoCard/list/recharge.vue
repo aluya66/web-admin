@@ -76,14 +76,14 @@ export default {
         },
         {
           label: '兑换码',
-          prop: 'couponCode',
+          prop: 'couponStoreNo',
           search: {
             type: 'input'
           }
         },
         {
           label: '用户',
-          prop: 'userName'
+          prop: 'name'
         },
         {
           label: '手机号',
@@ -119,10 +119,8 @@ export default {
           }
         },
         {
-          label: '使用时间',
-          formatter(row) {
-            return row.useCouponTimeStart ? row.useCouponTimeStart : '' + '~' + row.useCouponTimeEnd ? row.useCouponTimeEnd : ''
-          },
+          label: '时间',
+          prop: 'created',
           search: {
             type: 'dateTime',
             prop: 'dateTime'
