@@ -161,9 +161,10 @@ export default {
    */
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
+      console.log(this.pageInfo)
       const { dateTime, payBeginTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
-      const paySearchDate = this.getSearchDate(dateTime, '', 'payBeginTime', 'payEndTime')
+      const paySearchDate = this.getSearchDate(payBeginTime, '', 'payBeginTime', 'payEndTime')
       this.isLoading = true
       this.$api.order.queryVipList({
         ...searchDate,
