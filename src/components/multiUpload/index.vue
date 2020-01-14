@@ -44,11 +44,11 @@ export default create({
         {
           value: 'multiSelect',
           label: '本地图片'
-        },
-        {
-          value: 'onLineImage',
-          label: '在线图库'
         }
+        // {
+        //   value: 'onLineImage',
+        //   label: '在线图库'
+        // }
       ],
       activeName: 'multiSelect',
       initFileList: [],
