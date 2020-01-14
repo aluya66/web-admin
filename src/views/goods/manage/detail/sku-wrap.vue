@@ -1,6 +1,6 @@
 <template>
   <div class="vue-sku">
-    <div class="sku-box" v-for="(item, index) in skuAttrs" :key="item.id">
+    <div class="sku-box" style="display:none;" v-for="(item, index) in skuAttrs" :key="item.id">
       <div class="label">{{item.label}}</div>
       <el-checkbox-group
         disabled
@@ -26,9 +26,9 @@
           class="rate-set hidden"
           disabled
           clearable
-          placeholder="123"
+          placeholder="占位"
         >
-          <template slot="prepend">123</template>
+          <template slot="prepend">占位</template>
         </el-input>
         <template>
           <el-input

@@ -31,9 +31,6 @@ const perfectStatusList = [{
   value: 'UN_PERFECT',
   label: '未完善'
 }, {
-  value: 'PERFECT',
-  label: '完善'
-}, {
   value: 'PART_PERFECT',
   label: '部分完善'
 }]
