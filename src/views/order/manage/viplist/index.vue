@@ -104,7 +104,7 @@ export default {
         },
         {
           label: '第三方流水号',
-          prop: 'thirdPartyPayCode',
+          prop: 'thirdPartyPaycode',
           search: {
             type: 'input'
           }
@@ -136,7 +136,7 @@ export default {
         },
         {
           label: '下单时间',
-          prop: 'beginTime',
+          prop: 'created',
           search: {
             type: 'dateTime',
             prop: 'dateTime'
@@ -144,8 +144,9 @@ export default {
         },
         {
           label: '支付时间',
-          prop: 'payBeginTime',
+          prop: 'payTime',
           search: {
+            prop: 'payDateTime',
             type: 'dateTime'
           }
         }
@@ -162,9 +163,9 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       console.log(this.pageInfo)
-      const { dateTime, payBeginTime, ...other } = this.searchObj
+      const { dateTime, payDateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
-      const paySearchDate = this.getSearchDate(payBeginTime, '', 'payBeginTime', 'payEndTime')
+      const paySearchDate = this.getSearchDate(payDateTime, '', 'payBeginTime', 'payEndTime')
       this.isLoading = true
       this.$api.order.queryVipList({
         ...searchDate,

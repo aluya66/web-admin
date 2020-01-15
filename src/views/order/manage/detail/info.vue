@@ -9,7 +9,7 @@
       </div>
       <div class="row">
         <span>所属店铺：{{orderInfo.shopInfoResp.shopName}}</span>
-        <span>结算状态：{{setEnumValue(orderInfo.orderNewResp.settleStatus, settleStatusList)}}</span>
+        <span>结算状态：{{setEnumValue(orderInfo.orderNewResp.settleStatus, orderSettleStatusList)}}</span>
       </div>
       <div class="row">
         <span>客户名称：{{orderInfo.orderNewResp.buyerNick}}</span>
@@ -141,7 +141,7 @@ export default {
       }],
       lobList: dictObj.lobList,
       payStatusList: dictObj.payStatusList,
-      settleStatusList: dictObj.settleStatusList,
+      orderSettleStatusList: dictObj.orderSettleStatusList,
       orderStatusList: dictObj.orderStatusList
     }
   },

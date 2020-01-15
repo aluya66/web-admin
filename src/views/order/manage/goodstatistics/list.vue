@@ -89,7 +89,7 @@ export default {
         {
           width: 50,
           label: '排名',
-          prop: 'index',
+          prop: 'sortNumber',
           search: {
             label: '时间范围',
             type: 'dateTime',
@@ -143,7 +143,7 @@ export default {
         },
         {
           label: '货号',
-          prop: 'productCode'
+          prop: 'productSkuCode'
         }
       ]
     }
@@ -216,7 +216,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, '', 'startTime', 'endTime')
+      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
       this.isLoading = true
       this.$api.order.queryGoodsStatistics({
         ...searchDate,

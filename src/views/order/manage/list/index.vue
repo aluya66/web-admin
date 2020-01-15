@@ -429,7 +429,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, 'dateTime')
+      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'beginTime', 'endTime')
       this.isLoading = true
       this.$api.order.queryOrderList({
         ...searchDate,

@@ -165,7 +165,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, '', 'orderCreateStartTime', 'orderCreateEndTime')
+      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
       this.isLoading = true
       this.$api.order.queryOrderpayList({
         ...searchDate,
