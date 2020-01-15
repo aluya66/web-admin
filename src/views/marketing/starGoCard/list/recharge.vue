@@ -33,33 +33,24 @@
 import mixinTable from 'mixins/table'
 // import utils from 'utils'
 // import dictObj from '@/store/dictData'
-const statusList = [{ // 1 在线购卡 2 活动购卡 3 兑换码绑卡 4 系统发卡 5 在线购劵 6 活动购劵 7 兑换码绑劵 8 系统发劵 9 活动领劵
-  label: '在线购卡',
+const statusList = [{ // 1 系统发卡 2 活动发劵 4 兑换码绑卡 8 活动领卡  16 在线购卡 32 活动购卡
+  label: '系统发卡',
   value: 1
 }, {
-  label: '活动购卡',
+  label: '活动发劵',
   value: 2
 }, {
   label: '兑换码绑卡',
-  value: 3
-}, {
-  label: '系统发卡',
   value: 4
 }, {
-  label: '在线购劵',
-  value: 5
-}, {
-  label: '活动购劵',
-  value: 6
-}, {
-  label: '兑换码绑劵',
-  value: 7
-}, {
-  label: '系统发劵',
+  label: '活动领卡',
   value: 8
 }, {
-  label: '活动领劵',
-  value: 9
+  label: '在线购卡',
+  value: 16
+}, {
+  label: '活动购卡',
+  value: 32
 }]
 
 export default {
@@ -103,7 +94,7 @@ export default {
         },
         {
           label: '赠送金额',
-          prop: 'activityAmount'
+          prop: 'givingValue'
         },
         {
           label: '类型',
