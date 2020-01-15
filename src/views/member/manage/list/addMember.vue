@@ -48,13 +48,14 @@
       ></el-date-picker>
     </el-form-item>
     <template v-if="isShow">
-      <el-form-item label="店员id:" prop="staffId">
+      <el-form-item label="店员id:" prop="staffId" :rules="[{ required: true, validator: checkInt, trigger: 'blur' }]">
         <el-input
           class="input-item"
           v-model.trim="formModel.staffId"
           :size="size"
           placeholder="请输入店员id"
           clearable
+          maxlength="50"
         />
       </el-form-item>
       <el-form-item label="店铺名称:" prop="shopName">
@@ -111,7 +112,7 @@ export default {
       }
     }
   },
-  data() {
+  data(vm) {
     return {
       typeList,
       pickerOptions: utils.pickerOptions,
@@ -122,7 +123,6 @@ export default {
         memberTypeId: [{ required: true, message: '请选择会员类型', trigger: 'change' }],
         type: [{ required: true, message: '请选择开通方式', trigger: 'change' }],
         dateTime: [{ required: true, message: '请选择会员有效期', trigger: 'change' }],
-        staffId: [{ required: true, message: '请输入店员id', trigger: 'blur' }],
         shopName: [{ required: true, message: '请输入店铺名称', trigger: 'blur' }],
         memberName: [{ required: true, message: '请输入店员名称', trigger: 'blur' }]
       }
