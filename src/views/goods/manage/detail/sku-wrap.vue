@@ -21,13 +21,7 @@
     <div class="sku-box">
       <div class="label">倍率:</div>
       <div class="content-box">
-        <el-input
-          size="mini"
-          class="rate-set hidden"
-          disabled
-          clearable
-          placeholder="占位"
-        >
+        <el-input size="mini" class="rate-set hidden" disabled clearable placeholder="占位">
           <template slot="prepend">占位</template>
         </el-input>
         <template>
@@ -478,7 +472,6 @@ export default {
         isDefalut: false // 是否默认SKU
       }
       // 判断是否从详情读取sku列表数据
-      console.log(item.attributeColorValue, childProduct.childProductSpec[item.attrColorName], item.attributeSpecValue, childProduct.childProductSpec[item.attrSpecName])
       const curSkuInfo = this.skuList.find(item => {
         return item.attributeColorValue === childProduct.childProductSpec[item.attrColorName] && item.attributeSpecValue === childProduct.childProductSpec[item.attrSpecName]
       })
