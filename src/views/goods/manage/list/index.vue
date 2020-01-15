@@ -14,6 +14,7 @@
         :size="size"
         type="primary"
         icon="el-icon-download"
+        :loading="exportLoading"
         @click="handleGoods"
       >导出</el-button>
       <!-- <div class="header-btn">
@@ -44,7 +45,7 @@
 import mixinTable from 'mixins/table'
 import noperfect from './noperfect'
 import perfect from './perfect'
-// import utils from 'utils'
+import utils from 'utils'
 import CDialog from 'components/dialog'
 export default {
   name: 'goodsManage',
@@ -56,6 +57,7 @@ export default {
   mixins: [mixinTable],
   data(vm) {
     return {
+      exportLoading: false,
       dialogShow: false,
       noperfectCount: 0, // 未完善商品数量
       activeName: 'perfect',
@@ -78,8 +80,37 @@ export default {
       this.routerLink('/basic/exportList')
     },
     handleGoods() {
-      this.$api.goods.exportGoods().then(res => {
-        if (res) this.dialogShow = true
+      const { createDateTime, updateDateTime, categoryCode, stock, ...other } = this.$refs.childList.searchObj
+      const createDate = this.getSearchDate(createDateTime, '', 'beginDate', 'endDate')
+      const updateDate = this.getSearchDate(updateDateTime, '', 'updateBeginDate', 'updateEndDate')
+      const categoryVal = {
+        cateCodeFirst: categoryCode[0] || '',
+        cateCodeSecond: categoryCode[1] || '',
+        cateCodeThird: categoryCode[2] || ''
+      }
+      if (utils.isInteger(stock[0]) || utils.isInteger(stock[1])) {
+        return this.$msgTip('商品库存请输入正整数', 'warning')
+      }
+      if (stock[0] > stock[1]) {
+        return this.$msgTip('库存最小值不能大于最大值', 'warning')
+      }
+
+      this.exportLoading = true
+      this.$api.goods.exportGoods({
+        ...createDate,
+        ...updateDate,
+        ...categoryVal,
+        ...other,
+        minStock: stock[0] || '',
+        maxStock: stock[1] || ''
+
+      }).then(res => {
+        if (res) {
+          this.dialogShow = true
+        } else {
+          this.$msgTip('导出数据失败', 'warning')
+        }
+        this.exportLoading = false
       })
     },
     updateCount(val) {
