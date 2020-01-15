@@ -31,7 +31,7 @@
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import dictObj from '@/store/dictData'
+// import dictObj from '@/store/dictData'
 export default {
   name: 'exportList',
   mixins: [mixinTable],
@@ -58,10 +58,7 @@ export default {
         },
         {
           label: '业务线',
-          prop: 'appCode',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.appCode, 'lobList')
-          }
+          prop: 'appCode'
         },
         {
           label: '文件大小',

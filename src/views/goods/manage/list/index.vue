@@ -31,14 +31,11 @@
       </keep-alive>
     </div>
     <div v-if="dialogShow">
-      <c-dialog
-        :is-show="dialogShow"
-        title="提示"
-        close-btn
-        noBtn
-        @before-close="dialogShow = false"
-      >
-        <p>您导出的商品数据量较大，请等待5分钟后，在 <em class="router-link" @click="toExportList">基础服务-导出列表</em> 查看下载！</p>
+      <c-dialog :is-show="dialogShow" title="提示" close-btn noBtn @before-close="dialogShow = false">
+        <p class="dialog-text">
+          您导出的商品数据量较大，请等待5分钟后，在
+          <em class="router-link" @click="toExportList">基础服务-导出列表</em> 查看下载！
+        </p>
       </c-dialog>
     </div>
   </c-view>
@@ -47,7 +44,7 @@
 import mixinTable from 'mixins/table'
 import noperfect from './noperfect'
 import perfect from './perfect'
-import utils from 'utils'
+// import utils from 'utils'
 import CDialog from 'components/dialog'
 export default {
   name: 'goodsManage',
@@ -93,8 +90,12 @@ export default {
 </script>
 
 <style lang="less">
+.dialog-text {
+  padding-bottom: 10px;
+  text-align: center;
   .router-link {
     color: @menuActive;
     cursor: pointer;
   }
+}
 </style>
