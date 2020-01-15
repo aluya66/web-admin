@@ -473,7 +473,6 @@ export default {
       }
       // 判断是否从详情读取sku列表数据
       const curSkuInfo = this.skuList.find(item => {
-        console.log('1:' + item.attributeColorValue, '2:' + childProduct.childProductSpec[item.attrColorName], '3:' + item.attributeSpecValue, '4: ' + childProduct.childProductSpec[item.attrSpecName])
         return item.attributeColorValue === childProduct.childProductSpec[item.attrColorName] && item.attributeSpecValue === childProduct.childProductSpec[item.attrSpecName]
       })
       if (curSkuInfo) {
