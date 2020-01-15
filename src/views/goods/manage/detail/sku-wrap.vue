@@ -21,13 +21,7 @@
     <div class="sku-box">
       <div class="label">倍率:</div>
       <div class="content-box">
-        <el-input
-          size="mini"
-          class="rate-set hidden"
-          disabled
-          clearable
-          placeholder="占位"
-        >
+        <el-input size="mini" class="rate-set hidden" disabled clearable placeholder="占位">
           <template slot="prepend">占位</template>
         </el-input>
         <template>
