@@ -31,7 +31,7 @@
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import dictObj from '@/store/dictData'
+// import dictObj from '@/store/dictData'
 export default {
   name: 'exportList',
   mixins: [mixinTable],
