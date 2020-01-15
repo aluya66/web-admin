@@ -34,22 +34,6 @@
               :label="item.value"
             >{{item.label}}</el-radio-button>
           </el-radio-group>
-          <el-radio-group v-model="afterSaleStatus" class="radio-list">
-            <el-radio-button
-              v-for="(item, index) in afterSalesTabList"
-              :size="size"
-              :key="index"
-              :label="item.value"
-            >{{item.label}}</el-radio-button>
-          </el-radio-group>
-          <!-- <el-radio-group v-model="evaluateStatus">
-            <el-radio-button
-              v-for="(item, index) in evaluateStatusTab"
-              :size="size"
-              :key="index"
-              :label="item.value"
-            >{{item.label}}</el-radio-button>
-          </el-radio-group>-->
         </template>
       </c-table>
     </div>
@@ -78,6 +62,15 @@ import OrderInfo from './info'
 import CDialog from 'components/dialog'
 import DialogInfo from './dialogInfo'
 import dictObj from '@/store/dictData'
+
+// 售后状态
+const afterSalesTabList = [{
+  value: 52,
+  label: '售后中'
+}, {
+  value: 6,
+  label: '已售后'
+}]
 
 export default {
   name: 'orderManageList',
@@ -113,26 +106,6 @@ export default {
         value: 50,
         label: '已取消'
       }], // tab订单状态集合
-      afterSalesTabList: [{
-        value: '',
-        label: '全部售后'
-      }, {
-        value: 52,
-        label: '售后中'
-      }, {
-        value: 6,
-        label: '已售后'
-      }],
-      // evaluateStatusTab: [{
-      //   value: '',
-      //   label: '全部'
-      // }, {
-      //   value: 1,
-      //   label: '待评价'
-      // }, {
-      //   value: 2,
-      //   label: '已评价'
-      // }],
       tableInnerBtns: [{
         width: 180,
         name: '详情',
@@ -178,6 +151,7 @@ export default {
           label: '父订单编号',
           fixed: true,
           prop: 'parentCode',
+          width: 140,
           search: {
             type: 'input'
           }
@@ -185,6 +159,7 @@ export default {
         {
           label: '订单编号',
           prop: 'orderCode',
+          width: 150,
           search: {
             type: 'input'
           }
@@ -266,6 +241,7 @@ export default {
         {
           label: '订单实付金额(元)',
           prop: 'actualAmount',
+          width: 130,
           search: {
             type: 'input',
             label: '店铺',
@@ -283,15 +259,27 @@ export default {
         },
         {
           label: '售后金额(元)',
-          prop: 'afterSalesAmount'
+          prop: 'afterSalesAmount',
+          search: {
+            label: '售后状态',
+            prop: 'afterSaleStatus',
+            type: 'dict',
+            optionsList: afterSalesTabList
+          }
         },
         {
           label: '余额金额(元)',
-          prop: 'walletAmount'
+          prop: 'walletAmount',
+          search: {
+            label: '订单商品SKU',
+            prop: 'productSkuCode',
+            type: 'input'
+          }
         },
         {
           label: '星GO卡金额(元)',
           prop: 'storedCardAmount',
+          width: 130,
           search: {
             label: '下单时间',
             prop: 'dateTime',
@@ -399,21 +387,6 @@ export default {
               case 50:
                 label = `${info.label}${res.cancelQuantity}`
                 break
-            }
-            return {
-              ...info,
-              label
-            }
-          })
-          this.afterSalesTabList = this.afterSalesTabList.map(info => {
-            let label = ''
-            if (info.value === '') {
-              // label = res.inAfterSaleQuantity && res.outAfterSaleQuantity ? `${info.label}${res.inAfterSaleQuantity + res.outAfterSaleQuantity}` : info.label
-              label = info.label
-            } else if (info.value === 1) {
-              label = `${info.label}${res.inAfterSaleQuantity || ''}`
-            } else {
-              label = `${info.label}${res.outAfterSaleQuantity || ''}`
             }
             return {
               ...info,

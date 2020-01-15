@@ -28,14 +28,14 @@
         </template>
       </el-table-column>
       <el-table-column v-if="selection" :align="align" type="selection" width="55" />
-      <el-table-column v-if="hasIndex" label="序号" :fixed="true" align="center" width="50" type="index" :index="index => index + (pageInfo.pageNo - 1) * pageInfo.pageSize + 1" />
+      <el-table-column v-if="hasIndex" label="序号" :fixed="true" align="center" width="60" type="index" :index="index => index + (pageInfo.pageNo - 1) * pageInfo.pageSize + 1" />
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
         :align="align"
         :label="item.label"
         :prop="item.prop"
-        :width="item.width"
+        :min-width="item.width || 120"
         :fixed="item.fixed"
         :show-overflow-tooltip="item.inline"
       >

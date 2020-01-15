@@ -53,15 +53,15 @@
         <span>订单价格折让(元)：{{orderInfo.orderNewResp.letProfitAmount}}</span>
       </div>
     </line-card>
-    <line-card title="发票信息" v-if="orderInfo.orderInvoiceDto">
+    <line-card title="发票信息" v-if="orderInfo.orderInvoiceResp">
       <div class="row">
-        <span>发票抬头：{{orderInfo.orderInvoiceDto.title}}</span>
-        <span>发票编号：{{orderInfo.orderInvoiceDto.invoiceId}}</span>
-        <span>发票类型：{{orderInfo.orderInvoiceDto.invoiceType}}</span>
+        <span>发票类型：{{orderInfo.orderInvoiceResp.invoiceType}}</span>
+        <span>发票抬头：{{orderInfo.orderInvoiceResp.title}}</span>
+        <span>发票内容：{{orderInfo.orderInvoiceResp.content}}</span>
       </div>
       <div class="row">
-        <span>收票人邮箱：{{orderInfo.orderInvoiceDto.recipientMail}}</span>
-        <span>发票内容：{{orderInfo.orderInvoiceDto.content}}</span>
+        <span>电子邮箱：{{orderInfo.orderInvoiceResp.recipientMail}}</span>
+        <span>发票备注：</span>
       </div>
     </line-card>
     <line-card title="收获信息" v-if="orderInfo.orderDeliveryAddressResp">
