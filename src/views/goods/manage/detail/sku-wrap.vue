@@ -495,6 +495,7 @@ export default {
         // 如果此id不存在，说明为新增属性，则向 childProductArray 中添加一条数据
         if (this.stockSpecArr.findIndex((item) => objEquals(spec, item)) === -1) {
           this.$set(this.childProductArray, index, childProduct)
+          console.log(this.childProductArray)
         }
       } else if (option === 'del') {
         // 因为是删除操作，理论上所有数据都能从stockCopy中获取到
