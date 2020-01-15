@@ -3,13 +3,13 @@
     <slot name="header" />
     <el-table
       ref="multipleTable"
-      stripe
+      :stripe="stripe"
       :border="hasBorder"
       :size="size"
       :max-height="maxHeight"
       v-loading="loading"
       :data="tableList"
-      highlight-current-row
+      :highlight-current-row="highlightCurrentRow"
       :span-method="objectSpanMethod"
       tooltip-effect="dark"
       style="width: 100%"
@@ -21,6 +21,8 @@
       :row-style="rowStyle"
       :cell-style="cellStyle"
       :header-cell-style="headerCellStyle"
+      v-bind="$attrs"
+      v-on="$listeners"
     >
       <el-table-column v-if="expand" :align="align" type="expand" width="55">
         <template slot-scope="scope">
@@ -128,6 +130,7 @@ import CPagination from '../pagination'
 import CImage from '../image'
 
 export default {
+  inheritAttrs: false,
   name: 'CTable',
   components: {
     CPagination,
@@ -199,9 +202,17 @@ export default {
       type: String,
       default: 'medium'
     },
+    stripe: {
+      type: Boolean,
+      default: true
+    },
     hasBorder: {
       type: Boolean,
       default: false
+    },
+    highlightCurrentRow: {
+      type: Boolean,
+      default: true
     },
     maxHeight: Number,
     rowStyle: Object,
@@ -390,6 +401,9 @@ export default {
   }
   .text-multi-ellipsis {
     .multi-ellipsis(1);
+  }
+  .tabel-tr {
+    background-color: @table-tr;
   }
   .title-active {
     color: @active;

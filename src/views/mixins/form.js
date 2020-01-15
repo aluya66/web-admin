@@ -12,6 +12,7 @@ export default {
       }
     }
     const checkInt = (rule, value, callback) => {
+      console.log(value)
       if (value && Number(value) > 0 && Number.isInteger(Number(value))) {
         callback()
       } else {

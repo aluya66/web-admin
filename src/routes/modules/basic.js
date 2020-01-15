@@ -122,6 +122,17 @@ export default {
       icon: 'table',
       roles: ['review']
     }
+  },
+  {
+    path: '/basic/exportList',
+    name: 'exportList',
+    component: () => import('@/views/basic/exportList'),
+    meta: {
+      noCache: true,
+      title: 'exportList',
+      icon: 'table',
+      roles: ['admin']
+    }
   }
   ]
 }

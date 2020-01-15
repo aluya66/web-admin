@@ -14,7 +14,6 @@
         :table-header="tableHeader"
         :table-list="tableList"
         :page-info="pageInfo"
-        :table-inner-btns="tableInnerBtns"
         @change-pagination="changePagination"
       >
         <template v-slot:header>
@@ -36,7 +35,7 @@ const shopTypeSelect = [{
   label: '自营',
   value: 1
 }, {
-  label: '加盟',
+  label: '合作',
   value: 2
 }]
 const shopStatusSelect = [
@@ -62,16 +61,6 @@ export default {
       dialogObj: {}, // 对话框数据
       tableList: [],
       isLoading: false,
-      tableInnerBtns: [
-        {
-          width: 130,
-          name: '详情',
-          icon: 'el-icon-view',
-          handle(row) {
-            vm.routerLink(`/channel/detail/${row.shopId}`)
-          }
-        }
-      ],
       tableHeader: [
         {
           label: 'LOGO',

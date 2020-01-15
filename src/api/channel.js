@@ -1,6 +1,13 @@
 import Http from '../utils/request'
 
 const context = process.env.VUE_APP_CONSOLE_COMMON
+// VUE_APP_CONSOLE_COMMON
+
+// 店铺 风格
+export const getShopStyle = params =>
+  Http.fetch(`${context}/api/shopstyle`, params, {
+    method: 'get'
+  })
 
 // 店铺列表
 export const getShopList = params =>
@@ -12,6 +19,18 @@ export const getShopList = params =>
 export const getShopDetail = params =>
   Http.fetch(`${context}/api/shop`, params, {
     method: 'get'
+  })
+
+// 店铺 新增
+export const addShop = params =>
+  Http.fetch(`${context}/api/shop`, params, {
+    method: 'post'
+  })
+
+// 店铺 新增
+export const editShop = params =>
+  Http.fetch(`${context}/api/shop`, params, {
+    method: 'put'
   })
 
 /**

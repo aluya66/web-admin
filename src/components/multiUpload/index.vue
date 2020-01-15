@@ -9,10 +9,10 @@
           :name="item.value"
         ></el-tab-pane>
       </el-tabs>
-       <el-button v-if="activeName === 'multiSelect'" :disabled="disabled" type="primary" size="small" @click="uploadImage">上传图片</el-button>
+       <el-button v-if="activeName === 'multiSelect'" :disabled="disabled" type="primary" size="small" @click="uploadImage">上传</el-button>
     </div>
     <keep-alive>
-      <component ref="childRef" v-bind:is="activeName" :files="initFileList" @get-files="getFiles"></component>
+      <component ref="childRef"  v-on="$listeners" v-bind="$props" v-bind:is="activeName" :files="initFileList" @get-files="getFiles"></component>
     </keep-alive>
   </div>
 </template>
@@ -24,17 +24,31 @@ import OnLineImage from './onLineImage'
 
 export default create({
   name: 'multiUpload',
+  props: {
+    tip: {
+      type: String,
+      default: ''
+    },
+    fileType: {
+      type: String,
+      default: 'image'
+    },
+    limit: {
+      type: Number,
+      default: 9
+    }
+  },
   data() {
     return {
       tabTitle: [
         {
           value: 'multiSelect',
           label: '本地图片'
-        },
-        {
-          value: 'onLineImage',
-          label: '在线图库'
         }
+        // {
+        //   value: 'onLineImage',
+        //   label: '在线图库'
+        // }
       ],
       activeName: 'multiSelect',
       initFileList: [],
@@ -44,7 +58,6 @@ export default create({
 
   methods: {
     getFiles(fileList, status) {
-      console.log(fileList, status)
       this.initFileList = fileList
       this.disabled = status
       this.$emit('upload', fileList)

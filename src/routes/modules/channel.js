@@ -15,17 +15,19 @@ export default {
     component: () => import('@/views/channel/shop/list'),
     meta: {
       title: 'channelList',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {
     path: '/channel/shop/detail/:id?',
-    name: 'channelDetail',
+    name: 'shopDetail',
     hidden: true,
     component: () => import('@/views/channel/shop/detail/index'),
     meta: {
-      title: 'channelDetail',
-      icon: 'table'
+      title: 'shopDetail',
+      icon: 'table',
+      activeMenu: '/channel/shop/list'
     }
   },
   {

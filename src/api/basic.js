@@ -3,6 +3,15 @@ import Http from '../utils/request'
 const context = process.env.VUE_APP_CONSOLE_COMMON
 
 /**
+ * 导出列表
+ * @param {*} params
+ */
+export const getExportList = params =>
+  Http.fetch(`${context}/api/down/documentlist`, params, {
+    method: 'get'
+  })
+
+/**
  * 添加业务线
  * @param {*} params
  */
@@ -139,6 +148,13 @@ export const queryAllVersion = params =>
 
 // 获取全部区域
 export const getAllArea = params =>
+  Http.fetch(`${context}/api/area/all`, params, {
+    method: 'get',
+    cache: 'area'
+  })
+
+// 区域列表
+export const getAreaAll = params =>
   Http.fetch(`${context}/api/area/all`, params, {
     method: 'get',
     cache: 'area'

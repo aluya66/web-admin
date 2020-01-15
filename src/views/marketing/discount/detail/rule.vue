@@ -246,13 +246,6 @@ export default {
     }
   },
   beforeMount() {
-    // utils.Event.$on('updateGoodsList', (val) => {
-    //   Object.assign(this.formModel, { selectedGoodsList: val })
-    // })
-    // utils.Event.$on('updateCustomerList', (val) => {
-    //   Object.assign(this.formModel, { selectedCustomerList: val })
-    // })
-
     if (this.formModel.platformList) {
       this.getShopList(this.formModel.platformList)
     }

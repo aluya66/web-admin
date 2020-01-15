@@ -19,6 +19,7 @@
         :is-view="true"
         :is-disabled="isDisabled"
         :data-obj="formModel"
+        v-if="formModel.id"
         ref="basicRef"
         title="基础信息"
       ></g-basic>
@@ -31,7 +32,7 @@
         title="属性信息"
         @set-tag="setTagValue"
       ></g-params>
-      <el-form-item class="form-btn">
+      <el-form-item class="form-btn" v-if="formModel.id">
         <el-button
           :loading="btnLoading"
           :size="size"

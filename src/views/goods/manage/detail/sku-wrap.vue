@@ -1,8 +1,9 @@
 <template>
   <div class="vue-sku">
-    <div class="sku-box" v-for="(item, index) in skuAttrs" :key="item.id">
+    <div class="sku-box" style="display:none;" v-for="(item, index) in skuAttrs" :key="item.id">
       <div class="label">{{item.label}}</div>
       <el-checkbox-group
+        disabled
         class="content-box"
         v-model="item.checkedAttr"
         @change="handleCheckedChange"
@@ -18,26 +19,61 @@
     </div>
     <!-- 实战DEMO -->
     <div class="sku-box">
-      <div class="label">规格:</div>
+      <div class="label">倍率:</div>
+      <div class="content-box">
+        <el-input
+          size="mini"
+          class="rate-set hidden"
+          disabled
+          clearable
+          placeholder="占位"
+        >
+          <template slot="prepend">占位</template>
+        </el-input>
+        <template>
+          <el-input
+            v-for="(item, index) in rateList"
+            :key="index"
+            size="mini"
+            class="rate-set"
+            :disabled="isView"
+            v-model="item.value"
+            @focus="rateIndex = index"
+            @blur="setRate"
+            clearable
+            :placeholder="item.label"
+          >
+            <template slot="prepend">{{item.label}}</template>
+          </el-input>
+          <!-- <el-button type="primary" size="mini" @click="setBatch">计算</el-button> -->
+        </template>
+      </div>
+    </div>
+    <!-- <div class="sku-box">
+      <p
+        class="rate-text"
+      >当前品牌倍率为：供货价: {{rateListFromPort[0].value}}倍;散批价:{{rateListFromPort[1].value}}倍;大批价:{{rateListFromPort[2].value}}倍;会员价:{{rateListFromPort[3].value}}倍;零售价:{{rateListFromPort[4].value}}倍;</p>
+    </div>-->
+    <div class="sku-box">
+      <div class="label">SKU价格:</div>
       <div class="content-box">
         <template>
           <el-input
-            v-for="(item, index) in batchList"
+            v-for="(item, index) in batchList.slice(1)"
             :key="index"
+            v-show="item.name !== 'skuStock'"
             size="mini"
             class="batch-set"
             :disabled="isView"
-            v-model.number="item.value"
-            @focus="batchIndex = index"
+            v-model="item.value"
+            @focus="batchIndex = index + 1"
             @change="setBatch"
             clearable
             placeholder="批量设置"
           >
             <template slot="prepend">{{item.label}}</template>
           </el-input>
-          <!-- <el-button type="primary" size="mini" @click="setBatch">
-            <i class="set-btn blue el-icon-check"></i>批量设置
-          </el-button>-->
+          <!-- <el-button type="primary" size="mini" @click="setBatch">确认</el-button> -->
         </template>
       </div>
     </div>
@@ -54,7 +90,7 @@
               :key="'th_'+index"
               :title="item.name"
             >{{item.name !== 'skuStock' ? item.label + '(元)': item.label}}</th>
-            <th>是否启用</th>
+            <!-- <th>是否启用</th> -->
             <th>是否主sku</th>
           </tr>
         </thead>
@@ -67,26 +103,25 @@
                 :rowspan="countSum(n)"
               >
                 <!-- {{index}} {{countSum(specIndex + 1)}} {{specIndex}} {{countSum(0)}} {{index/countSum(specIndex + 1)}} -->
+                <!-- v-if="!specification[specIndex].posterUrl[index/countSum(specIndex + 1)]" :disabled="isView"-->
                 <c-upload
-                  v-if="!specification[specIndex].posterUrl[index/countSum(specIndex + 1)]"
                   :ref="'spec_'+index/countSum(specIndex + 1)"
                   class="pic"
                   auto-upload
                   action="/api/upload/file"
+                  :http-request="uploadHandle"
                   :size="10"
-                  :limit="1"
-                  :fileList="specification[specIndex].fileList"
-                  :disabled="isView"
-                  :on-success="uploadSuccess"
-                  :on-remove="uploadRemove"
+                  :limit="2"
+                  :fileList="[]"
+                  @on-success="uploadSuccess"
+                  :on-remove="(file, fileList) => { uploadIndex=index/countSum(specIndex + 1); uploadRemove(file, fileList) }"
                   :on-preview="uploadReview"
-                  @on-change="uploadIndex = specIndex"
                 >
-                  <el-button size="small" type="primary">点击上传</el-button>
+                  <!-- @on-change="uploadIndex=specIndex" -->
+                  <el-button size="small" type="primary" @click="changeSku(index, specIndex)">点击上传</el-button>
                   <div slot="tip" class="el-upload__tip">只能上传图片png/jepg后缀文件，且不超过10M</div>
                 </c-upload>
                 <c-image
-                  v-else
                   :url="specification[specIndex].posterUrl[index/countSum(specIndex + 1)]"
                   fit="contain"
                   :preview-src-list="[specification[specIndex].posterUrl[index/countSum(specIndex + 1)]]"
@@ -99,27 +134,29 @@
                 :rowspan="countSum(n)"
               >{{getSpecAttr(specIndex, index)}}</td>
             </template>
-            <td>{{childProductArray[index].goodsSkuSn}}</td>
+            <td v-if="childProductArray[index]">{{childProductArray[index].goodsSkuSn}}</td>
             <td v-for="(tdItem, tdIndex) in batchList" :key="'td_' + tdIndex">
               <el-input
                 size="small"
                 type="text"
+                v-if="childProductArray[index]"
                 v-model.number="childProductArray[index][tdItem.name]"
-                :placeholder="'请输入' + tdItem.label"
-                :disabled="isView || !childProductArray[index].isUse"
+                :placeholder="tdItem.label"
+                @change="(val) => { changeSkuPrice(val, index, tdItem.name) }"
+                :disabled="tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
               ></el-input>
             </td>
-            <td>
+            <!-- <td>
               <el-switch
                 v-model="childProductArray[index].isUse"
                 :disabled="isView"
                 @change="(val) => {handleUserChange(index, val)}"
               ></el-switch>
-            </td>
+            </td>-->
             <td>
               <el-switch
+                v-if="childProductArray[index]"
                 v-model="childProductArray[index].isDefalut"
-                :disabled="isView"
                 @change="(val) => {handleDefaultChange(index, val)}"
               ></el-switch>
             </td>
@@ -183,6 +220,9 @@ export default {
     CImage
   },
   props: {
+    rateObj: {
+      type: Object
+    },
     skuAttrs: {
       type: Array,
       required: true
@@ -205,6 +245,7 @@ export default {
   },
   data() {
     return {
+      currentSku: '',
       specification: [], // 规格
       childProductArray: [], // 子规格
       addValues: [], // 用来存储要添加的规格属性
@@ -212,7 +253,30 @@ export default {
       curSkuIndex: '', // 选中sku属性下标
       uploadIndex: '', // sku 列表属性
       batchIndex: '', // 批量设置下标
-      batchList: [{ // 批量处理
+      rateIndex: '', // 倍率下标
+      rateListFromPort: [], // 接口返回的倍率
+      rateList: [{ // 倍率列表
+        label: '供货倍率',
+        value: '',
+        name: 'supplyRate'
+      }, {
+        label: '散批价倍率',
+        value: '',
+        name: 'wholesalePriceRate'
+      }, {
+        label: '大批价格倍率',
+        value: '',
+        name: 'largeBatchRate'
+      }, {
+        label: '会员价倍率',
+        value: '',
+        name: 'memberPriceRate'
+      }, {
+        label: '零售倍率',
+        value: '',
+        name: 'retailPriceRate'
+      }],
+      batchList: [{
         label: '样衣成本价',
         value: '',
         name: 'sampleCostPrice'
@@ -257,6 +321,14 @@ export default {
     this.createData()
   },
   methods: {
+    changeSku(index, specIndex) {
+      this.uploadIndex = index / this.countSum(specIndex + 1) // 点击上传图片的下标
+      this.currentSku = 'spec_' + index / this.countSum(specIndex + 1)
+    },
+    uploadHandle(file) {
+      const ref = this.currentSku
+      this.$refs[ref][0].customUpload(file)
+    },
     // 创建模拟数据
     createData() {
       this.skuAttrs.forEach((res, i) => {
@@ -264,8 +336,10 @@ export default {
         this.addSpec()
         // 规格名称
         this.specification[i].name = res.name
+        // this.specification[i].posterUrl = this.skuAttrs[i].posterUrl || [] // 从颜色那个规格取图片
         if (i === 0) {
           this.specification[i].posterUrl = this.skuAttrs[i].posterUrl // 从颜色那个规格取图片
+          // this.specification[i].fileList = this.skuAttrs[i].posterUrl.map((item, index) => ([{ url: item, name: `sku图片${index + 1 }`}])) // 从颜色那个规格取图片
         }
         // 缓存按钮键值
         this.cacheSpecification[i].status = false
@@ -275,15 +349,27 @@ export default {
           this.handleCheckedChange(res.checkedAttr)
         }
       })
-      // console.log(this.specification)
+      // 处理倍率字段
+      Object.keys(this.rateObj).forEach((item, index) => {
+        this.rateList.forEach((rateItem) => {
+          if (rateItem.name === item) {
+            rateItem.value = this.rateObj[item]
+          }
+        })
+      })
+      // this.rateListFromPort = JSON.parse(JSON.stringify(this.rateList))
     },
     // 上传图片成功
     uploadSuccess(response, file, fileList) {
-      this.specification[this.uploadIndex].fileList = fileList
+      // this.specification[0].fileList[this.uploadIndex] = [fileList[fileList.length - 1]] // 获取最后一张覆盖原图
+      this.specification[0].posterUrl[this.uploadIndex] = fileList[fileList.length - 1].url
+      this.specification = JSON.parse(JSON.stringify(this.specification))
     },
     // 删除图片
     uploadRemove(file, fileList) {
-      this.specification[this.uploadIndex].fileList = fileList
+      this.specification[0].posterUrl[this.uploadIndex] = ''
+      // this.specification[0].fileList[this.uploadIndex] = fileList
+      this.specification = JSON.parse(JSON.stringify(this.specification))
     },
     // 预览图片
     uploadReview(file) {
@@ -388,10 +474,9 @@ export default {
         retailPrice: '', // 零售价
         memberPrice: '', // 成衣会员价
         skuStock: 0, // 成衣库存
-        isUse: true, // 是否有用sku
+        // isUse: true, // 是否有用sku
         isDefalut: false // 是否默认SKU
       }
-      // console.log(this.skuList[index], childProduct.childProductSpec)
       // 判断是否从详情读取sku列表数据
       const curSkuInfo = this.skuList.find(item => {
         return item.attributeColorValue === childProduct.childProductSpec[item.attrColorName] && item.attributeSpecValue === childProduct.childProductSpec[item.attrSpecName]
@@ -407,7 +492,7 @@ export default {
           largeBatchPrice: curSkuInfo.largeBatchPrice, // 成衣大批价
           retailPrice: curSkuInfo.retailPrice, // 零售价
           memberPrice: curSkuInfo.memberPrice, // 成衣会员价
-          skuStock: curSkuInfo.skuStock, // 成衣库存
+          skuStock: curSkuInfo.skuStock || 0, // 成衣库存
           isDefalut: curSkuInfo.isDefalut === 1
         }
       }
@@ -438,38 +523,198 @@ export default {
       return obj
     },
     // sku规则是否生效，生效的sku有goodsSkuSn，否则为空
-    handleUserChange(index, value) {
-      // 启用规格时，生成不重复的商品编号；关闭规格时，清空商品编号
-      if (value) {
-        this.$set(this.childProductArray[index], 'goodsSkuSn', `${this.spuBn}-${index}`)
-      } else {
-        this.$set(this.childProductArray[index], 'goodsSkuSn', '')
-      }
-    },
+    // handleUserChange(index, value) {
+    //   // 启用规格时，生成不重复的商品编号；关闭规格时，清空商品编号
+    //   if (value) {
+    //     this.$set(this.childProductArray[index], 'goodsSkuSn', `${this.spuBn}-${index}`)
+    //   } else {
+    //     this.$set(this.childProductArray[index], 'goodsSkuSn', '')
+    //   }
+    // },
     // 设置是否为主sku
     handleDefaultChange(index, value) {
-      this.childProductArray.forEach((res, num) => {
-        if (index === num) {
-          this.$set(this.childProductArray, 'isDefalut', value)
-        } else if (res.isDefalut === value) {
-          this.$set(this.childProductArray, 'isDefalut', !value)
+      if (!value) return
+      this.childProductArray.forEach((item, cindex) => {
+        if (cindex !== index) {
+          this.$set(this.childProductArray[cindex], 'isDefalut', false)
+        } else {
+          this.$set(this.childProductArray[index], 'isDefalut', true)
         }
       })
+      const target = this.childProductArray[index]
+      this.handleMinPrice(target)
     },
-    // 批量参数设置
-    setBatch() {
-      if (typeof this.batchList[this.batchIndex].value === 'string' && this.batchList[this.batchIndex].value !== '') {
+    // sku默认选中 则为最新价 【target: 选中的sku】
+    handleMinPrice(target) {
+      const minObj = {
+        costprice: target.costPrice, // 成衣成本价
+        supplyprice: target.supplyPrice, // 供货价
+        wholesaleprice: target.wholesalePrice, // 散批价
+        largePrice: target.largeBatchPrice, // 大批价
+        price: target.memberPrice, // 会员价
+        tagprice: target.retailPrice // 零售价
+      }
+      this.$emit('set-min-price', minObj)
+    },
+    changeSkuPrice(val, index, priceType) {
+      if (val) {
+        this.$set(this.childProductArray[index], priceType, Number(val).toFixed(2))
+        this.childProductArray[index].isDefalut && this.handleMinPrice(this.childProductArray[index])
+      }
+    },
+    // 倍率设置
+    setRate() {
+      if (!Number(this.rateList[this.rateIndex].value) || Number(this.rateList[this.rateIndex].value) <= 0) {
+        this.rateList[this.rateIndex].value = 1
         this.$message({
           type: 'warning',
           message: '请输入正确的值'
         })
         return
       }
+      this.rateList[this.rateIndex].value = Number(this.rateList[this.rateIndex].value).toFixed(2) // 保留2位小数
+      const name = this.rateList[this.rateIndex].name // 当前设置得倍率
+      let value // 倍率对应得价格
+      let target // sku列表得input
+      switch (name) { // 供货倍率、大批价格倍率、 散批价倍率、 会员价倍率、零售倍率
+        case 'supplyRate': // 供货
+          value = this.batchList[2].value
+          target = 'supplyPrice'
+          break
+        case 'wholesalePriceRate': // 散批价
+          value = this.batchList[3].value
+          target = 'wholesalePrice'
+          break
+        case 'largeBatchRate': // 大批价格
+          value = this.batchList[4].value
+          target = 'largeBatchPrice'
+          break
+        case 'memberPriceRate': // 会员价
+          value = this.batchList[5].value
+          target = 'memberPrice'
+          break
+        case 'retailPriceRate': // 零售
+          value = this.batchList[6].value
+          target = 'retailPrice'
+          break
+      }
       this.childProductArray.forEach(item => {
-        if (item.isUse) {
-          item[this.batchList[this.batchIndex].name] = this.batchList[this.batchIndex].value
+        if (value) {
+          if (target === 'memberPrice' || target === 'retailPrice') {
+            this.batchSameTypePrice(target, value, this.rateList[this.rateIndex].value, 'handlePrice')
+          } else {
+            this.batchSameTypePrice(target, value, this.rateList[this.rateIndex].value)
+          }
+          // item[target] = (value * this.rateList[this.rateIndex].value).toFixed(2)
         }
       })
+      // this.setMinPrice()
+      // this.rateList[this.rateIndex].value = this.rateList[this.rateIndex].value.toFixed(2)
+    },
+    // 批量参数设置
+    setBatch() {
+      // 成衣成本价=样衣成本价，不做处理；
+      // 供货价=供货价倍率*采购价，价格取整数，比如计算出来的价格为55.34，则系统去小数点后两位数取整为56.00；
+      // 大批价=大批价倍率*采购价，价格取整数，比如计算出来的价格为55.34，则系统去小数点后两位数取整为56.00；
+      // 散批价=散批价倍率*采购价，价格取整数，比如计算出来的价格为55.34，则系统去小数点后两位数取整为56.00；
+      // 会员价=会员价倍率*采购价，价格取整数，同时要求个位数系统自动调整为8，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为8，即结果为58.00；
+      // 零售价=零售价倍率*采购价，价格取整数，同时要求个位数系统自动调整为8，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为8，即结果为58.00；
+      // 在样衣库管理新增/编辑商品，提交后，若有新增的sku，均以上述的规则计算各个价格，填充到对应的值中，同时按照现有规则，在生成sku价格后，针对spu价格按照现有规则自动填充；
+
+      // typeof this.batchList[this.batchIndex].value === 'string' && this.batchList[this.batchIndex].value !== ''
+      if (!Number(this.batchList[this.batchIndex].value) || Number(this.batchList[this.batchIndex].value) <= 0) {
+        this.$message({
+          type: 'warning',
+          message: '请输入正确的值'
+        })
+        return
+      }
+      const curPrice = Number(this.batchList[this.batchIndex].value) // 设置的价格
+      const name = this.batchList[this.batchIndex].name // 设置的价格类型
+      this.batchList[this.batchIndex].value = curPrice.toFixed(2)
+      let rate
+      // const list = this.batchList.filter((item) => item.name !== 'costPrice')
+      // const list = this.batchList
+      switch (name) {
+        case 'costPrice': // 成衣成本价 根据价格类型的倍率设置全部价格
+          this.batchList.slice(1).forEach((item) => {
+            switch (item.name) {
+              case 'costPrice':
+                this.batchSameTypePrice('costPrice', curPrice, 1)
+                break
+              case 'supplyPrice': // 成衣供货价
+                rate = this.rateList[0].value // 供货价倍率
+                this.batchSameTypePrice('supplyPrice', curPrice, rate)
+                break
+              case 'wholesalePrice': // 成衣散批价
+                rate = this.rateList[1].value // 成衣散批价倍率
+                this.batchSameTypePrice('wholesalePrice', curPrice, rate)
+                break
+              case 'largeBatchPrice': // 成衣大批价
+                rate = this.rateList[2].value // 成衣大批价倍率
+                this.batchSameTypePrice('largeBatchPrice', curPrice, rate)
+                break
+              case 'memberPrice': // 成衣会员价
+                rate = this.rateList[3].value // 成衣会员价倍率
+                this.batchSameTypePrice('memberPrice', curPrice, rate, 'handlePrice')
+                break
+              case 'retailPrice': // 零售价
+                rate = this.rateList[4].value // 零售价倍率
+                this.batchSameTypePrice('retailPrice', curPrice, rate, 'handlePrice')
+                break
+            }
+          })
+          break
+        case 'supplyPrice': // 成衣供货价
+          rate = this.rateList[0].value // 供货价倍率
+          this.batchSameTypePrice('supplyPrice', curPrice, rate)
+          break
+        case 'wholesalePrice': // 成衣散批价
+          rate = this.rateList[1].value // 成衣散批价倍率
+          this.batchSameTypePrice('wholesalePrice', curPrice, rate)
+          break
+        case 'largeBatchPrice': // 成衣大批价
+          rate = this.rateList[2].value // 成衣大批价倍率
+          this.batchSameTypePrice('largeBatchPrice', curPrice, rate)
+          break
+        case 'memberPrice': // 成衣会员价
+          rate = this.rateList[3].value // 成衣会员价倍率
+          this.batchSameTypePrice('memberPrice', curPrice, rate, 'handlePrice')
+          break
+        case 'retailPrice': // 零售价
+          rate = this.rateList[4].value // 零售价倍率
+          this.batchSameTypePrice('retailPrice', curPrice, rate, 'handlePrice')
+          break
+      }
+      // this.setMinPrice()
+
+      // this.childProductArray.forEach(item => {
+      //   item[this.batchList[this.batchIndex].name] = this.batchList[this.batchIndex].value
+      // })
+      // this.setMinPrice()
+    },
+    // 获取sku各价格最低价
+    // setMinPrice() {
+    //   const minDataList = ['sampleCostPrice', 'costPrice', 'supplyPrice', 'wholesalePrice', 'largeBatchPrice', 'memberPrice', 'retailPrice']
+    //   let minObj = {}
+    //   minDataList.forEach((item) => {
+    //     let list = this.childProductArray.length ? this.childProductArray.map((skuItem) => Number(skuItem[item])) : []
+    //     if (list.length >= 1) minObj[item] = Math.min.apply(Math, list).toFixed(2)
+    //   })
+    //   if (Object.keys(minObj).length > 1) this.$emit('set-min-price', minObj)
+    // },
+    // 设置成衣成本价，同时批量设置sku相关价格
+    batchSameTypePrice(target, curPrice, rate, handlePrice = '') {
+      this.childProductArray.forEach((item) => {
+        item[target] = this.getPrice(curPrice, rate, handlePrice)
+      })
+    },
+    getPrice(val, rate, handlePrice = '') {
+      if (handlePrice === 'handlePrice') {
+        // 获取个位数，原数字减个位数加8 得会员价、零售价
+        return (parseInt(Math.ceil(val * rate)) - parseInt(Math.ceil(val * rate) % 10) + 8).toFixed(2)
+      }
+      return Math.ceil(val * rate).toFixed(2)
     }
   }
 }
@@ -504,11 +749,19 @@ export default {
     }
     .content-box {
       flex: 18;
-      .batch-set {
+      .batch-set,
+      .rate-set {
         margin-top: 8px;
         padding-right: 5px;
         width: 200px;
       }
+      .hidden {
+        margin-right: -5px;
+        visibility: hidden;
+      }
+    }
+    .rate-text {
+      color: blue;
     }
   }
   .pic {
