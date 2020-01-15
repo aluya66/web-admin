@@ -47,7 +47,7 @@
 import mixinTable from 'mixins/table'
 import noperfect from './noperfect'
 import perfect from './perfect'
-import utils from 'utils'
+// import utils from 'utils'
 import CDialog from 'components/dialog'
 export default {
   name: 'goodsManage',
