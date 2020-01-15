@@ -128,6 +128,7 @@ export default {
     name: 'exportList',
     component: () => import('@/views/basic/exportList'),
     meta: {
+      noCache: true,
       title: 'exportList',
       icon: 'table',
       roles: ['admin']
