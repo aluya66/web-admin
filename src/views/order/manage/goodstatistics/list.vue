@@ -143,7 +143,7 @@ export default {
         },
         {
           label: '货号',
-          prop: 'productSkuCode'
+          prop: 'starasSkuCode'
         }
       ]
     }
