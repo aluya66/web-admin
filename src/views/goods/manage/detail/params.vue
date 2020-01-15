@@ -253,6 +253,7 @@ export default {
       }
       .btn-item {
         display: flex;
+        justify-content: center;
         flex-direction: row;
         .btn {
           margin: 5px;

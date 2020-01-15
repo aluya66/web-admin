@@ -55,7 +55,7 @@
       >当前品牌倍率为：供货价: {{rateListFromPort[0].value}}倍;散批价:{{rateListFromPort[1].value}}倍;大批价:{{rateListFromPort[2].value}}倍;会员价:{{rateListFromPort[3].value}}倍;零售价:{{rateListFromPort[4].value}}倍;</p>
     </div>-->
     <div class="sku-box">
-      <div class="label">SKU批量填充:</div>
+      <div class="label">SKU价格:</div>
       <div class="content-box">
         <template>
           <el-input
