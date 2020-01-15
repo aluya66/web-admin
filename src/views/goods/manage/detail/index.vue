@@ -138,7 +138,6 @@ export default {
   methods: {
     handleScroll() {
       const top = document.documentElement.scrollTop
-      console.log(top)
       if (top >= 0 && top < 900) {
         this.currentPoint = 0
       } else if (top >= 900 && top < 1800) {
