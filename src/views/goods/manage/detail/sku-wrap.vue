@@ -150,7 +150,7 @@
             <td>
               <el-switch
                 v-if="childProductArray[index]"
-                v-model="childProductArray[index].isDefalut"
+                v-model="childProductArray[index].isDefault"
                 @change="(val) => {handleDefaultChange(index, val)}"
               ></el-switch>
             </td>
@@ -469,7 +469,7 @@ export default {
         memberPrice: '', // 成衣会员价
         skuStock: 0, // 成衣库存
         // isUse: true, // 是否有用sku
-        isDefalut: false // 是否默认SKU
+        isDefault: false // 是否默认SKU
       }
       // 判断是否从详情读取sku列表数据
       const curSkuInfo = this.skuList.find(item => {
@@ -487,7 +487,7 @@ export default {
           retailPrice: curSkuInfo.retailPrice, // 零售价
           memberPrice: curSkuInfo.memberPrice, // 成衣会员价
           skuStock: curSkuInfo.skuStock || 0, // 成衣库存
-          isDefalut: curSkuInfo.isDefalut === 1
+          isDefault: curSkuInfo.isDefault === 1
         }
       }
       const spec = childProduct.childProductSpec
@@ -495,6 +495,7 @@ export default {
         // 如果此id不存在，说明为新增属性，则向 childProductArray 中添加一条数据
         if (this.stockSpecArr.findIndex((item) => objEquals(spec, item)) === -1) {
           this.$set(this.childProductArray, index, childProduct)
+          console.log(this.childProductArray)
         }
       } else if (option === 'del') {
         // 因为是删除操作，理论上所有数据都能从stockCopy中获取到
@@ -530,9 +531,9 @@ export default {
       if (!value) return
       this.childProductArray.forEach((item, cindex) => {
         if (cindex !== index) {
-          this.$set(this.childProductArray[cindex], 'isDefalut', false)
+          this.$set(this.childProductArray[cindex], 'isDefault', false)
         } else {
-          this.$set(this.childProductArray[index], 'isDefalut', true)
+          this.$set(this.childProductArray[index], 'isDefault', true)
         }
       })
       const target = this.childProductArray[index]
@@ -554,7 +555,7 @@ export default {
     changeSkuPrice(val, index, priceType) {
       if (val) {
         this.$set(this.childProductArray[index], priceType, Number(val).toFixed(2))
-        this.childProductArray[index].isDefalut && this.handleMinPrice(this.childProductArray[index])
+        this.childProductArray[index].isDefault && this.handleMinPrice(this.childProductArray[index])
       }
     },
     // 倍率设置
