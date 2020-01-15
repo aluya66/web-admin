@@ -34,7 +34,7 @@ export default {
     ruleInfo: '发券规则详情',
     starGoCard: '星购卡管理',
     starGoCardList: '兑换列表',
-    starGoCardRechargeList: '充值列表',
+    starGoCardRechargeList: '购卡明细',
     starGoCardExportList: '导出列表',
     starGoCardRedeemCodeList: '兑换码列表',
     payCenter: '支付中心',

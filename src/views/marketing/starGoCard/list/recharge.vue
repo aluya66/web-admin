@@ -33,31 +33,35 @@
 import mixinTable from 'mixins/table'
 // import utils from 'utils'
 // import dictObj from '@/store/dictData'
-const statusList = [{
-  label: '待激活',
-  value: 0
-}, {
-  label: '已激活',
+const statusList = [{ // 1 在线购卡 2 活动购卡 3 兑换码绑卡 4 系统发卡 5 在线购劵 6 活动购劵 7 兑换码绑劵 8 系统发劵 9 活动领劵
+  label: '在线购卡',
   value: 1
 }, {
-  label: '使用中',
+  label: '活动购卡',
   value: 2
 }, {
-  label: '已使用',
+  label: '兑换码绑卡',
+  value: 3
+}, {
+  label: '系统发卡',
   value: 4
 }, {
-  label: '过期',
+  label: '在线购劵',
+  value: 5
+}, {
+  label: '活动购劵',
+  value: 6
+}, {
+  label: '兑换码绑劵',
+  value: 7
+}, {
+  label: '系统发劵',
   value: 8
 }, {
-  label: '删除',
-  value: 16
-}, {
-  label: '失效',
-  value: 32
-}, {
-  label: '不在有效期',
-  value: 64
+  label: '活动领劵',
+  value: 9
 }]
+
 export default {
   name: 'starGoCardRechargeList',
   mixins: [mixinTable],
@@ -103,9 +107,9 @@ export default {
         },
         {
           label: '类型',
-          prop: 'status',
+          prop: 'couponRuleType',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.status, statusList)
+            return row && vm.setTableColumnLabel(row.couponRuleType, statusList)
           },
           search: {
             type: 'select',
