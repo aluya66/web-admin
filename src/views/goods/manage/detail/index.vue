@@ -226,7 +226,7 @@ export default {
         }
       }
       const { videoList, goodsImageList, intro } = this.$refs.paramsRef.formModel
-      const goodsStaticFiles = goodsImageList.map((item, index) => ({ imageUrl: item.url, isDefault: index === 0 ? 1 : 0 }))
+      const goodsStaticFiles = goodsImageList.map((item, index) => ({ imageUrl: item.url, isDefalut: index === 0 ? 1 : 0 }))
       if (videoList.length) goodsStaticFiles.push({ videoUrl: videoList[0].url })
       const skus = childProductArray && childProductArray.length ? childProductArray.map((item, index) => {
         let imgIndex = specification[0].value.length && specification[0].value.findIndex((colorItem) => colorItem === item.childProductSpec['颜色'])
@@ -239,7 +239,7 @@ export default {
           supplyPrice: item.supplyPrice, // 供货价
           wholesalePrice: item.wholesalePrice, // 散批价
           largeBatchPrice: item.largeBatchPrice, // 大批发价
-          isDefalut: item.isDefalut ? 1 : 0 // 是否默认
+          isDefalut: item.isDefalut ? 1 : 2 // 是否默认
         }
       }) : []
       if (skus.some((item) => !item.imageUrl)) return this.$msgTip('sku图片不能为空', 'warning') // 判断sku是否都有图片
