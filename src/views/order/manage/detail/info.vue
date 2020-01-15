@@ -22,21 +22,21 @@
         <span>订单备注：{{orderInfo.orderNewResp.remark}}</span>
       </div>
     </line-card>
-    <line-card title="支付信息" v-if="orderInfo.orderNewResp">
+    <line-card title="支付信息" v-if="orderInfo.orderPayResp">
       <div class="row">
-        <span>支付方式：{{orderInfo.orderNewResp.payType}}</span>
-        <span>支付状态：{{setEnumValue(orderInfo.orderNewResp.payStatus, payStatusList)}}</span>
-        <span>支付时间：{{orderInfo.orderNewResp.payTime}}</span>
+        <span>支付方式：{{orderInfo.orderPayResp[0].payType}}</span>
+        <span>支付状态：{{setEnumValue(orderInfo.orderPayResp[0].status, payStatusList)}}</span>
+        <span>支付时间：{{orderInfo.orderPayResp[0].created}}</span>
       </div>
       <div class="row">
-        <span>支付单号：{{orderInfo.orderNewResp.thirdOrderCode}}</span>
-        <span>第三方流水号：{{orderInfo.orderNewResp.thirdPartyPaycode}}</span>
+        <span>支付单号：{{orderInfo.orderPayResp[0].flowCode}}</span>
+        <span>第三方流水号：{{orderInfo.orderPayResp[0].thirdPartyPaycode}}</span>
       </div>
     </line-card>
     <line-card title="付款信息" v-if="orderInfo.orderNewResp">
       <div class="row">
         <span>订单总金额(元)：{{orderInfo.orderNewResp.orderTotalAmount}}</span>
-        <span>优惠券金额(元)：{{orderInfo.orderNewResp.couponTotalAmount}}</span>
+        <span>优惠券金额(元)：{{orderInfo.orderNewResp.couponAmount}}</span>
         <span>售后金额(元)：{{orderInfo.orderNewResp.afterSalesAmount}}</span>
         <!-- <span>订单支付手续费(元)：{{orderInfo.orderNewResp.orderCode}}</span> -->
         <span>余额抵扣(元)：{{orderInfo.orderNewResp.walletAmount}}</span>
