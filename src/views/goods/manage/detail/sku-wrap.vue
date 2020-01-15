@@ -542,6 +542,7 @@ export default {
     // sku默认选中 则为最新价 【target: 选中的sku】
     handleMinPrice(target) {
       const minObj = {
+        sampleCostprice: target.sampleCostPrice, // 样衣成本价
         costprice: target.costPrice, // 成衣成本价
         supplyprice: target.supplyPrice, // 供货价
         wholesaleprice: target.wholesalePrice, // 散批价
