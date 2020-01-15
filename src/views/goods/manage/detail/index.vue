@@ -226,7 +226,7 @@ export default {
         }
       }
       const { videoList, goodsImageList, intro } = this.$refs.paramsRef.formModel
-      const goodsStaticFiles = goodsImageList.map((item, index) => ({ imageUrl: item.url, isDefalut: index === 0 ? 1 : 0 }))
+      const goodsStaticFiles = goodsImageList.map((item, index) => ({ imageUrl: item.url, isDefault: index === 0 ? 1 : 0 }))
       if (videoList.length) goodsStaticFiles.push({ videoUrl: videoList[0].url })
       const skus = childProductArray && childProductArray.length ? childProductArray.map((item, index) => {
         let imgIndex = specification[0].value.length && specification[0].value.findIndex((colorItem) => colorItem === item.childProductSpec['颜色'])
