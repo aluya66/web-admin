@@ -107,9 +107,9 @@ export default {
         },
         {
           label: '类型',
-          prop: 'couponRuleType',
+          prop: 'receiveType',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.couponRuleType, statusList)
+            return row && vm.setTableColumnLabel(row.receiveType, statusList)
           },
           search: {
             type: 'select',
@@ -124,7 +124,7 @@ export default {
           }
         },
         {
-          label: '时间',
+          label: '创建时间',
           prop: 'created',
           search: {
             type: 'dateTime',
