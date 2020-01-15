@@ -239,12 +239,12 @@ export default {
           supplyPrice: item.supplyPrice, // 供货价
           wholesalePrice: item.wholesalePrice, // 散批价
           largeBatchPrice: item.largeBatchPrice, // 大批发价
-          isDefault: item.isDefault ? 1 : 2 // 是否默认
+          isDefalut: item.isDefalut ? 1 : 2 // 是否默认
         }
       }) : []
       if (skus.some((item) => !item.imageUrl)) return this.$msgTip('sku图片不能为空', 'warning') // 判断sku是否都有图片
       if (type === 'confirmFinish' || type === 'edit') { // 编辑、确认完成需要 有默认主sku
-        if (!skus.some((item) => item.isDefault === 1)) return this.$msgTip('请选择一个作为主sku', 'warning')
+        if (!skus.some((item) => item.isDefalut === 1)) return this.$msgTip('请选择一个作为主sku', 'warning')
       }
       requestFun[type]({
         id, // 商品Id

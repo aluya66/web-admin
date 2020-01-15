@@ -150,7 +150,7 @@
             <td>
               <el-switch
                 v-if="childProductArray[index]"
-                v-model="childProductArray[index].isDefault"
+                v-model="childProductArray[index].isDefalut"
                 @change="(val) => {handleDefaultChange(index, val)}"
               ></el-switch>
             </td>
@@ -469,7 +469,7 @@ export default {
         memberPrice: '', // 成衣会员价
         skuStock: 0, // 成衣库存
         // isUse: true, // 是否有用sku
-        isDefault: false // 是否默认SKU
+        isDefalut: false // 是否默认SKU
       }
       // 判断是否从详情读取sku列表数据
       const curSkuInfo = this.skuList.find(item => {
@@ -487,7 +487,7 @@ export default {
           retailPrice: curSkuInfo.retailPrice, // 零售价
           memberPrice: curSkuInfo.memberPrice, // 成衣会员价
           skuStock: curSkuInfo.skuStock || 0, // 成衣库存
-          isDefault: curSkuInfo.isDefault === 1
+          isDefalut: curSkuInfo.isDefalut === 1
         }
       }
       const spec = childProduct.childProductSpec
@@ -531,9 +531,9 @@ export default {
       if (!value) return
       this.childProductArray.forEach((item, cindex) => {
         if (cindex !== index) {
-          this.$set(this.childProductArray[cindex], 'isDefault', false)
+          this.$set(this.childProductArray[cindex], 'isDefalut', false)
         } else {
-          this.$set(this.childProductArray[index], 'isDefault', true)
+          this.$set(this.childProductArray[index], 'isDefalut', true)
         }
       })
       const target = this.childProductArray[index]
@@ -555,7 +555,7 @@ export default {
     changeSkuPrice(val, index, priceType) {
       if (val) {
         this.$set(this.childProductArray[index], priceType, Number(val).toFixed(2))
-        this.childProductArray[index].isDefault && this.handleMinPrice(this.childProductArray[index])
+        this.childProductArray[index].isDefalut && this.handleMinPrice(this.childProductArray[index])
       }
     },
     // 倍率设置
