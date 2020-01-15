@@ -478,6 +478,7 @@ export default {
         isDefalut: false // 是否默认SKU
       }
       // 判断是否从详情读取sku列表数据
+      console.log(item.attributeColorValue, childProduct.childProductSpec[item.attrColorName], item.attributeSpecValue, childProduct.childProductSpec[item.attrSpecName])
       const curSkuInfo = this.skuList.find(item => {
         return item.attributeColorValue === childProduct.childProductSpec[item.attrColorName] && item.attributeSpecValue === childProduct.childProductSpec[item.attrSpecName]
       })
