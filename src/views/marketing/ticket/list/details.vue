@@ -130,7 +130,7 @@ export default {
             const { preferentialType, preferentialValue } = marketPreferentialRules
             switch (preferentialType) {
               case 1:
-                return `${preferentialValue * 10}折`
+                return `${preferentialValue}折`
               case 3:
                 return ''
               case 5:
