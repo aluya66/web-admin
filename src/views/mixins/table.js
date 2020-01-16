@@ -145,8 +145,8 @@ export default {
         })
         return arr.join(',')
       } else { // value 字符串和数字
-        let curVal = curArr.find(res => value === res.value)
-        return curVal ? curVal.label : ''
+        let curVal = curArr.find(res => Number(value) === res.value || value === res.value)
+        return curVal ? curVal.label : (value || '')
       }
     }
   },

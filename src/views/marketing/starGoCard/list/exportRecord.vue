@@ -52,7 +52,7 @@ export default {
           fixed: true
         },
         {
-          label: '绑卡金额',
+          label: '绑卡金额(元)',
           prop: 'faceValue'
         },
         {
