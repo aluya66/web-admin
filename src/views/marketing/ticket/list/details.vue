@@ -31,32 +31,15 @@
 
 <script>
 import mixinTable from 'mixins/table'
-// import utils from 'utils'
-// import dictObj from '@/store/dictData'
 const statusList = [{
-  label: '待激活',
-  value: 0
-}, {
-  label: '已激活',
+  label: '未使用',
   value: 1
-}, {
-  label: '使用中',
-  value: 2
 }, {
   label: '已使用',
   value: 4
 }, {
   label: '过期',
   value: 8
-}, {
-  label: '删除',
-  value: 16
-}, {
-  label: '失效',
-  value: 32
-}, {
-  label: '不在有效期',
-  value: 64
 }]
 export default {
   name: 'ticketDetailsList',
@@ -65,13 +48,13 @@ export default {
     return {
       tableInnerBtns: [
         {
-          // 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
+          //
           prop: {
             name: 'status',
             toggle: [{
               title: '核销',
               icon: 'el-icon-publish',
-              value: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+              value: [1] // 未使用才有核销功能
             }]
           },
           handle(row) {
@@ -141,7 +124,19 @@ export default {
         },
         {
           label: '券金额',
-          prop: 'couponAmount'
+          prop: 'couponAmount',
+          formatter(row) {
+            const marketPreferentialRules = row.couponRule.marketPreferentialRules && row.couponRule.marketPreferentialRules[0] ? row.couponRule.marketPreferentialRules[0] : {}
+            const { preferentialType } = marketPreferentialRules
+            switch (preferentialType) {
+              case 1:
+                return `${row.couponAmount * 10}折`
+              case 3:
+                return ''
+              case 5:
+                return `${row.couponAmount}元`
+            }
+          }
         },
         {
           label: '状态',
@@ -163,7 +158,7 @@ export default {
           }
         },
         {
-          label: '订单金额',
+          label: '订单金额(元)',
           prop: 'activityAmount'
         },
         {

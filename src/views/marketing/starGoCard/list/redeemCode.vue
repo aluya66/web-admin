@@ -91,11 +91,11 @@ export default {
           fixed: true
         },
         {
-          label: '绑定金额',
+          label: '绑定金额(元)',
           prop: 'faceValue'
         },
         {
-          label: '赠送金额',
+          label: '赠送金额(元)',
           prop: 'givingValue'
         },
         {
