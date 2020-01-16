@@ -127,14 +127,14 @@ export default {
           prop: 'couponAmount',
           formatter(row) {
             const marketPreferentialRules = row.couponRule.marketPreferentialRules && row.couponRule.marketPreferentialRules[0] ? row.couponRule.marketPreferentialRules[0] : {}
-            const { preferentialType } = marketPreferentialRules
+            const { preferentialType, preferentialValue } = marketPreferentialRules
             switch (preferentialType) {
               case 1:
-                return `${row.couponAmount * 10}折`
+                return `${preferentialValue * 10}折`
               case 3:
                 return ''
               case 5:
-                return `${row.couponAmount}元`
+                return `${preferentialValue}元`
             }
           }
         },
