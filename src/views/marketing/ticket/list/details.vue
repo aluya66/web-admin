@@ -110,15 +110,15 @@ export default {
         {
           label: '券内容',
           formatter(row) { // 卡券类型 5现金券 1折扣券 3兑换券
-            const marketPreferentialRules = row.couponRule.marketPreferentialRules && row.couponRule.marketPreferentialRules[0] ? row.couponRule.marketPreferentialRules[0] : {}
+            const marketPreferentialRules = row.couponRule && row.couponRule.marketPreferentialRules && row.couponRule.marketPreferentialRules[0] ? row.couponRule.marketPreferentialRules[0] : {}
             const { preferentialLevel, preferentialValue, preferentialType } = marketPreferentialRules
             switch (preferentialType) {
               case 1:
                 return `满${preferentialLevel || ''}件享${preferentialValue || ''}折`
-              case 3:
-                return ''
               case 5:
                 return `满${preferentialLevel || ''}元减${preferentialValue || ''}元`
+              default:
+                return ''
             }
           }
         },
@@ -126,15 +126,15 @@ export default {
           label: '券金额',
           prop: 'couponAmount',
           formatter(row) {
-            const marketPreferentialRules = row.couponRule.marketPreferentialRules && row.couponRule.marketPreferentialRules[0] ? row.couponRule.marketPreferentialRules[0] : {}
+            const marketPreferentialRules = row.couponRule && row.couponRule.marketPreferentialRules && row.couponRule.marketPreferentialRules[0] ? row.couponRule.marketPreferentialRules[0] : {}
             const { preferentialType, preferentialValue } = marketPreferentialRules
             switch (preferentialType) {
               case 1:
-                return `${preferentialValue * 10}折`
-              case 3:
-                return ''
+                return `${preferentialValue}折`
               case 5:
                 return `${preferentialValue}元`
+              default:
+                return ''
             }
           }
         },
