@@ -272,7 +272,7 @@ export default {
           prop: 'walletAmount',
           search: {
             label: '订单商品SKU',
-            prop: 'productSkuCode',
+            prop: 'starasSkuCode',
             type: 'input'
           }
         },

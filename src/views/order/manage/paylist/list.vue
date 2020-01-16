@@ -103,7 +103,7 @@ export default {
           label: '支付状态',
           prop: 'status',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.status, 'payStatusList')
+            return row && vm.setTableColumnLabel(row.status, payStatusList)
           },
           search: {
             type: 'dict',
@@ -115,10 +115,6 @@ export default {
           prop: 'payType',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.payType, 'payTypeList')
-          },
-          search: {
-            type: 'dict',
-            optionsList: dictObj.payTypeList
           }
         },
         {
