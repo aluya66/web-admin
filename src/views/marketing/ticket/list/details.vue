@@ -73,7 +73,7 @@ export default {
           fixed: true,
           search: {
             type: 'dateTime',
-            prop: 'activateTime'
+            prop: 'createTime'
           }
         },
         {
@@ -180,15 +180,15 @@ export default {
      * 获取表格数据
      */
     fetchData() {
-      const { useTime, activateTime, ...other } = this.searchObj
+      const { useTime, createTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
       const useTimeObj = this.getSearchDate(useTime, 'dateTime', 'useCouponTimeStart', 'useCouponTimeEnd')
-      const activateTimeObj = this.getSearchDate(activateTime, 'dateTime', 'activateCouponTimeStart', 'activateCouponTimeEnd')
+      const createTimeObj = this.getSearchDate(createTime, 'dateTime', 'createdTimeBegin', 'createdTimeEnd')
       this.isLoading = true
       this.$api.marketing
         .getTicketDetailsList({
           ...useTimeObj,
-          ...activateTimeObj,
+          ...createTimeObj,
           ...page,
           ...other
         })
