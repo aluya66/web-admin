@@ -48,7 +48,7 @@ export default {
         name: '详情',
         icon: 'el-icon-view',
         notBtn(row) {
-          return !(row.settleStatus === 2 && row.payStatus === 3) && !(row.settleStatus === 3 && row.payStatus === 1)
+          return (row.settleStatus === 2 && row.payStatus === 3) || (row.settleStatus === 3 && row.payStatus === 1)
         },
         handle(row) {
           vm.routerLink(`/finance/coping/settlement/detail/${row.id}`)

@@ -55,7 +55,7 @@ import dictObj from '@/store/dictData'
 import utils from 'utils'
 
 export default {
-  name: 'financeSettlement',
+  name: 'financeDistribution',
   mixins: [mixinTable],
   data(vm) {
     return {
