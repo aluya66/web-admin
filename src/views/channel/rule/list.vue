@@ -155,15 +155,7 @@ export default {
         const {
           ruleCode,
           ruleName,
-          ruleBrandResps,
-          // payment,
-          costPrice,
-          largeBatchPrice,
-          memberPrice,
-          retailPrice,
-          supplyPrice,
-          wholesalePrice
-          // store
+          ruleBrandResps
         } = res
         let brands = ruleBrandResps && ruleBrandResps.length ? ruleBrandResps.map(item => ({
           name: item.brandName,
@@ -176,15 +168,7 @@ export default {
             ruleId: id,
             ruleCode,
             ruleName,
-            brands,
-            // payment: [1, 2, 4],
-            costPrice,
-            largeBatchPrice,
-            memberPrice,
-            retailPrice,
-            supplyPrice,
-            wholesalePrice
-            // store
+            brands
           },
           isEdit: true
         })
@@ -206,7 +190,7 @@ export default {
         add: this.$api.channel.addRule,
         edit: this.$api.channel.editRule
       }
-      const { brands, submitPriceObj, priceList, ruleCode, ...other } = childFormModel
+      const { brands, ruleCode, ...other } = childFormModel
       const curBrands = childFormModel.brands.map(item => ({
         brandCode: item.code,
         brandName: item.name,
@@ -215,8 +199,7 @@ export default {
       requestObj[requestType]({
         ruleCode,
         brands: curBrands,
-        ...other,
-        ...submitPriceObj
+        ...other
       }).then(() => {
         const msg = requestType === 'edit' ? '编辑成功' : '新增成功'
         this.$msgTip(msg)
