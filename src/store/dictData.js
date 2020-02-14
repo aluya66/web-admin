@@ -1,3 +1,5 @@
+import utils from 'utils'
+
 // 积分来源
 const pointTypeList = [{
   label: '订单消费',
@@ -19,9 +21,9 @@ const pointTypeList = [{
   value: 5
 }
 ]
-
 // 业务线
-const lobList = [{
+let lobList = utils.getStore('GLOBALAPPLIST')
+lobList = lobList || [{
   label: 'IPX',
   value: 'ysdp'
 },

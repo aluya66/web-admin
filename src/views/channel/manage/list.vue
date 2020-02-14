@@ -122,7 +122,9 @@ export default {
           icon: 'el-icon-connection',
           notBtn: row => row.channelType === 1, // 主渠道隐藏
           handle(row) {
-            vm.$api.channel.getChannelRule().then(res => {
+            vm.$api.channel.getChannelRule({
+              status: 1
+            }).then(res => {
               vm.isLoading = false
               let ruleList = res && res.totalCount ? res.data : res
               vm.ruleList = ruleList.map(item => ({

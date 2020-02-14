@@ -54,9 +54,15 @@ export default {
       }
     }
   },
+  created() {
+    this.getAppCode() // 获取业务线数据
+  },
   methods: {
     handleClickOutside () {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
+    },
+    getAppCode() {
+      this.$store.dispatch('views/getAppCodeList')
     }
   }
 }
