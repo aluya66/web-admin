@@ -357,19 +357,19 @@ const orderStatusList = [{
   label: '订单完结',
   value: 70
 }
-// , {
-//   label: '未审核',
-//   value: 10
-// }, {
-//   label: '审核通过',
-//   value: 20
-// }, {
-//   label: '待复核',
-//   value: 30
-// }, {
-//   label: '审核不通过',
-//   value: 40
-// },
+  // , {
+  //   label: '未审核',
+  //   value: 10
+  // }, {
+  //   label: '审核通过',
+  //   value: 20
+  // }, {
+  //   label: '待复核',
+  //   value: 30
+  // }, {
+  //   label: '审核不通过',
+  //   value: 40
+  // },
 ]
 
 // 售后状态
@@ -508,8 +508,43 @@ const orderBusinessTypeList = [{
   label: '星购卡订单',
   value: 7
 }]
-
+// 售后单状态 状态 1:未审核 10:审核通过 11:审核拒绝 , 20:仓库审核通过, 21:仓库审核拒绝 80:售后完成, 90售后取消
+const afterSalesStatus = [{
+  label: '未审核',
+  value: 1
+}, {
+  label: '审核通过',
+  value: 10
+}, {
+  label: '审核拒绝',
+  value: 11
+}, {
+  label: '仓库审核通过',
+  value: 20
+}, {
+  label: '仓库审核拒绝',
+  value: 21
+}, {
+  label: '售后完成',
+  value: 80
+}, {
+  label: '售后取消',
+  value: 90
+}]
+// 售后类型 1：只退款，2：退款退货，3:代金券退货
+const afterSalesTypes = [{
+  label: '只退款',
+  value: 1
+}, {
+  label: '退款退货',
+  value: 2
+}, {
+  label: '代金券退货',
+  value: 3
+}]
 export default {
+  afterSalesTypes,
+  afterSalesStatus,
   payStatusList,
   settleStatusList,
   pointTypeList,

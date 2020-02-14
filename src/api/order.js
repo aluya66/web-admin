@@ -1,7 +1,7 @@
 import Http from '../utils/request'
 
-const context = process.env.VUE_APP_CONSOLE_COMMON
-
+const context = process.env.VUE_APP_CONSOLE_LOCALHOST
+// VUE_APP_CONSOLE_LOCALHOST VUE_APP_CONSOLE_COMMON
 /**
  * 查询订单列表
  * @param {*}
@@ -143,5 +143,14 @@ export const queryShipDetail = params =>
  */
 export const queryStargoList = params =>
   Http.fetch(`${context}/api/stargo/list`, params, {
+    method: 'get'
+  })
+
+/**
+* 查询售后单列表、退货单
+* @param {*}
+*/
+export const queryAfterSalesList = params =>
+  Http.fetch(`${context}/api/ass/list`, params, {
     method: 'get'
   })
