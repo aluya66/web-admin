@@ -3,7 +3,6 @@
     <template v-slot:header>
       <div class="title">
         {{$route.meta.name || $t(`route.${$route.meta.title}`)}}
-        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -186,7 +185,7 @@ export default {
       this.dialogObj = {
         isShow: true,
         isEdit: opts.isEdit || false,
-        title: opts.title || '新增',
+        title: opts.title,
         initData: opts.initData
       }
     }
