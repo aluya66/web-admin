@@ -1,3 +1,5 @@
+import utils from 'utils'
+
 // 积分来源
 const pointTypeList = [{
   label: '订单消费',
@@ -19,9 +21,9 @@ const pointTypeList = [{
   value: 5
 }
 ]
-
 // 业务线
-const lobList = [{
+let lobList = utils.getStore('GLOBALAPPLIST')
+lobList = lobList || [{
   label: 'IPX',
   value: 'ysdp'
 },
@@ -71,8 +73,7 @@ const auditStatus = [{
 }, {
   label: '已审核',
   value: 1
-}
-]
+}]
 
 // 标签分类类型
 const categoryTypeList = [{
@@ -194,15 +195,14 @@ const activityStatusList = [{
 }]
 
 // 卡券类型
-const ticketTypeList = [
-  {
-    value: 5,
-    label: '现金券'
-  },
-  {
-    value: 1,
-    label: '折扣券'
-  }
+const ticketTypeList = [{
+  value: 5,
+  label: '现金券'
+},
+{
+  value: 1,
+  label: '折扣券'
+}
   // {
   //   value: 3,
   //   label: '兑换券'
@@ -235,6 +235,7 @@ const priceTypeList = [{
   label: '成本价'
 }
 ]
+
 const couponStatusList = [ // 卡劵状态 0草稿 1审核中 2审核不通过 3审核通过 4未发布 5进行中 6未开始 7已下架 8已结束(失效)
   {
     value: 0,
@@ -297,6 +298,7 @@ const receiveTypeList = [{
   value: 2
 }
 ]
+
 // 结算状态
 const settleStatusList = [{
   label: '待结算',
@@ -309,7 +311,8 @@ const settleStatusList = [{
 {
   label: '已关闭',
   value: 3
-}]
+}
+]
 
 // 付款状态
 const payStatusList = [{
@@ -323,7 +326,8 @@ const payStatusList = [{
 {
   label: '已支付',
   value: 3
-}]
+}
+]
 
 const orderTypeList = [{
   label: '销售订单',
@@ -332,6 +336,179 @@ const orderTypeList = [{
 {
   label: '售后订单',
   value: 2
+}
+]
+
+// 订单状态
+const orderStatusList = [{
+  label: '待付款',
+  value: 80
+}, {
+  label: '待发货',
+  value: 81
+}, {
+  label: '待签收',
+  value: 82
+}, {
+  label: '已取消',
+  value: 50
+}, {
+  label: '已完成',
+  value: 60
+}, {
+  label: '订单完结',
+  value: 70
+}
+// , {
+//   label: '未审核',
+//   value: 10
+// }, {
+//   label: '审核通过',
+//   value: 20
+// }, {
+//   label: '待复核',
+//   value: 30
+// }, {
+//   label: '审核不通过',
+//   value: 40
+// },
+]
+
+// 售后状态
+const afterSaleStatusList = [{
+  label: '未售后',
+  value: -1
+}, {
+  label: '待审核',
+  value: 1
+}, {
+  label: '待退货',
+  value: 2
+}, {
+  label: '待确认（仓库）',
+  value: 3
+}, {
+  label: '仓库待发货',
+  value: 4
+}, {
+  label: '用户待确认',
+  value: 5
+}, {
+  label: '已完成',
+  value: 6
+}, {
+  label: '已取消',
+  value: 7
+}, {
+  label: '已驳回',
+  value: 8
+}]
+
+// 评价状态
+const evaluateStatusList = [{
+  label: '待评价',
+  value: 1
+}, {
+  label: '已评价',
+  value: 2
+}]
+// 订单支付类别
+const payTypeList = [{
+  label: '微信APP',
+  value: 'WXAPP'
+}, {
+  label: '微信小程序',
+  value: 'WXXCX'
+}, {
+  label: '微信二维码支付',
+  value: 'WXEWM'
+}, {
+  label: '微信WAP',
+  value: 'WXWAP'
+}, {
+  label: '支付宝APP',
+  value: 'ZFBAPP'
+}, {
+  label: '支付宝PC',
+  value: 'ZFBPC'
+}, {
+  label: '支付宝WAP',
+  value: 'ZFBWAP'
+}, {
+  label: '银联',
+  value: 'UPMP'
+}, {
+  label: '虚拟',
+  value: 'XN'
+}, {
+  label: '拉卡拉',
+  value: 'LKL'
+}, {
+  label: '钱包余额',
+  value: 'QB'
+}, {
+  label: '线下',
+  value: 'OFFLINE'
+}, {
+  label: '星购卡',
+  value: 'XGK'
+}, {
+  label: '优惠券',
+  value: 'YHQ'
+}, {
+  label: '代金券',
+  value: 'DJQ'
+}, {
+  label: '积分',
+  value: 'JF'
+}]
+
+// 支付结算状态
+const orderSettleStatusList = [{
+  label: '预结算',
+  value: 1
+}, {
+  label: '待结算',
+  value: 2
+}, {
+  label: '已结算',
+  value: 3
+}, {
+  label: '已关闭',
+  value: 4
+}]
+
+// 订单配送类型
+const deliveryTimeTypeList = [{
+  label: '门店自提',
+  value: 1
+}, {
+  label: '快递',
+  value: 2
+}]
+
+// 订单业务类型，单据类型
+const orderBusinessTypeList = [{
+  label: '团购',
+  value: 1
+}, {
+  label: '普通订单',
+  value: 2
+}, {
+  label: '秒杀',
+  value: 3
+}, {
+  label: '购券',
+  value: 4
+}, {
+  label: '充值',
+  value: 5
+}, {
+  label: 'VIP订单',
+  value: 6
+}, {
+  label: '星购卡订单',
+  value: 7
 }]
 
 export default {
@@ -358,5 +535,12 @@ export default {
   couponStatusList,
   ticketValidTypeArr,
   receiveTypeList,
-  orderTypeList
+  orderTypeList,
+  orderStatusList,
+  afterSaleStatusList,
+  evaluateStatusList,
+  payTypeList,
+  orderSettleStatusList,
+  deliveryTimeTypeList,
+  orderBusinessTypeList
 }

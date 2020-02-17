@@ -58,7 +58,7 @@ export default {
       {
         name: '删除',
         icon: 'el-icon-delete',
-        notBtn: row => row.businessType === 2, // 合作商显示
+        notBtn: row => row.businessType === 1, // 合作商显示
         handle(row) {
           const { businessName, id } = row
           vm.confirmTip(`是否确定删除【${businessName}】商户`, () => {

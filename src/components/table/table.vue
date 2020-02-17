@@ -30,13 +30,14 @@
         </template>
       </el-table-column>
       <el-table-column v-if="selection" :align="align" type="selection" width="55" />
+      <el-table-column v-if="hasIndex" label="序号" :fixed="true" align="center" width="60" type="index" :index="index => index + (pageInfo.pageNo - 1) * pageInfo.pageSize + 1" />
       <el-table-column
         v-for="(item, index) in tableHeader"
         :key="index"
         :align="align"
         :label="item.label"
         :prop="item.prop"
-        :width="item.width"
+        :min-width="item.width || 120"
         :fixed="item.fixed"
         :show-overflow-tooltip="item.inline"
       >
@@ -188,7 +189,7 @@ export default {
     },
     autoScroll: {
       type: Boolean,
-      default: true
+      default: false
     },
     clearSelect: {
       type: Boolean,
@@ -213,6 +214,10 @@ export default {
     highlightCurrentRow: {
       type: Boolean,
       default: true
+    },
+    hasIndex: {
+      type: Boolean,
+      default: false
     },
     maxHeight: Number,
     rowStyle: Object,
@@ -284,7 +289,7 @@ export default {
         }
         if (res.notBtn) { // 渠道关联关联后，屏蔽关联按钮 !row[res.notBtn].length
           if (typeof res.notBtn === 'function') { // 多个条件状态，判断是否显示某一个按钮时
-            return res.notBtn(row)
+            return !res.notBtn(row)
           }
           return Array.isArray(row[res.notBtn]) ? !row[res.notBtn].length : !!row[res.notBtn]
         } else {

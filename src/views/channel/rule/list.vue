@@ -97,51 +97,44 @@ export default {
         prop: 'updated'
       }],
       tableInnerBtns: [{
-        name: '查看',
-        icon: 'el-icon-view',
+        width: '180',
+        prop: {
+          name: 'status', // 为0或1
+          toggle: [{
+            icon: 'el-icon-open',
+            title: '开启'
+          }, {
+            icon: 'el-icon-close',
+            title: '关闭'
+          }]
+        },
+        handle(row) {
+          const { ruleId, ruleName, status } = row
+          const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
+          vm.confirmTip(
+            `是否${handleStatus === 0 ? '关闭' : '开启'} ${ruleName} 渠道规则`,
+            () => {
+              vm.handleRuleStatus({ id: ruleId, status: handleStatus })
+            }
+          )
+        }
+      }, {
+        name: '编辑',
+        icon: 'el-icon-edit',
         handle(row) {
           const { ruleId } = row
           vm.getRuleDetails(ruleId)
         }
+      }, {
+        name: '删除',
+        icon: 'el-icon-delete',
+        handle(row) {
+          const { ruleId, ruleName } = row
+          vm.confirmTip(`是否删除 ${ruleName} 渠道规则`, () => {
+            vm.deleteRule({ id: ruleId })
+          })
+        }
       }]
-      // tableInnerBtns: [{
-      //   prop: {
-      //     name: 'status', // 为0或1
-      //     toggle: [{
-      //       icon: 'el-icon-open',
-      //       title: '开启'
-      //     }, {
-      //       icon: 'el-icon-close',
-      //       title: '关闭'
-      //     }]
-      //   },
-      //   handle(row) {
-      //     const { ruleId, ruleName, status } = row
-      //     const handleStatus = status === 1 ? 0 : 1 // 0关闭、1开启
-      //     vm.confirmTip(
-      //       `是否${handleStatus === 0 ? '关闭' : '开启'} ${ruleName} 渠道规则`,
-      //       () => {
-      //         vm.handleRuleStatus({ id: ruleId, status: handleStatus })
-      //       }
-      //     )
-      //   }
-      // }, {
-      //   name: '编辑',
-      //   icon: 'el-icon-edit',
-      //   handle(row) {
-      //     const { ruleId } = row
-      //     vm.getRuleDetails(ruleId)
-      //   }
-      // }, {
-      //   name: '删除',
-      //   icon: 'el-icon-detail',
-      //   handle(row) {
-      //     const { ruleId, ruleName } = row
-      //     vm.confirmTip(`是否删除 ${ruleName} 渠道规则`, () => {
-      //       vm.deleteRule({ id: ruleId })
-      //     })
-      //   }
-      // }]
     }
   },
   created() {
@@ -162,15 +155,7 @@ export default {
         const {
           ruleCode,
           ruleName,
-          ruleBrandResps,
-          // payment,
-          costPrice,
-          largeBatchPrice,
-          memberPrice,
-          retailPrice,
-          supplyPrice,
-          wholesalePrice
-          // store
+          ruleBrandResps
         } = res
         let brands = ruleBrandResps && ruleBrandResps.length ? ruleBrandResps.map(item => ({
           name: item.brandName,
@@ -178,22 +163,13 @@ export default {
           code: item.brandCode
         })) : ''
         this.showDialog({
-          title: '查看渠道规则',
+          title: '编辑渠道规则',
           initData: {
             ruleId: id,
             ruleCode,
             ruleName,
-            brands,
-            // payment: [1, 2, 4],
-            costPrice,
-            largeBatchPrice,
-            memberPrice,
-            retailPrice,
-            supplyPrice,
-            wholesalePrice
-            // store
+            brands
           },
-          noBtn: true,
           isEdit: true
         })
       })
@@ -214,7 +190,7 @@ export default {
         add: this.$api.channel.addRule,
         edit: this.$api.channel.editRule
       }
-      const { brands, submitPriceObj, priceList, ruleCode, ...other } = childFormModel
+      const { brands, ruleCode, ...other } = childFormModel
       const curBrands = childFormModel.brands.map(item => ({
         brandCode: item.code,
         brandName: item.name,
@@ -223,8 +199,7 @@ export default {
       requestObj[requestType]({
         ruleCode,
         brands: curBrands,
-        ...other,
-        ...submitPriceObj
+        ...other
       }).then(() => {
         const msg = requestType === 'edit' ? '编辑成功' : '新增成功'
         this.$msgTip(msg)
