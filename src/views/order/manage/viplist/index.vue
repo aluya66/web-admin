@@ -104,7 +104,7 @@ export default {
         },
         {
           label: '第三方流水号',
-          prop: 'thirdPartyPaycode',
+          prop: 'thirdPartyPayCode',
           search: {
             type: 'input'
           }
