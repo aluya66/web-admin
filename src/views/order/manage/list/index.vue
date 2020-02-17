@@ -212,7 +212,7 @@ export default {
           }
         },
         {
-          label: '订单类别',
+          label: '订单类型',
           prop: 'orderCategory',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.orderCategory, 'shopTypeList')

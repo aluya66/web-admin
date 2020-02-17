@@ -57,6 +57,15 @@ export const queryDeliveryList = params =>
   })
 
 /**
+ * 发货订单明细
+ * @param {*}
+ */
+export const queryDeliveryDetail = params =>
+  Http.fetch(`${context}/api/order/deliveryinfo`, params, {
+    method: 'get'
+  })
+
+/**
  * 取消订单
  * @param {*}
  */
