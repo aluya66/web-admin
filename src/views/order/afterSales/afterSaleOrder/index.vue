@@ -32,10 +32,43 @@
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
         close-btn
-        no-btn
+        :no-btn="dialogObj.type === '2'"
+        :btns="dialogObj.btns"
         @before-close="dialogObj.isShow = false"
+        @on-submit="showRemarkDialog"
       >
-        <c-details ref="childRef" :init-data.sync="dialogObj.initData" :is-edit="dialogObj.isEdit"></c-details>
+        <c-details ref="childRef" :init-data.sync="dialogObj.initData"></c-details>
+      </c-dialog>
+    </div>
+
+    <div v-if="remarkDialogShow">
+      <c-dialog
+        :is-show="remarkDialogShow"
+        title="请输入审核说明"
+        close-btn
+        @before-close="remarkDialogShow = false"
+        @on-submit="handleAduit"
+      >
+        <el-form
+          ref="remarkFormRef"
+          :model="remarkForm"
+          label-width="80px"
+          class="form"
+          label-position="right"
+          status-icon
+          :rules="rules"
+        >
+          <el-form-item label="备注：" prop="remark">
+            <el-input
+              type="textarea"
+              placeholder="请输入备注说明"
+              v-model.trim="remarkForm.remark"
+              rows="4"
+              maxlength="300"
+              show-word-limit
+            ></el-input>
+          </el-form-item>
+        </el-form>
       </c-dialog>
     </div>
   </c-view>
@@ -54,6 +87,15 @@ export default {
   },
   data(vm) {
     return {
+      logisticsList: [],
+      rules: {
+        remark: [
+          { required: true, message: '请输入', trigger: 'blur' }
+        ]
+      },
+      aduitResult: '',
+      remarkDialogShow: false,
+      remarkForm: { remark: '' },
       // 对话框对象
       dialogObj: {},
       // 表格内操作按钮
@@ -62,20 +104,20 @@ export default {
           name: '详情',
           icon: 'el-icon-show',
           handle(row) {
-            vm.showDialog({
-              title: '详情',
-              initData: row
-            })
+            vm.getDetail(row.afterSalesCode, 1)
           }
         },
         {
-          name: '审核',
-          icon: 'el-icon-aduit',
-          handle(row) {
-            vm.showDialog({
+          prop: {
+            name: 'status',
+            toggle: [{
               title: '审核',
-              initData: row
-            })
+              icon: 'el-icon-aduit',
+              value: ['1']
+            }]
+          },
+          handle(row) {
+            vm.getDetail(row.afterSalesCode, 2)
           }
         }
       ],
@@ -123,9 +165,10 @@ export default {
           label: '所属店铺',
           prop: 'storeName',
           search: {
+            type: 'dict',
+            optionsList: [],
             label: '物流',
-            prop: 'deliveryCode',
-            type: 'input'
+            prop: 'deliveryCode'
           }
         },
         {
@@ -176,17 +219,74 @@ export default {
   },
   created() {
     this.fetchData()
+    this.getLogistics()
   },
   methods: {
+    getLogistics() {
+      this.$api.basic
+        .getLogistics({
+          pageSize: 100,
+          pageNo: 1
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data } = res
+            this.logisticsList = data && data.map(val => ({ label: val.logiName, value: val.logiCode }))
+          } else {
+            this.logisticsList = res && res.map(val => ({ label: val.logiName, value: val.logiCode }))
+          }
+          console.log(this.logisticsList)
+          this.setSearchOptionsList('deliveryCode', this.logisticsList)
+        })
+    },
+    showRemarkDialog(btnName) { // 审核结果：10:通过，11:拒绝
+      this.remarkDialogShow = true
+      this.aduitResult = btnName === '通过' ? 10 : 11
+    },
+    handleAduit() {
+      this.$refs.remarkFormRef.validate(valid => {
+        if (valid) {
+          this.$api.order
+            .approveAfterSales({
+              afterSalesCode: this.dialogObj.initData.afterSalesCode,
+              afterSalesType: this.$refs.childRef.formModel.afterSalesType,
+              approveRemark: this.remarkForm.remark,
+              approveResult: this.aduitResult
+            })
+            .then(res => {
+              this.remarkDialogShow = false
+              this.responeHandle('审核成功')
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    getDetail(afterSalesCode, type) {
+      this.$api.order
+        .afterSalesDetail({
+          afterSalesCode
+        })
+        .then(res => {
+          this.isLoading = false
+          this.showDialog({
+            initData: { ...res, dialogType: type },
+            btns: type === 2 ? [{ label: '通 过', name: 'submit', type: 'primary' }, { label: '拒 绝', name: 'submit' }, { label: '取 消', name: 'cancel' }] : [],
+            type
+          })
+        })
+    },
     /*
      * 查询表格列表数据
      */
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
-      const { dateTime, ...other } = this.searchObj
+      const { dateTime, statusList, ...other } = this.searchObj
       const searchDate = this.getSearchDate(
         dateTime,
-        '',
+        'dateTime',
         'startCreated',
         'endCreated'
       )
@@ -194,6 +294,7 @@ export default {
       this.$api.order
         .queryAfterSalesList({
           ...searchDate,
+          statusList: [statusList],
           ...other,
           ...page
         })
@@ -215,9 +316,10 @@ export default {
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        isEdit: opts.isEdit || false,
-        title: opts.title || '新增',
-        initData: opts.initData
+        title: opts.title || '售后单详情',
+        initData: opts.initData,
+        btns: opts.btns,
+        type: opts.type
       }
     }
   }

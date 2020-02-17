@@ -154,3 +154,21 @@ export const queryAfterSalesList = params =>
   Http.fetch(`${context}/api/ass/list`, params, {
     method: 'get'
   })
+
+/**
+* 售后单详情
+* @param {*}
+*/
+export const afterSalesDetail = params =>
+  Http.fetch(`${context}/api/ass/detail`, params, {
+    method: 'get'
+  })
+
+/**
+* 售后单审核
+* @param {*}
+*/
+export const approveAfterSales = params =>
+  Http.fetch(`${context}/api/ass/approve`, params, {
+    method: 'put'
+  })

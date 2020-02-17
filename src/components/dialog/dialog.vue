@@ -94,7 +94,7 @@ export default {
         this.onCancel()
       }
       if (btn.name === 'submit') {
-        this.onSubmit()
+        this.onSubmit(btn)
       }
       btn.handle && btn.handle()
     },
@@ -102,8 +102,8 @@ export default {
       this.$emit('on-cancel')
       this.handleClose()
     },
-    onSubmit () {
-      this.$emit('on-submit')
+    onSubmit (btn) {
+      this.$emit('on-submit', btn.label)
     },
     handleClose () {
       this.$emit('before-close')
