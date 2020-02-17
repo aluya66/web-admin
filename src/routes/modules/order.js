@@ -91,63 +91,6 @@ export default {
         roles: ['admin']
       }
     }
-      // {
-      //   path: '/order/manage/sendDetail/:id?',
-      //   name: 'orderManageSendDetail',
-      //   hidden: true,
-      //   component: () => import('@/views/order/manage/send/detail'),
-      //   meta: {
-      //     title: 'orderManageSendDetail',
-      //     noCache: true,
-      //     activeMenu: '/order/manage/send',
-      //     roles: ['admin']
-      //   }
-      // },
     ]
-  }, {
-    path: '/order/afterSales',
-    name: 'afterSale',
-    meta: {
-      title: 'afterSale',
-      icon: 'nested',
-      roles: ['admin']
-    },
-    children: [{
-      path: '/order/afterSales/afterSales',
-      name: 'aferSalesList',
-      component: () => import('@/views/order/afterSales/afterSales'),
-      meta: {
-        title: 'aferSalesList',
-        icon: 'table',
-        roles: ['admin']
-      }
-    }, {
-      path: '/order/afterSales/afterSalesCostSettings',
-      name: 'afterSalesCostSettingsList',
-      component: () => import('@/views/order/afterSales/afterSalesCostSettings'),
-      meta: {
-        title: 'afterSalesCostSettingsList',
-        icon: 'table',
-        roles: ['admin']
-      }
-    }, {
-      path: '/order/afterSales/refund',
-      name: 'refundList',
-      component: () => import('@/views/order/afterSales/refund'),
-      meta: {
-        title: 'refundList',
-        icon: 'table',
-        roles: ['admin']
-      }
-    }, {
-      path: '/order/afterSales/reship',
-      name: 'reshipList',
-      component: () => import('@/views/order/afterSales/reship'),
-      meta: {
-        title: 'reshipList',
-        icon: 'table',
-        roles: ['admin']
-      }
-    }]
   }]
 }
