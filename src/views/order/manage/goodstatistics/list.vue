@@ -150,7 +150,6 @@ export default {
     }
   },
   created() {
-    this.curDate = 0
     this.searchObj.sort = 'asc'
     this.searchObj.rankConditions = 'totalSalesQuantity'
     this.fetchData()
