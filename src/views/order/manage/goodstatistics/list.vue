@@ -143,7 +143,7 @@ export default {
         },
         {
           label: '货号',
-          prop: 'starasSkuCode'
+          prop: 'productSkuCode'
         }
       ]
     }
@@ -158,7 +158,12 @@ export default {
     curDate(newVal, oldVal) {
       let end = null
       let start = null
-      const curDate = new Date()
+      let curDate = new Date()
+      let lastDays = this.getMonthDay(1)
+      let lastMonthDate = new Date() // 上月日期
+      // let today = new Date().getDate()
+      lastMonthDate.setDate(1)
+      lastMonthDate.setMonth(lastMonthDate.getMonth() - 1)
       switch (newVal) {
         case 0:
           end = curDate
@@ -172,44 +177,84 @@ export default {
           start = end
           break
         case 2:
-
+          end = curDate
+          start = new Date(new Date().toDateString())
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * (new Date().getDay() - 1))
           break
         case 3:
+          end = curDate
+          start = new Date(new Date().toDateString())
+          end.setTime(start.getTime() - 3600 * 1000 * 24 * (new Date().getDay()))
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * (new Date().getDay() + 7))
           break
         case 4:
+          end = curDate
+          start = new Date(new Date().toDateString())
+          start.setTime(start.getTime() - (start.getDate() - 1) * 3600 * 1000 * 24)
           break
         case 5:
+          start = lastMonthDate
+          let year = this.getYear(start)
+          end = new Date(year, start.getMonth(), lastDays)
           break
         case 6:
-          end = new Date(new Date().toDateString())
+          end = curDate
           start = new Date()
           start.setTime(end.getTime() - 3600 * 1000 * 24 * 7)
           break
         case 7:
           end = new Date(new Date().toDateString())
-          start = new Date()
-          start.setTime(end.getTime() - 3600 * 1000 * 24 * 30)
+          start = this.getnMonth(1)
           break
         case 8:
           end = new Date(new Date().toDateString())
-          start = new Date()
-          start.setTime(end.getTime() - 3600 * 1000 * 24 * 90)
+          start = this.getnMonth(3)
           break
         case 9:
           end = new Date(new Date().toDateString())
-          start = new Date()
-          start.setTime(end.getTime() - 3600 * 1000 * 24 * 183)
+          start = this.getnMonth(6)
           break
         case 10:
           end = new Date(new Date().toDateString())
-          start = new Date()
-          start.setTime(end.getTime() - 3600 * 1000 * 24 * 364)
+          start = this.getnMonth(12)
           break
       }
       this.searchObj.dateTime = [start, end]
     }
   },
   methods: {
+    // 获取年
+    getYear(date) {
+      let years = date.getYear()
+      years += (years < 2000) ? 1900 : 0 //
+      return years
+    },
+    // 获取某月的天数(n为前某月)
+    getMonthDay(n) {
+      let preDate = new Date()
+      let nextDate = new Date()
+      preDate.setMonth(preDate.getMonth() - n)
+      nextDate.setMonth(nextDate.getMonth() - n + 1)
+      let monthStartDate = new Date(preDate.getYear(), preDate.getMonth(), 1)
+      let monthEndDate = new Date(nextDate.getYear(), nextDate.getMonth(), 1)
+      let days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24)
+      return days
+    },
+    // 获取前n月开始时间
+    getnMonth(n) {
+      let preDate = new Date()
+      let nextDate = new Date()
+      preDate.setMonth(preDate.getMonth() - n)
+      nextDate.setMonth(nextDate.getMonth() - n + 1)
+      let monthStartDate = new Date(preDate.getYear(), preDate.getMonth(), 1)
+      let monthEndDate = new Date(nextDate.getYear(), nextDate.getMonth(), 1)
+      let days = (monthEndDate - monthStartDate) / (1000 * 60 * 60 * 24)
+      let today = (new Date()).getDate()
+      let startYear = today > days ? this.getYear(nextDate) : this.getYear(preDate)
+      let startMonth = today > days ? nextDate.getMonth() : preDate.getMonth()
+      let startDay = today > days ? 1 : today + 1
+      return new Date(startYear, startMonth, startDay)
+    },
     /*
 	   * 查询表格列表数据
 	   */

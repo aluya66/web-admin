@@ -215,6 +215,10 @@ export default {
       type: Boolean,
       default: false
     },
+    highlightCurrentRow: {
+      type: Boolean,
+      default: true
+    },
     maxHeight: Number,
     rowStyle: Object,
     cellStyle: Object,
