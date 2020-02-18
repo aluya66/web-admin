@@ -1,13 +1,19 @@
 // import utils from 'utils'
 import { queryDictByCodes } from 'api/settings'
+import { businessList } from 'api/basic'
+import utils from 'utils'
 
 const state = {
-  dictList: []
+  dictList: [], // 字典
+  appList: [] // 业务线
 }
 
 const mutations = {
   SET_DICTLIST: (state, val) => {
     state.dictList = val
+  },
+  SET_APPCODE: (state, val) => {
+    state.appList = val
   }
 }
 
@@ -33,6 +39,33 @@ const actions = {
         // console.log(dictObj)
         commit('SET_DICTLIST', dictObj)
         resolve(dictObj)
+      })
+    })
+  },
+  /**
+   * 获取开启的业务线
+   */
+  getAppCodeList({ commit }, params) {
+    if (!params) {
+      params = {
+        status: 1,
+        pageNo: 1,
+        pageSize: 100
+      }
+    }
+    return new Promise(resolve => {
+      businessList(params, { cache: 'GLOBALAPPLIST' }).then(res => {
+        let appList = []
+        const { data } = res
+        if (data && data.length) {
+          appList = data.map(val => ({
+            label: val.appName,
+            value: val.appCode
+          }))
+          utils.setStore('GLOBALAPPLIST', appList)
+        }
+        commit('SET_APPCODE', appList)
+        resolve(appList)
       })
     })
   }

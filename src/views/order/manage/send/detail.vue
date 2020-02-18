@@ -52,6 +52,7 @@ export default {
   },
   data() {
     return {
+      formModel: {},
       tableHeader: [
         {
           label: '图片',
@@ -72,15 +73,15 @@ export default {
       orderBusinessTypeList: dictObj.orderBusinessTypeList
     }
   },
-  computed: {
-    formModel: {
-      get() {
-        console.log(this.initData)
-        return this.initData
-      },
-      set(val) {
-        this.$emit('update:init-data', val)
-      }
+  created() {
+    this.getDeliveryDetail()
+  },
+  methods: {
+    getDeliveryDetail() {
+      const { orderCode } = this.initData
+      this.$api.order.queryDeliveryDetail({ orderCode }).then(res => {
+        this.formModel = res
+      })
     }
   }
 }

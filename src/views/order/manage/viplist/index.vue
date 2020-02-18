@@ -139,7 +139,8 @@ export default {
           prop: 'created',
           search: {
             type: 'dateTime',
-            prop: 'dateTime'
+            prop: 'dateTime',
+            dateType: 'datetimerange'
           }
         },
         {
@@ -147,7 +148,8 @@ export default {
           prop: 'payTime',
           search: {
             prop: 'payDateTime',
-            type: 'dateTime'
+            type: 'dateTime',
+            dateType: 'datetimerange'
           }
         }
       ]
@@ -164,8 +166,8 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       console.log(this.pageInfo)
       const { dateTime, payDateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
-      const paySearchDate = this.getSearchDate(payDateTime, '', 'payBeginTime', 'payEndTime')
+      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'beginTime', 'endTime')
+      const paySearchDate = this.getSearchDate(payDateTime, 'dateTime', 'payBeginTime', 'payEndTime')
       this.isLoading = true
       this.$api.order.queryVipList({
         ...searchDate,

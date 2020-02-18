@@ -8,7 +8,7 @@
         <span>订单渠道：{{setEnumValue(orderInfo.orderNewResp.appCode, lobList)}}</span>
       </div>
       <div class="row">
-        <span>所属店铺：{{orderInfo.shopInfoResp.shopName}}</span>
+        <span>所属店铺：{{orderInfo.orderNewResp.storeName}}</span>
         <span>结算状态：{{setEnumValue(orderInfo.orderNewResp.settleStatus, orderSettleStatusList)}}</span>
       </div>
       <div class="row">

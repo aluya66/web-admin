@@ -91,18 +91,6 @@ export default {
         roles: ['admin']
       }
     }
-    // {
-    //   path: '/order/manage/sendDetail/:id?',
-    //   name: 'orderManageSendDetail',
-    //   hidden: true,
-    //   component: () => import('@/views/order/manage/send/detail'),
-    //   meta: {
-    //     title: 'orderManageSendDetail',
-    //     noCache: true,
-    //     activeMenu: '/order/manage/send',
-    //     roles: ['admin']
-    //   }
-    // },
     ]
   }]
 }

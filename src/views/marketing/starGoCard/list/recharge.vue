@@ -33,25 +33,28 @@
 import mixinTable from 'mixins/table'
 // import utils from 'utils'
 // import dictObj from '@/store/dictData'
-const statusList = [{ // 1 系统发卡 2 活动发劵 4 兑换码绑卡 8 活动领卡  16 在线购卡 32 活动购卡
+const statusList = [{
+  label: '兑换码绑卡',
+  value: 4
+}, {
+  label: '在线购卡',
+  value: 16
+}]
+
+// 全部类型  // 1 系统发卡 2 活动发劵 4 兑换码绑卡 8 活动领卡  16 在线购卡 32 活动购卡
+const allStatusList = statusList.concat([{
   label: '系统发卡',
   value: 1
 }, {
   label: '活动发劵',
   value: 2
 }, {
-  label: '兑换码绑卡',
-  value: 4
-}, {
   label: '活动领卡',
   value: 8
 }, {
-  label: '在线购卡',
-  value: 16
-}, {
   label: '活动购卡',
   value: 32
-}]
+}])
 
 export default {
   name: 'starGoCardRechargeList',
@@ -89,18 +92,18 @@ export default {
           }
         },
         {
-          label: '金额',
+          label: '金额(元)',
           prop: 'couponAmount'
         },
         {
-          label: '赠送金额',
+          label: '赠送金额(元)',
           prop: 'givingValue'
         },
         {
           label: '类型',
           prop: 'receiveType',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.receiveType, statusList)
+            return row && vm.setTableColumnLabel(row.receiveType, allStatusList)
           },
           search: {
             type: 'select',

@@ -29,10 +29,10 @@ export const businessDetail = params =>
  * 查询业务线列表
  * @param {*} params
  */
-export const businessList = params =>
-  Http.fetch(`${context}/api/app/list`, params, {
+export const businessList = (params, opts) =>
+  Http.fetch(`${context}/api/app/list`, params, Object.assign({}, {
     method: 'get'
-  })
+  }, opts))
 
 /**
  * 修改业务线

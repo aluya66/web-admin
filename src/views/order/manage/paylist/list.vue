@@ -3,7 +3,6 @@
     <template v-slot:header>
       <div class="title">
         {{$route.meta.name || $t(`route.${$route.meta.title}`)}}
-        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -145,7 +144,8 @@ export default {
           width: 100,
           search: {
             type: 'dateTime',
-            prop: 'dateTime'
+            prop: 'dateTime',
+            dateType: 'datetimerange'
           }
         }
       ]
@@ -161,7 +161,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
+      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'beginTime', 'endTime')
       this.isLoading = true
       this.$api.order.queryOrderpayList({
         ...searchDate,
@@ -186,7 +186,7 @@ export default {
       this.dialogObj = {
         isShow: true,
         isEdit: opts.isEdit || false,
-        title: opts.title || '新增',
+        title: opts.title,
         initData: opts.initData
       }
     }

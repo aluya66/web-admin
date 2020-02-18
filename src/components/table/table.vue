@@ -211,13 +211,13 @@ export default {
       type: Boolean,
       default: false
     },
-    hasIndex: {
-      type: Boolean,
-      default: false
-    },
     highlightCurrentRow: {
       type: Boolean,
       default: true
+    },
+    hasIndex: {
+      type: Boolean,
+      default: false
     },
     maxHeight: Number,
     rowStyle: Object,
@@ -261,10 +261,6 @@ export default {
     }, false)
   },
   methods: {
-    // table每一行序号
-    indexMethod(index) {
-      return index + 1
-    },
     selectAll() {
       this.$refs.multipleTable.toggleAllSelection()
     },

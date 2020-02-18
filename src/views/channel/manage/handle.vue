@@ -1,6 +1,6 @@
 <template>
-  <el-form ref="formRef" :model="formModel" label-width="120px" class="form" label-position="right">
-    <el-form-item label="所属渠道:" prop="parentChannelId" v-if="channelType === '子渠道'">
+  <el-form ref="formRef" :model="formModel" :rules="rules" label-width="120px" class="dialog-form" label-position="right">
+    <el-form-item label="所属渠道:" prop="parentChannelId">
       <el-select
         v-model="formModel.parentChannelId"
         class="select-item"
@@ -16,7 +16,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="渠道名称:" prop="channelName">
-      <el-input v-model.trim="formModel.channelName" class="form-item" placeholder="请输入渠道名称"/>
+      <el-input v-model.trim="formModel.channelName" class="input-item" placeholder="请输入渠道名称"/>
     </el-form-item>
   </el-form>
 </template>
@@ -36,20 +36,19 @@ export default {
     isEdit: {
       type: Boolean,
       default: false
-    },
-    channelType: String
+    }
   },
   data() {
     return {
       channelList: [], // 主渠道列表 下拉框数据
       rules: {
         channelName: [{ required: true, message: '渠道名称不能为空', trigger: 'blur' }],
-        channelType: [{ required: true, message: '请选择', trigger: 'change' }]
+        parentChannelId: [{ required: true, message: '请选择所属渠道', trigger: 'change' }]
       }
     }
   },
   created() {
-    this.channelType !== '主渠道' && this.getChannelList()
+    this.getChannelList()
   },
   computed: {
     formModel() {
@@ -75,18 +74,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.form {
-  width: 90%;
-  .form-item {
-    width: 100%;
-  }
-}
-.body .el-select {
-  position: fixed !important;
-}
-.select-item {
-  width: 50%;
-}
-</style>

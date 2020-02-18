@@ -93,7 +93,8 @@ export default {
           search: {
             label: '时间范围',
             type: 'dateTime',
-            prop: 'dateTime'
+            prop: 'dateTime',
+            dateType: 'datetimerange'
           }
         },
         {
@@ -149,7 +150,6 @@ export default {
     }
   },
   created() {
-    this.curDate = 0
     this.searchObj.sort = 'asc'
     this.searchObj.rankConditions = 'totalSalesQuantity'
     this.fetchData()
@@ -261,7 +261,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
+      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'beginTime', 'endTime')
       this.isLoading = true
       this.$api.order.queryGoodsStatistics({
         ...searchDate,
