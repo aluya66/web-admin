@@ -33,10 +33,7 @@
     </div>
     <div v-if="dialogShow">
       <c-dialog :is-show="dialogShow" title="提示" close-btn noBtn @before-close="dialogShow = false">
-        <p class="dialog-text">
-          您导出的商品数据量较大，请等待5分钟后，在
-          <em class="router-link" @click="toExportList">基础服务-导出列表</em> 查看下载！
-        </p>
+        <export-tip @handle="dialogShow=false"></export-tip>
       </c-dialog>
     </div>
   </c-view>
@@ -47,12 +44,14 @@ import noperfect from './noperfect'
 import perfect from './perfect'
 import utils from 'utils'
 import CDialog from 'components/dialog'
+import ExportTip from '../../../common/exportTip.vue'
 export default {
   name: 'goodsManage',
   components: {
     noperfect,
     perfect,
-    CDialog
+    CDialog,
+    ExportTip
   },
   mixins: [mixinTable],
   data(vm) {
@@ -75,10 +74,6 @@ export default {
     }
   },
   methods: {
-    toExportList() {
-      this.dialogShow = false
-      this.routerLink('/basic/exportList')
-    },
     handleGoods() {
       const { createDateTime, updateDateTime, categoryCode, stock, ...other } = this.$refs.childList.searchObj
       const createDate = this.getSearchDate(createDateTime, '', 'beginDate', 'endDate')
@@ -119,14 +114,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less">
-.dialog-text {
-  padding-bottom: 10px;
-  text-align: center;
-  .router-link {
-    color: @menuActive;
-    cursor: pointer;
-  }
-}
-</style>

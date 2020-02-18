@@ -126,7 +126,7 @@ export default {
       }, {
         path: '/order/afterSales/afterSalesCostSettings',
         name: 'afterSalesCostSettingsList',
-        component: () => import('@/views/order/afterSales/afterSalesCostSettings'),
+        component: () => import('@/views/order/afterSales/afterSalesCostSettings/index'),
         meta: {
           title: 'afterSalesCostSettingsList',
           icon: 'table',
@@ -144,7 +144,7 @@ export default {
       }, {
         path: '/order/afterSales/reship',
         name: 'reshipList',
-        component: () => import('@/views/order/afterSales/reship'),
+        component: () => import('@/views/order/afterSales/reship/index'),
         meta: {
           title: 'reshipList',
           icon: 'table',

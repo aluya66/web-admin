@@ -2,15 +2,13 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{$route.meta.name || $t(`route.${$route.meta.title}`)}}</div>
-      <div class="header-btn">
-        <el-button
-          :size="size"
-          type="primary"
-          :loading="exportLoading"
-          icon="el-icon-download"
-          @click="exportFile"
-        >导出</el-button>
-      </div>
+      <el-button
+        :size="size"
+        type="primary"
+        :loading="exportLoading"
+        icon="el-icon-download"
+        @click="exportFile"
+      >导出</el-button>
     </template>
     <div class="main__box">
       <c-table
@@ -41,44 +39,11 @@
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
         close-btn
-        :no-btn="dialogObj.type === '2'"
-        :btns="dialogObj.btns"
+        no-btn
         @before-close="dialogObj.isShow = false"
-        @on-submit="showRemarkDialog"
       >
-        <c-details v-if="dialogObj.type !== 3" ref="childRef" :init-data.sync="dialogObj.initData"></c-details>
+        <c-details v-if="dialogObj.type === 1" ref="childRef" :init-data.sync="dialogObj.initData"></c-details>
         <export-tip v-else @handle="dialogObj.isShow=false"></export-tip>
-      </c-dialog>
-    </div>
-
-    <div v-if="remarkDialogShow">
-      <c-dialog
-        :is-show="remarkDialogShow"
-        title="请输入审核说明"
-        close-btn
-        @before-close="remarkDialogShow = false"
-        @on-submit="handleAduit"
-      >
-        <el-form
-          ref="remarkFormRef"
-          :model="remarkForm"
-          label-width="80px"
-          class="form"
-          label-position="right"
-          status-icon
-          :rules="rules"
-        >
-          <el-form-item label="备注：" prop="remark">
-            <el-input
-              type="textarea"
-              placeholder="请输入备注说明"
-              v-model.trim="remarkForm.remark"
-              rows="4"
-              maxlength="300"
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-        </el-form>
       </c-dialog>
     </div>
   </c-view>
@@ -90,7 +55,7 @@ import CDetails from './details'
 import dictObj from '@/store/dictData'
 import ExportTip from '../../../common/exportTip.vue'
 export default {
-  name: 'afterSalesList',
+  name: 'reshipList',
   mixins: [mixinTable],
   components: {
     CDialog,
@@ -101,14 +66,7 @@ export default {
     return {
       exportLoading: false,
       logisticsList: [],
-      rules: {
-        remark: [
-          { required: true, message: '请输入', trigger: 'blur' }
-        ]
-      },
-      aduitResult: '',
-      remarkDialogShow: false,
-      remarkForm: { remark: '' },
+      shopsList: [],
       // 对话框对象
       dialogObj: {},
       // 表格内操作按钮
@@ -117,20 +75,7 @@ export default {
           name: '详情',
           icon: 'el-icon-show',
           handle(row) {
-            vm.getDetail(row.afterSalesCode, 1)
-          }
-        },
-        {
-          prop: {
-            name: 'status',
-            toggle: [{
-              title: '审核',
-              icon: 'el-icon-aduit',
-              value: ['1']
-            }]
-          },
-          handle(row) {
-            vm.getDetail(row.afterSalesCode, 2)
+            vm.getDetail(row.afterSalesCode)
           }
         }
       ],
@@ -163,6 +108,13 @@ export default {
           }
         },
         {
+          label: '退货单号',
+          prop: 'returnCode',
+          search: {
+            type: 'input'
+          }
+        },
+        {
           label: '售后类型',
           prop: 'afterSalesType',
           formatter(row) {
@@ -185,15 +137,6 @@ export default {
           }
         },
         {
-          label: '用户名称',
-          prop: 'buyerNick',
-          search: {
-            label: '商品名称',
-            prop: 'productAtrName',
-            type: 'input'
-          }
-        },
-        {
           label: '用户电话',
           prop: 'buyerMobile',
           search: {
@@ -204,19 +147,15 @@ export default {
           label: '物流公司',
           prop: 'deliveryName',
           search: {
-            label: 'SPU',
-            type: 'input',
-            prop: 'productAtrNumber'
+            label: '店铺',
+            type: 'dict',
+            prop: 'storeId',
+            optionsList: []
           }
         },
         {
           label: '物流单号',
-          prop: 'deliveryNo',
-          search: {
-            label: 'SKU',
-            type: 'input',
-            prop: 'skuCode'
-          }
+          prop: 'deliveryNo'
         },
         {
           width: 150,
@@ -232,6 +171,7 @@ export default {
   },
   created() {
     this.fetchData()
+    this.getShopList()
     this.getLogistics()
   },
   methods: {
@@ -244,15 +184,15 @@ export default {
         'endCreated'
       )
       this.exportLoading = true
-      this.$api.order.afterSalesExport({
+      this.$api.order.reshipExport({
         ...searchDate,
         statusList: [statusList],
         ...other
       }).then(res => {
         if (res) {
           this.showDialog({
-            title: '售后单导出',
-            type: 3
+            title: '退货单导出',
+            type: 2
           })
         } else {
           this.$msgTip('导出数据失败', 'warning')
@@ -277,31 +217,24 @@ export default {
           this.setSearchOptionsList('deliveryCode', this.logisticsList)
         })
     },
-    showRemarkDialog(btnName) { // 审核结果：10:通过，11:拒绝
-      this.remarkDialogShow = true
-      this.aduitResult = btnName === '通过' ? 10 : 11
+    getShopList() {
+      this.$api.channel
+        .getShopList({
+          pageSize: 200,
+          pageNo: 1
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data } = res
+            this.shopsList = data && data.map(val => ({ label: val.shopName, value: val.shopId }))
+          } else {
+            this.shopsList = res && res.map(val => ({ label: val.shopName, value: val.shopId }))
+          }
+          this.setSearchOptionsList('storeId', this.shopsList)
+        })
     },
-    handleAduit() {
-      this.$refs.remarkFormRef.validate(valid => {
-        if (valid) {
-          this.$api.order
-            .approveAfterSales({
-              afterSalesCode: this.dialogObj.initData.afterSalesCode,
-              afterSalesType: this.$refs.childRef.formModel.afterSalesType,
-              approveRemark: this.remarkForm.remark,
-              approveResult: this.aduitResult
-            })
-            .then(res => {
-              this.remarkDialogShow = false
-              this.responeHandle('审核成功')
-            })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    getDetail(afterSalesCode, type) {
+    getDetail(afterSalesCode) {
       this.$api.order
         .afterSalesDetail({
           afterSalesCode
@@ -309,9 +242,8 @@ export default {
         .then(res => {
           this.isLoading = false
           this.showDialog({
-            initData: { ...res, dialogType: type },
-            btns: type === 2 ? [{ label: '通 过', name: 'submit', type: 'primary' }, { label: '拒 绝', name: 'submit' }, { label: '取 消', name: 'cancel' }] : [],
-            type
+            initData: res,
+            type: 1
           })
         })
     },
@@ -353,9 +285,8 @@ export default {
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
-        title: opts.title || '售后单详情',
+        title: opts.title || '退货单查看',
         initData: opts.initData,
-        btns: opts.btns,
         type: opts.type
       }
     }

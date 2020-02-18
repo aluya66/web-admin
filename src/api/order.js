@@ -172,3 +172,68 @@ export const approveAfterSales = params =>
   Http.fetch(`${context}/api/ass/approve`, params, {
     method: 'put'
   })
+
+/**
+* 售后费用设置列表
+* @param {*}
+*/
+export const afterSalesCostSettingList = params =>
+  Http.fetch(`${context}/api/template/pagelist`, params, {
+    method: 'get'
+  })
+
+/**
+* 售后费用设置 新增
+* @param {*}
+*/
+export const afterSalesCostSettingCreate = params =>
+  Http.fetch(`${context}/api/template/create`, params, {
+    method: 'post'
+  })
+
+/**
+* 售后费用设置 编辑
+* @param {*}
+*/
+export const afterSalesCostSettingUpdate = params =>
+  Http.fetch(`${context}/api/template/update`, params, {
+    method: 'put'
+  })
+
+/**
+* 售后费用设置 详情
+* @param {*}
+*/
+export const getAfterSalesCostSettingDetails = params =>
+  Http.fetch(`${context}/api/template/detail`, params, {
+    method: 'get'
+  })
+
+/**
+* 售后费用设置 删除
+* @param {*}
+*/
+export const afterSalesCostSettingDelete = params =>
+  Http.fetch(`${context}/api/template/delete`, params, {
+    method: 'delete'
+  })
+
+/**
+* 售后单: 导出excel
+* @param {*}
+*/
+export const afterSalesExport = params =>
+  Http.fetch(`${context}/api/ass/asexport`, params, {
+    method: 'get'
+  })
+
+/**
+* 退货单: 导出excel
+* @param {*}
+*/
+export const reshipExport = params =>
+  Http.fetch(`${context}/api/ass/roexport`, params, {
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
+  })
