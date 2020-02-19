@@ -119,8 +119,7 @@ export default {
           prop: 'created',
           search: {
             type: 'dateTime',
-            prop: 'dateTime',
-            dateType: 'datetimerange'
+            prop: 'dateTime'
           }
         }
       ]
@@ -136,7 +135,7 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'beginTime', 'endTime')
+      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
       this.isLoading = true
       this.$api.order.queryDeliveryList({
         ...searchDate,
