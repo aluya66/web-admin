@@ -1,7 +1,7 @@
 import Http from '../utils/request'
 
-const context = process.env.VUE_APP_CONSOLE_COMMON
-// VUE_APP_CONSOLE_COMMON
+const context = process.env.VUE_APP_CONSOLE_LOCALHOST
+// VUE_APP_CONSOLE_COMMON VUE_APP_CONSOLE_LOCALHOST
 
 // 店铺 风格
 export const getShopStyle = params =>
@@ -27,7 +27,7 @@ export const addShop = params =>
     method: 'post'
   })
 
-// 店铺 新增
+// 店铺 编辑
 export const editShop = params =>
   Http.fetch(`${context}/api/shop`, params, {
     method: 'put'

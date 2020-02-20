@@ -321,6 +321,40 @@
         ></c-table>
       </div>
     </el-form-item>
+    <el-form-item label="开单调价">
+      <el-radio-group v-model="formModel.changeStatus">
+        <el-radio
+          class="checkbox-item"
+          :label="item.value"
+          v-for="(item, index) in disStatus"
+          :key="index"
+        >{{ item.label }}</el-radio>
+      </el-radio-group>
+      <el-form-item label="调价底线:" prop="changeType" v-if="formModel.changeStatus === 1">
+        <el-select
+          class="select-item"
+          v-model="formModel.changeType"
+          placeholder="请选择调价底线"
+        >
+          <el-option
+            v-for="item in changeTypeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form-item>
+    <el-form-item label="支持代开会员">
+      <el-radio-group v-model="formModel.openVipStatus">
+        <el-radio
+          class="checkbox-item"
+          :label="item.value"
+          v-for="(item, index) in disStatus"
+          :key="index"
+        >{{ item.label }}</el-radio>
+      </el-radio-group>
+    </el-form-item>
   </el-form>
 </template>
 
@@ -413,6 +447,20 @@ export default {
       disStatus: dictObj.disStatus, // 禁用启用
       businessList: [], // 商户列表
       styleList: [], // 风格列表
+      changeTypeList: [ // 调价底线 1零售价 2会员价 3批发价
+        {
+          label: '零售价',
+          value: 1
+        },
+        {
+          label: '会员价',
+          value: 2
+        },
+        {
+          label: '批发价',
+          value: 3
+        }
+      ],
       settleTypeList: [{ // 结算方式
         label: '先款后贷',
         value: 1
