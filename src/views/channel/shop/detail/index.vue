@@ -222,7 +222,7 @@ export default {
             status, // 状态
             channelCode: channelCode.length ? channelCode[0].channelCode : '', // 渠道
             changeStatus, // 开单调价
-            openVipStatus, // 支持代开会员
+            openVipStatus // 支持代开会员
             // ————————————————加盟商户字段 ——————————————
             // shopImage: shopImage.length ? shopImage[0].url : '', // 店招
             // exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图

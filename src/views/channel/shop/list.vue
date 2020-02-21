@@ -126,17 +126,17 @@ export default {
           label: '联系电话',
           prop: 'contactTel'
         },
-        // {
-        //   label: '状态',
-        //   prop: 'status',
-        //   formatter(row) {
-        //     return row.status ? shopStatusSelect[row.status].label : '关闭'
-        //   },
-        //   search: {
-        //     type: 'dict',
-        //     optionsList: shopStatusSelect
-        //   }
-        // },
+        {
+          label: '状态',
+          prop: 'status',
+          formatter(row) {
+            return row.status ? shopStatusSelect[row.status].label : '关闭'
+          },
+          search: {
+            type: 'dict',
+            optionsList: shopStatusSelect
+          }
+        },
         {
           label: '添加人',
           prop: 'operaterName'
