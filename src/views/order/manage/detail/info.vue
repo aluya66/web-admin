@@ -4,7 +4,7 @@
       <div class="row">
         <span>订单号：{{orderInfo.orderNewResp.parentCode}}</span>
         <span>子订单：{{orderInfo.orderNewResp.orderCode}}</span>
-        <span>订单类型：{{setEnumValue(orderInfo.orderNewResp.orderType, shopTypeList)}}</span>
+        <span>订单类型：{{setEnumValue(orderInfo.orderNewResp.orderCategory, shopTypeList)}}</span>
         <span>订单渠道：{{setEnumValue(orderInfo.orderNewResp.appCode, lobList)}}</span>
       </div>
       <div class="row">

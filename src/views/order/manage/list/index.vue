@@ -406,9 +406,7 @@ export default {
       this.$api.order.queryOrderList({
         ...searchDate,
         ...other,
-        ...page,
-        afterSaleStatus: this.afterSaleStatus
-        // orderStatus: orderStatus || this.orderStatus
+        ...page
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {
