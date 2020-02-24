@@ -184,3 +184,15 @@ export const getShopListByChannel = params =>
   Http.fetch(`${context}/api/channel/shoplist`, params, {
     method: 'get'
   })
+
+// 渠道新增关联价格类型
+export const addChannelPrice = params =>
+  Http.fetch(`${context}/api/channel/addprice`, params, {
+    method: 'post'
+  })
+
+// 查询渠道关联价格信息类型
+export const queryChannelPrice = params =>
+  Http.fetch(`${context}/api/channelprice`, params, {
+    method: 'get'
+  })

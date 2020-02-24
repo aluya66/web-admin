@@ -113,7 +113,7 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? shopStatusSelect[row.status].label : '关闭'
+            return row && vm.setTableColumnLabel(row.status, shopStatusSelect)
           },
           search: {
             type: 'dict',

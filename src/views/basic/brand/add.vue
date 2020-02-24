@@ -11,185 +11,151 @@
       :model="formModel"
       :rules="rules"
       label-width="120px"
-      class="form"
+      class="detail-form"
       label-position="right"
       status-icon
     >
-      <el-form-item label="品牌名称" prop="name">
-        <el-input v-model.trim="formModel.name" :disabled="isDisabled" class="select-item"/>
+      <el-form-item label="品牌名称:" prop="name">
+        <el-input v-model.trim="formModel.name" class="select-item"/>
       </el-form-item>
-      <el-form-item label="品牌别名">
-        <el-input v-model.trim="formModel.ename" :disabled="isDisabled" class="select-item"/>
-      </el-form-item>
-      <el-form-item label="品牌国家">
-        <el-input v-model.trim="formModel.country" :disabled="isDisabled" class="select-item"/>
-      </el-form-item>
-      <el-form-item label="消费人群" prop="consumer">
-        <el-input v-model.trim="formModel.consumer" :disabled="isDisabled" class="select-item"/>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model.trim="formModel.status"
+      <el-form-item label="品牌类型:" prop="type">
+        <query-dict
+          :dict-list="shopTypeList"
           class="select-item"
-          placeholder="请选择状态"
-          :disabled="isDisabled"
-          clearable
+          placeholder="请选择品牌类型"
+          :value.sync="formModel.type"
+        ></query-dict>
+      </el-form-item>
+      <el-form-item label="状态:" prop="status">
+        <query-dict
+          :dict-list="disStatus"
+          class="select-item"
+          placeholder="请选择品牌状态"
+          :value.sync="formModel.status"
+        ></query-dict>
+      </el-form-item>
+      <el-form-item label="品牌LOGO:" prop="fileList">
+        <c-upload
+          ref="curUpload"
+          class="pic"
+          auto-upload
+          action="/api/upload/file"
+          list-type="picture-card"
+          :http-request="uploadHandle"
+          :size="10"
+          :limit="1"
+          :fileList="formModel.fileList"
+          @on-success="uploadSuccess"
+          :on-remove="uploadRemove"
+          :on-preview="uploadReview"
         >
-          <el-option
-            v-for="item in brandStatus"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+          <i class="el-icon-plus"></i>
+          <div class="info">建议尺寸120*120图片</div>
+        </c-upload>
       </el-form-item>
-      <el-form-item label="排序" prop="sort">
-        <el-input-number
-          v-model.trim="formModel.sort"
-          controls-position="right"
-          class="select-item"
-          :disabled="isDisabled"
-          :min="1"
-          :max="10000"
-        ></el-input-number>
+      <el-form-item>
+        <el-checkbox v-model="priceChecked">设置品牌定价倍率</el-checkbox>
       </el-form-item>
-      <el-form-item label="品牌LOGO" prop="logo">
-        <el-input v-model.trim="formModel.logo" :disabled="isDisabled" class="select-item"/>
+      <el-form-item label="平台零售价:" prop="priceRate" v-if="priceChecked">
+        <el-input v-model.trim="formModel.priceRate" placeholder="倍率设置，不能为0" class="select-item">
+          <template slot="prepend">平台成本价 X</template>
+        </el-input>
+        <span class="input-info">* 零售价尾数向上取整原则，并且结尾尾数为：28、38、58、68、88、99</span>
       </el-form-item>
-      <el-form-item label="封面图地址" prop="previewUrl">
-        <el-input v-model.trim="formModel.previewUrl" :disabled="isDisabled" class="select-item"/>
-      </el-form-item>
-      <el-form-item label="封面视频" prop="videoUrl">
-        <el-input v-model.trim="formModel.videoUrl" :disabled="isDisabled" class="select-item"/>
-      </el-form-item>
-      <el-form-item label="品牌介绍" prop="intro">
-        <el-input type="textarea" v-model.trim="formModel.intro" :disabled="isDisabled"/>
-      </el-form-item>
-      <el-form-item label="品牌描述">
-        <el-input type="textarea" v-model.trim="formModel.description" :disabled="isDisabled"/>
-      </el-form-item>
-      <!-- <el-form-item label="封面图" prop="previewUrl">
-      <el-upload
-        class="upload-demo"
-        action="//jsonplaceholder.typicode.com/posts/"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :before-remove="beforeRemove"
-        multiple
-        :limit="3"
-        :on-exceed="handleExceed"
-        :file-list="fileList">
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-      </el-upload>
-    </el-form-item>
-
-    <el-form-item label="封面视频" prop="videoUrl">
-      <el-upload
-        class="upload-demo"
-        action="//jsonplaceholder.typicode.com/posts/"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :before-remove="beforeRemove"
-        multiple
-        :limit="3"
-        :on-exceed="handleExceed"
-        :file-list="fileVideoList">
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过1M</div>
-      </el-upload>
-      </el-form-item>-->
-      <el-form-item class="form-btn" v-if="!isDisabled">
-        <el-button :loading="btnLoading" type="primary" @click.native.prevent="submitHandle">保存</el-button>
+      <el-form-item>
+        <el-button
+          :size="size"
+          :loading="btnLoading"
+          type="primary"
+          @click.native.prevent="submitHandle"
+        >保存</el-button>
+        <el-button :size="size" @click.native.prevent="goBack">返回</el-button>
       </el-form-item>
     </el-form>
   </c-view>
 </template>
 
 <script>
+import CUpload from 'components/upload'
 import MixinForm from 'mixins/form'
+import dictObj from '@/store/dictData'
+
 export default {
   name: 'brandInfo',
   mixins: [MixinForm],
-  data() {
+  components: {
+    CUpload
+  },
+  data(vm) {
+    const validatePriceRate = (rule, value, callback) => {
+      if (vm.priceChecked) {
+        if (!value || !Number(value) || Number(value) < 0) {
+          callback(new Error('品牌定价倍率为非空数字'))
+        } else {
+          callback()
+        }
+      } else {
+        callback()
+      }
+    }
+
     return {
+      disStatus: dictObj.disStatus,
+      shopTypeList: dictObj.shopTypeList,
+      btnLoading: false,
+      priceChecked: false,
       formModel: {
-        country: '',
         name: '',
-        ename: '',
-        consumer: '',
-        logo: '',
-        intro: '',
-        description: '',
-        previewUrl: '',
-        videoUrl: '',
+        type: '',
+        priceRate: '',
         status: 1,
-        sort: 100
+        fileList: [] // 上传图片
       },
-      isDisabled: false,
       rules: {
-        country: [
-          { required: true, message: '请填写品牌国家', trigger: 'blur' }
-        ],
         name: [
           { required: true, message: '请填写品牌名称', trigger: 'blur' }
         ],
-        ename: [
-          { required: true, message: '请填写品牌别名', trigger: 'blur' }
+        type: [
+          { required: true, message: '请填选择品牌类型', trigger: 'change' }
         ],
-        consumer: [
-          { required: true, message: '请填写消费人群', trigger: 'blur' }
+        fileList: [
+          { required: true, message: '品牌logo图片不能为空', trigger: 'change' }
         ],
-        logo: [
-          { required: true, message: '请填写品牌LOGO的URL地址', trigger: 'blur' }
-        ],
-        intro: [
-          { required: true, message: '请填写品牌介绍', trigger: 'blur' }
-        ],
-        description: [
-          { required: true, message: '请填写品牌描述', trigger: 'blur' }
-        ],
-        previewUrl: [
-          { required: true, message: '请填写封面图URL', trigger: 'blur' }
-        ],
-        videoUrl: [
-          { required: true, message: '请填写封面视频URL', trigger: 'blur' }
-        ],
-        status: [
-          { required: true, message: '请选择状态', trigger: 'blur' }
-        ],
-        sort: [
-          { required: true, message: '请输入排序', trigger: 'blur' }
+        priceRate: [
+          { required: true, validator: validatePriceRate, trigger: 'blur' }
         ]
-      },
-      fileList: [],
-      fileVideoList: [],
-      brandStatus: [
-        {
-          value: 1,
-          label: '启用'
-        },
-        {
-          value: 2,
-          label: '禁用'
-        }
-      ]
+      }
     }
   },
   created() {
     this.fetchData()
   },
-
+  watch: {
+    'formModel.fileList': {
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.$nextTick(() => {
+            this.$refs.formRef.validateField('fileList')
+          })
+        }
+      },
+      immediate: false
+    }
+  },
   methods: {
     fetchData() {
       const { id } = this.$route.params
-      this.isDisabled = true
       if (id) {
         this.$api.basic.getBrandById({ id }).then(res => {
           this.setTagsViewTitle()
+          const { logo, priceRate, ...other } = res
+          if (priceRate) {
+            this.priceChecked = true
+          }
           this.formModel = {
-            ...this.formModel,
-            ...res
+            fileList: [{ name: '图片', url: logo }],
+            priceRate,
+            ...other
           }
         })
       }
@@ -197,66 +163,87 @@ export default {
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          const formModel = this.formModel
-          if (!this.dialogObj.isEdit) {
-            this.addHandle(formModel)
-          } else {
-            this.editHandle(formModel)
+          const { name, priceRate, type, status, fileList } = this.formModel
+          const requestMethods = {
+            'add': this.$api.basic.addBrand,
+            'edit': this.$api.basic.updateBrand
           }
+          let request = null
+          let params = {
+            name,
+            priceRate: this.priceChecked ? priceRate : '',
+            type,
+            status,
+            logo: fileList[0].url
+          }
+          const { id } = this.$route.params
+          if (id) {
+            request = requestMethods['edit']
+            params = { id, ...params }
+          } else {
+            request = requestMethods['add']
+          }
+          request(params).then(() => {
+            this.$msgTip(id ? '更新成功' : '新增成功').then(() => {
+              this.closeCurrentTag()
+              this.goBack()
+            })
+          })
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    showDialog(opts) {
+
+    uploadHandle(file) {
+      this.$refs.curUpload.customUpload(file)
+    },
+    uploadSuccess(response, file, fileList) {
+      this.formModel.fileList = [fileList[fileList.length - 1]] // 获取最后一张覆盖原图
+    },
+    // 删除图片
+    uploadRemove(file, fileList) {
+      this.formModel.fileList = fileList
+    },
+    // 预览图片
+    uploadReview(file) {
       this.dialogObj = {
-        isShow: true,
-        title: opts.title || '新增品牌',
-        isEdit: opts.isEdit || false,
-        initData: opts.initData
+        ...this.dialogObj,
+        imageUrl: file.url,
+        isShow: true
       }
-    },
-    addHandle(formModel) {
-      this.$api.basic.addBrand(formModel).then(res => {
-        this.dialogObj.isShow = false
-        this.$msgTip('添加成功')
-        this.fetchData()
-      })
-    },
-    editHandle(formModel) {
-      this.$api.basic.updateBrand(formModel).then(res => {
-        this.dialogObj.isShow = false
-        this.$msgTip('修改成功')
-        this.fetchData()
-      })
-    },
-    handleRemove(file, fileList) { // 删除文件
-      console.log(file, fileList)
-    },
-    handlePreview(file) { // 已上传的文件时的钩子
-      console.log(file)
-    },
-    handleExceed(files, fileList) { // 文件超出个数限制时的钩子
-      this.$msgTip(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove(file, fileList) { // 删除文件之前的钩子
-      return this.$confirm(`确定移除 ${file.name}？`)
     }
   }
 }
 </script>
-<style lang='less' scoped>
-.form {
-  min-height: calc(100vh - 128px);
-  background-color: @white;
-  padding: 15px 20px;
-  .select-item {
-    width: 30%;
+
+<style lang="less" scoped>
+.detail-form {
+  .pic {
+    padding-bottom: 25px;
+    span {
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .info {
+      line-height: 20px;
+      height: 20px;
+      margin-top: 5px;
+      font-size: @f12;
+    }
   }
-  .form-btn {
-    margin-left: 20px;
-    margin-top: 20px;
+}
+.preview {
+  box-sizing: border-box;
+  text-align: center;
+
+  img {
+    object-fit: contain;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

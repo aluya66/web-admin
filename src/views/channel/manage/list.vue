@@ -97,7 +97,7 @@ export default {
       dialogObj: {},
       tableInnerBtns: [
         {
-          width: 180,
+          width: 210,
           name: '编辑',
           icon: 'el-icon-edit',
           notBtn: row => row.channelType === 1, // 主渠道隐藏
@@ -138,6 +138,12 @@ export default {
                 dialogType: 'transfer'
               })
             })
+          }
+        }, {
+          name: '渠道定价',
+          icon: 'el-icon-setting',
+          handle(row) {
+            vm.routerLink(`/channel/manage/price/${row.channelId}`)
           }
         }, {
           prop: {

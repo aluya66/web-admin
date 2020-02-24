@@ -21,12 +21,13 @@
     <div class="sku-box">
       <div class="label">倍率:</div>
       <div class="content-box">
-        <el-input size="mini" class="rate-set hidden" disabled clearable placeholder="占位">
+        <!-- <el-input size="mini" class="rate-set hidden" disabled clearable placeholder="占位">
           <template slot="prepend">占位</template>
-        </el-input>
+        </el-input> -->
         <template>
           <el-input
             v-for="(item, index) in rateList"
+            v-show="index===4"
             :key="index"
             size="mini"
             class="rate-set"
@@ -55,7 +56,7 @@
           <el-input
             v-for="(item, index) in batchList.slice(1)"
             :key="index"
-            v-show="item.name !== 'skuStock'"
+            v-show="index === 5 && item.name !== 'skuStock'"
             size="mini"
             class="batch-set"
             :disabled="isView"
@@ -77,15 +78,17 @@
         <thead>
           <tr>
             <th style="width: 80px;">主图</th>
-            <th v-for="(item, index) in specification" :key="index">{{item.name}}</th>
+            <th style="width: 150px;" v-for="(item, index) in specification" :key="index">{{item.name}}</th>
             <th style="width: 150px;">sku款号</th>
             <th
+              style="width: 150px;"
               v-for="(item, index) in batchList"
+              v-show="index===1 || index===6"
               :key="'th_'+index"
               :title="item.name"
             >{{item.name !== 'skuStock' ? item.label + '(元)': item.label}}</th>
             <!-- <th>是否启用</th> -->
-            <th>是否主sku</th>
+            <th style="width: 150px;">是否主sku</th>
           </tr>
         </thead>
         <tbody v-if="specification[0] && specification[0].value.length">
@@ -129,7 +132,7 @@
               >{{getSpecAttr(specIndex, index)}}</td>
             </template>
             <td v-if="childProductArray[index]">{{childProductArray[index].goodsSkuSn}}</td>
-            <td v-for="(tdItem, tdIndex) in batchList" :key="'td_' + tdIndex">
+            <td v-for="(tdItem, tdIndex) in batchList" v-show="tdIndex === 1 || tdIndex===6" :key="'td_' + tdIndex">
               <el-input
                 size="small"
                 type="text"
@@ -137,7 +140,7 @@
                 v-model.number="childProductArray[index][tdItem.name]"
                 :placeholder="tdItem.label"
                 @change="(val) => { changeSkuPrice(val, index, tdItem.name) }"
-                :disabled="tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
+                :disabled="tdItem.name === 'costPrice' || tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
               ></el-input>
             </td>
             <!-- <td>
@@ -266,7 +269,7 @@ export default {
         value: '',
         name: 'memberPriceRate'
       }, {
-        label: '零售倍率',
+        label: '零售价倍率',
         value: '',
         name: 'retailPriceRate'
       }],
@@ -274,8 +277,8 @@ export default {
         label: '样衣成本价',
         value: '',
         name: 'sampleCostPrice'
-      }, {
-        label: '成衣成本价',
+      }, { // 原成衣成本价
+        label: '平台成本价',
         value: '',
         name: 'costPrice'
       }, {
@@ -294,8 +297,8 @@ export default {
         label: '成衣会员价',
         value: '',
         name: 'memberPrice'
-      }, {
-        label: '零售价',
+      }, { // 原零售价
+        label: '平台零售价',
         value: '',
         name: 'retailPrice'
       }, {

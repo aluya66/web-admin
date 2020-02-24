@@ -103,8 +103,9 @@ export default {
           label: '品牌',
           prop: 'brandName',
           search: {
-            prop: 'brandCode',
             type: 'dict',
+            filterable: true,
+            allowCreate: true,
             optionsList: []
           }
         },

@@ -53,8 +53,8 @@ export default {
         } else {
           this.brandList = res || []
         }
-        this.setSearchOptionsList('brandCode', this.brandList.map(item => ({
-          value: item.code,
+        this.setSearchOptionsList('brandName', this.brandList.map(item => ({
+          value: item.name,
           label: item.name
         })))
       })
