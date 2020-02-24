@@ -539,6 +539,18 @@ const deliveryTimeTypeList = [{
   value: 2
 }]
 
+// 发票类型列表
+const invoiceTypeList = [{
+  label: '普通发票',
+  value: 1
+}, {
+  label: '电子发票',
+  value: 2
+}, {
+  label: '增值税发票',
+  value: 3
+}]
+
 // 订单业务类型，单据类型
 const orderBusinessTypeList = [{
   label: '团购',
@@ -599,5 +611,6 @@ export default {
   payTypeList,
   orderSettleStatusList,
   deliveryTimeTypeList,
-  orderBusinessTypeList
+  orderBusinessTypeList,
+  invoiceTypeList
 }

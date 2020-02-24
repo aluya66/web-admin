@@ -60,7 +60,17 @@ export default {
   },
   data() {
     return {
-      detailData: {},
+      detailData: {
+        orderNewResp: {},
+        orderInvoiceResp: {},
+        orderRefundResp: [],
+        deliveryResp: [],
+        orderLogRespList: [],
+        afterSalesRespList: [],
+        orderDeliveryAddressResp: [],
+        memberResp: {},
+        shopInfoResp: {}
+      },
       dialogObj: {},
       btnLoading: false,
       rules: {},
