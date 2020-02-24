@@ -89,7 +89,7 @@ export default {
         },
         {
           label: '数量',
-          prop: 'originalQuantity'
+          prop: 'quantity'
         },
         {
           label: '商品总金额(元)',
