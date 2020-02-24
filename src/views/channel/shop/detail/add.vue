@@ -15,6 +15,7 @@
   >
     <template v-slot:header>
       <c-search
+        labelWidth="120px"
         :form-model="searchObj"
         :form-items="searchItems"
         @submit-form="searchSubmit"
@@ -47,19 +48,30 @@ export default {
           label: '子渠道号',
           prop: 'channelCode',
           search: {
+            label: '子渠道号或名称',
+            prop: 'keyword',
             type: 'input'
           }
         },
         {
           label: '子渠道名称',
-          prop: 'channelName',
-          search: {
-            type: 'input'
-          }
+          prop: 'channelName'
         },
         {
-          label: '描述',
-          prop: 'channelDescription'
+          label: '渠道品牌',
+          formatter(row) {
+            let arr = []
+            if (row.ruleInfos && row.ruleInfos.length) {
+              row.ruleInfos.forEach((item) => {
+                if (item.ruleBrandResp && item.ruleBrandResp.length) {
+                  item.ruleBrandResp.forEach((brandItem) => {
+                    arr.push(brandItem.brandName)
+                  })
+                }
+              })
+            }
+            return arr.length > 0 ? arr.join(',') : ''
+          }
         }
       ]
     }
@@ -75,7 +87,7 @@ export default {
     fetchData() {
       this.isLoading = true
       const { totalNum, ...page } = this.pageInfo
-      this.$api.channel.getChannel({
+      this.$api.channel.getShopChannel({
         ...this.searchObj,
         ...page,
         channelType: 2 // 类型： 2子渠道

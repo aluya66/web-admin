@@ -47,6 +47,10 @@ const shopTypeSelect = [{
   label: '加盟',
   value: 2
 }]
+const businessTypeSelect = [{
+  label: '加盟',
+  value: 1
+}]
 const shopStatusSelect = [
   {
     value: 0,
@@ -95,36 +99,48 @@ export default {
           }
         },
         {
-          label: '门店风格',
-          prop: 'styleName'
-        },
-        {
-          label: '经营方式',
+          label: '门店类型',
           prop: 'shopType',
           search: {
             type: 'select',
             optionsList: shopTypeSelect
           },
           formatter(row) {
-            return row.shopType ? shopTypeSelect[row.shopType - 1].label : ''
+            return row && vm.setTableColumnLabel(row.shopType, shopTypeSelect)
+          }
+        },
+        {
+          label: '联系人',
+          prop: 'contact',
+          search: {
+            label: '负责人',
+            type: 'input'
+          }
+        },
+        {
+          label: '联系手机',
+          prop: 'contactTel',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '经营方式',
+          prop: 'businessType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.businessType, businessTypeSelect)
           }
         },
         {
           label: '关联商户',
-          prop: 'businessName'
-        },
-        {
-          label: '门店地址',
-          prop: 'address',
-          isPopover: true
-        },
-        {
-          label: '联系人',
-          prop: 'contact'
-        },
-        {
-          label: '联系电话',
-          prop: 'contactTel'
+          prop: 'businessName',
+          search: {
+            prop: 'businessCode',
+            type: 'dict',
+            optionsList: [],
+            allowCreate: true,
+            filterable: true
+          }
         },
         {
           label: '状态',
@@ -138,20 +154,33 @@ export default {
           }
         },
         {
-          label: '添加人',
+          label: '更新人',
           prop: 'operaterName'
         },
         {
-          label: '添加时间',
-          prop: 'created'
+          label: '更新日期',
+          prop: 'updated'
         }
       ]
     }
   },
   created() {
     this.fetchData()
+    this.getBusiness()
   },
   methods: {
+    // 获取关联商户列表
+    getBusiness() {
+      this.$api.channel.getBusiness({
+        pageNo: 1,
+        pageSize: 100
+      }).then(res => {
+        if (res && res.totalCount) {
+          const businessList = res.data.map(res => ({ value: res.businessCode, label: res.businessName })) || []
+          this.setSearchOptionsList('businessCode', businessList)
+        }
+      })
+    },
     fetchData() {
       const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo

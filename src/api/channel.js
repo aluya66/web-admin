@@ -184,3 +184,19 @@ export const getShopListByChannel = params =>
   Http.fetch(`${context}/api/channel/shoplist`, params, {
     method: 'get'
   })
+
+/**
+* @param {*} 门店渠道列表
+*/
+export const getShopChannel = params =>
+  Http.fetch(`${context}/api/open/channel/list`, params, {
+    method: 'get'
+  })
+
+/**
+* @param {*} 获取关联商户
+*/
+export const getBusiness = params =>
+  Http.fetch(`${context}/api/business/querypage`, params, {
+    method: 'get'
+  })

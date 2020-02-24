@@ -221,12 +221,13 @@
         @before-upload="uploadBefore('videoUrl')"
       >
         <i class="el-icon-plus"></i>
+        <div class="info">格式：mp4</div>
         <div slot="file">
           <img class="el-upload-list__item-thumbnail" src="/static/default-video.png" />
         </div>
       </c-upload>
     </el-form-item>
-    <el-form-item label="营业时间:" prop="businessHours" v-if="formModel.shopType === 1" required>
+    <el-form-item label="营业时间:" prop="businessHours" v-if="formModel.shopType === 1">
       <el-time-picker
         is-range
         :size="size"
@@ -316,8 +317,6 @@
           :loading="isLoading"
           :table-header="tableHeader"
           :table-list="formModel.channelCode"
-          :rowStyle="{height:0}"
-          :cellStyle="{padding:0}"
         ></c-table>
       </div>
     </el-form-item>
@@ -331,11 +330,7 @@
         >{{ item.label }}</el-radio>
       </el-radio-group>
       <el-form-item label="调价底线:" prop="changeType" v-if="formModel.changeStatus === 1">
-        <el-select
-          class="select-item"
-          v-model="formModel.changeType"
-          placeholder="请选择调价底线"
-        >
+        <el-select class="select-item" v-model="formModel.changeType" placeholder="请选择调价底线">
           <el-option
             v-for="item in changeTypeList"
             :key="item.value"
