@@ -105,7 +105,9 @@ export default {
         shopDescription: '', // 描述
         isVisible: 0, // 是否隐藏门店
         stockCheck: 0, // 支持盘点
-        channelCode: [] // 关联渠道
+        channelCode: [], // 关联渠道
+        changeStatus: 0, // 开单调价
+        openVipStatus: 0 // 支持代开会员
       },
       isView: true,
       isDisabled: true,
@@ -132,6 +134,7 @@ export default {
     fetchData(shopId) {
       this.$api.channel.getShopDetail({ shopId }).then(res => {
         if (res) {
+          this.setTagsViewTitle()
           let {
             shopLogo,
             printer,
@@ -162,7 +165,6 @@ export default {
       })
     },
     submitHandle() {
-      console.log(this.formModel)
       const shopForm = this.$refs.formRef.$refs.shopFormRef
       Promise.all([shopForm].map(this.getFormPromise)).then(res => {
         // 所有子表单是否校验通过
@@ -198,7 +200,10 @@ export default {
             businessType, // 经营方式
             settleType, // 结算方式
             status, // 状态
-            channelCode // 渠道
+            channelCode, // 渠道
+            changeStatus, // 开单调价
+            openVipStatus, // 支持代开会员
+            changeType // 开启开单调价后： 调价底线 类型
           } = this.$refs.formRef.formModel
           let params = { // 基础参数
             shopType, // 门店类型
@@ -216,7 +221,9 @@ export default {
             businessType, // 经营方式
             settleType, // 结算方式
             status, // 状态
-            channelCode: channelCode.length ? channelCode[0].channelCode : '' // 渠道
+            channelCode: channelCode.length ? channelCode[0].channelCode : '', // 渠道
+            changeStatus, // 开单调价
+            openVipStatus // 支持代开会员
             // ————————————————加盟商户字段 ——————————————
             // shopImage: shopImage.length ? shopImage[0].url : '', // 店招
             // exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
@@ -230,6 +237,8 @@ export default {
           }
           // 关联打印机
           isConnectPrinter === 1 && Object.assign(params, { printer })
+          // 开启开单调价
+          changeStatus === 1 && Object.assign(params, { changeType })
           if (shopType === 1) { // 门店为自营类型
             Object.assign(params, {
               shopImage: shopImage.length ? shopImage[0].url : '', // 店招
@@ -244,7 +253,6 @@ export default {
             })
           }
           shopId && Object.assign(params, { shopId })
-          console.log(params)
           const reqFun = shopId
             ? requestMethods['edit'] : requestMethods['add']
           reqFun(params).then(() => {

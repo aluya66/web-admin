@@ -1,7 +1,7 @@
 import Http from '../utils/request'
 
 const context = process.env.VUE_APP_CONSOLE_COMMON
-// VUE_APP_CONSOLE_COMMON
+// VUE_APP_CONSOLE_COMMON VUE_APP_CONSOLE_LOCALHOST
 
 // 店铺 风格
 export const getShopStyle = params =>
@@ -17,7 +17,7 @@ export const getShopList = params =>
 
 // 店铺详情
 export const getShopDetail = params =>
-  Http.fetch(`${context}/api/shop`, params, {
+  Http.fetch(`${context}/api/shop/detail`, params, {
     method: 'get'
   })
 
@@ -27,7 +27,7 @@ export const addShop = params =>
     method: 'post'
   })
 
-// 店铺 新增
+// 店铺 编辑
 export const editShop = params =>
   Http.fetch(`${context}/api/shop`, params, {
     method: 'put'
@@ -194,5 +194,21 @@ export const addChannelPrice = params =>
 // 查询渠道关联价格信息类型
 export const queryChannelPrice = params =>
   Http.fetch(`${context}/api/channelprice`, params, {
+    method: 'get'
+  })
+
+/**
+* @param {*} 门店渠道列表
+*/
+export const getShopChannel = params =>
+  Http.fetch(`${context}/api/open/channel/list`, params, {
+    method: 'get'
+  })
+
+/**
+* @param {*} 获取关联商户
+*/
+export const getBusiness = params =>
+  Http.fetch(`${context}/api/business/querypage`, params, {
     method: 'get'
   })

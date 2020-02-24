@@ -203,7 +203,7 @@
         <div class="info">750px*350px</div>
       </c-upload>
     </el-form-item>
-    <el-form-item label="店铺视频:" prop="videoUrl" v-if="formModel.shopType === 1" required>
+    <el-form-item label="店铺视频:" prop="videoUrl" v-if="formModel.shopType === 1">
       <c-upload
         ref="videoUrl"
         class="pic"
@@ -221,12 +221,13 @@
         @before-upload="uploadBefore('videoUrl')"
       >
         <i class="el-icon-plus"></i>
+        <div class="info">格式：mp4</div>
         <div slot="file">
           <img class="el-upload-list__item-thumbnail" src="/static/default-video.png" />
         </div>
       </c-upload>
     </el-form-item>
-    <el-form-item label="营业时间:" prop="businessHours" v-if="formModel.shopType === 1" required>
+    <el-form-item label="营业时间:" prop="businessHours" v-if="formModel.shopType === 1">
       <el-time-picker
         is-range
         :size="size"
@@ -316,10 +317,38 @@
           :loading="isLoading"
           :table-header="tableHeader"
           :table-list="formModel.channelCode"
-          :rowStyle="{height:0}"
-          :cellStyle="{padding:0}"
         ></c-table>
       </div>
+    </el-form-item>
+    <el-form-item label="开单调价">
+      <el-radio-group v-model="formModel.changeStatus">
+        <el-radio
+          class="checkbox-item"
+          :label="item.value"
+          v-for="(item, index) in disStatus"
+          :key="index"
+        >{{ item.label }}</el-radio>
+      </el-radio-group>
+      <el-form-item label="调价底线:" prop="changeType" v-if="formModel.changeStatus === 1">
+        <el-select class="select-item" v-model="formModel.changeType" placeholder="请选择调价底线">
+          <el-option
+            v-for="item in changeTypeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form-item>
+    <el-form-item label="支持代开会员">
+      <el-radio-group v-model="formModel.openVipStatus">
+        <el-radio
+          class="checkbox-item"
+          :label="item.value"
+          v-for="(item, index) in disStatus"
+          :key="index"
+        >{{ item.label }}</el-radio>
+      </el-radio-group>
     </el-form-item>
   </el-form>
 </template>
@@ -387,10 +416,10 @@ export default {
         ],
         exhibitionImage: [
           { required: true, message: '请上传展馆图', trigger: 'blur' }
-        ],
-        videoUrl: [
-          { required: true, message: '请上传店铺视频', trigger: 'blur' }
         ]
+        // videoUrl: [
+        //   { required: true, message: '请上传店铺视频', trigger: 'blur' }
+        // ]
       },
       cacheShopType: '', // 缓存旧的门店类型
       tableHeader: [
@@ -413,6 +442,20 @@ export default {
       disStatus: dictObj.disStatus, // 禁用启用
       businessList: [], // 商户列表
       styleList: [], // 风格列表
+      changeTypeList: [ // 调价底线 1零售价 2会员价 3批发价
+        {
+          label: '零售价',
+          value: 1
+        },
+        {
+          label: '会员价',
+          value: 2
+        },
+        {
+          label: '批发价',
+          value: 3
+        }
+      ],
       settleTypeList: [{ // 结算方式
         label: '先款后贷',
         value: 1
