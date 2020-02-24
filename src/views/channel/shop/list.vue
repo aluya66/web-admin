@@ -40,13 +40,8 @@
 
 <script>
 import mixinTable from 'mixins/table'
-const shopTypeSelect = [{
-  label: '自营',
-  value: 1
-}, {
-  label: '加盟',
-  value: 2
-}]
+import dictObj from '@/store/dictData'
+
 const businessTypeSelect = [{
   label: '加盟',
   value: 1
@@ -103,10 +98,10 @@ export default {
           prop: 'shopType',
           search: {
             type: 'select',
-            optionsList: shopTypeSelect
+            optionsList: dictObj.shopTypeList
           },
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.shopType, shopTypeSelect)
+            return row && vm.setTableColumnLabel(row.shopType, 'shopTypeList')
           }
         },
         {

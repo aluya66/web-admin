@@ -203,7 +203,7 @@
         <div class="info">750px*350px</div>
       </c-upload>
     </el-form-item>
-    <el-form-item label="店铺视频:" prop="videoUrl" v-if="formModel.shopType === 1" required>
+    <el-form-item label="店铺视频:" prop="videoUrl" v-if="formModel.shopType === 1">
       <c-upload
         ref="videoUrl"
         class="pic"
@@ -416,10 +416,10 @@ export default {
         ],
         exhibitionImage: [
           { required: true, message: '请上传展馆图', trigger: 'blur' }
-        ],
-        videoUrl: [
-          { required: true, message: '请上传店铺视频', trigger: 'blur' }
         ]
+        // videoUrl: [
+        //   { required: true, message: '请上传店铺视频', trigger: 'blur' }
+        // ]
       },
       cacheShopType: '', // 缓存旧的门店类型
       tableHeader: [

@@ -134,6 +134,7 @@ export default {
     fetchData(shopId) {
       this.$api.channel.getShopDetail({ shopId }).then(res => {
         if (res) {
+          this.setTagsViewTitle()
           let {
             shopLogo,
             printer,
@@ -252,7 +253,6 @@ export default {
             })
           }
           shopId && Object.assign(params, { shopId })
-          console.log(params)
           const reqFun = shopId
             ? requestMethods['edit'] : requestMethods['add']
           reqFun(params).then(() => {
