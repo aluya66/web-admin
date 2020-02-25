@@ -5,7 +5,7 @@ const context = process.env.VUE_APP_CONSOLE_COMMON
 
 // 店铺 风格
 export const getShopStyle = params =>
-  Http.fetch(`${context}/api/shopstyle`, params, {
+  Http.fetch(`${context}/api/shop/styles`, params, {
     method: 'get'
   })
 
