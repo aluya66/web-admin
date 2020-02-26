@@ -21,57 +21,57 @@ export default {
       type: Object,
       default() {
         return {
-          
+
         }
       }
-    },
-    
+    }
+
   },
   data(vm) {
     return {
-      tableList:[],
-     tableHeader:[
+      tableList: [],
+      tableHeader: [
         {
           label: 'sku编码',
           prop: 'starasSkuCode',
-          width: 140,
+          width: 140
         },
         {
           label: '商品图片',
           prop: 'picturePath',
           width: 140,
-          isImage: true,
+          isImage: true
         },
         {
           label: '商品名称',
           prop: 'productName',
-          width: 140,
+          width: 140
         },
         {
           label: '规格',
           prop: 'specifications',
-          width: 140,
+          width: 140
         },
         {
           label: '下单数量',
           prop: 'quantity',
-          width: 140,
+          width: 140
         },
         {
           label: '实发数量',
           prop: 'consignQuantity',
-          width: 140,
+          width: 140
         },
         {
           label: '售后数量',
           prop: 'canAfterSalesQuantity',
-          width: 140,
-        },
-     ]
+          width: 140
+        }
+      ]
     }
   },
   computed: {
-     formModel: {
+    formModel: {
       get() {
         return this.initData
       },
@@ -89,17 +89,17 @@ export default {
       this.isLoading = true
       this.$api.order.queryGoodsList({
         orderCode,
-        pageSize:10,
-        pageNo:1
+        pageSize: 10,
+        pageNo: 1
       }).then(res => {
-           this.isLoading = false
-          if (res && res.totalCount) {
-            const { data, totalCount } = res
-            this.pageInfo.totalNum = totalCount
-            this.tableList = data || []
-          } 
+        this.isLoading = false
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.pageInfo.totalNum = totalCount
+          this.tableList = data || []
+        }
       })
-    },
+    }
   }
 }
 </script>

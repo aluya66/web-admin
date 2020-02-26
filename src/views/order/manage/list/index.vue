@@ -100,7 +100,7 @@ export default {
   data(vm) {
     return {
       dialogObj: {},
-      detailDialog:{},//详情弹框
+      detailDialog: {}, // 详情弹框
       listInfo: {}, // 列表统计数据
       orderStatus: '', // 订单状态
       areaOptions: [], // 全部区域集合
@@ -181,12 +181,12 @@ export default {
           search: {
             type: 'input'
           },
-           handle(row) {
-            vm.detailDialog={
-              isShow:true,
-              title:'商品信息',
-              initData:{
-                orderCode:row.orderCode
+          handle(row) {
+            vm.detailDialog = {
+              isShow: true,
+              title: '商品信息',
+              initData: {
+                orderCode: row.orderCode
               }
             }
           }
@@ -331,7 +331,7 @@ export default {
     }
   },
   methods: {
-    detailDialogConfirm(){
+    detailDialogConfirm() {
 
     },
     dialogConfirm() {
