@@ -518,8 +518,8 @@ export default {
       }
     },
     changeShopType() {
-      if(!this.cacheShopType){
-        return 
+      if (!this.cacheShopType) {
+        return
       }
       this.$confirm('您填写的信息将被重置，确定要更换吗？', '提示', {
         confirmButtonText: '确定',
