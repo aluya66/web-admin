@@ -18,7 +18,7 @@
       ></query-dict>
     </el-form-item>
     <el-form-item label="折扣率:" prop="discountRate">
-      <el-input v-model.trim="formModel.discountRate" class="select-item" min="1" max="100" clearable>
+      <el-input v-model.trim="formModel.discountRate" type="number" class="select-item" min="1" max="100" clearable>
         <template slot="append">%</template>
       </el-input>
     </el-form-item>
