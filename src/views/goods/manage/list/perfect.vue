@@ -138,10 +138,10 @@ export default {
             type: 'dateTime'
           }
         },
-        {
-          label: '平台成本价',
-          prop: 'costprice'
-        },
+        // {
+        //   label: '成衣成本价',
+        //   prop: 'costprice'
+        // },
         // {
         //   label: '成衣供货价(元)',
         //   prop: 'supplyprice'

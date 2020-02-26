@@ -13,7 +13,6 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import utils from 'utils'
 
 export default {
   mixins: [mixinTable],
