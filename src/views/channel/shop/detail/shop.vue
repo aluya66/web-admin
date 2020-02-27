@@ -442,7 +442,7 @@ export default {
       disStatus: dictObj.disStatus, // 禁用启用
       businessList: [], // 商户列表
       styleList: [], // 风格列表
-      changeTypeList: [], // 调价底线 
+      changeTypeList: [], // 调价底线
       settleTypeList: [{ // 结算方式
         label: '先款后贷',
         value: 1
@@ -471,15 +471,15 @@ export default {
     }
   },
   methods: {
-    //获取调价底线数据
-    fetchChangeType(){
+    // 获取调价底线数据
+    fetchChangeType() {
       this.$api.channel
-        .getPrice().then(res=>{
-          if(res && res.totalCount){
-            const {data} = res
-            this.changeTypeList=data||[]
-          }else{
-            this.changeTypeList=res
+        .getPrice().then(res => {
+          if (res && res.totalCount) {
+            const { data } = res
+            this.changeTypeList = data || []
+          } else {
+            this.changeTypeList = res
           }
         })
     },
@@ -564,7 +564,7 @@ export default {
         }
       })
     },
-    uploadRemove(type,file, fileList) {
+    uploadRemove(type, file, fileList) {
       this.formModel[type] = fileList
     },
     uploadReview(file) {

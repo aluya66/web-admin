@@ -280,7 +280,7 @@ export default {
       }, { // 原成衣成本价
         label: '平台成本价',
         value: '',
-        name: 'costPrice'
+        name: 'sampleCostPrice'
       }, {
         label: '成衣供货价',
         value: '',
@@ -635,11 +635,11 @@ export default {
       // const list = this.batchList.filter((item) => item.name !== 'costPrice')
       // const list = this.batchList
       switch (name) {
-        case 'costPrice': // 成衣成本价 根据价格类型的倍率设置全部价格
+        case 'sampleCostPrice': // 成衣成本价 根据价格类型的倍率设置全部价格
           this.batchList.slice(1).forEach((item) => {
             switch (item.name) {
-              case 'costPrice':
-                this.batchSameTypePrice('costPrice', curPrice, 1)
+              case 'sampleCostPrice':
+                this.batchSameTypePrice('sampleCostPrice', curPrice, 1)
                 break
               case 'supplyPrice': // 成衣供货价
                 rate = this.rateList[0].value // 供货价倍率
