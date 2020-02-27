@@ -461,8 +461,11 @@ export default {
         value: 1
       }],
       businessTypeList: [{ // 经营方式
-        label: '加盟',
+        label: '自营',
         value: 1
+      },{
+        label: '加盟',
+        value: 2
       }],
       isRecommendStatusList: [{ // 是否推荐
         label: '推荐',

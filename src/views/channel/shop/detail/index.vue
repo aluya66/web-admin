@@ -92,7 +92,7 @@ export default {
         usePos: 0, // 使用pos
         isConnectPrinter: 0, // 是否关联打印机
         printer: '', // 打印机编号
-        businessType: 1, // 经营方式 1加盟
+        businessType: 1, // 经营方式 1 自营
         settleType: 1, // 结算方式 1先款后贷
         status: 1, // 状态
         isRecommend: 1, // 是否推荐

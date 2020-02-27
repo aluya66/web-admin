@@ -233,7 +233,8 @@ export default {
               supplyRate: supplyRate || 1,
               largeBatchRate: largeBatchRate || 1,
               memberPriceRate: memberPriceRate || 1,
-              retailPriceRate: retailPriceRate || 1,
+              // retailPriceRate: retailPriceRate || 1,
+              retailPriceRate: '',  //初始化不同步当前设置的倍率  
               wholesalePriceRate: wholesalePriceRate || 1
             }
             this.curAttrs.push({ attrs, name: val.name, label: `${val.name}:`, id: val.id, checkedAttr: utils.uniqueArr(checkedAttr), posterUrl: colorPosters })
