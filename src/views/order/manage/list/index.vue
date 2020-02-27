@@ -50,7 +50,6 @@
           :init-data.sync="detailDialog.initData"
         ></detail-dialog>
       </c-dialog>
-          <!-- :area-options="areaOptions" -->
     </div>
     <div v-if="dialogObj.isShow">
       <c-dialog

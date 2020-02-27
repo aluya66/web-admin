@@ -9,6 +9,12 @@ export const getShopStyle = params =>
     method: 'get'
   })
 
+// 店铺 调价底线
+export const getPrice = params =>
+  Http.fetch(`${context}/api/shop/prices`, params, {
+    method: 'get'
+  })
+
 // 店铺列表
 export const getShopList = params =>
   Http.fetch(`${context}/api/shop/list`, params, {

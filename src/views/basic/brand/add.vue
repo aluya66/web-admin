@@ -16,7 +16,7 @@
       status-icon
     >
       <el-form-item label="品牌名称:" prop="name">
-        <el-input v-model.trim="formModel.name" class="select-item"/>
+        <el-input v-model.trim="formModel.name" class="select-item" maxlength="50"/>
       </el-form-item>
       <el-form-item label="品牌类型:" prop="type">
         <query-dict
@@ -60,7 +60,7 @@
         <el-input v-model.trim="formModel.priceRate" placeholder="倍率设置，不能为0" class="select-item">
           <template slot="prepend">平台成本价 X</template>
         </el-input>
-        <span class="input-info">* 零售价尾数向上取整原则，并且结尾尾数为：28、38、58、68、88、99</span>
+        <span class="input-info">* 零售价尾数向上取整原则，并且结尾尾数为：29、39、59、69、89、99</span>
       </el-form-item>
       <el-form-item>
         <el-button
