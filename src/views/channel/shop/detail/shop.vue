@@ -45,7 +45,7 @@
         :limit="1"
         :fileList="formModel.shopLogo"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'shopLogo')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('shopLogo')"
       >
@@ -175,7 +175,7 @@
         :limit="1"
         :fileList="formModel.shopImage"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'shopImage')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('shopImage')"
       >
@@ -195,7 +195,7 @@
         :limit="1"
         :fileList="formModel.exhibitionImage"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'exhibitionImage')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('exhibitionImage')"
       >
@@ -216,7 +216,7 @@
         :limit="1"
         :fileList="formModel.videoUrl"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'videoUrl')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('videoUrl')"
       >
@@ -564,8 +564,8 @@ export default {
         }
       })
     },
-    uploadRemove(file, fileList) {
-      this.formModel[file.ref] = fileList
+    uploadRemove(type,file, fileList) {
+      this.formModel[type] = fileList
     },
     uploadReview(file) {
       this.$emit('show-image', file)
