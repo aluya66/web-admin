@@ -16,7 +16,7 @@
       status-icon
     >
       <el-form-item label="品牌名称:" prop="name">
-        <el-input v-model.trim="formModel.name" class="select-item"/>
+        <el-input v-model.trim="formModel.name" class="select-item" maxlength="50"/>
       </el-form-item>
       <el-form-item label="品牌类型:" prop="type">
         <query-dict

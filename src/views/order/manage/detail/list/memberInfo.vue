@@ -21,19 +21,19 @@ import LineCard from '@/views/common/lineCard'
 export default {
   mixins: [mixinTable],
   props: {
-    memberObj:Object,
+    memberObj: Object
   },
   components: {
     LineCard
   },
   created() {
-    if(JSON.stringify(this.memberObj) !== '{}'){
-      this.memberList=[this.memberObj]
+    if (JSON.stringify(this.memberObj) !== '{}') {
+      this.memberList = [this.memberObj]
     }
   },
   data(vm) {
     return {
-      memberList:[],
+      memberList: [],
       tableHeader: [
         {
           label: '会员名称',
@@ -44,7 +44,7 @@ export default {
           prop: 'nickname'
         },
         {
-          label: '会员账号',
+          label: '会员账号'
           // prop: 'xxx'
         },
         {
@@ -52,7 +52,7 @@ export default {
           prop: 'grade'
         },
         {
-          label: '会员身份证',
+          label: '会员身份证'
           // prop: 'xx'
         },
         {

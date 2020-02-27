@@ -333,9 +333,9 @@
         <el-select class="select-item" v-model="formModel.changeType" placeholder="请选择调价底线">
           <el-option
             v-for="item in changeTypeList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            :key="item.priceId"
+            :label="item.priceName"
+            :value="item.priceId"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -442,20 +442,7 @@ export default {
       disStatus: dictObj.disStatus, // 禁用启用
       businessList: [], // 商户列表
       styleList: [], // 风格列表
-      changeTypeList: [ // 调价底线 1零售价 2会员价 3批发价
-        {
-          label: '零售价',
-          value: 1
-        },
-        {
-          label: '会员价',
-          value: 2
-        },
-        {
-          label: '批发价',
-          value: 3
-        }
-      ],
+      changeTypeList: [], // 调价底线 
       settleTypeList: [{ // 结算方式
         label: '先款后贷',
         value: 1
@@ -476,6 +463,7 @@ export default {
   created() {
     this.getStyleList()
     this.fetchAreaData()
+    this.fetchChangeType()
   },
   watch: {
     'formModel.shopType'() {
@@ -483,6 +471,18 @@ export default {
     }
   },
   methods: {
+    //获取调价底线数据
+    fetchChangeType(){
+      this.$api.channel
+        .getPrice().then(res=>{
+          if(res && res.totalCount){
+            const {data} = res
+            this.changeTypeList=data||[]
+          }else{
+            this.changeTypeList=res
+          }
+        })
+    },
     showDialog() {
       this.$emit('open-dialog')
     },
