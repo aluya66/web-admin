@@ -44,17 +44,17 @@
         />
         <span v-else>{{formModel.sampleCostprice}}</span>
       </el-form-item> -->
-      <el-form-item label="平台成本价(元):" prop="costprice">
+      <el-form-item label="平台成本价(元):" prop="sampleCostprice">
         <el-input
           v-if="!isView"
           class="select-item"
           disabled
-          v-model.trim="formModel.costprice"
+          v-model.trim="formModel.sampleCostprice"
           :size="size"
           placeholder="请输入平台成本价"
           clearable
         />
-        <span v-else>{{formModel.costprice}}</span>
+        <span v-else>{{formModel.sampleCostprice}}</span>
       </el-form-item>
       <!-- <el-form-item label="成衣供货价(元):" prop="supplyprice">
         <el-input

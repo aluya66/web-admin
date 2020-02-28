@@ -140,7 +140,7 @@
                 v-model.number="childProductArray[index][tdItem.name]"
                 :placeholder="tdItem.label"
                 @change="(val) => { changeSkuPrice(val, index, tdItem.name) }"
-                :disabled="tdItem.name === 'costPrice' || tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
+                :disabled="tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
               ></el-input>
             </td>
             <!-- <td>
@@ -463,7 +463,7 @@ export default {
       let childProduct = {
         childProductSpec: this.getChildProductSpec(index),
         goodsSkuSn: `${this.spuBn}-${index + 1}`, // sku款号
-        costPrice: '', // 成衣成本价
+        // costPrice: '', // 成衣成本价
         sampleCostPrice: '', // 样衣成本价
         supplyPrice: '', // 成衣供货价
         largeBatchPrice: '', // 成衣大批价
@@ -482,7 +482,7 @@ export default {
         childProduct = {
           ...childProduct,
           goodsSkuSn: curSkuInfo.goodsSkuSn, // 商品sku款号
-          costPrice: curSkuInfo.costPrice, // 成衣成本价
+          // costPrice: curSkuInfo.costPrice, // 成衣成本价
           sampleCostPrice: curSkuInfo.sampleCostPrice, // 样衣成本价
           supplyPrice: curSkuInfo.supplyPrice, // 成衣供货价
           wholesalePrice: curSkuInfo.wholesalePrice, // 成衣散批价
@@ -546,7 +546,7 @@ export default {
     handleMinPrice(target) {
       const minObj = {
         sampleCostprice: target.sampleCostPrice, // 样衣成本价
-        costprice: target.costPrice, // 成衣成本价
+        // costprice: target.costPrice, // 成衣成本价
         supplyprice: target.supplyPrice, // 供货价
         wholesaleprice: target.wholesalePrice, // 散批价
         largePrice: target.largeBatchPrice, // 大批价
@@ -709,6 +709,7 @@ export default {
       })
     },
     getPrice(val, rate, handlePrice = '') {
+      if(!rate) rate=1//如果倍率为空，先默认为1
       if (handlePrice === 'handlePrice') {
         // 获取个位数，原数字减个位数加9 得会员价、零售价
         return (parseInt(Math.ceil(val * rate)) - parseInt(Math.ceil(val * rate) % 10) + 9).toFixed(2)
