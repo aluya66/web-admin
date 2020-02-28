@@ -450,7 +450,7 @@ export default {
       businessTypeList: [{ // 经营方式
         label: '自营',
         value: 1
-      },{
+      }, {
         label: '加盟',
         value: 2
       }],
