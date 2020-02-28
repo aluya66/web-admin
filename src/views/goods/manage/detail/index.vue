@@ -201,27 +201,33 @@ export default {
       const { childProductArray, specification } = this.$refs.salesRef.$refs.skuWrapRef
       if (childProductArray.length > 0) {
         const arr = [{
-          value: 'costPrice',
+          value: 'sampleCostPrice',
           tip: '成衣成本价'
-        }, {
-          value: 'supplyPrice',
-          tip: '成衣供货价'
-        }, {
-          value: 'memberPrice',
-          tip: '成衣会员价'
-        }, {
-          value: 'largeBatchPrice',
-          tip: '成衣大批价'
-        }, {
-          value: 'wholesalePrice',
-          tip: '成衣散批价'
-        }, {
+        }, 
+        // {
+        //   value: 'supplyPrice',
+        //   tip: '成衣供货价'
+        // }, {
+        //   value: 'memberPrice',
+        //   tip: '成衣会员价'
+        // }, {
+        //   value: 'largeBatchPrice',
+        //   tip: '成衣大批价'
+        // }, {
+        //   value: 'wholesalePrice',
+        //   tip: '成衣散批价'
+        // }, 
+        {
           value: 'retailPrice',
           tip: '零售价'
         }]
         for (let i = 0, len = childProductArray.length; i < len; i++) {
           for (let j = 0, len = arr.length; j < len; j++) {
-            if (childProductArray[i][arr[j].value] === '' || !Number(childProductArray[i][arr[j].value]) || childProductArray[i][arr[j].value] < 0) return this.$msgTip(`sku${arr[j].tip}不能为空，请填写大于0的数字`, 'warning')
+            if (childProductArray[i][arr[j].value] === '' || !Number(childProductArray[i][arr[j].value]) || childProductArray[i][arr[j].value] < 0) {
+              return this.$msgTip(`sku${arr[j].tip}不能为空，请填写大于0的数字`, 'warning')
+            }else if(childProductArray[i].sampleCostPrice > childProductArray[i].retailPrice){
+              return this.$msgTip(`零售价不可低于成本价`, 'warning')
+            }
           }
         }
       }
