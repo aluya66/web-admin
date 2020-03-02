@@ -82,11 +82,35 @@
 <script>
 
 import dictObj from '@/store/dictData'
+import utils from 'utils'
 import QueryDict from '@/views/common/queryDict'
 export default {
   data() {
     return {
-      rules: {},
+      rules: {
+         operationName: [
+          { required: true, message: '机构名称不能为空', trigger: 'blur' },
+        ],
+        status: [
+          { required: true, message: '机构状态不能为空', trigger: 'change' }
+        ],
+        businessCode: [
+          { required: true, message: '所属商户不能为空', trigger: 'blur' }
+        ],
+        addressCode: [
+          { required: true, message: '机构地址不能为空', trigger: 'blur' }
+        ],
+        operationAddress: [
+          { required: true, message: '详细地址不能为空', trigger: 'blur' }
+        ],
+        responsibleName: [
+          { required: true, message: '联系人不能为空', trigger: 'blur' }
+        ],
+        responsiblePhone: [
+          { required: true, message: '联系手机不能为空', trigger: 'blur' },
+          {validator: utils.validater.phoneNumber,message: '请输入正确的手机号码',trigger: 'blur'}
+        ],
+      },
       btnLoading: false,
       formModel: {},
       areaOptions: [],
