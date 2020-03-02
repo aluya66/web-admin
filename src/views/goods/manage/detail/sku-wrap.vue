@@ -709,7 +709,7 @@ export default {
       })
     },
     getPrice(val, rate, handlePrice = '') {
-      if(!rate) rate=1//如果倍率为空，先默认为1
+      if (!rate) rate = 1// 如果倍率为空，先默认为1
       if (handlePrice === 'handlePrice') {
         // 获取个位数，原数字减个位数加9 得会员价、零售价
         return (parseInt(Math.ceil(val * rate)) - parseInt(Math.ceil(val * rate) % 10) + 9).toFixed(2)

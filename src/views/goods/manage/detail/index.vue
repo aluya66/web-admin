@@ -203,7 +203,7 @@ export default {
         const arr = [{
           value: 'sampleCostPrice',
           tip: '成衣成本价'
-        }, 
+        },
         // {
         //   value: 'supplyPrice',
         //   tip: '成衣供货价'
@@ -216,7 +216,7 @@ export default {
         // }, {
         //   value: 'wholesalePrice',
         //   tip: '成衣散批价'
-        // }, 
+        // },
         {
           value: 'retailPrice',
           tip: '零售价'
@@ -225,7 +225,7 @@ export default {
           for (let j = 0, len = arr.length; j < len; j++) {
             if (childProductArray[i][arr[j].value] === '' || !Number(childProductArray[i][arr[j].value]) || childProductArray[i][arr[j].value] < 0) {
               return this.$msgTip(`sku${arr[j].tip}不能为空，请填写大于0的数字`, 'warning')
-            }else if(Number(childProductArray[i].sampleCostPrice) > Number(childProductArray[i].retailPrice)){
+            } else if (Number(childProductArray[i].sampleCostPrice) > Number(childProductArray[i].retailPrice)) {
               return this.$msgTip(`零售价不可低于成本价`, 'warning')
             }
           }
