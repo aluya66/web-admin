@@ -36,6 +36,7 @@
                 class="search-item"
                 placeholder="请选择商户"
                 clearable
+                filterable
               >
                 <el-option
                   v-for="item in bussinessList"
