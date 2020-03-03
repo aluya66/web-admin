@@ -153,7 +153,7 @@ export default {
         },
         {
           label: '更新人',
-          prop: 'operaterName'
+          prop: 'opEditor'
         },
         {
           label: '更新日期',
