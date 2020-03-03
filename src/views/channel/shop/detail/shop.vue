@@ -521,6 +521,8 @@ export default {
       }
     },
     changeShopType() {
+      //console.info( this.formModel.shopType,222222)
+      this.formModel.businessType = this.formModel.shopType
       if (!this.cacheShopType) {
         return
       }
