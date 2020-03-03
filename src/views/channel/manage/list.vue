@@ -120,7 +120,7 @@ export default {
         {
           name: '关联规则',
           icon: 'el-icon-connection',
-          notBtn: row => row.channelType === 1 || (row.channelType === 2 && row.status === 0), // 主渠道隐藏
+          // notBtn: row => row.channelType === 1 || (row.channelType === 2 && row.status === 0), // 主渠道隐藏
           handle(row) {
             vm.$api.channel.getChannelRule({
               status: 1

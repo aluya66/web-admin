@@ -125,12 +125,12 @@ export default {
             optionsList: []
           }
         },
+        // {
+        //   label: '商品来源',
+        //   prop: 'originName'
+        // },
         {
-          label: '商品来源',
-          prop: 'originName'
-        },
-        {
-          label: '平台净采购价',
+          label: '平台成本价',
           prop: 'sampleCostprice',
           search: {
             label: '更新时间',
