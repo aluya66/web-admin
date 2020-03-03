@@ -28,6 +28,15 @@ export default {
       roles: ['review']
     }
   }, {
+    path: '/settings/price',
+    name: 'settingsPrice',
+    component: () => import('@/views/settings/channelPrice/list'),
+    meta: {
+      title: 'settingsPrice',
+      icon: 'table',
+      roles: ['admin']
+    }
+  }, {
     path: '/settings/qrcode',
     name: 'settingsQrcode',
     component: () => import('@/views/settings/qrcode/list'),

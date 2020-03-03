@@ -63,6 +63,18 @@ export default {
     }
   },
   {
+    path: '/channel/manage/price/:id?',
+    name: 'channelManagePrice',
+    hidden: true,
+    component: () => import('@/views/channel/manage/price/index'),
+    meta: {
+      title: 'channelManagePrice',
+      noCache: true,
+      activeMenu: '/channel/manage',
+      roles: ['admin']
+    }
+  },
+  {
     path: '/channel/rule',
     name: 'channelRule',
     component: () => import('@/views/channel/rule/list'),

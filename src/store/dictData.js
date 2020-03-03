@@ -48,13 +48,64 @@ lobListAll.unshift({
   value: 'commons'
 })
 
-// 启用禁用
+// 启用/禁用
 const disStatus = [{
   label: '启用',
   value: 1
 }, {
   label: '禁用',
   value: 0
+}]
+
+// 开启/关闭
+const openStatus = [{
+  label: '开启',
+  value: 1
+}, {
+  label: '关闭',
+  value: 0
+}]
+
+// 渠道价格应用范围
+const channelAppliedType = [{
+  label: '采购定价',
+  value: 1
+}, {
+  label: '销售定价',
+  value: 2
+}]
+
+// 渠道价格类型
+const channelPriceType = [{
+  label: '平台价格',
+  value: 1
+}, {
+  label: '渠道价格',
+  value: 2
+}]
+
+// 会员条件等级
+const customLevelList = [{
+  label: '普通会员',
+  value: 0
+}, {
+  label: '白金会员',
+  value: 1
+}, {
+  label: '钻石会员',
+  value: 2
+}, {
+  label: '黑卡会员',
+  value: 3
+}]
+
+// 同步状态
+const syncStatusList = [{
+  label: '不同步',
+  value: 0
+}, {
+  label: '已同步',
+  value: 1
 }]
 
 // 男1，女2
@@ -124,6 +175,7 @@ const shopTypeList = [{
   label: '合作',
   value: 2
 }]
+
 /**
  * 商户分类
  */
@@ -487,6 +539,18 @@ const deliveryTimeTypeList = [{
   value: 2
 }]
 
+// 发票类型列表
+const invoiceTypeList = [{
+  label: '普通发票',
+  value: 1
+}, {
+  label: '电子发票',
+  value: 2
+}, {
+  label: '增值税发票',
+  value: 3
+}]
+
 // 订单业务类型，单据类型
 const orderBusinessTypeList = [{
   label: '团购',
@@ -518,6 +582,11 @@ export default {
   lobList,
   lobListAll,
   disStatus,
+  openStatus,
+  syncStatusList,
+  customLevelList,
+  channelPriceType,
+  channelAppliedType,
   categoryTypeList,
   auditStatus,
   genderSelect,
@@ -542,5 +611,6 @@ export default {
   payTypeList,
   orderSettleStatusList,
   deliveryTimeTypeList,
-  orderBusinessTypeList
+  orderBusinessTypeList,
+  invoiceTypeList
 }

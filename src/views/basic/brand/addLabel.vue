@@ -18,10 +18,10 @@
         <el-form-item label="品牌名称:" prop="name">
           <span>{{formModel.name}}</span>
         </el-form-item>
-        <el-form-item label="品牌code:" prop="code">
+        <el-form-item label="品牌编码:" prop="code">
           <span>{{formModel.code}}</span>
         </el-form-item>
-        <el-form-item label="品牌logo:">
+        <el-form-item label="Logo:">
           <c-image
             class="coverImg"
             :url="formModel.logo"

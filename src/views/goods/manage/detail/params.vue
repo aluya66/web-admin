@@ -255,9 +255,6 @@ export default {
         display: flex;
         justify-content: center;
         flex-direction: row;
-        .btn {
-          margin: 5px;
-        }
       }
     }
   }

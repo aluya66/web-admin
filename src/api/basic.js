@@ -196,7 +196,9 @@ export const getBrandById = params =>
 
 // 新增品牌
 export const addBrand = params =>
-  Http.fetch(`${context}/api/brand`, params)
+  Http.fetch(`${context}/api/brand`, params, {
+    method: 'post'
+  })
 
 // 修改品牌
 export const updateBrand = params =>
