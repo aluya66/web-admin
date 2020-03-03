@@ -9,15 +9,6 @@
           @click="routerLink('/channel/operation/add')"
         >新增</el-button>
     </template>
-      <el-cascader
-        clearable
-        class="select-item"
-        :options="areaOptions"
-        :props="optionsProps"
-        placeholder="选择机构地址"
-        filterable
-      ></el-cascader>
-        <!-- v-model="formModel.addressCode" -->
     <div class="main__box">
       <c-table
         ref="cTable"
@@ -31,14 +22,14 @@
 				:page-info="pageInfo"
         @change-pagination="changePagination"
       >
-        <!-- <template v-slot:header>
+        <template v-slot:header>
           <c-search
             :form-model="searchObj"
             :form-items="searchItems"
             @submit-form="searchSubmit"
             @reset-form="searchReset"
           ></c-search>
-        </template> -->
+        </template>
       </c-table>
     </div>
     <div v-if="dialogObj.isShow">
@@ -61,6 +52,16 @@ import CDialog from 'components/dialog'
 // import dictObj from '@/store/dictData'
 import OperationAdd from './add'
 
+const statusSelect = [{
+  label: '关闭',
+  value: 0
+}, {
+  label: '开启 ',
+  value: 1
+},{
+  label:'全部',
+  value:''
+}]
 export default {
   name: 'operation',
   mixins: [mixinTable],
@@ -74,10 +75,16 @@ export default {
       dialogObj: {},
       // 全部区域集合
       areaOptions: [],
-      optionsProps: {
-        value: 'code',
-        label: 'name',
-        leaf: 2
+      areaProps: {
+        expandTrigger: 'click',
+        checkStrictly: true,
+        lazy: true,
+        lazyLoad(node, resolve) {
+          vm.fetchAreaData(node, (data) => {
+            // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+            resolve(data)
+          })
+        }
       },
       // 表格内操作按钮
       tableInnerBtns: [
@@ -88,33 +95,49 @@ export default {
             vm.routerLink(`/channel/operation/add/${row.id}`)
           }
         },
-        {
-          name: '删除',
-          icon: 'el-icon-delete',
-          handle(row) {
-            const { operationName, id } = row
-            vm.confirmTip(`是否删除【${operationName}】`, () => {
-              vm.deleteHandle({ id })
-            })
-          }
-        }
+        // {
+        //   name: '删除',
+        //   icon: 'el-icon-delete',
+        //   handle(row) {
+        //     const { operationName, id } = row
+        //     vm.confirmTip(`是否删除【${operationName}】`, () => {
+        //       vm.deleteHandle({ id })
+        //     })
+        //   }
+        // }
       ],
       tableHeader: [
         {
           label: '机构编码',
-          prop: 'operationCode'
+          prop: 'operationCode',
+           search: {
+            type: 'input'
+          }
         },
         {
           label: '机构名称',
-          prop: 'operationName'
+          prop: 'operationName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '所属商户',
-          prop: 'businessCode'
+          prop: 'businessCode',
+           search: {
+            type: 'input'
+          }
         },
         {
           label: '机构地址',
-          prop: 'operationProvince'
+          prop: 'operationProvince',
+          search: {
+            type: 'cascader',
+            prop: 'areaCode',
+            label: '所属地区',
+            optionsProps: {},
+            optionsList: []
+          }
         },
         {
           label: '详细地址',
@@ -122,31 +145,58 @@ export default {
         },
         {
           label: '联系人',
-          prop: 'responsibleName'
+          prop: 'responsibleName',
+           search: {
+            type: 'input'
+          }
         },
         {
           label: '联系电话',
-          prop: 'responsiblePhone'
+          prop: 'responsiblePhone',
+           search: {
+            type: 'input'
+          }
         },
         {
           label: '状态',
-          prop: 'status'
+          prop: 'status',
+          search: {
+            type: 'select',
+            optionsList: statusSelect
+          },
+          formatter(row) {
+            return row.status === 0 ? '关闭' : '开启'
+          }
         }
       ]
     }
   },
   created() {
     this.fetchData()
-    this.fetchAreaData()
+    this.setSearchOptionsList('areaCode', this.areaProps, 'optionsProps')
   },
   methods: {
     /**
      *  获取全部区域数据
     */
-    fetchAreaData() {
-      this.$api.basic.getAllArea().then(res => {
-        if (res && res.length) {
-          this.areaOptions = res
+     fetchAreaData(node = {}, callBack) {
+      const { level, value } = node
+      this.$api.basic.queryAllRegion({
+        parentCode: value || 0
+      }).then(res => {
+        const data = res.totalCount ? res.data : res
+        let curData = []
+        if (data && data.length) {
+          curData = data.map(res => ({
+            leaf: level ? level >= 2 : 0,
+            value: res.code,
+            label: res.name
+          }))
+        }
+        if (value === 0) {
+          this.areaOptions = curData
+        } else {
+          typeof callBack === 'function' && callBack(curData)
         }
       })
     },
@@ -155,12 +205,13 @@ export default {
 		 */
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
-      const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime)
+      const { areaCode,...other} =this.searchObj
       this.isLoading = true
       this.$api.operation.queryOperationList({
-        ...searchDate,
         ...other,
+        operationProvince:areaCode[0]||'',
+        operationCity:areaCode[1]||'',
+        operationDistrict:areaCode[2]||'',
         ...page
       }).then(res => {
         this.isLoading = false
