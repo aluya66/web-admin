@@ -2,6 +2,7 @@
   <c-view>
      <template v-slot:header>
         <el-page-header
+         @back="goBack"
           :content="$route.meta.name || $t(`route.${$route.meta.title}`)"
         ></el-page-header>
       </template>
@@ -83,9 +84,14 @@
 <script>
 
 import dictObj from '@/store/dictData'
+import MixinForm from 'mixins/form'
 import utils from 'utils'
 import QueryDict from '@/views/common/queryDict'
 export default {
+  components: {
+    QueryDict
+  },
+  mixins: [MixinForm],
   data() {
     return {
       rules: {
@@ -124,9 +130,7 @@ export default {
        openStatus: dictObj.openStatus,
     }
   },
-  components: {
-    QueryDict
-  },
+
   // computed: {
   //   formModel: {
   //     get() {
@@ -157,8 +161,7 @@ export default {
       const { id } = this.$route.params
       if (id) {
         this.$api.operation.queryOperationDetail({ id }).then(res => {
-          // this.setTagsViewTitle()
-          console.log('res', res)
+          this.setTagsViewTitle()
           this.formModel = {
             ...res,
             addressCode: [res.operationProvince, res.operationCity, res.operationDistrict] // 区域code }
@@ -203,7 +206,7 @@ export default {
           request(params).then((res) => {
             this.$msgTip(id ? '更新成功' : '新增成功').then(() => {
               this.closeCurrentTag()
-              // this.goBack()
+              this.goBack()
             })
           })
         } else {

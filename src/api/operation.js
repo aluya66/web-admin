@@ -8,7 +8,7 @@ const context = process.env.VUE_APP_CONSOLE_COMMON
  * @param {*}
  */
 export const queryOperationList = params =>
-  Http.fetch(`${context}/api/center/query`, params, {
+  Http.fetch(`${context}/api/center/querypage`, params, {
     method: 'get'
   })
 

@@ -32,17 +32,6 @@
         </template>
       </c-table>
     </div>
-    <div v-if="dialogObj.isShow">
-      <c-dialog
-        :is-show="dialogObj.isShow"
-        :title="dialogObj.title"
-        close-btn
-        @before-close="dialogObj.isShow = false"
-        @on-submit="dialogConfirm"
-      >
-				<operation-add ref="childRef" :init-data.sync="dialogObj.initData" :is-edit="dialogObj.isEdit"></operation-add>
-      </c-dialog>
-    </div>
   </c-view>
 </template>
 
@@ -50,7 +39,6 @@
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 // import dictObj from '@/store/dictData'
-import OperationAdd from './add'
 
 const statusSelect = [{
   label: '关闭',
@@ -67,7 +55,6 @@ export default {
   mixins: [mixinTable],
   components: {
     CDialog,
-    OperationAdd
   },
   data(vm) {
     return {
@@ -130,7 +117,9 @@ export default {
         },
         {
           label: '机构地址',
-          prop: 'operationProvince',
+          formatter(row) {
+            return row.operationProvince + ' ' + row.operationCity + ' ' + row.operationDistrict 
+          },
           search: {
             type: 'cascader',
             prop: 'areaCode',
@@ -207,6 +196,7 @@ export default {
       const { totalNum, ...page } = this.pageInfo
       const { areaCode,...other} =this.searchObj
       this.isLoading = true
+      // page.pageSize=20
       this.$api.operation.queryOperationList({
         ...other,
         operationProvince:areaCode[0]||'',
@@ -221,41 +211,6 @@ export default {
           this.tableList = data || []
         } else {
           this.tableList = res || []
-        }
-      })
-    },
-
-    /**
-     * dialog对话框数据处理
-     * @opts {*}
-     */
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        isEdit: opts.isEdit || false,
-        title: opts.title || '新增',
-        initData: opts.initData
-      }
-    },
-    /**
-		 * dialog新增、编辑处理函数
-		 */
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const params = childRef.formModel
-          const curAction = this.dialogObj.isEdit ? 'editOperation' : 'addOperation'
-          // TODO...
-          this.$api.operation[curAction]({
-            // TODO...
-            ...params
-          }).then(() => {
-            this.responeHandle(this.dialogObj.isEdit ? '更新成功' : '新增成功')
-          })
-        } else {
-          console.log('error submit!!')
-          return false
         }
       })
     },
