@@ -366,7 +366,7 @@ export default {
           priceId: curItem.value,
           priceName: curItem.label,
           priceType: 2,
-          appliedType: 2,
+          appliedType: this.curType,
           basePriceId: 3,
           basePriceName: '平台零售价',
           discountRate: '',

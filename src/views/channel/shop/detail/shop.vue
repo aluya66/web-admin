@@ -45,7 +45,7 @@
         :limit="1"
         :fileList="formModel.shopLogo"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'shopLogo')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('shopLogo')"
       >
@@ -175,7 +175,7 @@
         :limit="1"
         :fileList="formModel.shopImage"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'shopImage')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('shopImage')"
       >
@@ -195,7 +195,7 @@
         :limit="1"
         :fileList="formModel.exhibitionImage"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'exhibitionImage')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('exhibitionImage')"
       >
@@ -216,7 +216,7 @@
         :limit="1"
         :fileList="formModel.videoUrl"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'videoUrl')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('videoUrl')"
       >
@@ -333,9 +333,9 @@
         <el-select class="select-item" v-model="formModel.changeType" placeholder="请选择调价底线">
           <el-option
             v-for="item in changeTypeList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            :key="item.priceId"
+            :label="item.priceName"
+            :value="item.priceId"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -442,27 +442,17 @@ export default {
       disStatus: dictObj.disStatus, // 禁用启用
       businessList: [], // 商户列表
       styleList: [], // 风格列表
-      changeTypeList: [ // 调价底线 1零售价 2会员价 3批发价
-        {
-          label: '零售价',
-          value: 1
-        },
-        {
-          label: '会员价',
-          value: 2
-        },
-        {
-          label: '批发价',
-          value: 3
-        }
-      ],
+      changeTypeList: [], // 调价底线
       settleTypeList: [{ // 结算方式
         label: '先款后贷',
         value: 1
       }],
       businessTypeList: [{ // 经营方式
-        label: '加盟',
+        label: '自营',
         value: 1
+      }, {
+        label: '加盟',
+        value: 2
       }],
       isRecommendStatusList: [{ // 是否推荐
         label: '推荐',
@@ -476,6 +466,7 @@ export default {
   created() {
     this.getStyleList()
     this.fetchAreaData()
+    this.fetchChangeType()
   },
   watch: {
     'formModel.shopType'() {
@@ -483,6 +474,18 @@ export default {
     }
   },
   methods: {
+    // 获取调价底线数据
+    fetchChangeType() {
+      this.$api.channel
+        .getPrice().then(res => {
+          if (res && res.totalCount) {
+            const { data } = res
+            this.changeTypeList = data || []
+          } else {
+            this.changeTypeList = res
+          }
+        })
+    },
     showDialog() {
       this.$emit('open-dialog')
     },
@@ -518,6 +521,11 @@ export default {
       }
     },
     changeShopType() {
+      //console.info( this.formModel.shopType,222222)
+      this.formModel.businessType = this.formModel.shopType
+      if (!this.cacheShopType) {
+        return
+      }
       this.$confirm('您填写的信息将被重置，确定要更换吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -561,8 +569,8 @@ export default {
         }
       })
     },
-    uploadRemove(file, fileList) {
-      this.formModel[file.ref] = fileList
+    uploadRemove(type, file, fileList) {
+      this.formModel[type] = fileList
     },
     uploadReview(file) {
       this.$emit('show-image', file)

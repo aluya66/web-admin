@@ -43,8 +43,11 @@ import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
 
 const businessTypeSelect = [{
-  label: '加盟',
+  label: '自营',
   value: 1
+}, {
+  label: '加盟',
+  value: 2
 }]
 const shopStatusSelect = [
   {

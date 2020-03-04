@@ -140,7 +140,7 @@
                 v-model.number="childProductArray[index][tdItem.name]"
                 :placeholder="tdItem.label"
                 @change="(val) => { changeSkuPrice(val, index, tdItem.name) }"
-                :disabled="tdItem.name === 'costPrice' || tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
+                :disabled="tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
               ></el-input>
             </td>
             <!-- <td>
@@ -280,7 +280,7 @@ export default {
       }, { // 原成衣成本价
         label: '平台成本价',
         value: '',
-        name: 'costPrice'
+        name: 'sampleCostPrice'
       }, {
         label: '成衣供货价',
         value: '',
@@ -463,7 +463,7 @@ export default {
       let childProduct = {
         childProductSpec: this.getChildProductSpec(index),
         goodsSkuSn: `${this.spuBn}-${index + 1}`, // sku款号
-        costPrice: '', // 成衣成本价
+        // costPrice: '', // 成衣成本价
         sampleCostPrice: '', // 样衣成本价
         supplyPrice: '', // 成衣供货价
         largeBatchPrice: '', // 成衣大批价
@@ -482,7 +482,7 @@ export default {
         childProduct = {
           ...childProduct,
           goodsSkuSn: curSkuInfo.goodsSkuSn, // 商品sku款号
-          costPrice: curSkuInfo.costPrice, // 成衣成本价
+          // costPrice: curSkuInfo.costPrice, // 成衣成本价
           sampleCostPrice: curSkuInfo.sampleCostPrice, // 样衣成本价
           supplyPrice: curSkuInfo.supplyPrice, // 成衣供货价
           wholesalePrice: curSkuInfo.wholesalePrice, // 成衣散批价
@@ -546,7 +546,7 @@ export default {
     handleMinPrice(target) {
       const minObj = {
         sampleCostprice: target.sampleCostPrice, // 样衣成本价
-        costprice: target.costPrice, // 成衣成本价
+        // costprice: target.costPrice, // 成衣成本价
         supplyprice: target.supplyPrice, // 供货价
         wholesaleprice: target.wholesalePrice, // 散批价
         largePrice: target.largeBatchPrice, // 大批价
@@ -616,8 +616,8 @@ export default {
       // 供货价=供货价倍率*采购价，价格取整数，比如计算出来的价格为55.34，则系统去小数点后两位数取整为56.00；
       // 大批价=大批价倍率*采购价，价格取整数，比如计算出来的价格为55.34，则系统去小数点后两位数取整为56.00；
       // 散批价=散批价倍率*采购价，价格取整数，比如计算出来的价格为55.34，则系统去小数点后两位数取整为56.00；
-      // 会员价=会员价倍率*采购价，价格取整数，同时要求个位数系统自动调整为8，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为8，即结果为58.00；
-      // 零售价=零售价倍率*采购价，价格取整数，同时要求个位数系统自动调整为8，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为8，即结果为58.00；
+      // 会员价=会员价倍率*采购价，价格取整数，同时要求个位数系统自动调整为9，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为9，即结果为59.00；
+      // 零售价=零售价倍率*采购价，价格取整数，同时要求个位数系统自动调整为9，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为9，即结果为59.00；
       // 在样衣库管理新增/编辑商品，提交后，若有新增的sku，均以上述的规则计算各个价格，填充到对应的值中，同时按照现有规则，在生成sku价格后，针对spu价格按照现有规则自动填充；
 
       // typeof this.batchList[this.batchIndex].value === 'string' && this.batchList[this.batchIndex].value !== ''
@@ -635,11 +635,11 @@ export default {
       // const list = this.batchList.filter((item) => item.name !== 'costPrice')
       // const list = this.batchList
       switch (name) {
-        case 'costPrice': // 成衣成本价 根据价格类型的倍率设置全部价格
+        case 'sampleCostPrice': // 成衣成本价 根据价格类型的倍率设置全部价格
           this.batchList.slice(1).forEach((item) => {
             switch (item.name) {
-              case 'costPrice':
-                this.batchSameTypePrice('costPrice', curPrice, 1)
+              case 'sampleCostPrice':
+                this.batchSameTypePrice('sampleCostPrice', curPrice, 1)
                 break
               case 'supplyPrice': // 成衣供货价
                 rate = this.rateList[0].value // 供货价倍率
@@ -709,9 +709,10 @@ export default {
       })
     },
     getPrice(val, rate, handlePrice = '') {
+      if (!rate) rate = 1// 如果倍率为空，先默认为1
       if (handlePrice === 'handlePrice') {
-        // 获取个位数，原数字减个位数加8 得会员价、零售价
-        return (parseInt(Math.ceil(val * rate)) - parseInt(Math.ceil(val * rate) % 10) + 8).toFixed(2)
+        // 获取个位数，原数字减个位数加9 得会员价、零售价
+        return (parseInt(Math.ceil(val * rate)) - parseInt(Math.ceil(val * rate) % 10) + 9).toFixed(2)
       }
       return Math.ceil(val * rate).toFixed(2)
     }

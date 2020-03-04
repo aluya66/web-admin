@@ -44,17 +44,17 @@
         />
         <span v-else>{{formModel.sampleCostprice}}</span>
       </el-form-item> -->
-      <el-form-item label="平台成本价(元):" prop="costprice">
+      <el-form-item label="平台成本价(元):" prop="sampleCostprice">
         <el-input
           v-if="!isView"
           class="select-item"
           disabled
-          v-model.trim="formModel.costprice"
+          v-model.trim="formModel.sampleCostprice"
           :size="size"
           placeholder="请输入平台成本价"
           clearable
         />
-        <span v-else>{{formModel.costprice}}</span>
+        <span v-else>{{formModel.sampleCostprice}}</span>
       </el-form-item>
       <!-- <el-form-item label="成衣供货价(元):" prop="supplyprice">
         <el-input
@@ -206,7 +206,7 @@ export default {
       }).then(res => {
         const { totalCount, data } = res
         if (totalCount) {
-          const { skus, largeBatchRate, memberPriceRate, retailPriceRate, wholesalePriceRate, supplyRate } = this.dataObj
+          const { skus, largeBatchRate, memberPriceRate, wholesalePriceRate, supplyRate } = this.dataObj
           data.forEach((val, index) => {
             let colorPosters = [] // sku列表 颜色对应图片, 存在curAttrs第一个值中
             const checkedAttr = []
@@ -233,7 +233,8 @@ export default {
               supplyRate: supplyRate || 1,
               largeBatchRate: largeBatchRate || 1,
               memberPriceRate: memberPriceRate || 1,
-              retailPriceRate: retailPriceRate || 1,
+              // retailPriceRate: retailPriceRate || 1,
+              retailPriceRate: '', // 初始化不同步当前设置的倍率
               wholesalePriceRate: wholesalePriceRate || 1
             }
             this.curAttrs.push({ attrs, name: val.name, label: `${val.name}:`, id: val.id, checkedAttr: utils.uniqueArr(checkedAttr), posterUrl: colorPosters })

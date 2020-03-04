@@ -125,12 +125,12 @@ export default {
             optionsList: []
           }
         },
+        // {
+        //   label: '商品来源',
+        //   prop: 'originName'
+        // },
         {
-          label: '商品来源',
-          prop: 'originName'
-        },
-        {
-          label: '样衣成本价',
+          label: '平台成本价',
           prop: 'sampleCostprice',
           search: {
             label: '更新时间',
@@ -138,28 +138,28 @@ export default {
             type: 'dateTime'
           }
         },
+        // {
+        //   label: '成衣成本价',
+        //   prop: 'costprice'
+        // },
+        // {
+        //   label: '成衣供货价(元)',
+        //   prop: 'supplyprice'
+        // },
+        // {
+        //   label: '成衣散批价(元)',
+        //   prop: 'wholesaleprice'
+        // },
+        // {
+        //   label: '成衣大批价(元)',
+        //   prop: 'largePrice'
+        // },
+        // {
+        //   label: '成衣会员价(元)',
+        //   prop: 'price'
+        // },
         {
-          label: '成衣成本价',
-          prop: 'costprice'
-        },
-        {
-          label: '成衣供货价(元)',
-          prop: 'supplyprice'
-        },
-        {
-          label: '成衣散批价(元)',
-          prop: 'wholesaleprice'
-        },
-        {
-          label: '成衣大批价(元)',
-          prop: 'largePrice'
-        },
-        {
-          label: '成衣会员价(元)',
-          prop: 'price'
-        },
-        {
-          label: '零售价(元)',
+          label: '平台零售价(元)',
           prop: 'tagprice'
         },
         {

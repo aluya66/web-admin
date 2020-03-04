@@ -14,6 +14,7 @@
         <span>YOSHOP：{{dataInfo.ysOrderQuantity}}</span>
         <span>星GO：{{dataInfo.xgOrderQuantity}}</span>
         <span>IPX：{{dataInfo.ipxOrderQuantity}}</span>
+        <span>YOSHOPS：{{dataInfo.yssOrderQuantity}}</span>
       </p>
     </div>
     <div class="info-item">

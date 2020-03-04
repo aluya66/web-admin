@@ -5,7 +5,13 @@ const context = process.env.VUE_APP_CONSOLE_COMMON
 
 // 店铺 风格
 export const getShopStyle = params =>
-  Http.fetch(`${context}/api/shopstyle`, params, {
+  Http.fetch(`${context}/api/shop/styles`, params, {
+    method: 'get'
+  })
+
+// 店铺 调价底线
+export const getPrice = params =>
+  Http.fetch(`${context}/api/shop/prices`, params, {
     method: 'get'
   })
 
