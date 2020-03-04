@@ -49,7 +49,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    
+
     <el-form-item label="门店LOGO:" prop="shopLogo">
       <c-upload
         ref="shopLogo"
@@ -458,7 +458,7 @@ export default {
       shopTypeList: dictObj.shopTypeList, // 门店类型
       disStatus: dictObj.disStatus, // 禁用启用
       businessList: [], // 商户列表
-      operationList:[],//运营中心列表
+      operationList: [], // 运营中心列表
       styleList: [], // 风格列表
       changeTypeList: [], // 调价底线
       settleTypeList: [{ // 结算方式
@@ -493,11 +493,11 @@ export default {
     }
   },
   methods: {
-    //获取运营中心列表数据
-    fetchOperationList(){
-       this.$api.operation.queryAllOperationList().then(res => {
+    // 获取运营中心列表数据
+    fetchOperationList() {
+      this.$api.operation.queryAllOperationList().then(res => {
         if (res && res.totalCount) {
-          const { data, totalCount } = res
+          const { data } = res
           this.operationList = data || []
         } else {
           this.operationList = res || []
@@ -551,7 +551,6 @@ export default {
       }
     },
     changeShopType() {
-      //console.info( this.formModel.shopType,222222)
       this.formModel.businessType = this.formModel.shopType
       if (!this.cacheShopType) {
         return

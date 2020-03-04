@@ -175,6 +175,7 @@ export default {
   created() {
     this.fetchData()
     this.getBusiness()
+    this.getOperationList()
   },
   methods: {
     // 获取关联商户列表
@@ -186,6 +187,15 @@ export default {
         if (res && res.totalCount) {
           const businessList = res.data.map(res => ({ value: res.businessCode, label: res.businessName })) || []
           this.setSearchOptionsList('businessCode', businessList)
+        }
+      })
+    },
+    //获取关联运营中心数据
+    getOperationList(){
+      this.$api.operation.queryAllOperationList().then(res => {
+        if (res && res.totalCount) {
+          const operationList = res.data.map(res => ({ value: res.operationCode, label: res.operationName })) || []
+          this.setSearchOptionsList('operationCode', operationList)
         }
       })
     },
