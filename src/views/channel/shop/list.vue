@@ -141,6 +141,16 @@ export default {
           }
         },
         {
+          label: '关联运营中心',
+          prop: 'operationName',
+          search: {
+            prop: 'operationCode',
+            type: 'dict',
+            optionsList: [],
+            filterable: true
+          }
+        },
+        {
           label: '状态',
           prop: 'status',
           formatter(row) {

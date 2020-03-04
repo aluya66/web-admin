@@ -4,13 +4,23 @@ const context = process.env.VUE_APP_CONSOLE_COMMON
 
 // const context = process.env.VUE_APP_CONSOLE_LOCALHOST
 /**
- * 查询列表
+ * 分页查询列表 
  * @param {*}
  */
 export const queryOperationList = params =>
   Http.fetch(`${context}/api/center/querypage`, params, {
     method: 'get'
   })
+
+
+/**
+ * 查询列表  返回所有数据
+ * @param {*}
+ */
+export const queryAllOperationList = params =>
+Http.fetch(`${context}/api/center/query`, params, {
+  method: 'get'
+})
 
 /**
  * 新增

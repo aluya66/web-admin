@@ -33,6 +33,23 @@
         ></el-option>
       </el-select>
     </el-form-item>
+
+     <el-form-item label="选择运营中心:" prop="operationCode">
+      <el-select
+        class="select-item"
+        v-model="formModel.operationCode"
+        placeholder="请选择运营中心"
+        :disabled="!!formModel.shopId"
+      >
+        <el-option
+          v-for="item in operationList"
+          :key="item.operationCode"
+          :label="item.operationName"
+          :value="item.operationCode"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+    
     <el-form-item label="门店LOGO:" prop="shopLogo">
       <c-upload
         ref="shopLogo"
@@ -441,6 +458,7 @@ export default {
       shopTypeList: dictObj.shopTypeList, // 门店类型
       disStatus: dictObj.disStatus, // 禁用启用
       businessList: [], // 商户列表
+      operationList:[],//运营中心列表
       styleList: [], // 风格列表
       changeTypeList: [], // 调价底线
       settleTypeList: [{ // 结算方式
@@ -467,6 +485,7 @@ export default {
     this.getStyleList()
     this.fetchAreaData()
     this.fetchChangeType()
+    this.fetchOperationList()
   },
   watch: {
     'formModel.shopType'() {
@@ -474,6 +493,17 @@ export default {
     }
   },
   methods: {
+    //获取运营中心列表数据
+    fetchOperationList(){
+       this.$api.operation.queryAllOperationList().then(res => {
+        if (res && res.totalCount) {
+          const { data, totalCount } = res
+          this.operationList = data || []
+        } else {
+          this.operationList = res || []
+        }
+      })
+    },
     // 获取调价底线数据
     fetchChangeType() {
       this.$api.channel

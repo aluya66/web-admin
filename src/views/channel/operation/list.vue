@@ -116,7 +116,6 @@ export default {
         {
           label: '机构地址',
           formatter(row) {
-            // vm.transformArea(vm.areaList)
             return row.operationProvince + ' ' + row.operationCity + ' ' + row.operationDistrict
           },
           search: {
@@ -161,7 +160,6 @@ export default {
   },
   created() {
     this.fetchData()
-    this.getAreaData()
     this.setSearchOptionsList('areaCode', this.areaProps, 'optionsProps')
   },
   methods: {
@@ -182,7 +180,6 @@ export default {
             label: res.name
           }))
         }
-        console.log('dddadgasdg==', curData)
         if (value === 0) {
           this.areaOptions = curData
         } else {
@@ -191,22 +188,6 @@ export default {
       })
     },
 
-    /**
-     *  获取全部区域数据
-    */
-    getAreaData() {
-      this.$api.basic.getAllArea().then(res => {
-        if (res && res.length) {
-          this.areaList = res
-        }
-      })
-    },
-
-    transformArea(arr) {
-      let result = []
-
-      return result
-    },
     /*
 		 * 查询表格列表数据
 		 */
