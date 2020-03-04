@@ -95,8 +95,8 @@ export default {
   data() {
     return {
       rules: {
-         operationName: [
-          { required: true, message: '机构名称不能为空', trigger: 'blur' },
+        operationName: [
+          { required: true, message: '机构名称不能为空', trigger: 'blur' }
         ],
         status: [
           { required: true, message: '机构状态不能为空', trigger: 'change' }
@@ -115,8 +115,8 @@ export default {
         ],
         responsiblePhone: [
           { required: true, message: '联系手机不能为空', trigger: 'blur' },
-          {validator: utils.validater.phoneNumber,message: '请输入正确的手机号码',trigger: 'blur'}
-        ],
+          { validator: utils.validater.phoneNumber, message: '请输入正确的手机号码', trigger: 'blur' }
+        ]
       },
       btnLoading: false,
       formModel: {},
@@ -126,8 +126,8 @@ export default {
         label: 'name',
         leaf: 2
       },
-      bussinessList: [],// 商户数据
-       openStatus: dictObj.openStatus,
+      bussinessList: [], // 商户数据
+      openStatus: dictObj.openStatus
     }
   },
 
@@ -172,7 +172,7 @@ export default {
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          const { status,operationName, businessCode, addressCode, operationAddress, responsibleName, responsiblePhone } = this.formModel
+          const { status, operationName, businessCode, addressCode, operationAddress, responsibleName, responsiblePhone } = this.formModel
           const requestMethods = {
             'add': this.$api.operation.addOperation,
             'update': this.$api.operation.updateOperation
@@ -184,7 +184,7 @@ export default {
             // 机构状态
             status,
             // 所属商户
-            businessCode ,
+            businessCode,
             // 机构地址
             operationProvince: addressCode[0],
             operationCity: addressCode[1],

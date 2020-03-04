@@ -37,7 +37,6 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
 // import dictObj from '@/store/dictData'
 
 const statusSelect = [{
@@ -46,15 +45,14 @@ const statusSelect = [{
 }, {
   label: '开启 ',
   value: 1
-},{
-  label:'全部',
-  value:''
+}, {
+  label: '全部',
+  value: ''
 }]
 export default {
   name: 'operation',
   mixins: [mixinTable],
   components: {
-    CDialog,
   },
   data(vm) {
     return {
@@ -81,7 +79,7 @@ export default {
           handle(row) {
             vm.routerLink(`/channel/operation/add/${row.id}`)
           }
-        },
+        }
         // {
         //   name: '删除',
         //   icon: 'el-icon-delete',
@@ -97,7 +95,7 @@ export default {
         {
           label: '机构编码',
           prop: 'operationCode',
-           search: {
+          search: {
             type: 'input'
           }
         },
@@ -111,14 +109,15 @@ export default {
         {
           label: '所属商户',
           prop: 'businessCode',
-           search: {
+          search: {
             type: 'input'
           }
         },
         {
           label: '机构地址',
           formatter(row) {
-            return row.operationProvince + ' ' + row.operationCity + ' ' + row.operationDistrict 
+            // vm.transformArea(vm.areaList)
+            return row.operationProvince + ' ' + row.operationCity + ' ' + row.operationDistrict
           },
           search: {
             type: 'cascader',
@@ -135,14 +134,14 @@ export default {
         {
           label: '联系人',
           prop: 'responsibleName',
-           search: {
+          search: {
             type: 'input'
           }
         },
         {
           label: '联系电话',
           prop: 'responsiblePhone',
-           search: {
+          search: {
             type: 'input'
           }
         },
@@ -162,13 +161,14 @@ export default {
   },
   created() {
     this.fetchData()
+    this.getAreaData()
     this.setSearchOptionsList('areaCode', this.areaProps, 'optionsProps')
   },
   methods: {
     /**
-     *  获取全部区域数据
+     *  获取联级区域数据
     */
-     fetchAreaData(node = {}, callBack) {
+    fetchAreaData(node = {}, callBack) {
       const { level, value } = node
       this.$api.basic.queryAllRegion({
         parentCode: value || 0
@@ -182,6 +182,7 @@ export default {
             label: res.name
           }))
         }
+        console.log('dddadgasdg==', curData)
         if (value === 0) {
           this.areaOptions = curData
         } else {
@@ -189,19 +190,35 @@ export default {
         }
       })
     },
+
+    /**
+     *  获取全部区域数据
+    */
+    getAreaData() {
+      this.$api.basic.getAllArea().then(res => {
+        if (res && res.length) {
+          this.areaList = res
+        }
+      })
+    },
+
+    transformArea(arr) {
+      let result = []
+
+      return result
+    },
     /*
 		 * 查询表格列表数据
 		 */
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
-      const { areaCode,...other} =this.searchObj
+      const { areaCode, ...other } = this.searchObj
       this.isLoading = true
-      // page.pageSize=20
       this.$api.operation.queryOperationList({
         ...other,
-        operationProvince:areaCode[0]||'',
-        operationCity:areaCode[1]||'',
-        operationDistrict:areaCode[2]||'',
+        operationProvince: areaCode[0] || '',
+        operationCity: areaCode[1] || '',
+        operationDistrict: areaCode[2] || '',
         ...page
       }).then(res => {
         this.isLoading = false
