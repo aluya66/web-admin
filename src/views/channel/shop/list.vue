@@ -190,8 +190,8 @@ export default {
         }
       })
     },
-    //获取关联运营中心数据
-    getOperationList(){
+    // 获取关联运营中心数据
+    getOperationList() {
       this.$api.operation.queryAllOperationList().then(res => {
         if (res && res.totalCount) {
           const operationList = res.data.map(res => ({ value: res.operationCode, label: res.operationName })) || []

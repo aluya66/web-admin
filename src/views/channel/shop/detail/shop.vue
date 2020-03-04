@@ -34,7 +34,7 @@
       </el-select>
     </el-form-item>
 
-     <el-form-item label="选择运营中心:" prop="operationCode">
+     <el-form-item label="选择运营中心:" prop="operationCode" v-if="!formModel.shopId||formModel.operationCode">
       <el-select
         class="select-item"
         v-model="formModel.operationCode"

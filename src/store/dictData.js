@@ -42,7 +42,7 @@ lobList = lobList || [{
 {
   label: 'YOSHOPS',
   value: 'ysys'
-},
+}
 ]
 
 // 含公共的业务线
