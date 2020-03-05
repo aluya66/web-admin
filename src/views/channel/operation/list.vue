@@ -115,9 +115,10 @@ export default {
         },
         {
           label: '机构地址',
-          formatter(row) {
-            return row.operationProvince + ' ' + row.operationCity + ' ' + row.operationDistrict
-          },
+          // formatter(row) {
+          //   return row.operationProvince + ' ' + row.operationCity + ' ' + row.operationDistrict
+          // },
+          props:'areaName',
           search: {
             type: 'cascader',
             prop: 'areaCode',
