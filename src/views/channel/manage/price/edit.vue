@@ -3,7 +3,7 @@
     ref="formRef"
     :model="formModel"
     :rules="rules"
-    label-width="120px"
+    label-width="150px"
     class="dialog-form"
     label-position="right"
     status-icon
@@ -22,9 +22,28 @@
         <template slot="append">%</template>
       </el-input>
     </el-form-item>
-    <el-form-item label="条件等级:" v-if="formModel.priceId === 7 && formModel.appliedType === 2" prop="customLevel">
-      <query-dict :dict-list="memberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
+  
+    <el-form-item label="条件等级：" v-if="formModel.priceId === 7&& formModel.appliedType === 2"></el-form-item>
+    <!--星go-->
+    <div v-if="appType=='ysgo'&&formModel.priceId === 7&& formModel.appliedType === 2">
+      <el-form-item label="yoshop会员等级:" prop="customLevel">
+        <query-dict :dict-list="memberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
+      </el-form-item>
+      <el-form-item label="星go会员等级:" >
+        <query-dict :dict-list="stargoMemberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
+      </el-form-item>
+    </div>
+
+    <!--yoshop-->
+     <!-- <el-form-item label="yoshop会员等级:" v-if="appType=='yssp'&&formModel.priceId === 7 && formModel.appliedType === 2" prop="customLevel"> -->
+      <!-- <query-dict :dict-list="memberList" showType="radio" :value.sync="formModel.customLevel"></query-dict> -->
+    <!-- </el-form-item> -->
+
+     <!--ipx-->
+    <el-form-item label="IPX会员等级:" v-if="appType=='ysdp'&&formModel.priceId === 7 && formModel.appliedType === 2" prop="customLevel">
+      <query-dict :dict-list="ipxMemberList" showType="radio" value.sync="1"></query-dict>
     </el-form-item>
+
     <el-form-item label="是否同步:">
       <query-dict
         :dict-list="syncStatusList"
@@ -69,6 +88,10 @@ export default {
     isEdit: {
       type: Boolean,
       default: false
+    },
+    appType: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -82,7 +105,13 @@ export default {
         discountRate: [
           { required: true, message: '请输入折扣率', trigger: 'blur' }
         ]
-      }
+      },
+      stargoMemberList:[
+        {label:'星go会员',value:'stargo_1',appCode: 'ysgo'},
+      ],
+      ipxMemberList:[
+        [{label:'IPX会员',value:'ipx_1',appCode: 'ysdp'}]
+      ]
     }
   },
   computed: {
@@ -107,6 +136,10 @@ export default {
         const curCustomLevelIndex = curMemberList.findIndex(res => res.value === this.formModel.customLevel)
         if (curCustomLevelIndex !== -1) {
           curMemberList[curCustomLevelIndex].disabled = false
+        }else{
+          if(this.appType=='ysdp'){//如果是ipx的渠道，则给customLevel赋值为1
+            this.formModel.customLevel='ysdp_1'
+          }
         }
       }
       this.memberList = curMemberList
