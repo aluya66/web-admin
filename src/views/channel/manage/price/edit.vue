@@ -22,7 +22,7 @@
         <template slot="append">%</template>
       </el-input>
     </el-form-item>
-  
+
     <el-form-item label="条件等级：" v-if="formModel.priceId === 7&& formModel.appliedType === 2"></el-form-item>
     <!--星go-->
     <div v-if="appType=='ysgo'&&formModel.priceId === 7&& formModel.appliedType === 2">
@@ -106,11 +106,11 @@ export default {
           { required: true, message: '请输入折扣率', trigger: 'blur' }
         ]
       },
-      stargoMemberList:[
-        {label:'星go会员',value:'stargo_1',appCode: 'ysgo'},
+      stargoMemberList: [
+        { label: '星go会员', value: 'stargo_1', appCode: 'ysgo' }
       ],
-      ipxMemberList:[
-        [{label:'IPX会员',value:'ipx_1',appCode: 'ysdp'}]
+      ipxMemberList: [
+        [{ label: 'IPX会员', value: 'ipx_1', appCode: 'ysdp' }]
       ]
     }
   },
@@ -136,9 +136,9 @@ export default {
         const curCustomLevelIndex = curMemberList.findIndex(res => res.value === this.formModel.customLevel)
         if (curCustomLevelIndex !== -1) {
           curMemberList[curCustomLevelIndex].disabled = false
-        }else{
-          if(this.appType=='ysdp'){//如果是ipx的渠道，则给customLevel赋值为1
-            this.formModel.customLevel='ysdp_1'
+        } else {
+          if (this.appType === 'ysdp') { // 如果是ipx的渠道，则给customLevel赋值为1
+            this.formModel.customLevel = 'ysdp_1'
           }
         }
       }
