@@ -107,10 +107,10 @@ export default {
         ]
       },
       stargoMemberList: [
-        { label: '星go会员', value: 'stargo_1', appCode: 'ysgo' }
+        { label: '星go会员', value: 'ysgo_1', appCode: 'ysgo' }
       ],
       ipxMemberList: [
-        [{ label: 'IPX会员', value: 'ipx_1', appCode: 'ysdp' }]
+        [{ label: 'IPX会员', value: 'ysdp_1', appCode: 'ysdp' }]
       ]
     }
   },
