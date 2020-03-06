@@ -23,21 +23,16 @@
       </el-input>
     </el-form-item>
 
-    <el-form-item label="条件等级：" v-if="formModel.priceId === 7&& formModel.appliedType === 2"></el-form-item>
-    <!--星go-->
-    <div v-if="appType=='ysgo'&&formModel.priceId === 7&& formModel.appliedType === 2">
-      <el-form-item label="yoshop会员等级:" prop="customLevel">
+    <el-form-item label="条件等级：" v-if="formModel.priceId === 7&& formModel.appliedType === 2" prop="customLevel"></el-form-item>
+    <!--星go && yoshop-->
+    <div v-if="(appType=='ysgo'|| appType=='yssp')&&formModel.priceId === 7&& formModel.appliedType === 2">
+      <el-form-item label="yoshop会员等级:">
         <query-dict :dict-list="memberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
       </el-form-item>
-      <el-form-item label="星go会员等级:" >
+      <el-form-item label="星go会员等级:">
         <query-dict :dict-list="stargoMemberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
       </el-form-item>
     </div>
-
-    <!--yoshop-->
-     <!-- <el-form-item label="yoshop会员等级:" v-if="appType=='yssp'&&formModel.priceId === 7 && formModel.appliedType === 2" prop="customLevel"> -->
-      <!-- <query-dict :dict-list="memberList" showType="radio" :value.sync="formModel.customLevel"></query-dict> -->
-    <!-- </el-form-item> -->
 
      <!--ipx-->
     <el-form-item label="IPX会员等级:" v-if="appType=='ysdp'&&formModel.priceId === 7 && formModel.appliedType === 2" prop="customLevel">
@@ -127,23 +122,18 @@ export default {
   created() {
     if (this.formModel.priceId === 7 && this.formModel.appliedType === 2) {
       const curMemberList = this.memberTotal.slice(0)
-
+      
       curMemberList.forEach((val, index) => {
         if (this.memberPriceList.includes(val.value)) {
           curMemberList[index] = { ...val, disabled: true } // 新增时 会员类型列表
-          this.stargoMemberList[0].disabled=true
-          this.ipxMemberList[0].disabled=true
-        }else{
-          if(this.memberPriceList.includes("ysgo_1")){
+        } else {
+          if (this.memberPriceList.includes('ysgo_1')) {
             this.formModel.customLevel = 'ysgo_1'
-             this.stargoMemberList[0].disabled=true
-            curMemberList.forEach((val, index) => {
-              curMemberList[index] = { ...val, disabled: true } // 新增时 会员类型列表
-            })
+            this.stargoMemberList[0].disabled = true
           }
         }
       })
-         
+
       if (this.isEdit) { // 编辑时把当前数据的条件等级拼接上
         const curCustomLevelIndex = curMemberList.findIndex(res => res.value === this.formModel.customLevel)
         if (curCustomLevelIndex !== -1) {

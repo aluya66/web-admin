@@ -194,7 +194,14 @@ export default {
           label: '条件等级',
           prop: 'customLevel',
           formatter(row) {
-            return row && row.priceId === 7 && row.customLevel !== '' ? vm.setTableColumnLabel(row.customLevel, vm.memberList) : ''
+            if(row && row.priceId === 7 && row.customLevel !== ''){
+              if(row.customLevel==='ysgo_1'){
+                return '星go会员'
+              }
+              return vm.setTableColumnLabel(row.customLevel, vm.memberList)
+            }else {
+              return ''
+            }
           }
         },
         {
