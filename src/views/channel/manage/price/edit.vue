@@ -35,8 +35,8 @@
     </div>
 
      <!--ipx-->
-    <el-form-item label="IPX会员等级:" v-if="appType=='ysdp'&&formModel.priceId === 7 && formModel.appliedType === 2" prop="customLevel">
-      <query-dict :dict-list="ipxMemberList" showType="radio" value.sync="1"></query-dict>
+    <el-form-item label="IPX会员等级:" v-if="appType=='ysdp'&&formModel.priceId === 7 && formModel.appliedType === 2">
+      <query-dict :dict-list="ipxMemberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
     </el-form-item>
 
     <el-form-item label="是否同步:">
@@ -105,7 +105,7 @@ export default {
         { label: '星go会员', value: 'ysgo_1', appCode: 'ysgo' }
       ],
       ipxMemberList: [
-        [{ label: 'IPX会员', value: 'ysdp_1', appCode: 'ysdp' }]
+        { label: 'IPX会员', value: 'ysdp_1', appCode: 'ysdp' }
       ]
     }
   },
@@ -126,7 +126,7 @@ export default {
         if (this.memberPriceList.includes(val.value)) {
           curMemberList[index] = { ...val, disabled: true } // 新增时 会员类型列表
           if (this.memberPriceList.includes('ysgo_1')) {
-            this.formModel.customLevel = 'ysgo_1'
+            // this.formModel.customLevel = 'ysgo_1'
             this.stargoMemberList[0].disabled = true
           }
         }
