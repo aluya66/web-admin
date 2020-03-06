@@ -125,12 +125,14 @@ export default {
       curMemberList.forEach((val, index) => {
         if (this.memberPriceList.includes(val.value)) {
           curMemberList[index] = { ...val, disabled: true } // 新增时 会员类型列表
-          if (this.memberPriceList.includes('ysgo_1')) {
-            // this.formModel.customLevel = 'ysgo_1'
-            this.stargoMemberList[0].disabled = true
-          }
         }
       })
+
+      if (this.memberPriceList.includes('ysgo_1')) {//星go和ipx会员均为写死的字段，需要手动置灰已选
+        this.stargoMemberList[0].disabled = true
+      }else if(this.memberPriceList.includes('ysdp_1')) {
+        this.ipxMemberList[0].disabled = true
+      }
 
       if (this.isEdit) { // 编辑时把当前数据的条件等级拼接上
         const curCustomLevelIndex = curMemberList.findIndex(res => res.value === this.formModel.customLevel)
