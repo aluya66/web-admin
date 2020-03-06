@@ -81,6 +81,7 @@
           :price-list="viewPriceList"
           :member-price-list="memberPriceList"
           :member-total="memberList"
+          :app-type="appType"
         ></price-add>
       </c-dialog>
     </div>
@@ -100,6 +101,7 @@ export default {
     return {
       btnLoading: false,
       dialogObj: {},
+      appType: '', // 当前应用类型
       curType: '', // 定价类型
       tableIndex: '', // 列表编辑时下标
       salePriceList: [], // 销售定价
@@ -192,7 +194,16 @@ export default {
           label: '条件等级',
           prop: 'customLevel',
           formatter(row) {
-            return row && row.priceId === 7 && row.customLevel !== '' ? vm.setTableColumnLabel(row.customLevel, vm.memberList) : ''
+            if(row && row.priceId === 7 && row.customLevel !== ''){
+              if(row.customLevel==='ysgo_1'){
+                return '星go会员'
+              }else if(row.customLevel==='ysdp_1'){
+                return 'IPX会员'
+              }
+              return vm.setTableColumnLabel(row.customLevel, vm.memberList)
+            }else {
+              return ''
+            }
           }
         },
         {
@@ -254,6 +265,8 @@ export default {
       }).then(res => {
         this.setTagsViewTitle()
         const { platPrices, priceRelations, channelName, baseChannelName, appCode } = res
+
+        this.appType = res.appCode
         this.getChannelMemberList(appCode)
         this.tableList = priceRelations || []
         this.viewCheckList = platPrices || []
@@ -281,7 +294,6 @@ export default {
           }
           return val
         }) : []
-        console.log(this.tableList)
         this.formModel = {
           purchaseChecked,
           viewChecked,
@@ -289,7 +301,6 @@ export default {
           channelName,
           baseChannelName
         }
-        console.log(this.formModel)
       })
     },
     showDialog(opts) {
