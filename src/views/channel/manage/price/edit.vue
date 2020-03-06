@@ -122,11 +122,9 @@ export default {
   created() {
     if (this.formModel.priceId === 7 && this.formModel.appliedType === 2) {
       const curMemberList = this.memberTotal.slice(0)
-      
       curMemberList.forEach((val, index) => {
         if (this.memberPriceList.includes(val.value)) {
           curMemberList[index] = { ...val, disabled: true } // 新增时 会员类型列表
-        } else {
           if (this.memberPriceList.includes('ysgo_1')) {
             this.formModel.customLevel = 'ysgo_1'
             this.stargoMemberList[0].disabled = true
