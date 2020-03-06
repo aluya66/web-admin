@@ -138,11 +138,7 @@ export default {
         const curCustomLevelIndex = curMemberList.findIndex(res => res.value === this.formModel.customLevel)
         if (curCustomLevelIndex !== -1) {
           curMemberList[curCustomLevelIndex].disabled = false
-        } else {
-          if (this.appType === 'ysdp') { // 如果是ipx的渠道，则给customLevel赋值为1
-            this.formModel.customLevel = 'ysdp_1'
-          }
-        }
+        } 
       }
       this.memberList = curMemberList
     }
