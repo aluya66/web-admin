@@ -3,7 +3,7 @@
     ref="formRef"
     :model="formModel"
     :rules="rules"
-    label-width="120px"
+    label-width="150px"
     class="dialog-form"
     label-position="right"
     status-icon
@@ -22,9 +22,23 @@
         <template slot="append">%</template>
       </el-input>
     </el-form-item>
-    <el-form-item label="条件等级:" v-if="formModel.priceId === 7 && formModel.appliedType === 2" prop="customLevel">
-      <query-dict :dict-list="memberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
+
+    <el-form-item label="条件等级：" v-if="formModel.priceId === 7&& formModel.appliedType === 2" prop="customLevel"></el-form-item>
+    <!--星go && yoshop-->
+    <div v-if="(appType=='ysgo'|| appType=='yssp')&&formModel.priceId === 7&& formModel.appliedType === 2">
+      <el-form-item label="yoshop会员等级:">
+        <query-dict :dict-list="memberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
+      </el-form-item>
+      <el-form-item label="星go会员等级:">
+        <query-dict :dict-list="stargoMemberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
+      </el-form-item>
+    </div>
+
+     <!--ipx-->
+    <el-form-item label="IPX会员等级:" v-if="appType=='ysdp'&&formModel.priceId === 7 && formModel.appliedType === 2">
+      <query-dict :dict-list="ipxMemberList" showType="radio" :value.sync="formModel.customLevel"></query-dict>
     </el-form-item>
+
     <el-form-item label="是否同步:">
       <query-dict
         :dict-list="syncStatusList"
@@ -69,6 +83,10 @@ export default {
     isEdit: {
       type: Boolean,
       default: false
+    },
+    appType: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -82,7 +100,13 @@ export default {
         discountRate: [
           { required: true, message: '请输入折扣率', trigger: 'blur' }
         ]
-      }
+      },
+      stargoMemberList: [
+        { label: '星go会员', value: 'ysgo_1', appCode: 'ysgo' }
+      ],
+      ipxMemberList: [
+        { label: 'IPX会员', value: 'ysdp_1', appCode: 'ysdp' }
+      ]
     }
   },
   computed: {
@@ -103,11 +127,18 @@ export default {
           curMemberList[index] = { ...val, disabled: true } // 新增时 会员类型列表
         }
       })
+
+      if (this.memberPriceList.includes('ysgo_1')) {//星go和ipx会员均为写死的字段，需要手动置灰已选
+        this.stargoMemberList[0].disabled = true
+      }else if(this.memberPriceList.includes('ysdp_1')) {
+        this.ipxMemberList[0].disabled = true
+      }
+
       if (this.isEdit) { // 编辑时把当前数据的条件等级拼接上
         const curCustomLevelIndex = curMemberList.findIndex(res => res.value === this.formModel.customLevel)
         if (curCustomLevelIndex !== -1) {
           curMemberList[curCustomLevelIndex].disabled = false
-        }
+        } 
       }
       this.memberList = curMemberList
     }
