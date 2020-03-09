@@ -147,9 +147,11 @@ export default {
             cityCode,
             areaCode
           } = res
+
           this.formModel = {
             ...this.formModel,
             ...res,
+            canEditOperation:res.operationCode?false:true,
             shopAddress: [provinceCode, cityCode, areaCode], // 门店省市区
             businessHours: businessHours ? businessHours.split('~') : [],
             shopLogo: [{ url: shopLogo, name: '门店LOGO', fileType: 'image', ref: 'shopLogo' }],

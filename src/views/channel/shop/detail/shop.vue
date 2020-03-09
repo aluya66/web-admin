@@ -33,13 +33,12 @@
         ></el-option>
       </el-select>
     </el-form-item>
-
-     <el-form-item label="选择运营中心:" prop="operationCode" v-if="!formModel.shopId||formModel.operationCode">
+     <el-form-item label="选择运营中心:" prop="operationCode">
       <el-select
         class="select-item"
         v-model="formModel.operationCode"
         placeholder="请选择运营中心"
-        :disabled="!!formModel.shopId"
+        :disabled="!formModel.canEditOperation"
       >
         <el-option
           v-for="item in operationList"
