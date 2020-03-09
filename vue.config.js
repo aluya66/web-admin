@@ -205,21 +205,21 @@ module.exports = {
         target: process.env.VUE_APP_SERVERPATH_IPX,
         ws: false,
         pathRewrite: {
-          '^/api-ipx': '/'
+          '^/api-ipx': ''
         }
       },
       [process.env.VUE_APP_LOCALHOST]: {
         target: process.env.VUE_APP_CONSOLE_LOCALHOST,
         ws: false,
         pathRewrite: {
-          '^/local-api': '/'
+          '^/local-api': ''
         }
       },
       [process.env.VUE_APP_UPLOAD]: {
         target: process.env.VUE_APP_SERVERPATH_UPLOAD,
         ws: false,
         pathRewrite: {
-          '^/api-upload': '/'
+          '^/api-upload': ''
         }
       }
     },

@@ -13,7 +13,8 @@ const getters = {
   addRoutes: state => state.permission.addRoutes,
   errorLogs: state => state.errorLog.logs,
   roleList: state => state.permission.roleList,
-  dictList: state => state.views.dictList
+  dictList: state => state.views.dictList,
+  appList: state => state.views.appList
 }
 
 export default getters

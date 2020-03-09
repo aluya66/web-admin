@@ -37,6 +37,20 @@
         </template>
       </c-table>
     </div>
+    <div v-if="detailDialog.isShow">
+      <c-dialog
+        :is-show="detailDialog.isShow"
+        close-btn
+        @before-close="detailDialog.isShow = false"
+        noBtn
+        :title="detailDialog.title"
+      >
+        <detail-dialog
+          ref="detailRef"
+          :init-data.sync="detailDialog.initData"
+        ></detail-dialog>
+      </c-dialog>
+    </div>
     <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
@@ -60,6 +74,7 @@
 import mixinTable from 'mixins/table'
 import OrderInfo from './info'
 import CDialog from 'components/dialog'
+import DetailDialog from './detailDialog'
 import DialogInfo from './dialogInfo'
 import dictObj from '@/store/dictData'
 
@@ -78,11 +93,13 @@ export default {
   components: {
     OrderInfo,
     CDialog,
-    DialogInfo
+    DialogInfo,
+    DetailDialog
   },
   data(vm) {
     return {
       dialogObj: {},
+      detailDialog: {}, // 详情弹框
       listInfo: {}, // 列表统计数据
       orderStatus: '', // 订单状态
       areaOptions: [], // 全部区域集合
@@ -162,6 +179,15 @@ export default {
           width: 150,
           search: {
             type: 'input'
+          },
+          handle(row) {
+            vm.detailDialog = {
+              isShow: true,
+              title: '商品信息',
+              initData: {
+                orderCode: row.orderCode
+              }
+            }
           }
         },
         {
@@ -212,7 +238,7 @@ export default {
           }
         },
         {
-          label: '订单类别',
+          label: '订单类型',
           prop: 'orderCategory',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.orderCategory, 'shopTypeList')
@@ -283,8 +309,7 @@ export default {
           search: {
             label: '下单时间',
             prop: 'dateTime',
-            type: 'dateTime',
-            dateType: 'datetimerange'
+            type: 'dateTime'
           }
         }
       ]
@@ -305,6 +330,9 @@ export default {
     }
   },
   methods: {
+    detailDialogConfirm() {
+
+    },
     dialogConfirm() {
       const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
@@ -402,14 +430,12 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, 'dateTime', 'beginTime', 'endTime')
+      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
       this.isLoading = true
       this.$api.order.queryOrderList({
         ...searchDate,
         ...other,
-        ...page,
-        afterSaleStatus: this.afterSaleStatus
-        // orderStatus: orderStatus || this.orderStatus
+        ...page
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {

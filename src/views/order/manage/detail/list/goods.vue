@@ -57,11 +57,11 @@ export default {
         {
           label: 'spu款号',
           fixed: true,
-          prop: 'productCode'
+          prop: 'productAtrNumber'
         },
         {
           label: 'sku款号',
-          prop: 'productSkuCode'
+          prop: 'starasSkuCode'
         },
         {
           label: '商品图片',
@@ -89,11 +89,11 @@ export default {
         },
         {
           label: '数量',
-          prop: 'originalQuantity'
+          prop: 'quantity'
         },
         {
           label: '商品总金额(元)',
-          prop: 'totalProductAmount'
+          prop: 'productTotalAmount'
         },
         {
           label: '商品优惠金额(元)',
@@ -101,7 +101,7 @@ export default {
         },
         {
           label: '商品实付金额(元)',
-          prop: 'payAmount'
+          prop: 'confirmPaidAmount'
         },
         {
           label: '邀请码',

@@ -3,6 +3,7 @@
     <template v-slot:header>
       <div class="title">
         {{$route.meta.name || $t(`route.${$route.meta.title}`)}}
+        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
     <div class="main__box">
@@ -15,7 +16,6 @@
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
-        :table-inner-btns="tableInnerBtns"
         :page-info="pageInfo"
         @change-pagination="changePagination"
       >
@@ -34,10 +34,14 @@
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
         close-btn
-        no-btn
         @before-close="dialogObj.isShow = false"
+        @on-submit="dialogConfirm"
       >
-        <order-add ref="childRef" :init-data.sync="dialogObj.initData" :is-edit="dialogObj.isEdit"></order-add>
+        <settings-add
+          ref="childRef"
+          :init-data.sync="dialogObj.initData"
+          :is-edit="dialogObj.isEdit"
+        ></settings-add>
       </c-dialog>
     </div>
   </c-view>
@@ -46,105 +50,55 @@
 <script>
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
+import SettingsAdd from './add'
 import dictObj from '@/store/dictData'
-import OrderAdd from './add'
-
-// 支付状态
-const payStatusList = [{
-  label: '未支付',
-  value: 0
-}, {
-  label: '已支付',
-  value: 1
-}]
 
 export default {
-  name: 'orderManagePay',
+  name: 'settingsPrice',
   mixins: [mixinTable],
   components: {
     CDialog,
-    OrderAdd
+    SettingsAdd
   },
   data(vm) {
     return {
       // 对话框对象
       dialogObj: {},
-      // 表格内操作按钮
-      tableInnerBtns: [
-        {
-          name: '明细',
-          icon: 'el-icon-view',
-          handle(row) {
-            vm.showDialog({
-              title: '支付单明细',
-              initData: row
-            })
-          }
-        }
-      ],
       tableHeader: [
         {
-          label: '支付单号',
-          prop: 'flowCode',
+          label: '价格名称',
+          prop: 'priceName',
           search: {
             type: 'input'
           }
         },
         {
-          label: '第三方支付单号',
-          prop: 'thirdPartyPaycode',
+          label: '价格类型',
+          prop: 'priceType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.priceType, 'channelPriceType')
+          },
           search: {
-            label: '第三方单号',
-            type: 'input'
+            type: 'dict',
+            optionsList: dictObj.channelPriceType
           }
         },
         {
-          label: '支付状态',
+          label: '应用类型',
+          prop: 'appliedType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.appliedType, 'channelAppliedType')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.channelAppliedType
+          }
+        },
+        {
+          label: '状态',
           prop: 'status',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.status, payStatusList)
-          },
-          search: {
-            type: 'dict',
-            optionsList: payStatusList
-          }
-        },
-        {
-          label: '支付方式',
-          prop: 'payType',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.payType, 'payTypeList')
-          }
-        },
-        {
-          label: '单据类型',
-          prop: 'orderBusinessType',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.orderBusinessType, 'orderBusinessTypeList')
-          },
-          search: {
-            type: 'dict',
-            optionsList: dictObj.orderBusinessTypeList
-          }
-        },
-        {
-          label: '用户手机号',
-          prop: 'buyerMobile',
-          search: {
-            type: 'input'
-          }
-        },
-        {
-          label: '金额',
-          prop: 'payAmount'
-        },
-        {
-          label: '支付时间',
-          prop: 'created',
-          width: 100,
-          search: {
-            type: 'dateTime',
-            prop: 'dateTime'
+            return row && vm.setTableColumnLabel(row.status, 'openStatus')
           }
         }
       ]
@@ -160,9 +114,9 @@ export default {
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
+      const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.order.queryOrderpayList({
+      this.$api.settings.queryChannelPriceList({
         ...searchDate,
         ...other,
         ...page
@@ -185,9 +139,31 @@ export default {
       this.dialogObj = {
         isShow: true,
         isEdit: opts.isEdit || false,
-        title: opts.title,
+        title: opts.title || '新增价格',
         initData: opts.initData
       }
+    },
+    /**
+		 * dialog新增、编辑处理函数
+		 */
+    dialogConfirm() {
+      const childRef = this.$refs.childRef
+      childRef.$refs.formRef.validate(valid => {
+        if (valid) {
+          const params = childRef.formModel
+          const curAction = this.dialogObj.isEdit ? '' : 'addChannelPrice'
+          // TODO...
+          this.$api.settings[curAction]({
+            // TODO...
+            ...params
+          }).then(() => {
+            this.responeHandle(this.dialogObj.isEdit ? '更新成功' : '新增成功')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

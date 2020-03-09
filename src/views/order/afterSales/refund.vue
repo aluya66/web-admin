@@ -2,13 +2,6 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{$route.meta.name || $t(`route.${$route.meta.title}`)}}</div>
-      <el-button
-        :size="size"
-        type="primary"
-        :loading="exportLoading"
-        icon="el-icon-download"
-        @click="exportFile"
-      >导出</el-button>
     </template>
     <div class="main__box">
       <c-table
@@ -34,18 +27,7 @@
         </template>
       </c-table>
     </div>
-    <div v-if="dialogObj.isShow">
-      <c-dialog
-        :is-show="dialogObj.isShow"
-        :title="dialogObj.title"
-        close-btn
-        no-btn
-        @before-close="dialogObj.isShow = false"
-      >
-        <c-details v-if="dialogObj.type === 1" ref="childRef" :init-data.sync="dialogObj.initData"></c-details>
-        <export-tip v-else @handle="dialogObj.isShow=false"></export-tip>
-      </c-dialog>
-    </div>
+
   </c-view>
 </template>
 <script>
@@ -53,6 +35,42 @@ import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
 import dictObj from '@/store/dictData'
 import ExportTip from '../../common/exportTip.vue'
+const refundStatusList = [
+  {
+    label:'未退款',
+    value: 0
+  },{
+    label:'已退款',
+    value: 1
+  }
+]
+
+// const afterTypeList = [
+//   {
+//     label:'仅退款',
+//     value: 0
+//   },{
+//     label:'退货退款',
+//     value: 1
+//   }
+// ]
+
+const refundTypeList =[
+  {
+    label:'余额',
+    value: 1
+  },{
+    label:'星购卡',
+    value: 2
+  },{
+    label:'代金券',
+    value: 3
+  }
+]
+
+
+
+
 export default {
   name: 'reshipList',
   mixins: [mixinTable],
@@ -81,72 +99,45 @@ export default {
       tableHeader: [
         {
           label: '售后单号',
-          prop: 'afterSalesCode',
+          prop: 'afterOrder',
           search: {
             type: 'input'
           }
         },
         {
           label: '退款单号',
-          prop: 'thirdOrderCode',
+          prop: 'refundOrder',
           search: {
             type: 'input'
           }
         },
         {
           label: '用户电话',
-          prop: 'thirdOrderCode',
+          prop: 'userPhone',
           search: {
             type: 'input'
           }
+        },
+        {
+          label: '用户名称',
+          prop: 'userName'
         },
         {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.status, dictObj.afterSalesStatus)
+               return row && vm.setTableColumnLabel(row.status, refundStatusList)
           },
-        },
-          {
-            label: '售后类型',
-            prop: 'status',
-            formatter(row) {
-                return row && vm.setTableColumnLabel(row.status, dictObj.afterSalesStatus)
-            },
-          },
-          {
-            label: '店铺',
-            prop: 'status',
-            formatter(row) {
-                return row && vm.setTableColumnLabel(row.status, dictObj.afterSalesStatus)
-            },
-          },
-          {
-            label: '退款方式',
-            prop: 'status',
-            formatter(row) {
-                return row && vm.setTableColumnLabel(row.status, dictObj.afterSalesStatus)
-            },
-          },
-          {
           search: {
-            prop: 'statusList',
-            type: 'dict',
-            optionsList: dictObj.afterSalesStatus
-          }
-        },
-        {
-          label: '退货单号',
-          prop: 'returnCode',
-          search: {
-            type: 'input'
+            type: 'select',
+            optionsList: refundStatusList
           }
         },
         {
           label: '售后类型',
           prop: 'afterSalesType',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.afterSalesType, dictObj.afterSalesTypes)
+            return row && vm.setTableColumnLabel(row.refundType, dictObj.afterSalesTypes)
           },
           search: {
             prop: 'applyAfterSalesType',
@@ -155,40 +146,34 @@ export default {
           }
         },
         {
-          label: '所属店铺',
+          label: '店铺',
           prop: 'storeName',
           search: {
             type: 'dict',
-            optionsList: [],
-            label: '物流',
-            prop: 'deliveryCode'
+            optionsList:[],
+            prop: 'storeId'
           }
         },
-        {
-          label: '用户电话',
-          prop: 'buyerMobile',
+         {
+          label: '退款方式',
+          prop: 'refundType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.refundType, refundTypeList)
+          },
           search: {
-            type: 'input'
-          }
-        },
-        {
-          label: '物流公司',
-          prop: 'deliveryName',
-          search: {
-            label: '店铺',
+            prop: 'refundType',
             type: 'dict',
-            prop: 'storeId',
-            optionsList: []
+            optionsList: refundTypeList
           }
         },
         {
-          label: '物流单号',
-          prop: 'deliveryNo'
+          label: '退款金额',
+          prop: 'refundFee',
         },
         {
           width: 150,
           label: '售后时间',
-          prop: 'created',
+          prop: 'afterTime',
           search: {
             type: 'dateTime',
             prop: 'dateTime'
@@ -200,51 +185,8 @@ export default {
   created() {
     this.fetchData()
     this.getShopList()
-    this.getLogistics()
   },
   methods: {
-    exportFile() {
-      const { dateTime, statusList, ...other } = this.searchObj
-      const searchDate = this.getSearchDate(
-        dateTime,
-        'dateTime',
-        'startCreated',
-        'endCreated'
-      )
-      this.exportLoading = true
-      this.$api.order.reshipExport({
-        ...searchDate,
-        statusList: [statusList],
-        ...other
-      }).then(res => {
-        if (res) {
-          this.showDialog({
-            title: '退货单导出',
-            type: 2
-          })
-        } else {
-          this.$msgTip('导出数据失败', 'warning')
-        }
-        this.exportLoading = false
-      })
-    },
-    getLogistics() {
-      this.$api.basic
-        .getLogistics({
-          pageSize: 100,
-          pageNo: 1
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data } = res
-            this.logisticsList = data && data.map(val => ({ label: val.logiName, value: val.logiCode }))
-          } else {
-            this.logisticsList = res && res.map(val => ({ label: val.logiName, value: val.logiCode }))
-          }
-          this.setSearchOptionsList('deliveryCode', this.logisticsList)
-        })
-    },
     getShopList() {
       this.$api.channel
         .getShopList({
@@ -280,18 +222,17 @@ export default {
      */
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
-      const { dateTime, statusList, ...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(
         dateTime,
         'dateTime',
-        'startCreated',
-        'endCreated'
+        'startTime',
+        'endTime'
       )
       this.isLoading = true
       this.$api.order
-        .queryAfterSalesList({
+        .queryRefundList({
           ...searchDate,
-          statusList: [statusList],
           ...other,
           ...page
         })
@@ -306,18 +247,6 @@ export default {
           }
         })
     },
-    /**
-     * dialog对话框数据处理
-     * @opts {*}
-     */
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        title: opts.title || '退货单查看',
-        initData: opts.initData,
-        type: opts.type
-      }
-    }
   }
 }
 </script>

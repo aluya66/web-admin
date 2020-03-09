@@ -1,6 +1,6 @@
 import Http from '../utils/request'
 
-const context = process.env.VUE_APP_CONSOLE_LOCALHOST
+const context = process.env.VUE_APP_CONSOLE_COMMON
 // VUE_APP_CONSOLE_LOCALHOST VUE_APP_CONSOLE_COMMON
 /**
  * 查询订单列表
@@ -57,6 +57,15 @@ export const queryDeliveryList = params =>
   })
 
 /**
+ * 发货订单明细
+ * @param {*}
+ */
+export const queryDeliveryDetail = params =>
+  Http.fetch(`${context}/api/order/deliveryinfo`, params, {
+    method: 'get'
+  })
+
+/**
  * 取消订单
  * @param {*}
  */
@@ -79,7 +88,7 @@ export const queryVipList = params =>
  * @param {*}
  */
 export const queryRefundList = params =>
-  Http.fetch(`${context}/api/order/refund`, params, {
+  Http.fetch(`${context}/api/afterrefund/queryafterrefundpage`, params, {
     method: 'get'
   })
 
@@ -178,7 +187,7 @@ export const approveAfterSales = params =>
 * @param {*}
 */
 export const afterSalesCostSettingList = params =>
-  Http.fetch(`${context}/api/template/pagelist`, params, {
+  Http.fetch(`${context}/api/afterset/queryaftersetpage`, params, {
     method: 'get'
   })
 

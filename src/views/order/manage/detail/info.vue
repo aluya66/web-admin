@@ -4,11 +4,11 @@
       <div class="row">
         <span>订单号：{{orderInfo.orderNewResp.parentCode}}</span>
         <span>子订单：{{orderInfo.orderNewResp.orderCode}}</span>
-        <span>订单类型：{{setEnumValue(orderInfo.orderNewResp.orderType, orderTypeList)}}</span>
+        <span>订单类型：{{setEnumValue(orderInfo.orderNewResp.orderCategory, shopTypeList)}}</span>
         <span>订单渠道：{{setEnumValue(orderInfo.orderNewResp.appCode, lobList)}}</span>
       </div>
       <div class="row">
-        <span>所属店铺：{{orderInfo.shopInfoResp.shopName}}</span>
+        <span>所属店铺：{{orderInfo.orderNewResp.storeName}}</span>
         <span>结算状态：{{setEnumValue(orderInfo.orderNewResp.settleStatus, orderSettleStatusList)}}</span>
       </div>
       <div class="row">
@@ -55,7 +55,7 @@
     </line-card>
     <line-card title="发票信息" v-if="orderInfo.orderInvoiceResp">
       <div class="row">
-        <span>发票类型：{{orderInfo.orderInvoiceResp.invoiceType}}</span>
+        <span>发票类型：{{setEnumValue(orderInfo.orderInvoiceResp.invoiceType, invoiceTypeList)}}</span>
         <span>发票抬头：{{orderInfo.orderInvoiceResp.title}}</span>
         <span>发票内容：{{orderInfo.orderInvoiceResp.content}}</span>
       </div>
@@ -122,16 +122,7 @@ export default {
   data() {
     return {
       // 订单类型
-      orderTypeList: [{
-        label: '父订单',
-        value: 0
-      }, {
-        label: '商品订单',
-        value: 1
-      }, {
-        label: '虚拟订单',
-        value: 2
-      }],
+      shopTypeList: dictObj.shopTypeList,
       orderSourceWayList: [{
         label: '线上订单',
         value: 1
@@ -142,7 +133,8 @@ export default {
       lobList: dictObj.lobList,
       payStatusList: dictObj.payStatusList,
       orderSettleStatusList: dictObj.orderSettleStatusList,
-      orderStatusList: dictObj.orderStatusList
+      orderStatusList: dictObj.orderStatusList,
+      invoiceTypeList: dictObj.invoiceTypeList
     }
   },
   components: {

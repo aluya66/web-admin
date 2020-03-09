@@ -99,7 +99,6 @@ export default {
   },
   created() {
     this.fetchData()
-    this.fetchAreaData()
   },
   methods: {
     fetchData() {

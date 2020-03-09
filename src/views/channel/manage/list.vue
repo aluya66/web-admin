@@ -97,7 +97,7 @@ export default {
       dialogObj: {},
       tableInnerBtns: [
         {
-          width: 180,
+          width: 210,
           name: '编辑',
           icon: 'el-icon-edit',
           notBtn: row => row.channelType === 1, // 主渠道隐藏
@@ -120,9 +120,11 @@ export default {
         {
           name: '关联规则',
           icon: 'el-icon-connection',
-          notBtn: row => row.channelType === 1, // 主渠道隐藏
+          // notBtn: row => row.channelType === 1 || (row.channelType === 2 && row.status === 0), // 主渠道隐藏
           handle(row) {
-            vm.$api.channel.getChannelRule().then(res => {
+            vm.$api.channel.getChannelRule({
+              status: 1
+            }).then(res => {
               vm.isLoading = false
               let ruleList = res && res.totalCount ? res.data : res
               vm.ruleList = ruleList.map(item => ({
@@ -138,13 +140,19 @@ export default {
             })
           }
         }, {
+          name: '渠道定价',
+          icon: 'el-icon-setting',
+          handle(row) {
+            vm.routerLink(`/channel/manage/price/${row.channelId}`)
+          }
+        }, {
           prop: {
             name: 'status', // 为0或1
             toggle: [{
               icon: 'el-icon-open',
               title: '开启'
             }, {
-              icon: 'el-icon-close',
+              icon: 'el-icon-turn-off',
               title: '关闭'
             }]
           },

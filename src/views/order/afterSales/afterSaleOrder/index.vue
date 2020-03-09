@@ -324,8 +324,8 @@ export default {
       const searchDate = this.getSearchDate(
         dateTime,
         'dateTime',
-        'startCreated',
-        'endCreated'
+        'startTime',
+        'endTime'
       )
       this.isLoading = true
       this.$api.order
