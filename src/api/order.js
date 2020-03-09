@@ -196,7 +196,7 @@ export const afterSalesCostSettingList = params =>
 * @param {*}
 */
 export const afterSalesCostSettingCreate = params =>
-  Http.fetch(`${context}/api/template/create`, params, {
+  Http.fetch(`${context}/api/afterset/saveafterset`, params, {
     method: 'post'
   })
 

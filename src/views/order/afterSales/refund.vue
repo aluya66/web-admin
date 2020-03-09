@@ -27,12 +27,24 @@
         </template>
       </c-table>
     </div>
-
+     <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        noBtn
+        @before-close="dialogObj.isShow = false"
+      >
+        <c-details ref="childRef" :init-data.sync="dialogObj.initData"></c-details>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 <script>
 import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
+import CDialog from 'components/dialog'
+import CDetails from './detail'
 const refundStatusList = [
   {
     label: '未退款',
@@ -69,9 +81,10 @@ const refundTypeList = [
 export default {
   name: 'reshipList',
   mixins: [mixinTable],
-  // components: {
-  //   CDialog
-  // },
+  components: {
+    CDialog,
+    CDetails
+  },
   data(vm) {
     return {
       exportLoading: false,
@@ -85,7 +98,7 @@ export default {
           name: '详情',
           icon: 'el-icon-show',
           handle(row) {
-            vm.getDetail(row.afterSalesCode)
+            vm.getDetail(row)
           }
         }
       ],
@@ -198,18 +211,23 @@ export default {
           this.setSearchOptionsList('storeId', this.shopsList)
         })
     },
-    getDetail(afterSalesCode) {
-      this.$api.order
-        .afterSalesDetail({
-          afterSalesCode
-        })
-        .then(res => {
-          this.isLoading = false
-          this.showDialog({
-            initData: res,
-            type: 1
-          })
-        })
+    getDetail(row) {
+      console.log('当前详情====', row)
+      this.showDialog({
+        title: '详情',
+        initData: row
+      })
+    },
+    /**
+     * dialog对话框数据处理
+     * @opts {*}
+     */
+    showDialog(opts) {
+      this.dialogObj = {
+        isShow: true,
+        title: opts.title || '新增',
+        initData: opts.initData
+      }
     },
     /*
      * 查询表格列表数据

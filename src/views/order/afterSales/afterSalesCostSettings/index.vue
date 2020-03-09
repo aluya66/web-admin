@@ -92,7 +92,7 @@ export default {
         },
         {
           label: '金额',
-          prop: 'fee',
+          prop: 'fee'
         },
         {
           label: '状态',
@@ -118,7 +118,7 @@ export default {
   },
   methods: {
     // 删除渠道
-    deleteData(id, msgTip = '删除成功') {//无删除接口，调用更新接口来设置isDelete
+    deleteData(id, msgTip = '删除成功') { // 无删除接口，调用更新接口来设置isDelete
       this.$api.order.afterSalesCostSettingDelete({ id }).then(() => {
         this.$msgTip(msgTip)
         this.delResetData()
@@ -144,7 +144,7 @@ export default {
       })
     },
     getDetail(row) {
-      const { id,feeName, fee,status} = row
+      const { id, feeName, fee, status } = row
       this.showDialog({
         title: '编辑',
         initData: {
