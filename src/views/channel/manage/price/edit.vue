@@ -128,9 +128,9 @@ export default {
         }
       })
 
-      if (this.memberPriceList.includes('ysgo_1')) {//星go和ipx会员均为写死的字段，需要手动置灰已选
+      if (this.memberPriceList.includes('ysgo_1')) { // 星go和ipx会员均为写死的字段，需要手动置灰已选
         this.stargoMemberList[0].disabled = true
-      }else if(this.memberPriceList.includes('ysdp_1')) {
+      } else if (this.memberPriceList.includes('ysdp_1')) {
         this.ipxMemberList[0].disabled = true
       }
 
@@ -138,7 +138,7 @@ export default {
         const curCustomLevelIndex = curMemberList.findIndex(res => res.value === this.formModel.customLevel)
         if (curCustomLevelIndex !== -1) {
           curMemberList[curCustomLevelIndex].disabled = false
-        } 
+        }
       }
       this.memberList = curMemberList
     }
