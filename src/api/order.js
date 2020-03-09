@@ -205,7 +205,7 @@ export const afterSalesCostSettingCreate = params =>
 * @param {*}
 */
 export const afterSalesCostSettingUpdate = params =>
-  Http.fetch(`${context}/api/template/update`, params, {
+  Http.fetch(`${context}/api/afterset/updateafterset`, params, {
     method: 'put'
   })
 
@@ -223,7 +223,7 @@ export const getAfterSalesCostSettingDetails = params =>
 * @param {*}
 */
 export const afterSalesCostSettingDelete = params =>
-  Http.fetch(`${context}/api/template/delete`, params, {
+  Http.fetch(`${context}/api/afterset/deleteafterset`, params, {
     method: 'delete'
   })
 

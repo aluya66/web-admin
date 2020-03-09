@@ -10,8 +10,8 @@
     <el-form-item label="名称:" prop="feeName">
       <el-input :disabled="!!formModel.id" v-model.trim="formModel.feeName" class="input-item" placeholder="请输入名称" />
     </el-form-item>
-    <el-form-item label="金额:" prop="feeAmount">
-      <el-input v-model.trim="formModel.feeAmount" class="input-item" placeholder="请输入金额" />
+    <el-form-item label="金额:" prop="fee">
+      <el-input v-model.trim="formModel.fee" class="input-item" placeholder="请输入金额" />
     </el-form-item>
     <el-form-item label="状态:" prop="status">
       <query-dict
@@ -38,7 +38,7 @@ export default {
       default() {
         return {
           feeName: '', // 名称
-          feeAmount: '', // 金额
+          fee: '', // 金额
           status: 0 // 状态
         }
       }
@@ -49,7 +49,7 @@ export default {
       disStatus: dictObj.disStatus,
       rules: {
         feeName: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-        feeAmount: [{ required: true, validator: utils.validater.checkNumber, trigger: 'change' }]
+        fee: [{ required: true, validator: utils.validater.checkNumber, trigger: 'change' }]
       }
     }
   },
