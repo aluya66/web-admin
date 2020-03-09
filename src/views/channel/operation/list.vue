@@ -108,7 +108,7 @@ export default {
         },
         {
           label: '所属商户',
-          prop: 'businessCode',
+          prop: 'businessName',     
           search: {
             type: 'input'
           }
