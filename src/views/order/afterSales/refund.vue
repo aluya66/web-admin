@@ -100,6 +100,17 @@ export default {
           handle(row) {
             vm.getDetail(row)
           }
+        },{
+          prop:{
+            name: 'status',
+            toggle: [{
+              title: '退款',
+              value: [0]
+            }],
+          },
+          handle(row) {
+            console.log('resfgasdgasdgasdgf',row)
+          }
         }
       ],
       // 表格内操作按钮
@@ -212,7 +223,6 @@ export default {
         })
     },
     getDetail(row) {
-      console.log('当前详情====', row)
       this.showDialog({
         title: '详情',
         initData: row

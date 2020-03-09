@@ -1,39 +1,54 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="4"><div>单号:</div></el-col>
-      <el-col :span="20"><div>{{formModel.refundOrder}}</div></el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="4"><div>客户名称:</div></el-col>
-      <el-col :span="20"><div>{{formModel.userName}}</div></el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="4"><div>状态:</div></el-col>
-      <el-col :span="20"><div>{{formModel.status===0?'未退款':'已退款'}}</div></el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="4"><div>售后时间:</div></el-col>
-      <el-col :span="20"><div>{{formModel.afterTime}}</div></el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="4"><div>客户电话:</div></el-col>
-      <el-col :span="20"><div>{{formModel.userPhone}}</div></el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="4"><div>退款类型:</div></el-col>
-      <el-col :span="20"><div>{{refundAllType[formModel.refundType]}}</div></el-col>
-    </el-row>
-     <el-row>
-      <el-col :span="4"><div>退款金额:</div></el-col>
-      <el-col :span="20"><div>{{formModel.refundFee}}</div></el-col>
-    </el-row>
+    <el-form
+      :inline="true"
+      ref="formRef"
+      class="dialog-form"
+      label-position="left"
+    >
+      <el-form-item label="单号:">
+        {{formModel.refundOrder}}
+      </el-form-item>
+      <el-form-item label="退款单号:">
+        {{formModel.afterOrder}}
+      </el-form-item>
+      <el-form-item label="状态:">
+        {{formModel.status===0?'未退款':'已退款'}}
+      </el-form-item>
+      <el-form-item label="客户名称:">
+        {{formModel.userName}}
+      </el-form-item>
+      <el-form-item label="客户电话:">
+        {{formModel.userPhone}}
+      </el-form-item>
+        <el-form-item label="退款金额:">
+        {{formModel.refundFee}}
+      </el-form-item>
+      <el-form-item label="退款类型:">
+        {{refundAllType[formModel.refundType]}}
+      </el-form-item>
+      <el-form-item label="售后时间:">
+        {{formModel.afterTime}}
+      </el-form-item>
+    </el-form>
+    <p>退款记录：</p>
+     <c-table
+        ref="cTable"
+        hasBorder
+        noPage
+        :size="size"
+        :loading="isLoading"
+        :table-header="tableHeader"
+        :table-list="feeRecord"
+      />
   </div>
 </template>
 
 <script>
 
+import mixinTable from 'mixins/table'
 export default {
+  mixins: [mixinTable],
   components: {
   },
   props: {
@@ -51,13 +66,38 @@ export default {
         1: '余额',
         2: '星GO卡',
         3: '代金券'
-      }
+      },
+      feeRecord:[],//打款记录
+       // 表格内操作按钮
+      tableHeader: [
+        {
+          label: '退款单号',
+          prop: 'refundOrder',
+        },
+        {
+          label: '退款金额',
+          prop: 'money',
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+        }]
     }
   },
   computed: {
     formModel() {
       return this.initData
     }
+  },
+  created(){
+    //获取打款记录
+    this.$api.order.getRefundFeeRecord({refundOrder:this.formModel.refundOrder})
+      .then(res=>{
+        this.isLoading = false
+        if(res.data&&res.totalCount){
+          this.feeRecord=res.data
+        }
+      })
   }
 }
 </script>

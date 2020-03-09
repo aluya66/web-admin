@@ -246,3 +246,13 @@ export const reshipExport = params =>
     responseType: 'arraybuffer',
     hasErrMsg: true
   })
+
+  
+/**
+* 查询售后打款记录
+* @param {*}
+*/
+export const getRefundFeeRecord = params =>
+Http.fetch(`${context}/api/afterrefundlog/queryafterrefundlogpage`, params, {
+  method: 'get'
+})
