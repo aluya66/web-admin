@@ -32,15 +32,13 @@
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
 import dictObj from '@/store/dictData'
-import ExportTip from '../../common/exportTip.vue'
 const refundStatusList = [
   {
-    label:'未退款',
+    label: '未退款',
     value: 0
-  },{
-    label:'已退款',
+  }, {
+    label: '已退款',
     value: 1
   }
 ]
@@ -55,29 +53,25 @@ const refundStatusList = [
 //   }
 // ]
 
-const refundTypeList =[
+const refundTypeList = [
   {
-    label:'余额',
+    label: '余额',
     value: 1
-  },{
-    label:'星购卡',
+  }, {
+    label: '星购卡',
     value: 2
-  },{
-    label:'代金券',
+  }, {
+    label: '代金券',
     value: 3
   }
 ]
 
-
-
-
 export default {
   name: 'reshipList',
   mixins: [mixinTable],
-  components: {
-    CDialog,
-    ExportTip
-  },
+  // components: {
+  //   CDialog
+  // },
   data(vm) {
     return {
       exportLoading: false,
@@ -126,7 +120,7 @@ export default {
           label: '状态',
           prop: 'status',
           formatter(row) {
-               return row && vm.setTableColumnLabel(row.status, refundStatusList)
+            return row && vm.setTableColumnLabel(row.status, refundStatusList)
           },
           search: {
             type: 'select',
@@ -150,11 +144,11 @@ export default {
           prop: 'storeName',
           search: {
             type: 'dict',
-            optionsList:[],
+            optionsList: [],
             prop: 'storeId'
           }
         },
-         {
+        {
           label: '退款方式',
           prop: 'refundType',
           formatter(row) {
@@ -168,7 +162,7 @@ export default {
         },
         {
           label: '退款金额',
-          prop: 'refundFee',
+          prop: 'refundFee'
         },
         {
           width: 150,
@@ -246,7 +240,7 @@ export default {
             this.tableList = res || []
           }
         })
-    },
+    }
   }
 }
 </script>
