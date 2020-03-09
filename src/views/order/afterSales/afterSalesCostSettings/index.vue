@@ -9,8 +9,8 @@
     <div class="main__box">
       <c-table
         ref="cTable"
-        selection
         hasBorder
+        hasIndex
         :max-height="maxHeight"
         :size="size"
         :loading="isLoading"
@@ -103,7 +103,7 @@ export default {
         },
         {
           label: '操作人',
-          prop: 'updateName'
+          prop: 'opEditor'
         },
         {
           width: 150,
