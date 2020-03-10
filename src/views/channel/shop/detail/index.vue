@@ -151,7 +151,7 @@ export default {
           this.formModel = {
             ...this.formModel,
             ...res,
-            canEditOperation:res.operationCode?false:true,
+            canEditOperation: !res.operationCode,
             shopAddress: [provinceCode, cityCode, areaCode], // 门店省市区
             businessHours: businessHours ? businessHours.split('~') : [],
             shopLogo: [{ url: shopLogo, name: '门店LOGO', fileType: 'image', ref: 'shopLogo' }],
