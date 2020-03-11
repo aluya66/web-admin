@@ -194,14 +194,14 @@ export default {
           label: '条件等级',
           prop: 'customLevel',
           formatter(row) {
-            if(row && row.priceId === 7 && row.customLevel !== ''){
-              if(row.customLevel==='ysgo_1'){
+            if (row && row.priceId === 7 && row.customLevel !== '') {
+              if (row.customLevel === 'ysgo_1') {
                 return '星go会员'
-              }else if(row.customLevel==='ysdp_1'){
+              } else if (row.customLevel === 'ysdp_1') {
                 return 'IPX会员'
               }
               return vm.setTableColumnLabel(row.customLevel, vm.memberList)
-            }else {
+            } else {
               return ''
             }
           }

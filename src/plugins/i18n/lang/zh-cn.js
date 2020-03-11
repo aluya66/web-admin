@@ -56,6 +56,8 @@ export default {
     refundList: '退款单列表',
     afterSalesCostSettingsList: '售后费用设置',
     reshipList: '退货单列表',
+    operationCenter: '运营中心管理',
+    operationAdd: '运营中心',
     channel: '渠道中心',
     channelList: '门店管理',
     channelMerchant: '商户管理',

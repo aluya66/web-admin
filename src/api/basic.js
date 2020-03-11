@@ -287,3 +287,9 @@ export const getStyle = params =>
   Http.fetch(`${context}/api/attr/querypage`, params, {
     method: 'get'
   })
+
+// 根据省市区code查询省市区
+export const getAdressByCode = params =>
+  Http.fetch(`${context}/api/area/getbycodes`, params, {
+    method: 'post'
+  })
