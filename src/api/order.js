@@ -247,12 +247,23 @@ export const reshipExport = params =>
     hasErrMsg: true
   })
 
-  
 /**
 * 查询售后打款记录
 * @param {*}
 */
 export const getRefundFeeRecord = params =>
-Http.fetch(`${context}/api/afterrefundlog/queryafterrefundlogpage`, params, {
-  method: 'get'
+  Http.fetch(`${context}/api/afterrefundlog/queryafterrefundlogpage`, params, {
+    method: 'get'
+  })
+
+
+/**
+* 新增打款信息记录
+* @param {*}
+*/
+export const createRefundRecord = params =>
+Http.fetch(`${context}/api/afterrefundlog/saveaafterrefundlog`, params, {
+  method: 'post'
 })
+
+  

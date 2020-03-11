@@ -135,7 +135,7 @@ export default {
       }, {
         path: '/order/afterSales/refund',
         name: 'refundList',
-        component: () => import('@/views/order/afterSales/refund'),
+        component: () => import('@/views/order/afterSales/refund/index'),
         meta: {
           title: 'refundList',
           icon: 'table',

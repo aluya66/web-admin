@@ -67,20 +67,20 @@ export default {
         2: '星GO卡',
         3: '代金券'
       },
-      feeRecord:[],//打款记录
-       // 表格内操作按钮
+      feeRecord: [], // 打款记录
+      // 表格内操作按钮
       tableHeader: [
         {
           label: '退款单号',
-          prop: 'refundOrder',
+          prop: 'refundOrder'
         },
         {
           label: '退款金额',
-          prop: 'money',
+          prop: 'money'
         },
         {
           label: '备注',
-          prop: 'remark',
+          prop: 'remark'
         }]
     }
   },
@@ -89,13 +89,13 @@ export default {
       return this.initData
     }
   },
-  created(){
-    //获取打款记录
-    this.$api.order.getRefundFeeRecord({refundOrder:this.formModel.refundOrder})
-      .then(res=>{
+  created() {
+    // 获取打款记录
+    this.$api.order.getRefundFeeRecord({ refundOrder: this.formModel.refundOrder })
+      .then(res => {
         this.isLoading = false
-        if(res.data&&res.totalCount){
-          this.feeRecord=res.data
+        if (res&&res.data && res.totalCount) {
+          this.feeRecord = res.data
         }
       })
   }

@@ -33,9 +33,19 @@
         :title="dialogObj.title"
         close-btn
         noBtn
+        width="80%"
         @before-close="dialogObj.isShow = false"
       >
-        <c-details ref="childRef" :init-data.sync="dialogObj.initData"></c-details>
+        <refund-confirm
+          ref="childRef"
+          v-if="dialogObj.type==='action'"
+           :init-data.sync="dialogObj.initData"
+           @submit="handleSubmit"
+        ></refund-confirm>
+        <c-details
+          v-if="dialogObj.type==='detail'"
+          :init-data.sync="dialogObj.initData"
+        />
       </c-dialog>
     </div>
   </c-view>
@@ -45,6 +55,7 @@ import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
 import CDialog from 'components/dialog'
 import CDetails from './detail'
+import RefundConfirm from './refundConfirm'
 const refundStatusList = [
   {
     label: '未退款',
@@ -83,13 +94,14 @@ export default {
   mixins: [mixinTable],
   components: {
     CDialog,
-    CDetails
+    CDetails,
+    RefundConfirm
   },
   data(vm) {
     return {
       exportLoading: false,
-      logisticsList: [],
       shopsList: [],
+      feeList:[],//售后扣费项目数据
       // 对话框对象
       dialogObj: {},
       // 表格内操作按钮
@@ -100,16 +112,20 @@ export default {
           handle(row) {
             vm.getDetail(row)
           }
-        },{
-          prop:{
+        }, {
+          prop: {
             name: 'status',
             toggle: [{
               title: '退款',
               value: [0]
-            }],
+            }]
           },
           handle(row) {
-            console.log('resfgasdgasdgasdgf',row)
+            vm.showDialog({
+              title: '退款确认',
+              initData: {row,feeList:vm.feeList},
+              type: 'action'
+            })
           }
         }
       ],
@@ -203,8 +219,24 @@ export default {
   created() {
     this.fetchData()
     this.getShopList()
+    this.getRefundFeeList()
   },
   methods: {
+    // 获取扣费项目数据
+    getRefundFeeList() {
+      this.isLoading = true
+      this.$api.order
+        .afterSalesCostSettingList()
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data } = res
+            this.feeList = data || []
+          } else {
+            this.feeList = res || []
+          }
+        })
+    },
     getShopList() {
       this.$api.channel
         .getShopList({
@@ -225,7 +257,8 @@ export default {
     getDetail(row) {
       this.showDialog({
         title: '详情',
-        initData: row
+        initData: row,
+        type: 'detail'
       })
     },
     /**
@@ -235,6 +268,7 @@ export default {
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
+        type: opts.type,
         title: opts.title || '新增',
         initData: opts.initData
       }
@@ -268,7 +302,12 @@ export default {
             this.tableList = res || []
           }
         })
-    }
+    },
+    handleSubmit(param){
+      this.$api.order.createRefundRecord(param).then(res=>{
+        console.log('提交打款返回',res)
+      })
+    },
   }
 }
 </script>
