@@ -94,7 +94,7 @@ export default {
     this.$api.order.getRefundFeeRecord({ refundOrder: this.formModel.refundOrder })
       .then(res => {
         this.isLoading = false
-        if (res&&res.data && res.totalCount) {
+        if (res && res.data && res.totalCount) {
           this.feeRecord = res.data
         }
       })

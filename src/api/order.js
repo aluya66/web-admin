@@ -256,14 +256,11 @@ export const getRefundFeeRecord = params =>
     method: 'get'
   })
 
-
 /**
 * 新增打款信息记录
 * @param {*}
 */
 export const createRefundRecord = params =>
-Http.fetch(`${context}/api/afterrefundlog/saveaafterrefundlog`, params, {
-  method: 'post'
-})
-
-  
+  Http.fetch(`${context}/api/afterrefundlog/saveaafterrefundlog`, params, {
+    method: 'post'
+  })

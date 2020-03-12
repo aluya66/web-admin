@@ -101,7 +101,7 @@ export default {
     return {
       exportLoading: false,
       shopsList: [],
-      feeList:[],//售后扣费项目数据
+      feeList: [], // 售后扣费项目数据
       // 对话框对象
       dialogObj: {},
       // 表格内操作按钮
@@ -123,7 +123,7 @@ export default {
           handle(row) {
             vm.showDialog({
               title: '退款确认',
-              initData: {row,feeList:vm.feeList},
+              initData: { row, feeList: vm.feeList },
               type: 'action'
             })
           }
@@ -179,15 +179,15 @@ export default {
             optionsList: dictObj.afterSalesTypes
           }
         },
-        {
-          label: '店铺',
-          prop: 'storeName',
-          search: {
-            type: 'dict',
-            optionsList: [],
-            prop: 'storeId'
-          }
-        },
+        // {
+        //   label: '店铺',
+        //   prop: 'storeName',
+        //   search: {
+        //     type: 'dict',
+        //     optionsList: [],
+        //     prop: 'storeId'
+        //   }
+        // },
         {
           label: '退款方式',
           prop: 'refundType',
@@ -303,11 +303,12 @@ export default {
           }
         })
     },
-    handleSubmit(param){
-      this.$api.order.createRefundRecord(param).then(res=>{
-        console.log('提交打款返回',res)
-      })
-    },
+    handleSubmit(param) {
+      console.log('提交的参数是', param)
+      // this.$api.order.createRefundRecord(param).then(res=>{
+      //   console.log('提交打款返回',res)
+      // })
+    }
   }
 }
 </script>
