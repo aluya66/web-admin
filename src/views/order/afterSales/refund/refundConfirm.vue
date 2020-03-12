@@ -14,6 +14,7 @@
             class="select-item"
             clearable
             v-model.trim="formModel.afterRefundLogList[index].typeId"
+            @change="selectOnchange($event,index)"
           >
             <el-option
               v-for="item in feeList"
@@ -22,7 +23,6 @@
               :value="item.id"
             ></el-option>
           </el-select>
-          <!-- <el-input v-model.trim="formModel.afterRefundLogList[index].typeId"></el-input> -->
         </el-form-item>
         <el-form-item label="金额:">
           <el-input type="number" @blur="moneyBlur($event,index)" :max="canRefundFee" v-model.trim="formModel.afterRefundLogList[index].money"></el-input>
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     initData: {
@@ -64,30 +65,38 @@ export default {
           }
         ]
       },
-      canRefundFee:0,//当前可扣除的数目
-      accumulateRefundFee:0,//累计已扣费
-      curItemInfo:{},//当前退款信息
-      feeList:[],//可扣款项目
+      canRefundFee: 0, // 当前可扣除的数目
+      accumulateRefundFee: 0, // 累计已扣费
+      curItemInfo: {}, // 当前退款信息
+      feeList: []// 可扣款项目
     }
   },
-  created(){
-    this.feeList=this.initData.feeList
-    this.curItemInfo=this.initData.row
-    this.canRefundFee=this.curItemInfo.refundFee
+  created() {
+    this.feeList = this.initData.feeList
+    this.curItemInfo = this.initData.row
+    this.canRefundFee = this.curItemInfo.refundFee
   },
   methods: {
     submitForm() {
-      console.log('this-----,', this.formModel,this.$refs.formRef)
-      //自定义校验
-      this.formModel.afterRefundLogList.map((elem,index)=>{
-
+      // 自定义校验
+      let unpass =[]
+      unpass= this.formModel.afterRefundLogList.filter((elem, index) => {
+        return !elem.typeId||!Number(elem.money)
       })
-      this.$emit('submit',{refundOrder:this.curItemInfo.refundOrder,...this.formModel})
+      if(unpass.length>0){
+        this.$message({
+          type: 'error',
+          message: '扣费项目和金额不能为空'
+        })
+      }else{
+        this.$emit('submit', { refundOrder: this.curItemInfo.refundOrder, ...this.formModel })
+      }
     },
     removeItem(index) {
-      if (this.formModel.afterRefundLogList.length>1 ) {
+      if (this.formModel.afterRefundLogList.length > 1) {
         this.formModel.afterRefundLogList.splice(index, 1)
       }
+      this.caculate(index,0)
     },
     addItem() {
       this.formModel.afterRefundLogList.push({
@@ -96,26 +105,37 @@ export default {
         remark: ''
       })
     },
-    //计算累计扣费
-    caculateRefundFee(){
-      this.accumulateRefundFee=this.formModel.afterRefundLogList.reduce((pre,cur)=>{
-        return (parseInt(pre)+parseInt(cur.money))
-      },0)
+     selectOnchange(value,index){
+      let fee
+      this.feeList.forEach((elem)=>{
+        if(elem.id===value){
+          fee = elem.fee
+          this.formModel.afterRefundLogList[index].money = elem.fee
+        }
+      })
+      this.caculate(index,fee)// 累计扣费
     },
-    //金额输入框校验
-    moneyBlur(e,index){
-      let value=e.target.value
-      if (value<0) value=-value//转为正数
-      this.formModel.afterRefundLogList[index].money = parseInt(value)
-      this.caculateRefundFee()//累计扣费
-      let diff = parseInt(this.curItemInfo.refundFee) - parseInt(this.accumulateRefundFee)
-      if(diff>=0){
-        this.canRefundFee = diff//当前剩余
-      }else{
-        this.formModel.afterRefundLogList[index].money = parseInt(value)+parseInt(diff)
-        this.accumulateRefundFee=this.curItemInfo.refundFee
-        this.canRefundFee =0
+    // 计算累计扣费  index当前操作的扣费项目  value当前输入的金额
+    caculate(index,value) {
+      this.accumulateRefundFee = this.formModel.afterRefundLogList.reduce((pre, cur) => {
+        return (parseFloat(pre) + parseFloat(cur.money)).toFixed(2)
+      }, 0)
+
+      let diff = (parseFloat(this.curItemInfo.refundFee) - parseFloat(this.accumulateRefundFee)).toFixed(2)
+      if (diff >= 0) {
+        this.canRefundFee = diff// 当前剩余
+      } else {
+        this.formModel.afterRefundLogList[index].money = (parseFloat(value)+ parseFloat(diff)).toFixed(2)
+        this.accumulateRefundFee = this.curItemInfo.refundFee
+        this.canRefundFee = 0
       }
+    },
+    // 金额输入框校验
+    moneyBlur(e, index) {
+      let value = e.target.value
+      if (value < 0) value = -value// 转为正数
+      this.formModel.afterRefundLogList[index].money = parseFloat(value).toFixed(2)
+      this.caculate(index,value)// 累计扣费
     }
   }
 }
