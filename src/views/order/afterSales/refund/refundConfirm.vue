@@ -34,7 +34,7 @@
         <el-button @click.prevent="removeItem(index)">删除</el-button>
       </div>
       <p>总计扣费余额：{{accumulateRefundFee}}元</p>
-      <p>总计退款至余额：{{canRefundFee}}元</p>
+      <p>总计退款至余额：{{parseFloat(curItemInfo.refundFee-accumulateRefundFee).toFixed(2)}}元</p>
       <el-form-item>
         <el-button type="primary" @click="submitForm">确认</el-button>
       </el-form-item>
@@ -65,7 +65,6 @@ export default {
           }
         ]
       },
-      canRefundFee: 0, // 当前可扣除的数目
       accumulateRefundFee: 0, // 累计已扣费
       curItemInfo: {}, // 当前退款信息
       feeList: []// 可扣款项目
@@ -74,7 +73,6 @@ export default {
   created() {
     this.feeList = this.initData.feeList
     this.curItemInfo = this.initData.row
-    this.canRefundFee = this.curItemInfo.refundFee
   },
   methods: {
     submitForm() {
@@ -105,6 +103,7 @@ export default {
         remark: ''
       })
     },
+    //扣费项目选项更新
      selectOnchange(value,index){
       let fee
       this.feeList.forEach((elem)=>{
@@ -121,17 +120,12 @@ export default {
       this.accumulateRefundFee = this.formModel.afterRefundLogList.reduce((pre, cur) => {
         return (parseFloat(pre) + parseFloat(cur.money)).toFixed(2)
       }, 0)
-
       //当前需要退款的总金额
       let shouldRefundFee = this.curItemInfo.refundFee
-
       let diff = (parseFloat(shouldRefundFee) - parseFloat(this.accumulateRefundFee)).toFixed(2)
-      if (diff >= 0) {
-        this.canRefundFee = diff// 当前剩余
-      } else {
-        this.formModel.afterRefundLogList[index].money = (parseFloat(value)+ parseFloat(diff)).toFixed(2)
+      if(diff<0){
+         this.formModel.afterRefundLogList[index].money = (parseFloat(value)+ parseFloat(diff)).toFixed(2)
         this.accumulateRefundFee = shouldRefundFee
-        this.canRefundFee = 0
       }
     },
     // 金额输入框校验
