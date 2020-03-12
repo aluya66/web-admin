@@ -10,7 +10,6 @@
       :loading="isLoading"
       :table-header="tableHeader"
       :table-list="deliveryList"
-      :table-inner-btns="tableInnerBtns"
     ></c-table>
   </line-card>
 </template>
@@ -29,17 +28,17 @@ export default {
   },
   data(vm) {
     return {
-      tableInnerBtns: [{
-        name: '详情',
-        icon: 'el-icon-review',
-        handle(row) {
-          vm.$emit('show-dialog', {
-            isEdit: true,
-            initData: row,
-            title: '物流详情'
-          })
-        }
-      }],
+      // tableInnerBtns: [{
+      //   name: '详情',
+      //   icon: 'el-icon-review',
+      //   handle(row) {
+      //     vm.$emit('show-dialog', {
+      //       isEdit: true,
+      //       initData: row,
+      //       title: '物流详情'
+      //     })
+      //   }
+      // }],
       tableHeader: [
         {
           label: '物流公司',

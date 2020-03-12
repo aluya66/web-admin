@@ -2,6 +2,14 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{ $route.meta.name || $t(`route.${$route.meta.title}`) }}</div>
+      <div class="header-btn">
+        <el-button
+          type="primary"
+          :size="size"
+          icon="el-icon-plus"
+          @click="routerLink('/channel/shop/detail')"
+        >新增</el-button>
+      </div>
     </template>
     <div class="main__box">
       <c-table
@@ -14,6 +22,7 @@
         :table-header="tableHeader"
         :table-list="tableList"
         :page-info="pageInfo"
+        :table-inner-btns="tableInnerBtns"
         @change-pagination="changePagination"
       >
         <template v-slot:header>
@@ -31,11 +40,13 @@
 
 <script>
 import mixinTable from 'mixins/table'
-const shopTypeSelect = [{
+import dictObj from '@/store/dictData'
+
+const businessTypeSelect = [{
   label: '自营',
   value: 1
 }, {
-  label: '合作',
+  label: '加盟',
   value: 2
 }]
 const shopStatusSelect = [
@@ -61,6 +72,16 @@ export default {
       dialogObj: {}, // 对话框数据
       tableList: [],
       isLoading: false,
+      tableInnerBtns: [
+        {
+          width: 100,
+          name: '编辑',
+          icon: 'el-icon-edit',
+          handle(row) {
+            vm.routerLink(`/channel/shop/detail/${row.shopId}`)
+          }
+        }
+      ],
       tableHeader: [
         {
           label: 'LOGO',
@@ -69,51 +90,71 @@ export default {
           width: 100
         },
         {
-          label: '店招',
-          prop: 'shopImage',
-          isImage: true,
-          width: 100
-        },
-        {
-          label: '店铺名称',
+          label: '门店名称',
           prop: 'shopName',
           search: {
             type: 'input'
           }
         },
         {
-          label: '店铺风格',
-          prop: 'styleName'
-        },
-        {
-          label: '店铺类型',
+          label: '门店类型',
           prop: 'shopType',
           search: {
             type: 'select',
-            optionsList: shopTypeSelect
+            optionsList: dictObj.shopTypeList
           },
           formatter(row) {
-            return row.shopType ? shopTypeSelect[row.shopType - 1].label : ''
+            return row && vm.setTableColumnLabel(row.shopType, 'shopTypeList')
           }
         },
         {
-          label: '店铺地址',
-          prop: 'address',
-          isPopover: true
-        },
-        {
           label: '联系人',
-          prop: 'contact'
+          prop: 'contact',
+          search: {
+            label: '负责人',
+            type: 'input'
+          }
         },
         {
-          label: '联系电话',
-          prop: 'contactTel'
+          label: '联系手机',
+          prop: 'contactTel',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '经营方式',
+          prop: 'businessType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.businessType, businessTypeSelect)
+          }
+        },
+        {
+          label: '关联商户',
+          prop: 'businessName',
+          search: {
+            prop: 'businessCode',
+            type: 'dict',
+            optionsList: [],
+            allowCreate: true,
+            filterable: true
+          }
+        },
+        {
+          label: '关联运营中心',
+          prop: 'operationName',
+          search: {
+            prop: 'operationCode',
+            type: 'dict',
+            optionsList: [],
+            filterable: true
+          }
         },
         {
           label: '状态',
           prop: 'status',
           formatter(row) {
-            return row.status ? shopStatusSelect[row.status].label : '关闭'
+            return row && vm.setTableColumnLabel(row.status, shopStatusSelect)
           },
           search: {
             type: 'dict',
@@ -121,20 +162,43 @@ export default {
           }
         },
         {
-          label: '添加人',
-          prop: 'operaterName'
+          label: '更新人',
+          prop: 'opEditor'
         },
         {
-          label: '添加时间',
-          prop: 'created'
+          label: '更新日期',
+          prop: 'updated'
         }
       ]
     }
   },
   created() {
     this.fetchData()
+    this.getBusiness()
+    this.getOperationList()
   },
   methods: {
+    // 获取关联商户列表
+    getBusiness() {
+      this.$api.channel.getBusiness({
+        pageNo: 1,
+        pageSize: 100
+      }).then(res => {
+        if (res && res.totalCount) {
+          const businessList = res.data.map(res => ({ value: res.businessCode, label: res.businessName })) || []
+          this.setSearchOptionsList('businessCode', businessList)
+        }
+      })
+    },
+    // 获取关联运营中心数据
+    getOperationList() {
+      this.$api.operation.queryAllOperationList().then(res => {
+        if (res && res.totalCount) {
+          const operationList = res.data.map(res => ({ value: res.operationCode, label: res.operationName })) || []
+          this.setSearchOptionsList('operationCode', operationList)
+        }
+      })
+    },
     fetchData() {
       const { dateTime, ...other } = this.searchObj
       const { totalNum, ...page } = this.pageInfo
