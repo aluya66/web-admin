@@ -63,6 +63,18 @@ export default {
     }
   },
   {
+    path: '/channel/manage/price/:id?',
+    name: 'channelManagePrice',
+    hidden: true,
+    component: () => import('@/views/channel/manage/price/index'),
+    meta: {
+      title: 'channelManagePrice',
+      noCache: true,
+      activeMenu: '/channel/manage',
+      roles: ['admin']
+    }
+  },
+  {
     path: '/channel/rule',
     name: 'channelRule',
     component: () => import('@/views/channel/rule/list'),
@@ -71,5 +83,26 @@ export default {
       icon: 'table',
       roles: ['admin']
     }
-  }]
+  },
+  {
+    path: '/channel/operation/list',
+    name: 'operationList',
+    component: () => import('@/views/channel/operation/list'),
+    meta: {
+      title: 'operationCenter',
+      icon: 'table',
+      roles: ['admin']
+    }
+  },
+  {
+    path: '/channel/operation/add/:id?',
+    name: 'operationAdd',
+    hidden: true,
+    component: () => import('@/views/channel/operation/add'),
+    meta: {
+      title: 'operationAdd',
+      activeMenu: '/channel/operation/list'
+    }
+  }
+  ]
 }

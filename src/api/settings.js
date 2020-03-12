@@ -2,6 +2,18 @@ import Http from '../utils/request'
 
 const context = process.env.VUE_APP_CONSOLE_COMMON
 
+// 新增渠道价格类型
+export const addChannelPrice = params =>
+  Http.fetch(`${context}/api/channel/price`, params, {
+    method: 'post'
+  })
+
+// 查询渠道价格类型列表
+export const queryChannelPriceList = params =>
+  Http.fetch(`${context}/api/channel/pricelist`, params, {
+    method: 'get'
+  })
+
 // 新增字典
 export const addDict = params =>
   Http.fetch(`${context}/api/dict`, params, {

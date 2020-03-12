@@ -5,7 +5,6 @@
         {{ $route.meta.name || $t(`route.${$route.meta.title}`) }}
         <el-button
           type="primary"
-          v-permission="$route.meta.roles"
           :size="size"
           icon="el-icon-plus"
           @click="routerLink('/basic/brandInfo')"
@@ -40,14 +39,7 @@
 </template>
 <script>
 import mixinTable from 'mixins/table'
-
-const statusSelect = [{
-  value: 1,
-  label: '启用'
-}, {
-  value: 2,
-  label: '禁用'
-}]
+import dictObj from '@/store/dictData'
 
 export default {
   name: 'brand',
@@ -55,14 +47,14 @@ export default {
   data(vm) {
     return {
       tableInnerBtns: [
-        // {
-        //   width: 150,
-        //   name: '编辑',
-        //   icon: 'el-icon-edit',
-        //   handle(row) {
-        //     vm.routerLink(`/basic/brandInfo/${row.id}`)
-        //   }
-        // },
+        {
+          width: 150,
+          name: '编辑',
+          icon: 'el-icon-edit',
+          handle(row) {
+            vm.routerLink(`/basic/brandInfo/${row.id}`)
+          }
+        },
         {
           name: '添加标签',
           icon: 'el-icon-plus',
@@ -83,12 +75,6 @@ export default {
       ],
       tableHeader: [
         {
-          label: '品牌LOGO',
-          prop: 'logo',
-          width: 100,
-          isImage: true
-        },
-        {
           label: '品牌名称',
           prop: 'name',
           search: {
@@ -96,83 +82,63 @@ export default {
           }
         },
         {
-          label: '品牌别名',
-          prop: 'ename',
+          label: '品牌编码',
+          prop: 'code'
+        },
+        {
+          label: '品牌类型',
+          prop: 'type',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.type, 'shopTypeList')
+          },
           search: {
-            type: 'input'
+            type: 'dict',
+            optionsList: dictObj.shopTypeList
           }
         },
         {
-          label: '品牌描述',
-          prop: 'description'
-        },
-        {
-          label: '品牌介绍',
-          prop: 'intro'
-        },
-        {
-          label: '品牌国家',
-          prop: 'country',
-          width: 120,
-          search: {
-            type: 'input'
-          }
-        },
-        {
-          label: '封面图',
-          prop: 'previewUrl',
+          label: '品牌Logo',
+          prop: 'logo',
           width: 100,
           isImage: true
         },
         {
-          label: '封面视频',
-          prop: 'videoUrl',
-          width: 100
+          label: '平台零售价倍率',
+          prop: 'priceRate'
         },
         {
           label: '品牌状态',
-          prop: 'statusCN',
-          width: 100,
+          prop: 'status',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.status, 'disStatus')
+          },
           search: {
             type: 'dict',
-            prop: 'status',
-            optionsList: statusSelect
+            optionsList: dictObj.disStatus
           }
         },
         {
-          label: '消费人群',
-          prop: 'consumer',
-          width: 100
+          label: '更新人',
+          prop: 'opEditor'
         },
-        // {
-        //   label: '创建人',
-        //   prop: 'createdby',
-        //   width: 100
-        // },
-        // {
-        //   label: '更新人',
-        //   prop: 'updatedby',
-        //   width: 100
-        // },
         {
-          label: '创建时间',
-          prop: 'created',
+          label: '更新时间',
+          prop: 'updated',
           width: 100,
           search: {
             type: 'dateTime',
             prop: 'dateTime'
           }
-        },
-        {
-          label: '更新时间',
-          prop: 'updated',
-          width: 100
         }
       ]
     }
   },
   created() {
     this.fetchData()
+    this.isCreated = !this.isCreated
+  },
+  activated() {
+    this.isCreated && this.fetchData()
   },
   methods: {
     fetchData() {

@@ -1,11 +1,17 @@
 import Http from '../utils/request'
 
 const context = process.env.VUE_APP_CONSOLE_COMMON
-// VUE_APP_CONSOLE_COMMON
+// VUE_APP_CONSOLE_COMMON VUE_APP_CONSOLE_LOCALHOST
 
 // 店铺 风格
 export const getShopStyle = params =>
-  Http.fetch(`${context}/api/shopstyle`, params, {
+  Http.fetch(`${context}/api/shop/styles`, params, {
+    method: 'get'
+  })
+
+// 店铺 调价底线
+export const getPrice = params =>
+  Http.fetch(`${context}/api/shop/prices`, params, {
     method: 'get'
   })
 
@@ -17,7 +23,7 @@ export const getShopList = params =>
 
 // 店铺详情
 export const getShopDetail = params =>
-  Http.fetch(`${context}/api/shop`, params, {
+  Http.fetch(`${context}/api/shop/detail`, params, {
     method: 'get'
   })
 
@@ -27,7 +33,7 @@ export const addShop = params =>
     method: 'post'
   })
 
-// 店铺 新增
+// 店铺 编辑
 export const editShop = params =>
   Http.fetch(`${context}/api/shop`, params, {
     method: 'put'
@@ -182,5 +188,33 @@ export const getGoodsListByChannel = params =>
 // 根据渠道查询店铺列表
 export const getShopListByChannel = params =>
   Http.fetch(`${context}/api/channel/shoplist`, params, {
+    method: 'get'
+  })
+
+// 渠道新增关联价格类型
+export const addChannelPrice = params =>
+  Http.fetch(`${context}/api/channel/addprice`, params, {
+    method: 'post'
+  })
+
+// 查询渠道关联价格信息类型
+export const queryChannelPrice = params =>
+  Http.fetch(`${context}/api/channelprice`, params, {
+    method: 'get'
+  })
+
+/**
+* @param {*} 门店渠道列表
+*/
+export const getShopChannel = params =>
+  Http.fetch(`${context}/api/open/channel/list`, params, {
+    method: 'get'
+  })
+
+/**
+* @param {*} 获取关联商户
+*/
+export const getBusiness = params =>
+  Http.fetch(`${context}/api/business/querypage`, params, {
     method: 'get'
   })

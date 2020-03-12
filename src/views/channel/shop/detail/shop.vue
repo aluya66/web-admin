@@ -33,6 +33,22 @@
         ></el-option>
       </el-select>
     </el-form-item>
+     <el-form-item label="选择运营中心:" prop="operationCode">
+      <el-select
+        class="select-item"
+        v-model="formModel.operationCode"
+        placeholder="请选择运营中心"
+        :disabled="!formModel.canEditOperation"
+      >
+        <el-option
+          v-for="item in operationList"
+          :key="item.operationCode"
+          :label="item.operationName"
+          :value="item.operationCode"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+
     <el-form-item label="门店LOGO:" prop="shopLogo">
       <c-upload
         ref="shopLogo"
@@ -45,7 +61,7 @@
         :limit="1"
         :fileList="formModel.shopLogo"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'shopLogo')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('shopLogo')"
       >
@@ -175,7 +191,7 @@
         :limit="1"
         :fileList="formModel.shopImage"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'shopImage')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('shopImage')"
       >
@@ -195,7 +211,7 @@
         :limit="1"
         :fileList="formModel.exhibitionImage"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'exhibitionImage')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('exhibitionImage')"
       >
@@ -203,7 +219,7 @@
         <div class="info">750px*350px</div>
       </c-upload>
     </el-form-item>
-    <el-form-item label="店铺视频:" prop="videoUrl" v-if="formModel.shopType === 1" required>
+    <el-form-item label="店铺视频:" prop="videoUrl" v-if="formModel.shopType === 1">
       <c-upload
         ref="videoUrl"
         class="pic"
@@ -216,17 +232,18 @@
         :limit="1"
         :fileList="formModel.videoUrl"
         @on-success="uploadSuccess"
-        :on-remove="uploadRemove"
+        :on-remove="uploadRemove.bind(this,'videoUrl')"
         :on-preview="uploadReview"
         @before-upload="uploadBefore('videoUrl')"
       >
         <i class="el-icon-plus"></i>
+        <div class="info">格式：mp4</div>
         <div slot="file">
           <img class="el-upload-list__item-thumbnail" src="/static/default-video.png" />
         </div>
       </c-upload>
     </el-form-item>
-    <el-form-item label="营业时间:" prop="businessHours" v-if="formModel.shopType === 1" required>
+    <el-form-item label="营业时间:" prop="businessHours" v-if="formModel.shopType === 1">
       <el-time-picker
         is-range
         :size="size"
@@ -316,10 +333,38 @@
           :loading="isLoading"
           :table-header="tableHeader"
           :table-list="formModel.channelCode"
-          :rowStyle="{height:0}"
-          :cellStyle="{padding:0}"
         ></c-table>
       </div>
+    </el-form-item>
+    <el-form-item label="开单调价">
+      <el-radio-group v-model="formModel.changeStatus">
+        <el-radio
+          class="checkbox-item"
+          :label="item.value"
+          v-for="(item, index) in disStatus"
+          :key="index"
+        >{{ item.label }}</el-radio>
+      </el-radio-group>
+      <el-form-item label="调价底线:" prop="changeType" v-if="formModel.changeStatus === 1">
+        <el-select class="select-item" v-model="formModel.changeType" placeholder="请选择调价底线">
+          <el-option
+            v-for="item in changeTypeList"
+            :key="item.priceId"
+            :label="item.priceName"
+            :value="item.priceId"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form-item>
+    <el-form-item label="支持代开会员">
+      <el-radio-group v-model="formModel.openVipStatus">
+        <el-radio
+          class="checkbox-item"
+          :label="item.value"
+          v-for="(item, index) in disStatus"
+          :key="index"
+        >{{ item.label }}</el-radio>
+      </el-radio-group>
     </el-form-item>
   </el-form>
 </template>
@@ -387,10 +432,10 @@ export default {
         ],
         exhibitionImage: [
           { required: true, message: '请上传展馆图', trigger: 'blur' }
-        ],
-        videoUrl: [
-          { required: true, message: '请上传店铺视频', trigger: 'blur' }
         ]
+        // videoUrl: [
+        //   { required: true, message: '请上传店铺视频', trigger: 'blur' }
+        // ]
       },
       cacheShopType: '', // 缓存旧的门店类型
       tableHeader: [
@@ -412,14 +457,19 @@ export default {
       shopTypeList: dictObj.shopTypeList, // 门店类型
       disStatus: dictObj.disStatus, // 禁用启用
       businessList: [], // 商户列表
+      operationList: [], // 运营中心列表
       styleList: [], // 风格列表
+      changeTypeList: [], // 调价底线
       settleTypeList: [{ // 结算方式
         label: '先款后贷',
         value: 1
       }],
       businessTypeList: [{ // 经营方式
-        label: '加盟',
+        label: '自营',
         value: 1
+      }, {
+        label: '加盟',
+        value: 2
       }],
       isRecommendStatusList: [{ // 是否推荐
         label: '推荐',
@@ -433,6 +483,8 @@ export default {
   created() {
     this.getStyleList()
     this.fetchAreaData()
+    this.fetchChangeType()
+    this.fetchOperationList()
   },
   watch: {
     'formModel.shopType'() {
@@ -440,6 +492,29 @@ export default {
     }
   },
   methods: {
+    // 获取运营中心列表数据
+    fetchOperationList() {
+      this.$api.operation.queryAllOperationList().then(res => {
+        if (res && res.totalCount) {
+          const { data } = res
+          this.operationList = data || []
+        } else {
+          this.operationList = res || []
+        }
+      })
+    },
+    // 获取调价底线数据
+    fetchChangeType() {
+      this.$api.channel
+        .getPrice().then(res => {
+          if (res && res.totalCount) {
+            const { data } = res
+            this.changeTypeList = data || []
+          } else {
+            this.changeTypeList = res
+          }
+        })
+    },
     showDialog() {
       this.$emit('open-dialog')
     },
@@ -475,6 +550,10 @@ export default {
       }
     },
     changeShopType() {
+      this.formModel.businessType = this.formModel.shopType
+      if (!this.cacheShopType) {
+        return
+      }
       this.$confirm('您填写的信息将被重置，确定要更换吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -518,8 +597,8 @@ export default {
         }
       })
     },
-    uploadRemove(file, fileList) {
-      this.formModel[file.ref] = fileList
+    uploadRemove(type, file, fileList) {
+      this.formModel[type] = fileList
     },
     uploadReview(file) {
       this.$emit('show-image', file)

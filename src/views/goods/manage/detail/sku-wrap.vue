@@ -21,12 +21,13 @@
     <div class="sku-box">
       <div class="label">倍率:</div>
       <div class="content-box">
-        <el-input size="mini" class="rate-set hidden" disabled clearable placeholder="占位">
+        <!-- <el-input size="mini" class="rate-set hidden" disabled clearable placeholder="占位">
           <template slot="prepend">占位</template>
-        </el-input>
+        </el-input> -->
         <template>
           <el-input
             v-for="(item, index) in rateList"
+            v-show="index===4"
             :key="index"
             size="mini"
             class="rate-set"
@@ -55,7 +56,7 @@
           <el-input
             v-for="(item, index) in batchList.slice(1)"
             :key="index"
-            v-show="item.name !== 'skuStock'"
+            v-show="index === 5 && item.name !== 'skuStock'"
             size="mini"
             class="batch-set"
             :disabled="isView"
@@ -77,15 +78,17 @@
         <thead>
           <tr>
             <th style="width: 80px;">主图</th>
-            <th v-for="(item, index) in specification" :key="index">{{item.name}}</th>
+            <th style="width: 150px;" v-for="(item, index) in specification" :key="index">{{item.name}}</th>
             <th style="width: 150px;">sku款号</th>
             <th
+              style="width: 150px;"
               v-for="(item, index) in batchList"
+              v-show="index===1 || index===6"
               :key="'th_'+index"
               :title="item.name"
             >{{item.name !== 'skuStock' ? item.label + '(元)': item.label}}</th>
             <!-- <th>是否启用</th> -->
-            <th>是否主sku</th>
+            <th style="width: 150px;">是否主sku</th>
           </tr>
         </thead>
         <tbody v-if="specification[0] && specification[0].value.length">
@@ -129,7 +132,7 @@
               >{{getSpecAttr(specIndex, index)}}</td>
             </template>
             <td v-if="childProductArray[index]">{{childProductArray[index].goodsSkuSn}}</td>
-            <td v-for="(tdItem, tdIndex) in batchList" :key="'td_' + tdIndex">
+            <td v-for="(tdItem, tdIndex) in batchList" v-show="tdIndex === 1 || tdIndex===6" :key="'td_' + tdIndex">
               <el-input
                 size="small"
                 type="text"
@@ -266,7 +269,7 @@ export default {
         value: '',
         name: 'memberPriceRate'
       }, {
-        label: '零售倍率',
+        label: '零售价倍率',
         value: '',
         name: 'retailPriceRate'
       }],
@@ -274,10 +277,10 @@ export default {
         label: '样衣成本价',
         value: '',
         name: 'sampleCostPrice'
-      }, {
-        label: '成衣成本价',
+      }, { // 原成衣成本价
+        label: '平台成本价',
         value: '',
-        name: 'costPrice'
+        name: 'sampleCostPrice'
       }, {
         label: '成衣供货价',
         value: '',
@@ -294,8 +297,8 @@ export default {
         label: '成衣会员价',
         value: '',
         name: 'memberPrice'
-      }, {
-        label: '零售价',
+      }, { // 原零售价
+        label: '平台零售价',
         value: '',
         name: 'retailPrice'
       }, {
@@ -460,7 +463,7 @@ export default {
       let childProduct = {
         childProductSpec: this.getChildProductSpec(index),
         goodsSkuSn: `${this.spuBn}-${index + 1}`, // sku款号
-        costPrice: '', // 成衣成本价
+        // costPrice: '', // 成衣成本价
         sampleCostPrice: '', // 样衣成本价
         supplyPrice: '', // 成衣供货价
         largeBatchPrice: '', // 成衣大批价
@@ -479,7 +482,7 @@ export default {
         childProduct = {
           ...childProduct,
           goodsSkuSn: curSkuInfo.goodsSkuSn, // 商品sku款号
-          costPrice: curSkuInfo.costPrice, // 成衣成本价
+          // costPrice: curSkuInfo.costPrice, // 成衣成本价
           sampleCostPrice: curSkuInfo.sampleCostPrice, // 样衣成本价
           supplyPrice: curSkuInfo.supplyPrice, // 成衣供货价
           wholesalePrice: curSkuInfo.wholesalePrice, // 成衣散批价
@@ -543,7 +546,7 @@ export default {
     handleMinPrice(target) {
       const minObj = {
         sampleCostprice: target.sampleCostPrice, // 样衣成本价
-        costprice: target.costPrice, // 成衣成本价
+        // costprice: target.costPrice, // 成衣成本价
         supplyprice: target.supplyPrice, // 供货价
         wholesaleprice: target.wholesalePrice, // 散批价
         largePrice: target.largeBatchPrice, // 大批价
@@ -613,8 +616,8 @@ export default {
       // 供货价=供货价倍率*采购价，价格取整数，比如计算出来的价格为55.34，则系统去小数点后两位数取整为56.00；
       // 大批价=大批价倍率*采购价，价格取整数，比如计算出来的价格为55.34，则系统去小数点后两位数取整为56.00；
       // 散批价=散批价倍率*采购价，价格取整数，比如计算出来的价格为55.34，则系统去小数点后两位数取整为56.00；
-      // 会员价=会员价倍率*采购价，价格取整数，同时要求个位数系统自动调整为8，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为8，即结果为58.00；
-      // 零售价=零售价倍率*采购价，价格取整数，同时要求个位数系统自动调整为8，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为8，即结果为58.00；
+      // 会员价=会员价倍率*采购价，价格取整数，同时要求个位数系统自动调整为9，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为9，即结果为59.00；
+      // 零售价=零售价倍率*采购价，价格取整数，同时要求个位数系统自动调整为9，比如计算出来的价格是55.34，则系统去小数点后两位数取整为56.00，同时系统自动调整个位数为9，即结果为59.00；
       // 在样衣库管理新增/编辑商品，提交后，若有新增的sku，均以上述的规则计算各个价格，填充到对应的值中，同时按照现有规则，在生成sku价格后，针对spu价格按照现有规则自动填充；
 
       // typeof this.batchList[this.batchIndex].value === 'string' && this.batchList[this.batchIndex].value !== ''
@@ -632,11 +635,11 @@ export default {
       // const list = this.batchList.filter((item) => item.name !== 'costPrice')
       // const list = this.batchList
       switch (name) {
-        case 'costPrice': // 成衣成本价 根据价格类型的倍率设置全部价格
+        case 'sampleCostPrice': // 成衣成本价 根据价格类型的倍率设置全部价格
           this.batchList.slice(1).forEach((item) => {
             switch (item.name) {
-              case 'costPrice':
-                this.batchSameTypePrice('costPrice', curPrice, 1)
+              case 'sampleCostPrice':
+                this.batchSameTypePrice('sampleCostPrice', curPrice, 1)
                 break
               case 'supplyPrice': // 成衣供货价
                 rate = this.rateList[0].value // 供货价倍率
@@ -706,9 +709,10 @@ export default {
       })
     },
     getPrice(val, rate, handlePrice = '') {
+      if (!rate) rate = 1// 如果倍率为空，先默认为1
       if (handlePrice === 'handlePrice') {
-        // 获取个位数，原数字减个位数加8 得会员价、零售价
-        return (parseInt(Math.ceil(val * rate)) - parseInt(Math.ceil(val * rate) % 10) + 8).toFixed(2)
+        // 获取个位数，原数字减个位数加9 得会员价、零售价
+        return (parseInt(Math.ceil(val * rate)) - parseInt(Math.ceil(val * rate) % 10) + 9).toFixed(2)
       }
       return Math.ceil(val * rate).toFixed(2)
     }

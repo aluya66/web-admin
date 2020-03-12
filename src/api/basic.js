@@ -196,7 +196,9 @@ export const getBrandById = params =>
 
 // 新增品牌
 export const addBrand = params =>
-  Http.fetch(`${context}/api/brand`, params)
+  Http.fetch(`${context}/api/brand`, params, {
+    method: 'post'
+  })
 
 // 修改品牌
 export const updateBrand = params =>
@@ -284,4 +286,10 @@ export const getLogisticsDel = params =>
 export const getStyle = params =>
   Http.fetch(`${context}/api/attr/querypage`, params, {
     method: 'get'
+  })
+
+// 根据省市区code查询省市区
+export const getAdressByCode = params =>
+  Http.fetch(`${context}/api/area/getbycodes`, params, {
+    method: 'post'
   })
