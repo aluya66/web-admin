@@ -25,7 +25,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="金额:">
-          <el-input type="number" @blur="moneyBlur($event,index)" :max="canRefundFee" v-model.trim="formModel.afterRefundLogList[index].money"></el-input>
+          <el-input type="number" @blur="moneyBlur($event,index)" v-model.trim="formModel.afterRefundLogList[index].money"></el-input>
         </el-form-item>
         <el-form-item label="备注:">
           <el-input v-model.trim="formModel.afterRefundLogList[index].remark"></el-input>
@@ -113,20 +113,24 @@ export default {
           this.formModel.afterRefundLogList[index].money = elem.fee
         }
       })
-      this.caculate(index,fee)// 累计扣费
+      this.caculate(index,fee)
     },
-    // 计算累计扣费  index当前操作的扣费项目  value当前输入的金额
+    //计算累计扣款，剩余扣款金额    index当前操作的扣费项目  value当前输入的金额
     caculate(index,value) {
+      //计算累计扣款金额总数
       this.accumulateRefundFee = this.formModel.afterRefundLogList.reduce((pre, cur) => {
         return (parseFloat(pre) + parseFloat(cur.money)).toFixed(2)
       }, 0)
 
-      let diff = (parseFloat(this.curItemInfo.refundFee) - parseFloat(this.accumulateRefundFee)).toFixed(2)
+      //当前需要退款的总金额
+      let shouldRefundFee = this.curItemInfo.refundFee
+
+      let diff = (parseFloat(shouldRefundFee) - parseFloat(this.accumulateRefundFee)).toFixed(2)
       if (diff >= 0) {
         this.canRefundFee = diff// 当前剩余
       } else {
         this.formModel.afterRefundLogList[index].money = (parseFloat(value)+ parseFloat(diff)).toFixed(2)
-        this.accumulateRefundFee = this.curItemInfo.refundFee
+        this.accumulateRefundFee = shouldRefundFee
         this.canRefundFee = 0
       }
     },
@@ -135,7 +139,7 @@ export default {
       let value = e.target.value
       if (value < 0) value = -value// 转为正数
       this.formModel.afterRefundLogList[index].money = parseFloat(value).toFixed(2)
-      this.caculate(index,value)// 累计扣费
+      this.caculate(index,value)
     }
   }
 }

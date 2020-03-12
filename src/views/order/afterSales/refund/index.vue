@@ -304,10 +304,12 @@ export default {
         })
     },
     handleSubmit(param) {
-      console.log('提交的参数是', param)
-      // this.$api.order.createRefundRecord(param).then(res=>{
-      //   console.log('提交打款返回',res)
-      // })
+      this.$api.order.createRefundRecord(param).then(res=>{
+        console.log('提交打款返回',res)
+        this.dialogObj.isShow = false
+        this.$msgTip('修改成功')
+        this.fetchData()
+      })
     }
   }
 }
