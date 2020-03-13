@@ -279,7 +279,7 @@ export default {
     },
     showRemarkDialog(btnName) { // 审核结果：10:通过，11:拒绝  坑点：btnName中文字带空格
       this.remarkDialogShow = true
-      this.aduitResult = btnName.replace(/\s*/g, '') === '通过' ? 10 : 11
+      this.aduitResult = btnName.replace(/\s*/g, '') === '通过' ? 30 : 11//TODO：通过暂时处理流程扭转为 等待买家发货
     },
     handleAduit() {
       this.$refs.remarkFormRef.validate(valid => {
