@@ -131,7 +131,8 @@ export default {
     },
     // 金额输入框校验
     moneyBlur(e, index) {
-      let value = (value<0)? -value :(!e.target.value)?0:e.target.value//负数转为整数
+      let value = e.target.value
+      value  = (value < 0) ? -value : (!value) ? 0 : value// 负数转为整数
       this.formModel.afterRefundLogList[index].money = parseFloat(value).toFixed(2)
       this.caculate(index, value)
     }
