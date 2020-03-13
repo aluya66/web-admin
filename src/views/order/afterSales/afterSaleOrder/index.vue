@@ -277,9 +277,9 @@ export default {
           this.setSearchOptionsList('deliveryCode', this.logisticsList)
         })
     },
-    showRemarkDialog(btnName) { // 审核结果：10:通过，11:拒绝
+    showRemarkDialog(btnName) { // 审核结果：10:通过，11:拒绝  坑点：btnName中文字带空格
       this.remarkDialogShow = true
-      this.aduitResult = btnName === '通过' ? 10 : 11
+      this.aduitResult = btnName.replace(/\s*/g, '') === '通过' ? 10 : 11
     },
     handleAduit() {
       this.$refs.remarkFormRef.validate(valid => {

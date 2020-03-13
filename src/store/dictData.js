@@ -587,7 +587,7 @@ const afterSalesStatus = [{
 }, {
   label: '审核通过并发货',
   value: 15
-},{
+}, {
   label: '仓库审核通过',
   value: 20
 }, {
@@ -602,7 +602,7 @@ const afterSalesStatus = [{
 }, {
   label: '等待商家退款',
   value: 50
-},{
+}, {
   label: '售后完成',
   value: 80
 }, {

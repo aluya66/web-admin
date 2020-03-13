@@ -77,16 +77,16 @@ export default {
   methods: {
     submitForm() {
       // 自定义校验
-      let unpass =[]
-      unpass= this.formModel.afterRefundLogList.filter((elem, index) => {
-        return !elem.typeId||!Number(elem.money)
+      let unpass = []
+      unpass = this.formModel.afterRefundLogList.filter((elem, index) => {
+        return !elem.typeId || !Number(elem.money)
       })
-      if(unpass.length>0){
+      if (unpass.length > 0) {
         this.$message({
           type: 'error',
           message: '扣费项目和金额不能为空'
         })
-      }else{
+      } else {
         this.$emit('submit', { refundOrder: this.curItemInfo.refundOrder, ...this.formModel })
       }
     },
@@ -94,7 +94,7 @@ export default {
       if (this.formModel.afterRefundLogList.length > 1) {
         this.formModel.afterRefundLogList.splice(index, 1)
       }
-      this.caculate(index,0)
+      this.caculate(index, 0)
     },
     addItem() {
       this.formModel.afterRefundLogList.push({
@@ -103,37 +103,37 @@ export default {
         remark: ''
       })
     },
-    //扣费项目选项更新
-     selectOnchange(value,index){
+    // 扣费项目选项更新
+    selectOnchange(value, index) {
       let fee
-      this.feeList.forEach((elem)=>{
-        if(elem.id===value){
+      this.feeList.forEach((elem) => {
+        if (elem.id === value) {
           fee = elem.fee
           this.formModel.afterRefundLogList[index].money = elem.fee
         }
       })
-      this.caculate(index,fee)
+      this.caculate(index, fee)
     },
-    //计算累计扣款，剩余扣款金额    index当前操作的扣费项目  value当前输入的金额
-    caculate(index,value) {
-      //计算累计扣款金额总数
+    // 计算累计扣款，剩余扣款金额    index当前操作的扣费项目  value当前输入的金额
+    caculate(index, value) {
+      if (!value) value = 0
+      // 计算累计扣款金额总数
       this.accumulateRefundFee = this.formModel.afterRefundLogList.reduce((pre, cur) => {
         return (parseFloat(pre) + parseFloat(cur.money)).toFixed(2)
       }, 0)
-      //当前需要退款的总金额
+      // 当前需要退款的总金额
       let shouldRefundFee = this.curItemInfo.refundFee
       let diff = (parseFloat(shouldRefundFee) - parseFloat(this.accumulateRefundFee)).toFixed(2)
-      if(diff<0){
-         this.formModel.afterRefundLogList[index].money = (parseFloat(value)+ parseFloat(diff)).toFixed(2)
+      if (diff < 0) {
+        this.formModel.afterRefundLogList[index].money = (parseFloat(value) + parseFloat(diff)).toFixed(2)
         this.accumulateRefundFee = shouldRefundFee
       }
     },
     // 金额输入框校验
     moneyBlur(e, index) {
-      let value = e.target.value
-      if (value < 0) value = -value// 转为正数
+      let value = (value<0)? -value :(!e.target.value)?0:e.target.value//负数转为整数
       this.formModel.afterRefundLogList[index].money = parseFloat(value).toFixed(2)
-      this.caculate(index,value)
+      this.caculate(index, value)
     }
   }
 }
