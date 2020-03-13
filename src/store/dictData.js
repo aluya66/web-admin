@@ -38,6 +38,10 @@ lobList = lobList || [{
 {
   label: '星助手',
   value: 'ysia'
+},
+{
+  label: 'YOSHOPS',
+  value: 'ysys'
 }
 ]
 

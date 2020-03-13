@@ -147,9 +147,11 @@ export default {
             cityCode,
             areaCode
           } = res
+
           this.formModel = {
             ...this.formModel,
             ...res,
+            canEditOperation: !res.operationCode,
             shopAddress: [provinceCode, cityCode, areaCode], // 门店省市区
             businessHours: businessHours ? businessHours.split('~') : [],
             shopLogo: [{ url: shopLogo, name: '门店LOGO', fileType: 'image', ref: 'shopLogo' }],
@@ -179,6 +181,7 @@ export default {
             shopType, // 门店类型
             businessCode, // 商户code
             shopLogo, // 门店
+            operationCode, // 运营中心
             shopName, // 门店名称
             shopAddress, // 门店地址
             address, // 详细地址
@@ -207,6 +210,7 @@ export default {
           } = this.$refs.formRef.formModel
           let params = { // 基础参数
             shopType, // 门店类型
+            operationCode, // 运营中心
             businessCode, // 商户code
             shopLogo: shopLogo.length ? shopLogo[0].url : '', // 门店
             shopName, // 门店名称
