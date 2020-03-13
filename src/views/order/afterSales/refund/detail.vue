@@ -71,8 +71,8 @@ export default {
       // 表格内操作按钮
       tableHeader: [
         {
-          label: '退款单号',
-          prop: 'refundOrder'
+          label: '扣费项目',
+          prop: 'typeName'
         },
         {
           label: '退款金额',
