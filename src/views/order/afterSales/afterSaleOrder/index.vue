@@ -46,7 +46,7 @@
         @before-close="dialogObj.isShow = false"
         @on-submit="showRemarkDialog"
       >
-        <c-details v-if="dialogObj.type !== 3" ref="childRef" :init-data.sync="dialogObj.initData"></c-details>
+        <c-details @update-submit="handleUpdateDetail" v-if="dialogObj.type !== 3" ref="childRef" :init-data.sync="dialogObj.initData"></c-details>
         <export-tip v-else @handle="dialogObj.isShow=false"></export-tip>
       </c-dialog>
     </div>
@@ -359,6 +359,13 @@ export default {
         btns: opts.btns,
         type: opts.type
       }
+    },
+    //售后单详情中更新物流信息
+    handleUpdateDetail(params){
+      this.$api.order.updateRefundDelivery(params).then(res=>{
+        this.$msgTip('修改成功！')
+        this.fetchData()//更新列表数据
+      })
     }
   }
 }

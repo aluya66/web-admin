@@ -44,12 +44,52 @@
         :table-list="formModel.detailList"
       ></c-table>
     </div>
-    <div class="row">
-      <span>物流公司：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryName : ''}}</span>
-      <span>物流单号：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryNo : ''}}</span>
-    </div>
-    <div class="row">
-      <span>操作物流发货时间：{{formModel.deliveryList.length ? formModel.deliveryList[0].created : ''}}</span>
+    <!--更新物流信息-->
+    <div class="delivery-row">
+      <el-divider content-position="left">物流信息</el-divider>
+      <div v-if="formModel.status==30||formModel.status==40||formModel.status==50">
+        <el-form
+          ref="formRef"
+          :model="logiticFormModel"
+          :rules="rules"
+          class="form"
+          label-width="100px"
+          label-position="right"
+        >
+          <el-form-item label="物流公司：" prop="deliveryName" >
+            <el-select
+              v-model="logiticFormModel.deliveryName"
+              class="select-item"
+              clearable>
+              <el-option
+                v-for="item in logisticsList"
+                :key="item.value"
+                :label="item.label"
+                :value="item"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="物流单号：" prop="deliveryNo">
+            <el-input class="select-item" v-model.trim="logiticFormModel.deliveryNo" />
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              :size="size"
+              type="primary"
+              @click.native.prevent="submitHandle"
+            >修改物流</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div v-else>
+        <div class="delivery-item-row">
+          <span>物流公司：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryName : ''}}</span>
+          <span>物流单号：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryNo : ''}}</span>
+        </div> 
+        <div class="delivery-item-row">
+          <span>操作物流发货时间：{{formModel.deliveryList.length ? formModel.deliveryList[0].created : ''}}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -70,6 +110,17 @@ export default {
   },
   data() {
     return {
+      logiticFormModel:{
+        deliveryName:'',deliveryNo:''
+      },
+      rules: {
+        deliveryName: [
+          { required: true, message: '请输入物流公司', trigger: 'blur' }
+        ],
+        deliveryNo: [
+          { required: true, message: '请输入物流单号', trigger: 'blur' }
+        ],
+      },
       afterSalesTypes: dictObj.afterSalesTypes,
       tableHeader: [
         {
@@ -123,14 +174,46 @@ export default {
       set(val) {
         this.$emit('update:init-data', val)
       }
+    },
+    logisticsList:{
+      get() {
+        return this.initData.logisticsList
+      },
+    }
+  },
+  created(){
+    if(this.initData.deliveryList.length){
+      this.logiticFormModel={
+        deliveryName:this.initData.deliveryList[0].deliveryName,
+        deliveryNo:this.initData.deliveryList[0].deliveryNo
+      }
+    }
+  },
+  methods:{
+    submitHandle(){
+      this.$refs.formRef.validate(valid => {
+        const deliveryInfo=this.logiticFormModel.deliveryName
+        if (valid) {
+          const params={
+            afterSalesCode:this.formModel.afterSalesCode,//售后单单号	
+            deliveryCode:deliveryInfo.value,//物流公司编码
+            deliveryName:deliveryInfo.label,//物流公司名称	
+            deliveryNo:this.logiticFormModel.deliveryNo,//物流单编号	
+            deliveryType:2//配送类型 1:门店自提，2:快递
+          }
+          this.$emit('update-submit',params)
+        }else{
+          return false
+        }
+      })
     }
   }
 }
 </script>
 <style lang="less" scoped>
 .detail {
-  .row {
-    padding: 0 80px;
+  .row{ padding: 0 80px; }
+  .row ,.delivery-item-row{
     display: flex;
     flex-wrap: wrap;
     span {
@@ -140,8 +223,11 @@ export default {
       min-width: 220px;
     }
   }
-  .table-row {
+  .table-row,.delivery-row {
     padding: 0 80px 30px 80px;
+  }
+  .select-item{
+    width:50%
   }
 }
 </style>
