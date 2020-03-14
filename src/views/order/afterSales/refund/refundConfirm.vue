@@ -7,7 +7,9 @@
       class="dialog-form"
       label-position="left"
     >
-      <p>退款总金额{{curItemInfo.refundFee}}元，至用户账户余额</p>
+      <div class="row">
+        <p>退款总金额{{curItemInfo.refundFee}}元，至用户账户余额</p>
+      </div>
       <div v-for="(item,index) in formModel.afterRefundLogList" :key="index">
         <el-form-item label="扣费项目:">
           <el-select
@@ -33,8 +35,12 @@
         <el-button @click="addItem(item)" type="primary">新增</el-button>
         <el-button @click.prevent="removeItem(index)">删除</el-button>
       </div>
-      <p>总计扣费余额：{{accumulateRefundFee}}元</p>
-      <p>总计退款至余额：{{parseFloat(curItemInfo.refundFee-accumulateRefundFee).toFixed(2)}}元</p>
+      <div class="row">
+        <p>总计扣费余额：{{accumulateRefundFee}}元</p>
+      </div>
+      <div class="row">
+        <p>总计退款至余额：{{parseFloat(curItemInfo.refundFee-accumulateRefundFee).toFixed(2)}}元</p>
+      </div>
       <el-form-item>
         <el-button type="primary" @click="submitForm">确认</el-button>
       </el-form-item>
@@ -132,10 +138,16 @@ export default {
     // 金额输入框校验
     moneyBlur(e, index) {
       let value = e.target.value
-      value  = (value < 0) ? -value : (!value) ? 0 : value// 负数转为整数
+      value = (value < 0) ? -value : (!value) ? 0 : value// 负数转为整数
       this.formModel.afterRefundLogList[index].money = parseFloat(value).toFixed(2)
       this.caculate(index, value)
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+  .row {
+    margin-bottom: 15px;
+  }
+</style>
