@@ -90,22 +90,28 @@ export default {
         },
         {
           label: '编码',
-          prop: 'whCode',
+          prop: 'whCode'
         },
         {
-          label: '属性',
-          formatter (row){
-            return row.whType===1?'可销售':'不可售'
-          }
-        },
-        {
-          label: '仓库类型',//仓库业务类型：10:仓库，20:店仓
-          formatter (row){
-            return row.whBusinessType===10?'云仓':'店仓'
+          label: '仓库属性',
+          prop:'whType',
+          formatter (row) {
+            return row.whType === 1 ? '可销售' : '不可售'
           },
           search: {
             type: 'select',
-            optionsList: dictObj.warehouseType,
+            optionsList: dictObj.warehouseSaleType
+          }
+        },
+        {
+          label: '仓库类型', // 仓库业务类型：10:仓库，20:店仓
+          prop: 'whBusinessType',
+          formatter (row) {
+            return row.whBusinessType === 10 ? '云仓' : '店仓'
+          },
+          search: {
+            type: 'select',
+            optionsList: dictObj.warehouseType
           }
         },
         {
@@ -119,13 +125,13 @@ export default {
           label: '仓库地址',
           prop: 'updated',
           formatter (row) {
-            return row.provinceName + row.cityName + row.districtName +row.address
+            return row.provinceName + row.cityName + row.districtName + row.address
           }
         },
         {
           label: '状态',
           formatter (row) {
-            return row.status===10?'启用':'未开启'
+            return row.status === 10 ? '启用' : '未开启'
           }
         }
       ]
@@ -191,8 +197,8 @@ export default {
           return false
         }
       })
-    },
-    
+    }
+
   }
 }
 </script>

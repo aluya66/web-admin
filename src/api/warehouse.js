@@ -56,13 +56,11 @@ export const queryWarehousePreoccupation = params =>
     method: 'get'
   })
 
-
 /**
  * 分页查询仓库库存
  * @param {*}
  */
-export const queryWarehouseStock = params=>
+export const queryWarehouseStock = params =>
   Http.fetch(`${context}/api/stock/page`, params, {
     method: 'get'
   })
-

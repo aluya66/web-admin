@@ -579,12 +579,22 @@ const orderBusinessTypeList = [{
   value: 7
 }]
 
-const warehouseType=[{
+//仓库类型
+const warehouseType = [{
   label: '云仓',
   value: 10
-},{
+}, {
   label: '店仓',
   value: 20
+}]
+
+//仓库属性  0:不可售; 1:可销售
+const warehouseSaleType=[{
+  label: '不可售',
+  value: 0
+},{
+  label: '可销售',
+  value: 1
 }]
 
 export default {
@@ -625,5 +635,6 @@ export default {
   deliveryTimeTypeList,
   orderBusinessTypeList,
   invoiceTypeList,
-  warehouseType
+  warehouseType,
+  warehouseSaleType
 }
