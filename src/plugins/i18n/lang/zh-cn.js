@@ -96,7 +96,10 @@ export default {
     settingsQrcode: '二维码管理',
     settingsAccess: '接入方管理',
     settingsAccessList: '接入方列表',
-    settingsAccessLog: '接入方日志'
+    settingsAccessLog: '接入方日志',
+    warehouse: '仓库管理',
+    warehouseList: '仓库列表',
+    warehousePreoccupationList: '库存预占查询'
   },
   navbar: {
     logout: '退出',

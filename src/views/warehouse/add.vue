@@ -1,0 +1,62 @@
+<template>
+  <el-form
+    ref="formRef"
+    :model="formModel"
+    :rules="rules"
+    label-width="120px"
+    class="dialog-form"
+    label-position="right"
+    status-icon
+  >
+		<el-form-item label="输入框:" prop="">
+			<!-- <el-input v-model.trim="formModel." class="input-item" clearable></el-input> -->
+		</el-form-item>
+		<el-form-item label="下拉选择:" prop="">
+			<!-- <query-dict
+				:disabled="isEdit"
+				:dict-list="lobList"
+				class="select-item"
+				placeholder="请选择"
+				:value.sync="formModel."
+			></query-dict> -->
+		</el-form-item>
+		<!-- TODO -->
+  </el-form>
+</template>
+
+<script>
+// import dictObj from '@/store/dictData'
+
+export default {
+  props: {
+    initData: {
+      type: Object,
+      default() {
+        return {
+          // TODO... 初始化数据，需加备注
+        }
+      }
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      // lobList: dictObj.lobList,
+      rules: {}
+    }
+  },
+  computed: {
+    formModel: {
+      get() {
+        return this.initData
+      },
+      set(val) {
+        this.$emit('update:init-data', val)
+      }
+    }
+  }
+}
+</script>
