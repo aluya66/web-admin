@@ -35,15 +35,15 @@
 
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
+// import CDialog from 'components/dialog'
 // import dictObj from '@/store/dictData'
 
 export default {
   name: 'warehouse',
   mixins: [mixinTable],
   components: {
-    CDialog,
-    WarehouseAdd
+    // CDialog
+    // WarehouseAdd
   },
   data(vm) {
     return {

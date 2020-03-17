@@ -15,7 +15,8 @@ export default {
     component: () => import('@/views/warehouse/list'),
     meta: {
       title: 'warehouseList',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   },
   {
@@ -24,7 +25,8 @@ export default {
     component: () => import('@/views/warehouse/preoccupation/list'),
     meta: {
       title: 'warehousePreoccupationList',
-      icon: 'table'
+      icon: 'table',
+      roles: ['admin']
     }
   }]
 }

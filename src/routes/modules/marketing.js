@@ -46,7 +46,7 @@ export default {
       icon: 'table',
       noCache: true,
       title: 'ticketInfo',
-      activeMenu: '/marketing/ticket/list/index',
+      activeMenu: '/marketing/ticket/list',
       roles: ['admin']
     }
   }, {

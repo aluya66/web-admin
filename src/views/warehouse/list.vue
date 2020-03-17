@@ -9,8 +9,8 @@
     <div class="main__box">
       <c-table
         ref="cTable"
-        selection
         hasBorder
+        hasIndex
         :max-height="maxHeight"
         :size="size"
         :loading="isLoading"
@@ -47,7 +47,7 @@
 <script>
 import mixinTable from 'mixins/table'
 import CDialog from 'components/dialog'
-// import dictObj from '@/store/dictData'
+import dictObj from '@/store/dictData'
 import WarehouseAdd from './add'
 
 export default {
@@ -78,40 +78,55 @@ export default {
               }
             })
           }
-        },
-        {
-          name: '删除',
-          icon: 'el-icon-delete',
-          handle(row) {
-            const { name, id } = row
-            vm.confirmTip(`是否删除【${name}】`, () => {
-              vm.deleteHandle({ id })
-            })
-          }
         }
       ],
       tableHeader: [
-        // TODO...
         {
-          label: '创建人',
-          prop: 'opCreator'
-        },
-        {
-          label: '创建时间',
-          prop: 'created',
-          width: 100,
+          label: '仓库名称',
+          prop: 'whName',
           search: {
-            type: 'dateTime',
-            prop: 'dateTime'
+            type: 'input'
           }
         },
         {
-          label: '更新人',
-          prop: 'opEditor'
+          label: '编码',
+          prop: 'whCode',
         },
         {
-          label: '更新时间',
-          prop: 'updated'
+          label: '属性',
+          formatter (row){
+            return row.whType===1?'可销售':'不可售'
+          }
+        },
+        {
+          label: '仓库类型',//仓库业务类型：10:仓库，20:店仓
+          formatter (row){
+            return row.whBusinessType===10?'云仓':'店仓'
+          },
+          search: {
+            type: 'select',
+            optionsList: dictObj.warehouseType,
+          }
+        },
+        {
+          label: '所属公司',
+          prop: 'refGroupCode',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '仓库地址',
+          prop: 'updated',
+          formatter (row) {
+            return row.provinceName + row.cityName + row.districtName +row.address
+          }
+        },
+        {
+          label: '状态',
+          formatter (row) {
+            return row.status===10?'启用':'未开启'
+          }
         }
       ]
     }
@@ -177,16 +192,7 @@ export default {
         }
       })
     },
-    /**
-		 * 删除单条表格数据
-		 * @id {Number}
-		 */
-    deleteHandle(params) {
-      this.$api.warehouse.deleteWarehouse(params).then(() => {
-        this.$msgTip('删除成功')
-        this.delResetData()
-      })
-    }
+    
   }
 }
 </script>

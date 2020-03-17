@@ -579,6 +579,14 @@ const orderBusinessTypeList = [{
   value: 7
 }]
 
+const warehouseType=[{
+  label: '云仓',
+  value: 10
+},{
+  label: '店仓',
+  value: 20
+}]
+
 export default {
   payStatusList,
   settleStatusList,
@@ -616,5 +624,6 @@ export default {
   orderSettleStatusList,
   deliveryTimeTypeList,
   orderBusinessTypeList,
-  invoiceTypeList
+  invoiceTypeList,
+  warehouseType
 }
