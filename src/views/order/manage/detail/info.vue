@@ -135,7 +135,7 @@ export default {
       orderSettleStatusList: dictObj.orderSettleStatusList,
       orderStatusList: dictObj.orderStatusList,
       invoiceTypeList: dictObj.invoiceTypeList,
-      memberTransferList:dictObj.customLevelList,
+      memberTransferList: dictObj.customLevelList
     }
   },
   components: {

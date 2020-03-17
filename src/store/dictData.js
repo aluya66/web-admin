@@ -517,6 +517,9 @@ const payTypeList = [{
 }, {
   label: '积分',
   value: 'JF'
+}, {
+  label: '拉卡拉',
+  value: 'LAKALA'
 }]
 
 // 支付结算状态
