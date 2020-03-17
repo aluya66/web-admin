@@ -9,7 +9,7 @@
     <div class="main__box">
       <c-table
         ref="cTable"
-        selection
+        hasIndex
         hasBorder
         :max-height="maxHeight"
         :size="size"
@@ -79,27 +79,44 @@ export default {
         }
       ],
       tableHeader: [
-        // TODO...
         {
-          label: '创建人',
-          prop: 'opCreator'
+          label: '商品款号',
+          prop: 'productAtrNumber'
         },
         {
-          label: '创建时间',
-          prop: 'created',
-          width: 100,
-          search: {
-            type: 'dateTime',
-            prop: 'dateTime'
-          }
+          label: 'SKU款号',
+          prop: 'skuCode',
         },
         {
-          label: '更新人',
-          prop: 'opEditor'
+          label: '仓库名称',
+          prop: 'whName'
         },
         {
-          label: '更新时间',
-          prop: 'updated'
+          label: '仓库类型',
+          prop: 'whBusinessType',
+          formatter (row) {
+            return row.whBusinessType === 10 ? '云仓' : '店仓'
+          },
+        },
+        {
+          label: '锁定库存',
+          prop: 'changeQty'
+        },
+        {
+          label: '预占时间',
+          prop: 'changeTime'
+        },
+        {
+          label: '操作流水号',
+          prop: 'flowCode'
+        },
+        {
+          label: '补充备注',
+          prop: 'remark'
+        },
+        {
+          label: '来源',
+          prop: 'flowSource'
         }
       ]
     }
@@ -116,7 +133,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.warehouse.queryWarehouseList({
+      this.$api.warehouse.queryWarehousePreoccupation({
         ...searchDate,
         ...other,
         ...page

@@ -99,7 +99,7 @@ export default {
     settingsAccessLog: '接入方日志',
     warehouse: '仓库管理',
     warehouseList: '仓库列表',
-    warehousePreoccupationList: '库存预占查询'
+    warehousePreoccupationList: '库存预占'
   },
   navbar: {
     logout: '退出',
