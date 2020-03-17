@@ -284,13 +284,13 @@ export default {
     handleAduit() {
       this.$refs.remarkFormRef.validate(valid => {
         if (valid) {
-          const afterSalesType=this.$refs.childRef.formModel.afterSalesType
+          const afterSalesType = this.$refs.childRef.formModel.afterSalesType
           this.$api.order
             .approveAfterSales({
               afterSalesCode: this.dialogObj.initData.afterSalesCode,
               afterSalesType,
               approveRemark: this.remarkForm.remark,
-              approveResult: afterSalesType ===1 ? 50: this.aduitResult//TODO：如果afterSalesType为1，则是仅退款，仅退款直接将转改扭转为等待退款
+              approveResult: afterSalesType === 1 ? 50 : this.aduitResult// TODO：如果afterSalesType为1，则是仅退款，仅退款直接将转改扭转为等待退款
             })
             .then(res => {
               this.remarkDialogShow = false
@@ -310,7 +310,7 @@ export default {
         .then(res => {
           this.isLoading = false
           this.showDialog({
-            initData: { ...res, dialogType: type ,logisticsList:this.logisticsList },
+            initData: { ...res, dialogType: type, logisticsList: this.logisticsList },
             btns: type === 2 ? [{ label: '通 过', name: 'submit', type: 'primary' }, { label: '拒 绝', name: 'submit' }, { label: '取 消', name: 'cancel' }] : [],
             type
           })
@@ -360,11 +360,11 @@ export default {
         type: opts.type
       }
     },
-    //售后单详情中更新物流信息
-    handleUpdateDetail(params){
-      this.$api.order.updateRefundDelivery(params).then(res=>{
+    // 售后单详情中更新物流信息
+    handleUpdateDetail(params) {
+      this.$api.order.updateRefundDelivery(params).then(res => {
         this.$msgTip('修改成功！')
-        this.fetchData()//更新列表数据
+        this.fetchData()// 更新列表数据
       })
     }
   }

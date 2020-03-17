@@ -85,7 +85,7 @@
         <div class="delivery-item-row">
           <span>物流公司：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryName : ''}}</span>
           <span>物流单号：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryNo : ''}}</span>
-        </div> 
+        </div>
         <div class="delivery-item-row">
           <span>操作物流发货时间：{{formModel.deliveryList.length ? formModel.deliveryList[0].created : ''}}</span>
         </div>
@@ -110,8 +110,8 @@ export default {
   },
   data() {
     return {
-      logiticFormModel:{
-        deliveryName:'',deliveryNo:''
+      logiticFormModel: {
+        deliveryName: '', deliveryNo: ''
       },
       rules: {
         deliveryName: [
@@ -119,7 +119,7 @@ export default {
         ],
         deliveryNo: [
           { required: true, message: '请输入物流单号', trigger: 'blur' }
-        ],
+        ]
       },
       afterSalesTypes: dictObj.afterSalesTypes,
       tableHeader: [
@@ -175,34 +175,34 @@ export default {
         this.$emit('update:init-data', val)
       }
     },
-    logisticsList:{
+    logisticsList: {
       get() {
         return this.initData.logisticsList
-      },
-    }
-  },
-  created(){
-    if(this.initData.deliveryList.length){
-      this.logiticFormModel={
-        deliveryName:this.initData.deliveryList[0].deliveryName,
-        deliveryNo:this.initData.deliveryList[0].deliveryNo
       }
     }
   },
-  methods:{
-    submitHandle(){
+  created() {
+    if (this.initData.deliveryList.length) {
+      this.logiticFormModel = {
+        deliveryName: this.initData.deliveryList[0].deliveryName,
+        deliveryNo: this.initData.deliveryList[0].deliveryNo
+      }
+    }
+  },
+  methods: {
+    submitHandle() {
       this.$refs.formRef.validate(valid => {
-        const deliveryInfo=this.logiticFormModel.deliveryName
+        const deliveryInfo = this.logiticFormModel.deliveryName
         if (valid) {
-          const params={
-            afterSalesCode:this.formModel.afterSalesCode,//售后单单号	
-            deliveryCode:deliveryInfo.value,//物流公司编码
-            deliveryName:deliveryInfo.label,//物流公司名称	
-            deliveryNo:this.logiticFormModel.deliveryNo,//物流单编号	
-            deliveryType:2//配送类型 1:门店自提，2:快递
+          const params = {
+            afterSalesCode: this.formModel.afterSalesCode, // 售后单单号
+            deliveryCode: deliveryInfo.value, // 物流公司编码
+            deliveryName: deliveryInfo.label, // 物流公司名称
+            deliveryNo: this.logiticFormModel.deliveryNo, // 物流单编号
+            deliveryType: 2// 配送类型 1:门店自提，2:快递
           }
-          this.$emit('update-submit',params)
-        }else{
+          this.$emit('update-submit', params)
+        } else {
           return false
         }
       })

@@ -264,8 +264,7 @@ export const createRefundRecord = params =>
   Http.fetch(`${context}/api/afterrefundlog/saveaafterrefundlog`, params, {
     method: 'post'
   })
-  
-  
+
 /**
 * 售后单: 更新售后单物流
 * @param {*}
@@ -273,4 +272,4 @@ export const createRefundRecord = params =>
 export const updateRefundDelivery = params =>
   Http.fetch(`${context}/api/ass/delivery`, params, {
     method: 'post'
-})
+  })
