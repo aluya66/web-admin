@@ -85,7 +85,7 @@
         <span>会员账户：{{orderInfo.memberResp.phoneNumber}}</span>
       </div>
       <div class="row">
-        <span>会员等级：{{orderInfo.memberResp.grade}}</span>
+        <span>会员等级：{{memberTransferList[orderInfo.memberResp.grade].label}}</span>
         <!-- <span>会员身份证：</span> -->
         <span>联系电话：{{orderInfo.memberResp.phoneNumber}}</span>
       </div>
@@ -134,7 +134,8 @@ export default {
       payStatusList: dictObj.payStatusList,
       orderSettleStatusList: dictObj.orderSettleStatusList,
       orderStatusList: dictObj.orderStatusList,
-      invoiceTypeList: dictObj.invoiceTypeList
+      invoiceTypeList: dictObj.invoiceTypeList,
+      memberTransferList:dictObj.customLevelList,
     }
   },
   components: {
