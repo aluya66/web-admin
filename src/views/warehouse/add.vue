@@ -14,14 +14,20 @@
     <el-form-item label="仓库编号:" prop="whCode">
 			<el-input v-model.trim="formModel.whCode" class="input-item" clearable></el-input>
 		</el-form-item>
-		<el-form-item label="仓库地址:" prop="">
-			<!-- <query-dict
-				:disabled="isEdit"
-				:dict-list="lobList"
-				class="select-item"
-				placeholder="请选择"
-				:value.sync="formModel."
-			></query-dict> -->
+		<el-form-item label="仓库地址:" prop="companyAddressCode">
+      <el-cascader
+        clearable
+        class="select-item"
+        :options="areaOptions"
+        :props="optionsProps"
+        v-model="formModel.companyAddressCode"
+        placeholder="请选择省市区"
+        @change="cascaderOnchange"
+        filterable
+      ></el-cascader>
+		</el-form-item>
+    <el-form-item label="详细地址:" prop="address">
+			<el-input v-model.trim="formModel.address" class="input-item" clearable></el-input>
 		</el-form-item>
 		<el-form-item label="仓库属性:" prop="whType">
 			<query-dict
@@ -38,7 +44,7 @@
 				:dict-list="warehouseType"
 				class="select-item"
 				placeholder="请选择仓库类型"
-				:value.sync="formModel.whType"
+				:value.sync="formModel.whBusinessType"
 			></query-dict>
       <!--如果选择的是店仓，则需要展示下拉店铺选择-->
       <!-- <query-dict
@@ -54,16 +60,16 @@
 				:disabled="isEdit"
 				:dict-list="bussinessList"
 				class="select-item"
-				placeholder="请选择仓库类型"
-				:value.sync="formModel.whType"
+				placeholder="请选择所属公司"
+				:value.sync="formModel.refGroupCode"
 			></query-dict>
     </el-form-item>
-    <el-form-item label="管理员名称:" prop="">
+    <!-- <el-form-item label="管理员名称:" prop="">
 			<el-input v-model.trim="formModel.whName" class="input-item" clearable></el-input>
 		</el-form-item>
     <el-form-item label="联系电话:" prop="">
 			<el-input v-model.trim="formModel.whName" class="input-item" clearable></el-input>
-		</el-form-item>
+		</el-form-item> -->
   </el-form>
 </template>
 
@@ -78,7 +84,7 @@ export default {
       type: Object,
       default() {
         return {
-          // TODO... 初始化数据，需加备注
+      
         }
       }
     },
@@ -92,11 +98,19 @@ export default {
       warehouseSaleType: dictObj.warehouseSaleType,
       warehouseType:dictObj.warehouseType,
       bussinessList:[],
-      rules: {}
+      companyAddressCode: [], // 区域code
+      areaOptions: [], // 地区列表
+      optionsProps: {
+        value: 'code',
+        label: 'name',
+        leaf: 2
+      },
+      rules: {},
     }
   },
   created(){
     this.getBusiness()
+    this.fetchAreaData()
   },
   computed: {
     formModel: {
@@ -109,6 +123,14 @@ export default {
     }
   },
   methods:{
+    //获取区域
+    fetchAreaData() {
+      this.$api.basic.getAllArea().then(res => {
+        if (res.length) {
+          this.areaOptions = res
+        }
+      })
+    },
     // 商户列表数据
     getBusiness() {
       this.$api.channel.queryBusinessList({
@@ -117,7 +139,17 @@ export default {
       }).then(res => {
         this.bussinessList = res.data
       })
+    },
+    //联级地区选取
+    cascaderOnchange(e,b){
+      console.log('eeeee?????',e,b)
     }
   }
 }
 </script>
+
+<style lang='less' scoped>
+.input-item{
+  width:60%
+}
+</style>

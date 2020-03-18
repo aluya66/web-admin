@@ -24,7 +24,7 @@ export const addWarehouse = params =>
  * 更新仓库
  * @param {*}
  */
-export const updateWarehouse = params =>
+export const editWarehouse = params =>
   Http.fetch(`${context}/api/warehouse/update`, params, {
     method: 'put'
   })

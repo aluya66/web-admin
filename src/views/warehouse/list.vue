@@ -184,7 +184,14 @@ export default {
       const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
-          const params = childRef.formModel
+          const { companyAddressCode ,...other }=childRef.formModel
+          const params = {
+            ...other,
+            provinceCode: companyAddressCode[0],
+            cityCode: companyAddressCode[1],
+            districtCode: companyAddressCode[2],
+          }
+          console.log('params=======,,,',params)
           const curAction = this.dialogObj.isEdit ? 'editWarehouse' : 'addWarehouse'
           // TODO...
           this.$api.warehouse[curAction]({
