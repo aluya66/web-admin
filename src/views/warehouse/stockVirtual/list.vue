@@ -60,42 +60,22 @@ export default {
           prop: 'whName'
         },
         {
-          label: '仓库类型',
-          prop: 'whBusinessType',
-          formatter (row) {
-            return row.whBusinessType === 10 ? '云仓' : '店仓'
-          },
-          search: {
-            type: 'select',
-            optionsList: dictObj.warehouseType
-          }
+          label: '可用库存',
+          prop: 'availableQty',
         },
         {
-          label: '锁定库存',
-          prop: 'changeQty'
+          label: '实物库存',
+          prop: 'entityQty'
         },
         {
-          label: '预占时间',
-          prop: 'changeTime'
+          label: '在途库存',
+          prop: 'intransitQty'
         },
         {
-          label: '操作流水号',
-          prop: 'flowCode',
-          search: {
-            type: 'input'
-          }
+          label: '预占库存',
+          prop: 'occupiedQty',
+         
         },
-        {
-          label: '补充备注',
-          prop: 'remark'
-        },
-        {
-          label: '来源',
-          prop: 'flowSource',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.flowSource, 'lobList')
-          },
-        }
       ]
     }
   },
@@ -111,7 +91,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.warehouse.queryWarehousePreoccupation({
+      this.$api.warehouse.queryWarehouseVirtualStock({
         ...searchDate,
         ...other,
         ...page

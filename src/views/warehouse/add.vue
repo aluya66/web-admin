@@ -49,6 +49,7 @@
     <!--如果选择的是店仓，则需要展示下拉店铺选择-->
     <el-form-item label="门店:" prop="refStoreId" v-if="formModel.whBusinessType===20">
        <el-select
+        :disabled="isEdit"
         v-model="formModel.refStoreId"
         :size="size"
         class="search-item"
@@ -65,13 +66,13 @@
     </el-form-item>
     <el-form-item label="所属公司:" prop="refGroupCode">
       <el-select
+        :disabled="isEdit"
         v-model="formModel.refGroupCode"
         :size="size"
         class="search-item"
         placeholder="请选择所属公司"
         clearable
-        filterable
-      >
+        filterable>
         <el-option
           v-for="item in bussinessList"
           :key="item.businessCode"

@@ -44,58 +44,69 @@ export default {
       dialogObj: {},
       tableHeader: [
         {
-          label: '商品款号',
-          prop: 'productAtrNumber',
+          label: '品牌',
+          prop: 'brandName',
           fixed: true,
-          search: {
-            type: 'input'
-          }
+          // search: {
+          //   type: 'input'
+          // }
         },
         {
-          label: 'SKU款号',
-          prop: 'skuCode'
+          label: '商品编码',
+          prop: 'skuCode',
+          fixed: true,
         },
         {
-          label: '仓库名称',
-          prop: 'whName'
+          label: '商品名称',
+          prop: 'productName',
+          fixed: true,
         },
         {
-          label: '仓库类型',
-          prop: 'whBusinessType',
-          formatter (row) {
-            return row.whBusinessType === 10 ? '云仓' : '店仓'
-          },
-          search: {
-            type: 'select',
-            optionsList: dictObj.warehouseType
-          }
+          label: '供应商款号',
+          prop: 'venderProductCode',
+          // search: {
+          //   type: 'select',
+          //   optionsList: dictObj.warehouseType
+          // }
         },
         {
-          label: '锁定库存',
-          prop: 'changeQty'
+          label: '商品规格',
+          prop: 'productSpc'
         },
         {
-          label: '预占时间',
+          label: '单位',
           prop: 'changeTime'
         },
         {
-          label: '操作流水号',
+          label: '仓库信息',
+          prop: 'whName',
+          // search: {
+          //   type: 'input'
+          // }
+        },
+        {
+          label: '业务类型',
+          prop: 'sourceType'
+        },
+        {
+          label: '单号',
           prop: 'flowCode',
           search: {
             type: 'input'
           }
         },
         {
-          label: '补充备注',
-          prop: 'remark'
+          label: '来源',
+          prop: 'refSource'
         },
         {
-          label: '来源',
-          prop: 'flowSource',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.flowSource, 'lobList')
-          },
-        }
+          label: '出入库数量',
+          prop: 'changeQty'
+        },
+        {
+          label: '出入库日期',
+          prop: 'changeTime'
+        },
       ]
     }
   },
@@ -111,7 +122,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.warehouse.queryWarehousePreoccupation({
+      this.$api.warehouse.queryInOutStockLog({
         ...searchDate,
         ...other,
         ...page

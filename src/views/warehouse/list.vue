@@ -212,11 +212,14 @@ export default {
     //获取仓库详情
     getWarehouseDetail(params) {
       this.$api.warehouse.queryWarehouseDetail(params).then(res => {
-        console.log('resssss======',res)
+        const { provinceCode, cityCode ,districtCode, ...other } = res
         this.showDialog({
           title: "编辑",
           isEdit: true,
-          initData: res.data
+          initData: {
+            ...other,
+            companyAddressCode:[provinceCode,cityCode,districtCode]
+          }
         });
       });
     }

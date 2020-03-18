@@ -28,5 +28,24 @@ export default {
       icon: 'table',
       roles: ['admin']
     }
+  },
+  {
+    path: '/warehouse/stockVirtual/list',
+    name: 'warehouseVirtualList',
+    component: () => import('@/views/warehouse/stockVirtual/list'),
+    meta: {
+      title: 'warehouseVirtualList',
+      icon: 'table',
+      roles: ['admin']
+    }
+  },{
+    path: '/warehouse/inOutLog/list',
+    name: 'inOutLogList',
+    component: () => import('@/views/warehouse/inOutLog/list'),
+    meta: {
+      title: 'inOutLogList',
+      icon: 'table',
+      roles: ['admin']
+    }
   }]
 }

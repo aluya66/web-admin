@@ -64,3 +64,23 @@ export const queryWarehouseStock = params =>
   Http.fetch(`${context}/api/stock/page`, params, {
     method: 'get'
   })
+
+
+  /**
+ * 平台库存查询
+ * @param {*}
+ */
+export const queryWarehouseVirtualStock = params =>
+Http.fetch(`${context}/api/stock/page`, params, {
+  method: 'get'
+})
+
+
+/**
+ * 出入库明细
+ * @param {*}
+ */
+export const queryInOutStockLog = params =>
+Http.fetch(`${context}/api/stock/log/page`, params, {
+  method: 'get'
+})
