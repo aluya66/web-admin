@@ -24,7 +24,7 @@
     </line-card>
     <line-card title="支付信息" v-if="orderInfo.orderPayResp">
       <div class="row">
-        <span>支付方式：{{orderInfo.orderPayResp[0].payType}}</span>
+        <span>支付方式：{{setEnumValue((orderInfo.orderPayResp[0].payType).split(','),payTypeList)}}</span>
         <span>支付状态：{{setEnumValue(orderInfo.orderPayResp[0].status, payStatusList)}}</span>
         <span>支付时间：{{orderInfo.orderPayResp[0].created}}</span>
       </div>
@@ -142,7 +142,8 @@ export default {
       orderSettleStatusList: dictObj.orderSettleStatusList,
       orderStatusList: dictObj.orderStatusList,
       invoiceTypeList: dictObj.invoiceTypeList,
-      memberTransferList: dictObj.customLevelList
+      memberTransferList: dictObj.customLevelList,
+      payTypeList:dictObj.payTypeList
     }
   },
   components: {
@@ -153,8 +154,17 @@ export default {
      * 获取枚举值
      */
     setEnumValue(value, curArr) {
-      let curVal = curArr.find(res => value === res.value)
-      return curVal ? curVal.label : (value || '')
+      if (Array.isArray(value)) { // value 为数组
+        let arr = []
+        value.forEach((item) => {
+          let curVal = curArr.find(res => item === res.value)
+          curVal && arr.push(curVal.label)
+        })
+        return arr.join(',')
+      } else{
+        let curVal = curArr.find(res => value === res.value)
+        return curVal ? curVal.label : (value || '')
+      }
     }
   }
 }

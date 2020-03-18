@@ -201,7 +201,7 @@ export default {
           label: '支付方式',
           prop: 'payType',
           formatter(row) {
-            //row.payType  这里可返回多个方式，要转化成数组形式进行转化处理
+            // row.payType  这里可返回多个方式，要转化成数组形式进行转化处理
             return row && vm.setTableColumnLabel(row.payType.split(','), 'payTypeList')
           },
           search: {
