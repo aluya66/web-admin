@@ -31,7 +31,7 @@
       <p>
         <span>订单总金额(元)：{{dataInfo.orderTotalAmount}}</span>
         <span>优惠券抵扣总额(元)：{{dataInfo.couponAmount}}</span>
-        <span>优惠券使用总额(元)：{{dataInfo.couponFaceAmount}}</span>
+        <!-- <span>优惠券使用总额(元)：{{dataInfo.couponFaceAmount}}</span> -->
         <span>代金券抵扣总额(元)：{{dataInfo.voucherAmount}}</span>
       </p>
       <p>
