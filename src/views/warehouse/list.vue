@@ -86,7 +86,8 @@ export default {
           prop: 'whName',
           search: {
             type: 'input'
-          }
+          },
+          fixed: true,
         },
         {
           label: '编码',
@@ -94,7 +95,7 @@ export default {
         },
         {
           label: '仓库属性',
-          prop:'whType',
+          prop: 'whType',
           formatter (row) {
             return row.whType === 1 ? '可销售' : '不可售'
           },
@@ -172,7 +173,7 @@ export default {
       this.dialogObj = {
         isShow: true,
         isEdit: opts.isEdit || false,
-        title: opts.title || '新增',
+        title: opts.title || '创建仓库',
         initData: opts.initData
       }
     },

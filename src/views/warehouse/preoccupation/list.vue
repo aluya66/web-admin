@@ -1,11 +1,5 @@
 <template>
   <c-view>
-    <template v-slot:header>
-      <div class="title">
-        <!-- $route.meta.name || $t(`route.${$route.meta.title}`) -->
-        <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
-      </div>
-    </template>
     <div class="main__box">
       <c-table
         ref="cTable"
@@ -36,7 +30,7 @@
 <script>
 import mixinTable from 'mixins/table'
 // import CDialog from 'components/dialog'
-// import dictObj from '@/store/dictData'
+import dictObj from '@/store/dictData'
 
 export default {
   name: 'warehouse',
@@ -81,11 +75,15 @@ export default {
       tableHeader: [
         {
           label: '商品款号',
-          prop: 'productAtrNumber'
+          prop: 'productAtrNumber',
+          fixed: true,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: 'SKU款号',
-          prop: 'skuCode',
+          prop: 'skuCode'
         },
         {
           label: '仓库名称',
@@ -97,6 +95,10 @@ export default {
           formatter (row) {
             return row.whBusinessType === 10 ? '云仓' : '店仓'
           },
+          search: {
+            type: 'select',
+            optionsList: dictObj.warehouseType
+          }
         },
         {
           label: '锁定库存',
@@ -108,7 +110,10 @@ export default {
         },
         {
           label: '操作流水号',
-          prop: 'flowCode'
+          prop: 'flowCode',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '补充备注',
@@ -116,7 +121,10 @@ export default {
         },
         {
           label: '来源',
-          prop: 'flowSource'
+          prop: 'flowSource',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.flowSource, 'lobList')
+          },
         }
       ]
     }
@@ -137,7 +145,7 @@ export default {
         ...searchDate,
         ...other,
         ...page
-      }).then(res => {
+      }).then(res => {     
         this.isLoading = false
         if (res && res.totalCount) {
           const { data, totalCount } = res

@@ -579,7 +579,7 @@ const orderBusinessTypeList = [{
   value: 7
 }]
 
-//仓库类型
+// 仓库类型
 const warehouseType = [{
   label: '云仓',
   value: 10
@@ -588,11 +588,11 @@ const warehouseType = [{
   value: 20
 }]
 
-//仓库属性  0:不可售; 1:可销售
-const warehouseSaleType=[{
+// 仓库属性  0:不可售; 1:可销售
+const warehouseSaleType = [{
   label: '不可售',
   value: 0
-},{
+}, {
   label: '可销售',
   value: 1
 }]
