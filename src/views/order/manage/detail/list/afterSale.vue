@@ -16,29 +16,8 @@
 <script>
 import mixinTable from 'mixins/table'
 import LineCard from '@/views/common/lineCard'
+import dictObj from '@/store/dictData'
 
-const statusList = [{
-  value: 1,
-  label: '未审核'
-}, {
-  value: 10,
-  label: '审核通过'
-}, {
-  value: 11,
-  label: '审核拒绝'
-}, {
-  value: 20,
-  label: '仓库审核通过'
-}, {
-  value: 21,
-  label: '仓库审核拒绝'
-}, {
-  value: 80,
-  label: '售后完成'
-}, {
-  value: 90,
-  label: '售后取消'
-}]
 
 const afterSalesTypeList = [{
   value: 1,
@@ -77,7 +56,7 @@ export default {
           label: '售后状态',
           prop: 'status',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.status, statusList)
+            return row && vm.setTableColumnLabel(row.status, dictObj.afterSalesStatus)
           }
         },
         {
