@@ -83,18 +83,18 @@ export default {
   methods: {
     submitForm() {
       // 自定义校验
-      let unpass = []
-      unpass = this.formModel.afterRefundLogList.filter((elem, index) => {
-        return !elem.typeId || !Number(elem.money)
-      })
-      if (unpass.length > 0) {
-        this.$message({
-          type: 'error',
-          message: '扣费项目和金额不能为空'
-        })
-      } else {
+      // let unpass = []
+      // unpass = this.formModel.afterRefundLogList.filter((elem, index) => {
+      //   return !elem.typeId || !Number(elem.money)
+      // })
+      // if (unpass.length > 0) {
+      //   this.$message({
+      //     type: 'error',
+      //     message: '扣费项目和金额不能为空'
+      //   })
+      // } else {
         this.$emit('submit', { refundOrder: this.curItemInfo.refundOrder, ...this.formModel })
-      }
+      // }
     },
     removeItem(index) {
       if (this.formModel.afterRefundLogList.length > 1) {

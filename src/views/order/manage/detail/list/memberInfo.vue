@@ -32,9 +32,9 @@ export default {
       this.memberList = [this.memberObj]
     }
   },
-  watch:{
-    memberObj(nVal){
-      this.memberList =[nVal]
+  watch: {
+    memberObj(nVal) {
+      this.memberList = [nVal]
     }
   },
   data(vm) {
@@ -56,7 +56,7 @@ export default {
         {
           label: '会员等级',
           formatter (row) {
-            return row.memberTypeId!==undefined?dictObj.customLevelList[row.memberTypeId].label:'普通会员'
+            return row.memberTypeId !== undefined ? dictObj.customLevelList[row.memberTypeId].label : '普通会员'
           }
         },
         {
