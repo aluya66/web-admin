@@ -186,8 +186,12 @@ export default {
           }
         },
         {
-          label: '退款金额',
+          label: '扣款金额',
           prop: 'refundFee'
+        },
+        {
+          label: '实际退款金额',
+          prop: 'actualRefundFee'
         },
         {
           width: 150,
