@@ -143,7 +143,7 @@ export default {
       orderStatusList: dictObj.orderStatusList,
       invoiceTypeList: dictObj.invoiceTypeList,
       memberTransferList: dictObj.customLevelList,
-      payTypeList:dictObj.payTypeList
+      payTypeList: dictObj.payTypeList
     }
   },
   components: {
@@ -161,7 +161,7 @@ export default {
           curVal && arr.push(curVal.label)
         })
         return arr.join(',')
-      } else{
+      } else {
         let curVal = curArr.find(res => value === res.value)
         return curVal ? curVal.label : (value || '')
       }

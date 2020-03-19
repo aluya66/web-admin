@@ -226,7 +226,7 @@ export default {
     getRefundFeeList() {
       this.isLoading = true
       this.$api.order
-        .afterSalesCostSettingList()
+        .afterSalesCostSettingList({status:1})
         .then(res => {
           this.isLoading = false
           if (res && res.totalCount) {
