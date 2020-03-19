@@ -66,16 +66,6 @@ const refundStatusList = [
   }
 ]
 
-// const afterTypeList = [
-//   {
-//     label:'仅退款',
-//     value: 0
-//   },{
-//     label:'退货退款',
-//     value: 1
-//   }
-// ]
-
 const refundTypeList = [
   {
     label: '余额',
