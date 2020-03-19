@@ -49,20 +49,20 @@ export default {
           label: '会员昵称',
           prop: 'nickname'
         },
-        {
-          label: '会员账号'
-          // prop: 'xxx'
-        },
+        // {
+        //   label: '会员账号'
+        //   // prop: 'xxx'
+        // },
         {
           label: '会员等级',
           formatter (row) {
             return row.memberTypeId !== undefined ? dictObj.customLevelList[row.memberTypeId].label : '普通会员'
           }
         },
-        {
-          label: '会员身份证'
-          // prop: 'xx'
-        },
+        // {
+        //   label: '会员身份证'
+        //   // prop: 'xx'
+        // },
         {
           label: '联系电话',
           prop: 'phoneNumber'
