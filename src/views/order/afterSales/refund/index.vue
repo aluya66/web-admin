@@ -173,11 +173,6 @@ export default {
           formatter(row) {
             return row && vm.setTableColumnLabel(row.refundType, dictObj.afterSalesTypes)
           },
-          search: {
-            prop: 'applyAfterSalesType',
-            type: 'dict',
-            optionsList: dictObj.afterSalesTypes
-          }
         },
         // {
         //   label: '店铺',
