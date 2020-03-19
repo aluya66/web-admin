@@ -17,6 +17,7 @@
 <script>
 import mixinTable from 'mixins/table'
 import LineCard from '@/views/common/lineCard'
+import dictObj from '@/store/dictData'
 
 export default {
   mixins: [mixinTable],
@@ -29,6 +30,11 @@ export default {
   created() {
     if (JSON.stringify(this.memberObj) !== '{}') {
       this.memberList = [this.memberObj]
+    }
+  },
+  watch:{
+    memberObj(nVal){
+      this.memberList =[nVal]
     }
   },
   data(vm) {
@@ -49,7 +55,9 @@ export default {
         },
         {
           label: '会员等级',
-          prop: 'grade'
+          formatter (row) {
+            return row.memberTypeId!==undefined?dictObj.customLevelList[row.memberTypeId].label:'普通会员'
+          }
         },
         {
           label: '会员身份证'

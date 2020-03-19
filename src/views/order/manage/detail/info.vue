@@ -85,7 +85,7 @@
         <span>会员账户：{{orderInfo.memberResp.phoneNumber}}</span>
       </div>
       <div class="row">
-        <span>会员等级：{{orderInfo.memberResp.grade!==undefined?memberTransferList[orderInfo.memberResp.grade].label:''}}</span>
+        <span>会员等级：{{orderInfo.memberResp.memberTypeId!==undefined?memberTransferList[orderInfo.memberResp.memberTypeId].label:'普通会员'}}</span>
         <!-- <span>会员身份证：</span> -->
         <span>联系电话：{{orderInfo.memberResp.phoneNumber}}</span>
       </div>
