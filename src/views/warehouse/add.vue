@@ -91,8 +91,8 @@
 </template>
 
 <script>
-import dictObj from "@/store/dictData";
-import MixinForm from "mixins/form";
+import dictObj from '@/store/dictData'
+import MixinForm from 'mixins/form'
 
 export default {
   mixins: [MixinForm],
@@ -100,7 +100,7 @@ export default {
     initData: {
       type: Object,
       default() {
-        return {};
+        return {}
       }
     },
     isEdit: {
@@ -115,36 +115,36 @@ export default {
       bussinessList: [],
       companyAddressCode: [], // 区域code
       areaOptions: [], // 地区列表
-      shopList:[],//店铺列表
+      shopList: [], // 店铺列表
       optionsProps: {
-        value: "code",
-        label: "name",
+        value: 'code',
+        label: 'name',
         leaf: 2
       },
       rules: {}
-    };
+    }
   },
   created() {
-    this.getBusiness();
-    this.fetchAreaData();
-    this.getShopList();
+    this.getBusiness()
+    this.fetchAreaData()
+    this.getShopList()
   },
   computed: {
     formModel: {
       get() {
-        return this.initData;
+        return this.initData
       },
       set(val) {
-        this.$emit("update:init-data", val);
+        this.$emit('update:init-data', val)
       }
     }
   },
   methods: {
-     // 获取商户
+    // 获取商户
     getShopList() {
       this.$api.channel.getShopList({
         pageSize: 200,
-        pageNo: 1,
+        pageNo: 1
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {
@@ -155,13 +155,13 @@ export default {
         }
       })
     },
-    //获取区域
+    // 获取区域
     fetchAreaData() {
       this.$api.basic.getAllArea().then(res => {
         if (res.length) {
-          this.areaOptions = res;
+          this.areaOptions = res
         }
-      });
+      })
     },
     // 商户列表数据
     getBusiness() {
@@ -171,11 +171,11 @@ export default {
           pageSize: 20
         })
         .then(res => {
-          this.bussinessList = res.data;
-        });
-    },
+          this.bussinessList = res.data
+        })
+    }
   }
-};
+}
 </script>
 
 <style lang='less' scoped>

@@ -61,7 +61,7 @@ export default {
         },
         {
           label: '可用库存',
-          prop: 'availableQty',
+          prop: 'availableQty'
         },
         {
           label: '实物库存',
@@ -73,9 +73,9 @@ export default {
         },
         {
           label: '预占库存',
-          prop: 'occupiedQty',
-         
-        },
+          prop: 'occupiedQty'
+
+        }
       ]
     }
   },
@@ -95,7 +95,7 @@ export default {
         ...searchDate,
         ...other,
         ...page
-      }).then(res => {     
+      }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {
           const { data, totalCount } = res

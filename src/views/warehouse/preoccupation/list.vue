@@ -94,7 +94,7 @@ export default {
           prop: 'flowSource',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.flowSource, 'lobList')
-          },
+          }
         }
       ]
     }
@@ -115,7 +115,7 @@ export default {
         ...searchDate,
         ...other,
         ...page
-      }).then(res => {     
+      }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {
           const { data, totalCount } = res

@@ -38,7 +38,7 @@ export default {
       icon: 'table',
       roles: ['admin']
     }
-  },{
+  }, {
     path: '/warehouse/inOutLog/list',
     name: 'inOutLogList',
     component: () => import('@/views/warehouse/inOutLog/list'),

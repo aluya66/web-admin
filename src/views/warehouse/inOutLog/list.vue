@@ -29,7 +29,7 @@
 <script>
 import mixinTable from 'mixins/table'
 // import CDialog from 'components/dialog'
-import dictObj from '@/store/dictData'
+// import dictObj from '@/store/dictData'
 
 export default {
   // name: 'warehouse',
@@ -46,7 +46,7 @@ export default {
         {
           label: '品牌',
           prop: 'brandName',
-          fixed: true,
+          fixed: true
           // search: {
           //   type: 'input'
           // }
@@ -54,20 +54,23 @@ export default {
         {
           label: '商品编码',
           prop: 'skuCode',
-          fixed: true,
+          fixed: true
+
         },
         {
           label: '商品名称',
           prop: 'productName',
           fixed: true,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '供应商款号',
           prop: 'venderProductCode',
-          // search: {
-          //   type: 'select',
-          //   optionsList: dictObj.warehouseType
-          // }
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '商品规格',
@@ -79,7 +82,7 @@ export default {
         },
         {
           label: '仓库信息',
-          prop: 'whName',
+          prop: 'whName'
           // search: {
           //   type: 'input'
           // }
@@ -106,7 +109,7 @@ export default {
         {
           label: '出入库日期',
           prop: 'changeTime'
-        },
+        }
       ]
     }
   },
@@ -126,7 +129,7 @@ export default {
         ...searchDate,
         ...other,
         ...page
-      }).then(res => {     
+      }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {
           const { data, totalCount } = res

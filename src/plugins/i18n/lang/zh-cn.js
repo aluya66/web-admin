@@ -100,8 +100,8 @@ export default {
     warehouse: '仓库管理',
     warehouseList: '仓库列表',
     warehousePreoccupationList: '库存预占',
-    warehouseVirtualList:'仓库库存',
-    inOutLogList:'出入库明细',
+    warehouseVirtualList: '仓库库存',
+    inOutLogList: '出入库明细'
   },
   navbar: {
     logout: '退出',
