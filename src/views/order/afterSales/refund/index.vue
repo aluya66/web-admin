@@ -6,8 +6,8 @@
     <div class="main__box">
       <c-table
         ref="cTable"
-        selection
         hasBorder
+        hasIndex
         :max-height="maxHeight"
         :size="size"
         :loading="isLoading"
@@ -126,14 +126,21 @@ export default {
           prop: 'afterOrder',
           search: {
             type: 'input'
-          }
+          },
+          fixed:true
         },
         {
           label: '退款单号',
           prop: 'refundOrder',
           search: {
             type: 'input'
-          }
+          },
+          fixed:true
+        },
+        {
+          label: '用户名称',
+          prop: 'userName',
+          fixed:true
         },
         {
           label: '用户电话',
@@ -141,10 +148,6 @@ export default {
           search: {
             type: 'input'
           }
-        },
-        {
-          label: '用户名称',
-          prop: 'userName'
         },
         {
           label: '状态',

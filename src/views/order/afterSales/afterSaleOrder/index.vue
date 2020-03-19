@@ -15,7 +15,7 @@
     <div class="main__box">
       <c-table
         ref="cTable"
-        selection
+        hasIndex
         hasBorder
         :max-height="maxHeight"
         :size="size"
@@ -139,6 +139,7 @@ export default {
         {
           label: '售后单号',
           prop: 'afterSalesCode',
+          fixed:true,
           search: {
             type: 'input'
           }
@@ -146,6 +147,24 @@ export default {
         {
           label: '订单号',
           prop: 'thirdOrderCode',
+          fixed:true,
+          search: {
+            type: 'input'
+          }
+        },
+         {
+          label: '用户名称',
+          prop: 'buyerNick',
+          fixed:true,
+          search: {
+            label: '商品名称',
+            prop: 'productAtrName',
+            type: 'input'
+          }
+        },
+        {
+          label: '用户电话',
+          prop: 'buyerMobile',
           search: {
             type: 'input'
           }
@@ -184,22 +203,7 @@ export default {
             prop: 'deliveryCode'
           }
         },
-        {
-          label: '用户名称',
-          prop: 'buyerNick',
-          search: {
-            label: '商品名称',
-            prop: 'productAtrName',
-            type: 'input'
-          }
-        },
-        {
-          label: '用户电话',
-          prop: 'buyerMobile',
-          search: {
-            type: 'input'
-          }
-        },
+       
         {
           label: '物流公司',
           prop: 'deliveryName',

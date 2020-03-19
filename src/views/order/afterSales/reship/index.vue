@@ -13,7 +13,7 @@
     <div class="main__box">
       <c-table
         ref="cTable"
-        selection
+        hasIndex
         hasBorder
         :max-height="maxHeight"
         :size="size"
@@ -86,11 +86,21 @@ export default {
           prop: 'afterSalesCode',
           search: {
             type: 'input'
-          }
+          },
+          fixed:true
         },
         {
           label: '订单号',
           prop: 'thirdOrderCode',
+          search: {
+            type: 'input'
+          },
+          fixed:true
+        },
+        {
+          label: '退货单号',
+          prop: 'returnCode',
+          fixed:true,
           search: {
             type: 'input'
           }
@@ -105,13 +115,6 @@ export default {
             prop: 'statusList',
             type: 'dict',
             optionsList: dictObj.afterSalesStatus
-          }
-        },
-        {
-          label: '退货单号',
-          prop: 'returnCode',
-          search: {
-            type: 'input'
           }
         },
         {
