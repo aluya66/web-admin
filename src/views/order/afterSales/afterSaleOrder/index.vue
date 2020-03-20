@@ -106,7 +106,6 @@ export default {
           { required: true, message: '请输入', trigger: 'blur' }
         ]
       },
-      aduitResult: '',
       remarkDialogShow: false,
       remarkForm: { remark: '' },
       // 对话框对象
@@ -281,21 +280,35 @@ export default {
           this.setSearchOptionsList('deliveryCode', this.logisticsList)
         })
     },
-    showRemarkDialog(btnName) { // 审核结果：10:通过，11:拒绝  坑点：btnName中文字带空格
+    showRemarkDialog(btnName) {
+      this.remarkForm={ remark: '' }
       this.remarkDialogShow = true
-      this.aduitResult = btnName.replace(/\s*/g, '') === '通过' ? 30 : 11// TODO：通过暂时处理流程扭转为 等待买家发货
+      // 坑点：btnName中文字带空格
+      this.curAduitType = btnName.replace(/\s*/g, '') === '通过' ? 'pass' : 'reject'// 审核通过pass 拒绝reject
     },
     handleAduit() {
+      // afterSalesType 1:仅退款  2:退款退货  3:代金券退货
+      const approveResultMap = {
+        pass: {
+          1: 50, // 退款通过=>50
+          2: 30, // 退款退货通过=>30
+          3: 30// 代金券退货通过=>30
+        },
+        reject: {// 拒绝均转为11
+          1: 11, 2: 11, 3: 11
+        }
+      }
       this.$refs.remarkFormRef.validate(valid => {
         if (valid) {
           const afterSalesType = this.$refs.childRef.formModel.afterSalesType
+          const params = {
+            afterSalesCode: this.dialogObj.initData.afterSalesCode,
+            afterSalesType,
+            approveRemark: this.remarkForm.remark,
+            approveResult: approveResultMap[this.curAduitType][afterSalesType]
+          }
           this.$api.order
-            .approveAfterSales({
-              afterSalesCode: this.dialogObj.initData.afterSalesCode,
-              afterSalesType,
-              approveRemark: this.remarkForm.remark,
-              approveResult: (afterSalesType === 1 && this.aduitResult === 30) ? 50 : this.aduitResult// TODO：如果afterSalesType为1并且通过，则是仅退款，仅退款直接将转改扭转为等待退款
-            })
+            .approveAfterSales(params)
             .then(res => {
               this.remarkDialogShow = false
               this.responeHandle('审核成功')
