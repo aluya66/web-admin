@@ -142,7 +142,7 @@ export default {
         title: opts.title || '新增',
         initData: opts.initData
       }
-    },
+    }
   }
 }
 </script>

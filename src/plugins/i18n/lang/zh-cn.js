@@ -101,7 +101,9 @@ export default {
     warehouseList: '仓库列表',
     warehousePreoccupationList: '库存预占',
     warehouseVirtualList: '仓库库存',
-    inOutLogList: '出入库明细'
+    inOutLogList: '出入库明细',
+    platformStockList: '平台仓库',
+    platformOccupiedStockList: '平台预占'
   },
   navbar: {
     logout: '退出',

@@ -39,11 +39,20 @@ export default {
       roles: ['admin']
     }
   }, {
-    path: '/warehouse/inOutLog/list',
-    name: 'inOutLogList',
-    component: () => import('@/views/warehouse/inOutLog/list'),
+    path: '/warehouse/platformStock/list',
+    name: 'platformStockList',
+    component: () => import('@/views/warehouse/platformStock/list'),
     meta: {
-      title: 'inOutLogList',
+      title: 'platformStockList',
+      icon: 'table',
+      roles: ['admin']
+    }
+  }, {
+    path: '/warehouse/platformOccupiedStock/list',
+    name: 'platformOccupiedStockList',
+    component: () => import('@/views/warehouse/platformOccupiedStock/list'),
+    meta: {
+      title: 'platformOccupiedStockList',
       icon: 'table',
       roles: ['admin']
     }

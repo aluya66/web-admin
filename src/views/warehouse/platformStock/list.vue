@@ -1,6 +1,6 @@
 <template>
   <c-view>
-     <template v-slot:header>
+    <template v-slot:header>
       <div class="title">
         {{$route.meta.name || $t(`route.${$route.meta.title}`)}}
       </div>
@@ -8,14 +8,14 @@
     <div class="main__box">
       <c-table
         ref="cTable"
-        hasIndex
         hasBorder
+        hasIndex
         :max-height="maxHeight"
         :size="size"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
-				:page-info="pageInfo"
+        :page-info="pageInfo"
         @change-pagination="changePagination"
       >
         <template v-slot:header>
@@ -33,44 +33,50 @@
 
 <script>
 import mixinTable from 'mixins/table'
-// import CDialog from 'components/dialog'
 import dictObj from '@/store/dictData'
 
 export default {
   // name: 'warehouse',
   mixins: [mixinTable],
   components: {
-    // CDialog
-    // WarehouseAdd
   },
   data(vm) {
     return {
       // 对话框对象
       dialogObj: {},
       tableHeader: [
+        // {
+        //   label: '仓库名称',
+        //   prop: 'whName',
+        //   search: {
+        //     type: 'input'
+        //   },
+        //   fixed: true
+        // },
+        // {
+        //   label: '仓库编码',
+        //   prop: 'whCode',
+        //   fixed: true
+        // },
         {
-          label: '商品款号',
-          prop: 'productAtrNumber',
-          fixed: true,
-          search: {
-            type: 'input'
-          }
+          label: '库存编号',
+          prop: 'stockCode'
         },
+        // {
+        //   label: '仓库属性',
+        //   prop: 'whType',
+        //   formatter(row) {
+        //     return row.whType === 1 ? '可销售' : '不可售'
+        //   },
+        //   search: {
+        //     type: 'select',
+        //     optionsList: dictObj.warehouseSaleType
+        //   }
+        // },
         {
-          label: 'SKU款号',
-          prop: 'skuCode'
-        },
-        {
-          label: '仓库名称',
-          prop: 'whName',
-          search: {
-            type: 'input'
-          }
-        },
-        {
-          label: '仓库类型',
+          label: '仓库类型', // 仓库业务类型：10:仓库，20:店仓
           prop: 'whBusinessType',
-          formatter (row) {
+          formatter(row) {
             return row.whBusinessType === 10 ? '云仓' : '店仓'
           },
           search: {
@@ -79,21 +85,31 @@ export default {
           }
         },
         {
-          label: '可用库存',
-          prop: 'availableQty'
+          label: 'sku编码',
+          prop: 'skuCode',
+          search: {
+            type: 'input'
+          }
         },
         {
-          label: '实物库存',
+          label: '商品款号',
+          prop: 'productAtrNumber'
+        },
+        {
+          label: '实库数量',
           prop: 'entityQty'
         },
         {
-          label: '在途库存',
-          prop: 'intransitQty'
+          label: '占位数量',
+          prop: 'occupiedQty'
         },
         {
-          label: '预占库存',
-          prop: 'occupiedQty'
-
+          label: '可用数量',
+          prop: 'availableQty'
+        },
+        {
+          label: '在途数量',
+          prop: 'intransitQty'
         }
       ]
     }
@@ -103,27 +119,29 @@ export default {
   },
   methods: {
     /*
-		 * 查询表格列表数据
-		 */
+     * 查询表格列表数据
+     */
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.warehouse.queryWarehouseStock({
-        ...searchDate,
-        ...other,
-        ...page
-      }).then(res => {
-        this.isLoading = false
-        if (res && res.totalCount) {
-          const { data, totalCount } = res
-          this.pageInfo.totalNum = totalCount
-          this.tableList = data || []
-        } else {
-          this.tableList = res || []
-        }
-      })
+      this.$api.warehouse
+        .queryPlateStock({
+          ...searchDate,
+          ...other,
+          ...page
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data || []
+          } else {
+            this.tableList = res || []
+          }
+        })
     },
     /**
      * dialog对话框数据处理
@@ -133,7 +151,7 @@ export default {
       this.dialogObj = {
         isShow: true,
         isEdit: opts.isEdit || false,
-        title: opts.title || '新增',
+        title: opts.title || '创建仓库',
         initData: opts.initData
       }
     }
