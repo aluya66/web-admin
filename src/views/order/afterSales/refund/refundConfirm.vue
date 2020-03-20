@@ -93,7 +93,7 @@ export default {
       //     message: '扣费项目和金额不能为空'
       //   })
       // } else {
-        this.$emit('submit', { refundOrder: this.curItemInfo.refundOrder, ...this.formModel })
+      this.$emit('submit', { refundOrder: this.curItemInfo.refundOrder, ...this.formModel })
       // }
     },
     removeItem(index) {

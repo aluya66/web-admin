@@ -18,7 +18,6 @@ import mixinTable from 'mixins/table'
 import LineCard from '@/views/common/lineCard'
 import dictObj from '@/store/dictData'
 
-
 const afterSalesTypeList = [{
   value: 1,
   label: '只退款'

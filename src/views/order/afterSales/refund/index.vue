@@ -127,7 +127,7 @@ export default {
           search: {
             type: 'input'
           },
-          fixed:true
+          fixed: true
         },
         {
           label: '退款单号',
@@ -135,12 +135,12 @@ export default {
           search: {
             type: 'input'
           },
-          fixed:true
+          fixed: true
         },
         {
           label: '用户名称',
           prop: 'userName',
-          fixed:true
+          fixed: true
         },
         {
           label: '用户电话',

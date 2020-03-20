@@ -87,7 +87,7 @@ export default {
           search: {
             type: 'input'
           },
-          fixed:true
+          fixed: true
         },
         {
           label: '订单号',
@@ -95,12 +95,12 @@ export default {
           search: {
             type: 'input'
           },
-          fixed:true
+          fixed: true
         },
         {
           label: '退货单号',
           prop: 'returnCode',
-          fixed:true,
+          fixed: true,
           search: {
             type: 'input'
           }

@@ -627,7 +627,8 @@ const afterSalesTypes = [{
 }, {
   label: '代金券退货',
   value: 3
-}]
+}
+]
 export default {
   afterSalesTypes,
   afterSalesStatus,

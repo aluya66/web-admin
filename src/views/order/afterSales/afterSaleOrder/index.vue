@@ -139,7 +139,7 @@ export default {
         {
           label: '售后单号',
           prop: 'afterSalesCode',
-          fixed:true,
+          fixed: true,
           search: {
             type: 'input'
           }
@@ -147,15 +147,15 @@ export default {
         {
           label: '订单号',
           prop: 'thirdOrderCode',
-          fixed:true,
+          fixed: true,
           search: {
             type: 'input'
           }
         },
-         {
+        {
           label: '用户名称',
           prop: 'buyerNick',
-          fixed:true,
+          fixed: true,
           search: {
             label: '商品名称',
             prop: 'productAtrName',
@@ -203,7 +203,7 @@ export default {
             prop: 'deliveryCode'
           }
         },
-       
+
         {
           label: '物流公司',
           prop: 'deliveryName',
@@ -294,7 +294,7 @@ export default {
               afterSalesCode: this.dialogObj.initData.afterSalesCode,
               afterSalesType,
               approveRemark: this.remarkForm.remark,
-              approveResult: afterSalesType === 1 ? 50 : this.aduitResult// TODO：如果afterSalesType为1，则是仅退款，仅退款直接将转改扭转为等待退款
+              approveResult: (afterSalesType === 1 && this.aduitResult === 30) ? 50 : this.aduitResult// TODO：如果afterSalesType为1并且通过，则是仅退款，仅退款直接将转改扭转为等待退款
             })
             .then(res => {
               this.remarkDialogShow = false
