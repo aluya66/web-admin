@@ -1,5 +1,10 @@
 <template>
   <c-view>
+     <template v-slot:header>
+      <div class="title">
+        {{$route.meta.name || $t(`route.${$route.meta.title}`)}}
+      </div>
+    </template>
     <div class="main__box">
       <c-table
         ref="cTable"
@@ -28,15 +33,12 @@
 
 <script>
 import mixinTable from 'mixins/table'
-// import CDialog from 'components/dialog'
-// import dictObj from '@/store/dictData'
+import dictObj from '@/store/dictData'
 
 export default {
   // name: 'warehouse',
   mixins: [mixinTable],
   components: {
-    // CDialog
-    // WarehouseAdd
   },
   data(vm) {
     return {
@@ -54,8 +56,10 @@ export default {
         {
           label: '商品编码',
           prop: 'skuCode',
-          fixed: true
-
+          fixed: true,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '商品名称',
@@ -100,7 +104,11 @@ export default {
         },
         {
           label: '来源',
-          prop: 'refSource'
+          prop: 'refSource',
+          search: {
+            type: 'select',
+            optionsList: dictObj.lobList
+          }
         },
         {
           label: '出入库数量',
@@ -152,38 +160,6 @@ export default {
         initData: opts.initData
       }
     },
-    /**
-		 * dialog新增、编辑处理函数
-		 */
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const params = childRef.formModel
-          const curAction = this.dialogObj.isEdit ? 'editWarehouse' : 'addWarehouse'
-          // TODO...
-          this.$api.warehouse[curAction]({
-            // TODO...
-            ...params
-          }).then(() => {
-            this.responeHandle(this.dialogObj.isEdit ? '更新成功' : '新增成功')
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    /**
-		 * 删除单条表格数据
-		 * @id {Number}
-		 */
-    deleteHandle(params) {
-      this.$api.warehouse.deleteWarehouse(params).then(() => {
-        this.$msgTip('删除成功')
-        this.delResetData()
-      })
-    }
   }
 }
 </script>

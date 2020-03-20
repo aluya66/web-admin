@@ -29,15 +29,6 @@ export const editWarehouse = params =>
     method: 'put'
   })
 
-// /**
-//  * 删除
-//  * @param {*}
-//  */
-// export const deleteWarehouse = params =>
-//   Http.fetch(`${context}/api`, params, {
-//     method: 'delete'
-//   })
-
 /**
  * 查询仓库详情
  * @param {*}
@@ -66,19 +57,28 @@ export const queryWarehouseStock = params =>
   })
 
 /**
- * 平台库存查询
- * @param {*}
- */
-export const queryWarehouseVirtualStock = params =>
-  Http.fetch(`${context}/api/stock/page`, params, {
-    method: 'get'
-  })
-
-/**
  * 出入库明细
  * @param {*}
  */
 export const queryInOutStockLog = params =>
   Http.fetch(`${context}/api/stock/log/page`, params, {
+    method: 'get'
+  })
+
+/**
+ * 平台库存查询
+ * @param {*}
+ */
+export const queryPlateStock = params =>
+  Http.fetch(`${context}/api/stock/virtual/page`, params, {
+    method: 'get'
+  })
+
+/**
+ * 平台预占查询
+ * @param {*}
+ */
+export const queryPlateOccupiedStock = params =>
+  Http.fetch(`${context}/api/virtual/occupied/page`, params, {
     method: 'get'
   })

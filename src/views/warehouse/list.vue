@@ -2,7 +2,7 @@
   <c-view>
     <template v-slot:header>
       <div class="title">
-        <!-- $route.meta.name || $t(`route.${$route.meta.title}`) -->
+        {{$route.meta.name || $t(`route.${$route.meta.title}`)}}
         <el-button type="primary" :size="size" icon="el-icon-plus" @click="showDialog">新增</el-button>
       </div>
     </template>
@@ -71,7 +71,6 @@ export default {
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
-            console.log('row=======,', row)
             const { whCode, refGroupCode } = row
             vm.getWarehouseDetail({ whCode, refGroupCode })
           }
@@ -114,7 +113,7 @@ export default {
         },
         {
           label: '所属公司',
-          prop: 'refGroupCode',
+          prop: 'refGroupName',
           search: {
             type: 'input'
           }
@@ -194,7 +193,6 @@ export default {
             refSource: 2, // 仓库数据来源 1:星助; 2:中台订单
             status: 10 // 仓库状态：10: 有效
           }
-          console.log('params=======,,,', params)
           const curAction = this.dialogObj.isEdit
             ? 'editWarehouse'
             : 'addWarehouse'

@@ -1,5 +1,10 @@
 <template>
   <c-view>
+     <template v-slot:header>
+      <div class="title">
+        {{$route.meta.name || $t(`route.${$route.meta.title}`)}}
+      </div>
+    </template>
     <div class="main__box">
       <c-table
         ref="cTable"
@@ -57,7 +62,21 @@ export default {
         },
         {
           label: '仓库名称',
-          prop: 'whName'
+          prop: 'whName',
+          search: {
+            type: 'input'
+          }
+        },
+        {
+          label: '仓库类型',
+          prop: 'whBusinessType',
+          formatter (row) {
+            return row.whBusinessType === 10 ? '云仓' : '店仓'
+          },
+          search: {
+            type: 'select',
+            optionsList: dictObj.warehouseType
+          }
         },
         {
           label: '可用库存',
@@ -91,7 +110,7 @@ export default {
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.warehouse.queryWarehouseVirtualStock({
+      this.$api.warehouse.queryWarehouseStock({
         ...searchDate,
         ...other,
         ...page
@@ -118,38 +137,6 @@ export default {
         initData: opts.initData
       }
     },
-    /**
-		 * dialog新增、编辑处理函数
-		 */
-    dialogConfirm() {
-      const childRef = this.$refs.childRef
-      childRef.$refs.formRef.validate(valid => {
-        if (valid) {
-          const params = childRef.formModel
-          const curAction = this.dialogObj.isEdit ? 'editWarehouse' : 'addWarehouse'
-          // TODO...
-          this.$api.warehouse[curAction]({
-            // TODO...
-            ...params
-          }).then(() => {
-            this.responeHandle(this.dialogObj.isEdit ? '更新成功' : '新增成功')
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    /**
-		 * 删除单条表格数据
-		 * @id {Number}
-		 */
-    deleteHandle(params) {
-      this.$api.warehouse.deleteWarehouse(params).then(() => {
-        this.$msgTip('删除成功')
-        this.delResetData()
-      })
-    }
   }
 }
 </script>
