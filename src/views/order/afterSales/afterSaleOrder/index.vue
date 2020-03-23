@@ -281,9 +281,8 @@ export default {
         })
     },
     showRemarkDialog(btnName) {
-      this.remarkForm={ remark: '' }
+      this.remarkForm = { remark: '' }
       this.remarkDialogShow = true
-      // 坑点：btnName中文字带空格
       this.curAduitType = btnName.replace(/\s*/g, '') === '通过' ? 'pass' : 'reject'// 审核通过pass 拒绝reject
     },
     handleAduit() {
