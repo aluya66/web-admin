@@ -164,7 +164,7 @@ export default {
           label: '售后类型',
           prop: 'afterSalesType',
           formatter(row) {
-            return row && vm.setTableColumnLabel(row.refundType, dictObj.afterSalesTypes)
+            return row && vm.setTableColumnLabel(row.applyAfterSalesType, dictObj.afterSalesTypes)
           }
         },
         // {
