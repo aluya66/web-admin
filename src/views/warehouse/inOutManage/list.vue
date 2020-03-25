@@ -12,7 +12,6 @@
         hasBorder
         :max-height="maxHeight"
         :size="size"
-        :table-inner-btns="tableInnerBtns"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -63,15 +62,15 @@ export default {
     return {
       // 对话框对象
       dialogObj: {},
-       tableInnerBtns: [
-        {
-          width: 100,
-          name: '详情',
-          handle(row) {
-            vm.getDetail({id:row.id})
-          }
-        }
-      ],
+      //  tableInnerBtns: [
+      //   {
+      //     width: 100,
+      //     name: '详情',
+      //     handle(row) {
+      //       vm.getDetail({id:row.id})
+      //     }
+      //   }
+      // ],
       tableHeader: [
         {
           label: '仓库名称',
@@ -87,10 +86,11 @@ export default {
           fixed: true,
           formatter(row) {
             return row && vm.setTableColumnLabel(row.sourceType, dictObj.bussinessType)
+          },
+          search: {
+            type: 'select',
+            optionsList:  dictObj.bussinessType
           }
-          // search: {
-          //   type: 'input'
-          // }
         },
         {
           label: '入库单号',
@@ -111,6 +111,10 @@ export default {
           prop: 'source',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.source, dictObj.inOutType)
+          },
+          search: {
+            type: 'select',
+            optionsList:  dictObj.inOutType
           }
         },
         {
