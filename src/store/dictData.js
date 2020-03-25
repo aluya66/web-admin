@@ -415,19 +415,19 @@ const orderStatusList = [{
   label: '订单完结',
   value: 70
 }
-// , {
-//   label: '未审核',
-//   value: 10
-// }, {
-//   label: '审核通过',
-//   value: 20
-// }, {
-//   label: '待复核',
-//   value: 30
-// }, {
-//   label: '审核不通过',
-//   value: 40
-// },
+  // , {
+  //   label: '未审核',
+  //   value: 10
+  // }, {
+  //   label: '审核通过',
+  //   value: 20
+  // }, {
+  //   label: '待复核',
+  //   value: 30
+  // }, {
+  //   label: '审核不通过',
+  //   value: 40
+  // },
 ]
 
 // 售后状态
@@ -517,6 +517,9 @@ const payTypeList = [{
 }, {
   label: '积分',
   value: 'JF'
+}, {
+  label: '拉卡拉',
+  value: 'LAKALA'
 }]
 
 // 支付结算状态
@@ -597,7 +600,57 @@ const warehouseSaleType = [{
   value: 1
 }]
 
+// 售后单状态 状态 1:未审核 10:审核通过 11:审核拒绝 15:审核通过并发货
+// 20:仓库审核通过, 21:仓库审核拒绝 30:等待买家发货 40：等待卖家收货 50：等待商家退款 80:售后完成, 90售后取消
+const afterSalesStatus = [{
+  label: '未审核',
+  value: 1
+}, {
+  label: '审核通过',
+  value: 10
+}, {
+  label: '审核拒绝',
+  value: 11
+}, {
+  label: '审核通过并发货',
+  value: 15
+}, {
+  label: '仓库审核通过',
+  value: 20
+}, {
+  label: '仓库审核拒绝',
+  value: 21
+}, {
+  label: '等待买家发货',
+  value: 30
+}, {
+  label: '等待卖家收货',
+  value: 40
+}, {
+  label: '等待商家退款',
+  value: 50
+}, {
+  label: '售后完成',
+  value: 80
+}, {
+  label: '售后取消',
+  value: 90
+}]
+// 售后类型 1：只退款，2：退款退货，3:代金券退货
+const afterSalesTypes = [{
+  label: '只退款',
+  value: 1
+}, {
+  label: '退款退货',
+  value: 2
+}, {
+  label: '代金券退货',
+  value: 3
+}
+]
 export default {
+  afterSalesTypes,
+  afterSalesStatus,
   payStatusList,
   settleStatusList,
   pointTypeList,

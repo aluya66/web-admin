@@ -74,13 +74,13 @@ export default {
       ],
       // 表格内操作按钮
       tableHeader: [
-        {
-          label: '发货单号',
-          prop: 'outboundCode',
-          search: {
-            type: 'input'
-          }
-        },
+        // {
+        //   label: '发货单号',
+        //   prop: 'outboundCode',
+        //   search: {
+        //     type: 'input'
+        //   }
+        // },
         {
           label: '订单号',
           prop: 'orderCode',

@@ -1,7 +1,7 @@
 import Http from '../utils/request'
 
 const context = process.env.VUE_APP_CONSOLE_COMMON
-
+// VUE_APP_CONSOLE_LOCALHOST VUE_APP_CONSOLE_COMMON
 /**
  * 查询订单列表
  * @param {*}
@@ -88,7 +88,7 @@ export const queryVipList = params =>
  * @param {*}
  */
 export const queryRefundList = params =>
-  Http.fetch(`${context}/api/order/refund`, params, {
+  Http.fetch(`${context}/api/afterrefund/queryafterrefundpage`, params, {
     method: 'get'
   })
 
@@ -153,4 +153,123 @@ export const queryShipDetail = params =>
 export const queryStargoList = params =>
   Http.fetch(`${context}/api/stargo/list`, params, {
     method: 'get'
+  })
+
+/**
+* 查询售后单列表、退货单
+* @param {*}
+*/
+export const queryAfterSalesList = params =>
+  Http.fetch(`${context}/api/ass/list`, params, {
+    method: 'get'
+  })
+
+/**
+* 售后单详情
+* @param {*}
+*/
+export const afterSalesDetail = params =>
+  Http.fetch(`${context}/api/ass/detail`, params, {
+    method: 'get'
+  })
+
+/**
+* 售后单审核
+* @param {*}
+*/
+export const approveAfterSales = params =>
+  Http.fetch(`${context}/api/ass/approve`, params, {
+    method: 'put'
+  })
+
+/**
+* 售后费用设置列表
+* @param {*}
+*/
+export const afterSalesCostSettingList = params =>
+  Http.fetch(`${context}/api/afterset/queryaftersetpage`, params, {
+    method: 'get'
+  })
+
+/**
+* 售后费用设置 新增
+* @param {*}
+*/
+export const afterSalesCostSettingCreate = params =>
+  Http.fetch(`${context}/api/afterset/saveafterset`, params, {
+    method: 'post'
+  })
+
+/**
+* 售后费用设置 编辑
+* @param {*}
+*/
+export const afterSalesCostSettingUpdate = params =>
+  Http.fetch(`${context}/api/afterset/updateafterset`, params, {
+    method: 'put'
+  })
+
+/**
+* 售后费用设置 详情
+* @param {*}
+*/
+export const getAfterSalesCostSettingDetails = params =>
+  Http.fetch(`${context}/api/template/detail`, params, {
+    method: 'get'
+  })
+
+/**
+* 售后费用设置 删除
+* @param {*}
+*/
+export const afterSalesCostSettingDelete = params =>
+  Http.fetch(`${context}/api/afterset/deleteafterset`, params, {
+    method: 'delete'
+  })
+
+/**
+* 售后单: 导出excel
+* @param {*}
+*/
+export const afterSalesExport = params =>
+  Http.fetch(`${context}/api/ass/asexport`, params, {
+    method: 'get'
+  })
+
+/**
+* 退货单: 导出excel
+* @param {*}
+*/
+export const reshipExport = params =>
+  Http.fetch(`${context}/api/ass/roexport`, params, {
+    method: 'get',
+    responseType: 'arraybuffer',
+    hasErrMsg: true
+  })
+
+/**
+* 查询售后打款记录
+* @param {*}
+*/
+export const getRefundFeeRecord = params =>
+  Http.fetch(`${context}/api/afterrefundlog/queryafterrefundlogpage`, params, {
+    method: 'get'
+  })
+
+/**
+* 新增打款信息记录
+* @param {*}
+*/
+export const createRefundRecord = params =>
+  Http.fetch(`${context}/api/afterrefundlog/saveaafterrefundlog`, params, {
+    method: 'post'
+  })
+
+/**
+* 售后单: 更新售后单物流
+* @param {*}
+*/
+export const updateRefundDelivery = params =>
+  Http.fetch(`${context}/api/ass/delivery`, params, {
+    method: 'post'
   })

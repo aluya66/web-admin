@@ -17,7 +17,7 @@
     >
       <template v-if="item.type === 'select'">
         <el-select
-          v-model="formModel[item.prop]"
+          v-model.trim="formModel[item.prop]"
           class="search-item"
           :size="size"
           clearable
@@ -94,7 +94,7 @@
       </template>
       <template v-else>
         <el-input
-          v-model="formModel[item.prop]"
+          v-model.trim="formModel[item.prop]"
           class="search-item"
           :disabled="item.disabled"
           :size="size"

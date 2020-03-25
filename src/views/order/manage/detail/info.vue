@@ -24,7 +24,7 @@
     </line-card>
     <line-card title="支付信息" v-if="orderInfo.orderPayResp">
       <div class="row">
-        <span>支付方式：{{orderInfo.orderPayResp[0].payType}}</span>
+        <span>支付方式：{{setEnumValue((orderInfo.orderPayResp[0].payType).split(','),payTypeList)}}</span>
         <span>支付状态：{{setEnumValue(orderInfo.orderPayResp[0].status, payStatusList)}}</span>
         <span>支付时间：{{orderInfo.orderPayResp[0].created}}</span>
       </div>
@@ -85,7 +85,7 @@
         <span>会员账户：{{orderInfo.memberResp.phoneNumber}}</span>
       </div>
       <div class="row">
-        <span>会员等级：{{orderInfo.memberResp.grade}}</span>
+        <span>会员等级：{{orderInfo.memberResp.memberTypeId!==undefined?memberTransferList[orderInfo.memberResp.memberTypeId].label:'普通会员'}}</span>
         <!-- <span>会员身份证：</span> -->
         <span>联系电话：{{orderInfo.memberResp.phoneNumber}}</span>
       </div>
@@ -131,10 +131,19 @@ export default {
         value: 2
       }],
       lobList: dictObj.lobList,
-      payStatusList: dictObj.payStatusList,
+      payStatusList: // 支付状态
+      [{
+        label: '未支付',
+        value: 0
+      }, {
+        label: '已支付',
+        value: 1
+      }],
       orderSettleStatusList: dictObj.orderSettleStatusList,
       orderStatusList: dictObj.orderStatusList,
-      invoiceTypeList: dictObj.invoiceTypeList
+      invoiceTypeList: dictObj.invoiceTypeList,
+      memberTransferList: dictObj.customLevelList,
+      payTypeList: dictObj.payTypeList
     }
   },
   components: {
@@ -145,8 +154,17 @@ export default {
      * 获取枚举值
      */
     setEnumValue(value, curArr) {
-      let curVal = curArr.find(res => value === res.value)
-      return curVal ? curVal.label : (value || '')
+      if (Array.isArray(value)) { // value 为数组
+        let arr = []
+        value.forEach((item) => {
+          let curVal = curArr.find(res => item === res.value)
+          curVal && arr.push(curVal.label)
+        })
+        return arr.join(',')
+      } else {
+        let curVal = curArr.find(res => value === res.value)
+        return curVal ? curVal.label : (value || '')
+      }
     }
   }
 }
