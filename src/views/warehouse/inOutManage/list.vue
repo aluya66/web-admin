@@ -12,6 +12,7 @@
         hasBorder
         :max-height="maxHeight"
         :size="size"
+        :table-inner-btns="tableInnerBtns"
         :loading="isLoading"
         :table-header="tableHeader"
         :table-list="tableList"
@@ -28,22 +29,49 @@
         </template>
       </c-table>
     </div>
+      <div v-if="dialogObj.isShow">
+      <c-dialog
+        :is-show="dialogObj.isShow"
+        :title="dialogObj.title"
+        close-btn
+        @before-close="dialogObj.isShow = false"
+      >
+        <in-out-detail
+          ref="childRef"
+          :init-data.sync="dialogObj.initData"
+          :is-edit="dialogObj.isEdit"
+        ></in-out-detail>
+      </c-dialog>
+    </div>
   </c-view>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
+import CDialog from 'components/dialog'
+import InOutDetail from './detail'
 
 export default {
   // name: 'warehouse',
   mixins: [mixinTable],
   components: {
+    InOutDetail,
+    CDialog
   },
   data(vm) {
     return {
       // 对话框对象
       dialogObj: {},
+       tableInnerBtns: [
+        {
+          width: 100,
+          name: '详情',
+          handle(row) {
+            vm.getDetail({id:row.id})
+          }
+        }
+      ],
       tableHeader: [
         {
           label: '仓库名称',
@@ -67,7 +95,6 @@ export default {
         {
           label: '入库单号',
           prop: 'orderCode',
-          fixed: true,
           search: {
             type: 'input'
           }
@@ -147,6 +174,16 @@ export default {
         title: opts.title || '新增',
         initData: opts.initData
       }
+    },
+    //获取出入库详情
+    getDetail(params){
+      this.$api.warehouse.queryInOutRecordDetail(params).then(res=>{
+        this.showDialog({
+          isEdit:false,
+          title:'详情',
+          initData:res
+        })
+      })
     }
   }
 }
