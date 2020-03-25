@@ -82,3 +82,12 @@ export const queryPlateOccupiedStock = params =>
   Http.fetch(`${context}/api/virtual/occupied/page`, params, {
     method: 'get'
   })
+
+/**
+ * 出入库管理
+ * @param {*}
+ */
+export const queryInOutRecord = params =>
+  Http.fetch(`${context}/api/order/record/list`, params, {
+    method: 'get'
+  })

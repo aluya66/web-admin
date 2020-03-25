@@ -56,5 +56,14 @@ export default {
       icon: 'table',
       roles: ['admin']
     }
+  }, {
+    path: '/warehouse/inOutManage/list',
+    name: 'inOutManage',
+    component: () => import('@/views/warehouse/inOutManage/list'),
+    meta: {
+      title: 'inOutManage',
+      icon: 'table',
+      roles: ['admin']
+    }
   }]
 }

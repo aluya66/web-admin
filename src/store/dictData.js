@@ -648,6 +648,64 @@ const afterSalesTypes = [{
   value: 3
 }
 ]
+
+// 业务类型(0:均不属于;1:其他入库; 2:采购入库; 3:销售退货入库;4:调拨入库;5:其他出库;
+// 6:销售出库;7:调拨出库;8:挂版入库;9:挂版出库,10:退货出库,11#盘亏出库，12#盘盈入库，13#调货出库，14#调货入库)
+const bussinessType = [{
+  label: '其他入库',
+  value: 1
+}, {
+  label: '采购入库',
+  value: 2
+}, {
+  label: '销售退货入库',
+  value: 3
+}, {
+  label: '调拨入库',
+  value: 4
+}, {
+  label: '其他出库',
+  value: 5
+}, {
+  label: '销售出库',
+  value: 6
+}, {
+  label: '调拨出库',
+  value: 7
+}, {
+  label: '挂版入库',
+  value: 8
+}, {
+  label: '挂版出库',
+  value: 9
+}, {
+  label: '退货出库',
+  value: 10
+}, {
+  label: '盘亏出库',
+  value: 11
+}, {
+  label: '盘盈入库',
+  value: 12
+}, {
+  label: '调货出库',
+  value: 13
+}, {
+  label: '调货入库',
+  value: 14
+}]
+
+// 出入库 1 出库  2 入库
+const inOutType = [
+  {
+    label: '出库',
+    value: 1
+  }, {
+    label: '入库',
+    value: 2
+  }
+]
+
 export default {
   afterSalesTypes,
   afterSalesStatus,
@@ -689,5 +747,7 @@ export default {
   orderBusinessTypeList,
   invoiceTypeList,
   warehouseType,
-  warehouseSaleType
+  warehouseSaleType,
+  bussinessType,
+  inOutType
 }
