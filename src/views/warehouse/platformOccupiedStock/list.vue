@@ -76,11 +76,11 @@ export default {
         },
         {
           label: 'sku编码',
-          props: 'skuCode'
+          prop: 'skuCode'
         },
         {
           label: '变更时间',
-          props: 'changeTime'
+          prop: 'changeTime'
         }
       ]
     }
