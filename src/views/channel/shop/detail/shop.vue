@@ -88,6 +88,7 @@
         :options="areaOptions"
         placeholder="请选择门店地址"
         filterable
+        ref="cascaderRef"
       ></el-cascader>
     </el-form-item>
     <el-form-item label="详细地址:" prop="address">
@@ -172,10 +173,10 @@
     <el-form-item label="门店风格" prop="style" v-if="formModel.shopType === 1" required>
       <el-select class="select-item" v-model="formModel.style" placeholder="请选择商户">
         <el-option
-          v-for="item in styleList"
+          v-for="(item,index) in styleList"
           :key="item.styleId"
           :label="item.styleName"
-          :value="item.styleId"
+          :value="index"
         ></el-option>
       </el-select>
     </el-form-item>
@@ -380,6 +381,15 @@ export default {
   components: {
     CUpload
   },
+  props:{
+    styleLists: {
+      // 初始化选中值
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   mixins: [MixinFormCard, mixinTable],
   data(vm) {
     return {
@@ -458,7 +468,6 @@ export default {
       disStatus: dictObj.disStatus, // 禁用启用
       businessList: [], // 商户列表
       operationList: [], // 运营中心列表
-      styleList: [], // 风格列表
       changeTypeList: [], // 调价底线
       settleTypeList: [{ // 结算方式
         label: '先款后贷',
@@ -480,8 +489,12 @@ export default {
       }]
     }
   },
+  computed: {
+    styleList() {
+      return this.styleLists
+    }
+  },
   created() {
-    this.getStyleList()
     this.fetchAreaData()
     this.fetchChangeType()
     this.fetchOperationList()
@@ -517,22 +530,6 @@ export default {
     },
     showDialog() {
       this.$emit('open-dialog')
-    },
-    getStyleList() {
-      this.$api.channel
-        .getShopStyle({
-          pageSize: 100,
-          pageNo: 1
-        })
-        .then(res => {
-          this.isLoading = false
-          if (res && res.totalCount) {
-            const { data } = res
-            this.styleList = data || []
-          } else {
-            this.styleList = res || []
-          }
-        })
     },
     fetchAreaData() {
       this.$api.basic.getAreaAll().then(res => {
