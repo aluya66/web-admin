@@ -497,10 +497,10 @@ export default {
   methods: {
     // 获取运营中心列表数据
     fetchOperationList() {
-      if(!this.formModel.businessCode){
-        return 
+      if (!this.formModel.businessCode) {
+        return
       }
-      this.$api.operation.queryAllOperationList({businessCode:this.formModel.businessCode}).then(res => {
+      this.$api.operation.queryAllOperationList({ businessCode: this.formModel.businessCode }).then(res => {
         if (res && res.totalCount) {
           const { data } = res
           this.operationList = data || []

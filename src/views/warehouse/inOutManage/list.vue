@@ -63,12 +63,12 @@ export default {
     return {
       // 对话框对象
       dialogObj: {},
-       tableInnerBtns: [
+      tableInnerBtns: [
         {
           width: 100,
           name: '详情',
           handle(row) {
-            vm.getDetail({id:row.id})
+            vm.getDetail({ id: row.id })
           }
         }
       ],

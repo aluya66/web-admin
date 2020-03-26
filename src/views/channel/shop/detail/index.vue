@@ -107,8 +107,8 @@ export default {
         stockCheck: 0, // 支持盘点
         channelCode: [], // 关联渠道
         changeStatus: 0, // 开单调价
-        openVipStatus: 0 ,// 支持代开会员
-        canEditOperation:true,//可选择运营中心，初始默认为true
+        openVipStatus: 0, // 支持代开会员
+        canEditOperation: true// 可选择运营中心，初始默认为true
       },
       isView: true,
       isDisabled: true,
