@@ -16,6 +16,7 @@
         :table-header="tableHeader"
         :table-list="tableList"
 				:page-info="pageInfo"
+        :table-inner-btns="tableInnerBtns"
         @change-pagination="changePagination"
       >
         <template v-slot:header>
@@ -62,23 +63,23 @@ export default {
     return {
       // 对话框对象
       dialogObj: {},
-      //  tableInnerBtns: [
-      //   {
-      //     width: 100,
-      //     name: '详情',
-      //     handle(row) {
-      //       vm.getDetail({id:row.id})
-      //     }
-      //   }
-      // ],
+       tableInnerBtns: [
+        {
+          width: 100,
+          name: '详情',
+          handle(row) {
+            vm.getDetail({id:row.id})
+          }
+        }
+      ],
       tableHeader: [
         {
           label: '仓库名称',
           prop: 'whName',
-          fixed: true
-          // search: {
-          //   type: 'input'
-          // }
+          fixed: true,
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '业务类型',
@@ -89,7 +90,7 @@ export default {
           },
           search: {
             type: 'select',
-            optionsList:  dictObj.bussinessType
+            optionsList: dictObj.bussinessType
           }
         },
         {
@@ -114,7 +115,7 @@ export default {
           },
           search: {
             type: 'select',
-            optionsList:  dictObj.inOutType
+            optionsList: dictObj.inOutType
           }
         },
         {
@@ -123,11 +124,21 @@ export default {
         },
         {
           label: '状态',
-          prop: 'status'
+          prop: 'status',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.status, dictObj.inOutStatusList)
+          },
+          search: {
+            type: 'select',
+            optionsList: dictObj.inOutStatusList
+          }
         },
         {
           label: '操作人',
-          prop: 'createdName'
+          prop: 'createdName',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '出入库日期',
@@ -179,13 +190,13 @@ export default {
         initData: opts.initData
       }
     },
-    //获取出入库详情
-    getDetail(params){
-      this.$api.warehouse.queryInOutRecordDetail(params).then(res=>{
+    // 获取出入库详情
+    getDetail(params) {
+      this.$api.warehouse.queryInOutRecordDetail(params).then(res => {
         this.showDialog({
-          isEdit:false,
-          title:'详情',
-          initData:res
+          isEdit: false,
+          title: '详情',
+          initData: res
         })
       })
     }

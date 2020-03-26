@@ -696,15 +696,28 @@ const bussinessType = [{
 }]
 
 // 出入库 1 出库  2 入库
-const inOutType = [
-  {
-    label: '出库',
-    value: 1
-  }, {
-    label: '入库',
-    value: 2
-  }
-]
+const inOutType = [{
+  label: '出库',
+  value: 1
+},{
+  label: '入库',
+  value: 2
+}]
+
+//出入库管理状态 // 1,待确认, 2,已完成, 3,已取消, 4,临时保存',
+const inOutStatusList=[{
+  label: '待确认',
+  value: 1
+},{
+  label: '已完成',
+  value: 2
+},{
+  label: '已取消',
+  value: 3
+},{
+  label: '临时保存',
+  value: 4
+}]
 
 export default {
   afterSalesTypes,
@@ -749,5 +762,6 @@ export default {
   warehouseType,
   warehouseSaleType,
   bussinessType,
-  inOutType
+  inOutType,
+  inOutStatusList
 }

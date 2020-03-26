@@ -92,11 +92,11 @@ export const queryInOutRecord = params =>
     method: 'get'
   })
 
-  /**
+/**
  * 出入库详情
  * @param {*}
  */
 export const queryInOutRecordDetail = params =>
-Http.fetch(`${context}/api/order/record/detail`, params, {
-  method: 'get'
-})
+  Http.fetch(`${context}/api/order/record/detail`, params, {
+    method: 'get'
+  })

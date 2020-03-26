@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import dictObj from '@/store/dictData'
+// import dictObj from '@/store/dictData'
 import MixinForm from 'mixins/form'
 
 export default {
@@ -39,7 +39,7 @@ export default {
     }
   },
   methods: {
-    
+
   }
 }
 </script>
