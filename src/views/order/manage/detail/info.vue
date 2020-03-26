@@ -64,7 +64,7 @@
         <span>发票备注：</span>
       </div>
     </line-card>
-    <line-card title="收获信息" v-if="orderInfo.orderDeliveryAddressResp">
+    <line-card title="收货信息" v-if="orderInfo.orderDeliveryAddressResp">
       <div class="row">
         <span>收货人：{{orderInfo.orderDeliveryAddressResp.name}}</span>
         <span>联系电话：{{orderInfo.orderDeliveryAddressResp.mobile}}</span>

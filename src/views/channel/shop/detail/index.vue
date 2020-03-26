@@ -11,6 +11,7 @@
         :is-view="isView"
         :is-disabled="isDisabled"
         :data-obj.sync="formModel"
+        :style-lists.sync="styleList"
         ref="formRef"
         @show-image="reviewImage"
         @open-dialog="showDialog"
@@ -112,14 +113,32 @@ export default {
       },
       isView: true,
       isDisabled: true,
-      btnLoading: false
+      btnLoading: false,
+      styleList: [], // 风格列表
     }
   },
   created() {
     const { params } = this.$route
     params.id && this.fetchData(params.id)
+    this.getStyleList()
   },
   methods: {
+     getStyleList() {
+      this.$api.channel
+        .getShopStyle({
+          pageSize: 100,
+          pageNo: 1
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data } = res
+            this.styleList = data || []
+          } else {
+            this.styleList = res || []
+          }
+        })
+    },
     dialogConfirm() {
       if (this.$refs.childRef.selectedList.length > 1) return this.$msgTip('只能选择一条渠道', 'warning')
       this.formModel.channelCode = this.$refs.childRef.selectedList
@@ -169,6 +188,8 @@ export default {
     },
     submitHandle() {
       const shopForm = this.$refs.formRef.$refs.shopFormRef
+      const cascaderObj = this.$refs.formRef.$refs.cascaderRef
+      
       Promise.all([shopForm].map(this.getFormPromise)).then(res => {
         // 所有子表单是否校验通过
         const validateResult = res.every(item => !!item)
@@ -177,6 +198,7 @@ export default {
             'add': this.$api.channel.addShop,
             'edit': this.$api.channel.editShop
           }
+          const shopAddressText = cascaderObj.inputValue.split('/')
           const {
             shopId, // id
             shopType, // 门店类型
@@ -219,6 +241,9 @@ export default {
             provinceCode: shopAddress[0], // 省
             cityCode: shopAddress[1], // 市
             areaCode: shopAddress[2], // 区
+            provinceName:shopAddressText[0],//省中文
+            cityName:shopAddressText[1],//市中文
+            areaName:shopAddressText[2],//区中文
             coordinate, // 门店坐标
             contact, // 联系人
             contactTel, // 联系手机
@@ -249,7 +274,8 @@ export default {
               shopImage: shopImage.length ? shopImage[0].url : '', // 店招
               exhibitionImage: exhibitionImage.length ? exhibitionImage[0].url : '', // 展馆图
               videoUrl: videoUrl.length ? videoUrl[0].url : '', // 门店视频
-              style, // 门店风格
+              style:this.styleList[style].styleId, // 门店风格
+              styleName:this.styleList[style].styleName,//门店风格中文名
               isRecommend, // 是否推荐
               businessHours: businessHours.length ? businessHours.join('~') : '', // 营业时间
               shopDescription, // 描述
