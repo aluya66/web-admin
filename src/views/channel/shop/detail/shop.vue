@@ -489,12 +489,18 @@ export default {
   watch: {
     'formModel.shopType'() {
       this.getShopList()
+    },
+    'formModel.businessCode'() {
+      this.fetchOperationList()
     }
   },
   methods: {
     // 获取运营中心列表数据
     fetchOperationList() {
-      this.$api.operation.queryAllOperationList().then(res => {
+      if(!this.formModel.businessCode){
+        return 
+      }
+      this.$api.operation.queryAllOperationList({businessCode:this.formModel.businessCode}).then(res => {
         if (res && res.totalCount) {
           const { data } = res
           this.operationList = data || []
