@@ -189,7 +189,7 @@ export default {
     submitHandle() {
       const shopForm = this.$refs.formRef.$refs.shopFormRef
       const cascaderObj = this.$refs.formRef.$refs.cascaderRef
-      const shopAddressText = cascaderObj.inputValue.split('/')
+      
       Promise.all([shopForm].map(this.getFormPromise)).then(res => {
         // 所有子表单是否校验通过
         const validateResult = res.every(item => !!item)
@@ -198,6 +198,7 @@ export default {
             'add': this.$api.channel.addShop,
             'edit': this.$api.channel.editShop
           }
+          const shopAddressText = cascaderObj.inputValue.split('/')
           const {
             shopId, // id
             shopType, // 门店类型
