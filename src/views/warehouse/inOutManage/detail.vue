@@ -24,7 +24,7 @@
 
 <script>
 // import dictObj from '@/store/dictData'
-import mixinTable from "mixins/table";
+import mixinTable from 'mixins/table'
 
 export default {
   mixins: [mixinTable],
@@ -32,7 +32,7 @@ export default {
     initData: {
       type: Object,
       default() {
-        return {};
+        return {}
       }
     }
     // isEdit: {
@@ -45,20 +45,20 @@ export default {
       // 表格内操作按钮
       tableHeader: [
         {
-          label: "仓库id",
-          prop: "whId"
+          label: '仓库id',
+          prop: 'whId'
         },
         {
-          label: "仓库编码",
-          prop: "whCode"
+          label: '仓库编码',
+          prop: 'whCode'
         },
         {
-          label: "仓库名称",
-          prop: "whName"
+          label: '仓库名称',
+          prop: 'whName'
         },
         {
-          label: "商品id",
-          prop: "productId"
+          label: '商品id',
+          prop: 'productId'
         },
         // {
         //   label: "供应商编码",
@@ -73,53 +73,53 @@ export default {
         //   prop: "venderProductCode"
         // },
         {
-          label: "商品sku",
-          prop: "skuCode"
+          label: '商品sku',
+          prop: 'skuCode'
         },
         {
-          label: "商品款号",
-          prop: "productAtrNumber"
+          label: '商品款号',
+          prop: 'productAtrNumber'
         },
         {
-          label: "商品名称",
-          prop: "productName"
+          label: '商品名称',
+          prop: 'productName'
         },
         {
-          label: "品牌名称",
-          prop: "brandName"
+          label: '品牌名称',
+          prop: 'brandName'
         },
-          {
-          label: "品牌编码",
-          prop: "brandCode"
+        {
+          label: '品牌编码',
+          prop: 'brandCode'
         },
-          {
-          label: "数量",
-          prop: "qty"
-        },  {
-          label: "创建时间",
-          prop: "created"
-        },  {
-          label: "创建人",
-          prop: "createdName"
-        },
+        {
+          label: '数量',
+          prop: 'qty'
+        }, {
+          label: '创建时间',
+          prop: 'created'
+        }, {
+          label: '创建人',
+          prop: 'createdName'
+        }
       ]
-    };
+    }
   },
   created() {
-    console.log("createeeeeee?????", this.initData);
+    console.log('createeeeeee?????', this.initData)
   },
   computed: {
     formModel: {
       get() {
-        return this.initData;
+        return this.initData
       },
       set(val) {
-        this.$emit("update:init-data", val);
+        this.$emit('update:init-data', val)
       }
     }
   },
   methods: {}
-};
+}
 </script>
 
 <style lang='less' scoped>
