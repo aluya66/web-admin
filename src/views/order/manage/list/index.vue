@@ -251,7 +251,7 @@ export default {
         },
         {
           label: '支付单号',
-          prop: 'thirdPartyPaycode',
+          prop: 'flowCode',
           search: {
             type: 'input'
           }
