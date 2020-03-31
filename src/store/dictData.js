@@ -722,6 +722,18 @@ const inOutStatusList = [{
   value: 4
 }]
 
+//店铺角色
+const shopRole = [{
+  label:'老板',
+  value:1
+}, {
+  label:'店长',
+  value:2
+}, {
+  label:'店员',
+  value:3
+}]
+
 export default {
   afterSalesTypes,
   afterSalesStatus,
@@ -766,5 +778,6 @@ export default {
   warehouseSaleType,
   bussinessType,
   inOutType,
-  inOutStatusList
+  inOutStatusList,
+  shopRole
 }

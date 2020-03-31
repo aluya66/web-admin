@@ -19,6 +19,15 @@ export default {
       icon: 'nested'
     },
     children: [{
+      path: '/member/manage/shop',
+      name: 'shopMemberManageList',
+      component: () => import('@/views/member/manage/shop'),
+      meta: {
+        icon: 'table',
+        title: 'shopMemberManageList',
+        roles: ['edit']
+      }
+    }, {
       path: '/member/manage/list',
       name: 'memberManageList',
       component: () => import('@/views/member/manage/list/index'),
