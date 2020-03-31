@@ -520,9 +520,9 @@ const payTypeList = [{
 }, {
   label: '拉卡拉',
   value: 'LAKALA'
-},{
-  label:'通联pos',
-  value:'TL'
+}, {
+  label: '通联pos',
+  value: 'TL'
 }]
 
 // 支付结算状态
