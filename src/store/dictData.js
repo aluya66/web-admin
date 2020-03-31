@@ -520,9 +520,9 @@ const payTypeList = [{
 }, {
   label: '拉卡拉',
   value: 'LAKALA'
-},{
-  label:'通联pos',
-  value:'TL'
+}, {
+  label: '通联pos',
+  value: 'TL'
 }]
 
 // 支付结算状态
@@ -722,16 +722,16 @@ const inOutStatusList = [{
   value: 4
 }]
 
-//店铺角色
+// 店铺角色
 const shopRole = [{
-  label:'老板',
-  value:1
+  label: '老板',
+  value: 1
 }, {
-  label:'店长',
-  value:2
+  label: '店长',
+  value: 2
 }, {
-  label:'店员',
-  value:3
+  label: '店员',
+  value: 3
 }]
 
 export default {

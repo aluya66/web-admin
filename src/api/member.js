@@ -256,7 +256,7 @@ export const exportEarnings = params =>
  */
 export const getShopMemberList = params =>
   Http.fetch(`${context}/api/shop/user/list`, params, {
-    method: 'get',
+    method: 'get'
   })
 
 /**
@@ -265,7 +265,7 @@ export const getShopMemberList = params =>
  */
 export const updateShopMember = params =>
   Http.fetch(`${context}/api/shop/user/update`, params, {
-    method: 'put',
+    method: 'put'
   })
 
 /**
@@ -274,7 +274,7 @@ export const updateShopMember = params =>
  */
 export const getShopMemberDetail = params =>
   Http.fetch(`${context}/api/shop/user/detail`, params, {
-    method: 'get',
+    method: 'get'
   })
 
 /**
@@ -283,5 +283,5 @@ export const getShopMemberDetail = params =>
  */
 export const addShopMember = params =>
   Http.fetch(`${context}/api/shop/user/add`, params, {
-    method: 'post',
+    method: 'post'
   })

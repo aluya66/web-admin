@@ -40,6 +40,7 @@
       >
         <warehouse-add
           ref="childRef"
+          :shop-list.sync="dialogObj.shopList"
           :init-data.sync="dialogObj.initData"
           :is-edit="dialogObj.isEdit"
         ></warehouse-add>
@@ -95,14 +96,20 @@ export default {
         },
         {
           label: '客户ID',
-          prop: 'staffId',
+          prop: 'staffId'
         },
-          {
+        {
           label: '所属店铺',
-          prop: 'shopName',
-          search:{
-            type: 'select',
-            optionsList: shopList
+          prop: 'shopId',
+          search: {
+            prop: 'shopId',
+            type: 'dict',
+            optionsList: [],
+            allowCreate: true,
+            filterable: true
+          },
+          formatter (row) {
+            return row && row.shopName
           }
         },
         {
@@ -122,7 +129,7 @@ export default {
           search: {
             type: 'input'
           }
-        },
+        }
       ]
     }
   },
@@ -131,17 +138,15 @@ export default {
     this.getShopList()
   },
   methods: {
-    getShopList(){
+    getShopList() {
       this.$api.channel.getShopList({
-        pageSize: 100,
-        pageNo: 1,
+        pageSize: 200,
+        pageNo: 1
       }).then(res => {
         this.isLoading = false
         if (res && res.totalCount) {
-          const { data } = res
-          this.shopList = data || []
-        } else {
-          this.shopList = res || []
+          this.shopList = res.data.map(val => ({ label: val.shopName, value: val.shopId })) || []
+          this.setSearchOptionsList('shopName', this.shopList)
         }
       })
     },
@@ -177,7 +182,8 @@ export default {
         isShow: true,
         isEdit: opts.isEdit || false,
         title: opts.title || '创建店铺用户',
-        initData: opts.initData
+        initData: opts.initData,
+        shopList: this.shopList
       }
     },
     /**
@@ -187,16 +193,15 @@ export default {
       const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
-          console.log('childRef.formModel',childRef.formModel)
-          const params = {}
+          const params = childRef.formModel
           const curAction = this.dialogObj.isEdit
             ? 'updateShopMember'
             : 'addShopMember'
-          // this.$api.member[curAction]({
-          //   ...params
-          // }).then(() => {
-          //   this.responeHandle(this.dialogObj.isEdit ? '更新成功' : '新增成功')
-          // })
+          this.$api.member[curAction]({
+            ...params
+          }).then(() => {
+            this.responeHandle(this.dialogObj.isEdit ? '更新成功' : '新增成功')
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -210,7 +215,7 @@ export default {
           title: '更新店铺用户',
           isEdit: true,
           initData: {
-           ...res
+            ...res
           }
         })
       })
