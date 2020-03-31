@@ -171,12 +171,12 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item label="门店风格" prop="style" v-if="formModel.shopType === 1" required>
-      <el-select class="select-item" v-model="formModel.style" placeholder="请选择商户">
+      <el-select ref="styleRef" class="select-item" v-model="formModel.style" placeholder="请选择商户">
         <el-option
-          v-for="(item,index) in styleList"
+          v-for="item in styleList"
           :key="item.styleId"
           :label="item.styleName"
-          :value="index"
+          :value="item.styleId"
         ></el-option>
       </el-select>
     </el-form-item>
@@ -381,15 +381,6 @@ export default {
   components: {
     CUpload
   },
-  props:{
-    styleLists: {
-      // 初始化选中值
-      type: Array,
-      default() {
-        return []
-      }
-    }
-  },
   mixins: [MixinFormCard, mixinTable],
   data(vm) {
     return {
@@ -469,7 +460,9 @@ export default {
       businessList: [], // 商户列表
       operationList: [], // 运营中心列表
       changeTypeList: [], // 调价底线
+      styleList: [], // 风格列表
       settleTypeList: [{ // 结算方式
+
         label: '先款后贷',
         value: 1
       }],
@@ -489,25 +482,43 @@ export default {
       }]
     }
   },
-  computed: {
-    styleList() {
-      return this.styleLists
-    }
-  },
   created() {
     this.fetchAreaData()
     this.fetchChangeType()
     this.fetchOperationList()
+    this.getStyleList()
   },
   watch: {
     'formModel.shopType'() {
       this.getShopList()
+    },
+    'formModel.businessCode'() {
+      this.fetchOperationList()
     }
   },
   methods: {
+    getStyleList() {
+      this.$api.channel
+        .getShopStyle({
+          pageSize: 100,
+          pageNo: 1
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data } = res
+            this.styleList = data || []
+          } else {
+            this.styleList = res || []
+          }
+        })
+    },
     // 获取运营中心列表数据
     fetchOperationList() {
-      this.$api.operation.queryAllOperationList().then(res => {
+      if (!this.formModel.businessCode) {
+        return
+      }
+      this.$api.operation.queryAllOperationList({ businessCode: this.formModel.businessCode }).then(res => {
         if (res && res.totalCount) {
           const { data } = res
           this.operationList = data || []
