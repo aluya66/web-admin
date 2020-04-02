@@ -504,7 +504,8 @@ export default {
           retailPrice: curSkuInfo.retailPrice, // 零售价
           memberPrice: curSkuInfo.memberPrice, // 成衣会员价
           skuStock: curSkuInfo.skuStock || 0, // 成衣库存
-          isDefalut: curSkuInfo.isDefalut === 1
+          isDefalut: curSkuInfo.isDefalut === 1,
+          ipxBatchPrice:curSkuInfo.ipxBatchPrice,//ipx临时批发价
         }
       }
       const spec = childProduct.childProductSpec
