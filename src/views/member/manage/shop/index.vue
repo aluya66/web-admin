@@ -146,7 +146,7 @@ export default {
         this.isLoading = false
         if (res && res.totalCount) {
           this.shopList = res.data.map(val => ({ label: val.shopName, value: val.shopId })) || []
-          this.setSearchOptionsList('shopName', this.shopList)
+          this.setSearchOptionsList('shopId', this.shopList)
         }
       })
     },
