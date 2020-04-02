@@ -125,9 +125,13 @@ export default {
         },
         {
           label: '状态',
-          prop: 'statusName',
+          prop: 'status',
+           formatter (row) {
+            return row && row.statusName
+          },
           search: {
-            type: 'input'
+            type: 'select',
+            optionsList: dictObj.openStatus
           }
         }
       ]
