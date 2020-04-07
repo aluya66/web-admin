@@ -12,7 +12,7 @@
       :highlight-current-row="highlightCurrentRow"
       :span-method="objectSpanMethod"
       tooltip-effect="dark"
-      style="width: 100%"
+      style="width: 99.9%"
       @selection-change="handleSelectionChange"
       @select="handleSelect"
       @select-all="handleSelectAll"
