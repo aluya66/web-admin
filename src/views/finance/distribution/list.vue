@@ -97,7 +97,10 @@ export default {
           label: '结算类型',
           prop: 'type',
           formatter(row) {
-            return row.typeName || vm.setTableColumnLabel(row.type, 'earningsTypeList')
+            return (
+              row.typeName ||
+              vm.setTableColumnLabel(row.type, 'earningsTypeList')
+            )
           },
           search: {
             type: 'dict',
@@ -116,7 +119,10 @@ export default {
           label: '结算状态',
           prop: 'earningsStatus',
           formatter(row) {
-            return row.earningsStatusName || vm.setTableColumnLabel(row.earningsStatus, 'earningsStatusList')
+            return (
+              row.earningsStatusName ||
+              vm.setTableColumnLabel(row.earningsStatus, 'earningsStatusList')
+            )
           },
           search: {
             type: 'dict',
@@ -143,50 +149,54 @@ export default {
       const { totalNum } = this.pageInfo
       const searchDate = this.getSearchDate(dateTime)
       this.exportLoading = true
-      this.$api.member.exportEarnings({
-        ...searchDate,
-        ...other,
-        total: totalNum
-      }).then(res => {
-        this.exportLoading = false
-        if (res) {
-          const { data, filename } = res
-          if (data && filename) {
-            utils.createBlobFile(data, filename)
+      this.$api.member
+        .exportEarnings({
+          ...searchDate,
+          ...other,
+          total: totalNum
+        })
+        .then(res => {
+          this.exportLoading = false
+          if (res) {
+            const { data, filename } = res
+            if (data && filename) {
+              utils.createBlobFile(data, filename)
+            } else {
+              this.$msgTip('导出数据异常', 'warning')
+            }
           } else {
-            this.$msgTip('导出数据异常', 'warning')
+            this.$msgTip('导出数据失败', 'warning')
           }
-        } else {
-          this.$msgTip('导出数据失败', 'warning')
-        }
-      })
+        })
     },
     /*
-	   * 查询表格列表数据
-	   */
+     * 查询表格列表数据
+     */
     fetchData() {
       const { totalNum, ...page } = this.pageInfo
       const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime)
       this.isLoading = true
-      this.$api.member.queryEarningslist({
-        ...searchDate,
-        ...other,
-        ...page
-      }).then(res => {
-        this.isLoading = false
-        if (res && res.totalCount) {
-          const { data, totalCount } = res
-          this.pageInfo.totalNum = totalCount
-          this.tableList = data.earningsList || []
-          this.totalSellPrice = data.totalSellPrice
-          this.totalEarnings = data.totalEarnings
-        } else {
-          this.tableList = res || []
-          this.totalSellPrice = '0.00'
-          this.totalEarnings = '0.00'
-        }
-      })
+      this.$api.member
+        .queryEarningslist({
+          ...searchDate,
+          ...other,
+          ...page
+        })
+        .then(res => {
+          this.isLoading = false
+          if (res && res.totalCount) {
+            const { data, totalCount } = res
+            this.pageInfo.totalNum = totalCount
+            this.tableList = data.earningsList || []
+            this.totalSellPrice = data.totalSellPrice
+            this.totalEarnings = data.totalEarnings
+          } else {
+            this.tableList = res || []
+            this.totalSellPrice = '0.00'
+            this.totalEarnings = '0.00'
+          }
+        })
     }
   }
 }

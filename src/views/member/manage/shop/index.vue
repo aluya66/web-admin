@@ -126,7 +126,7 @@ export default {
         {
           label: '状态',
           prop: 'status',
-           formatter (row) {
+          formatter (row) {
             return row && row.statusName
           },
           search: {
@@ -197,7 +197,9 @@ export default {
       const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
         if (valid) {
-          const params = childRef.formModel
+          const { fileList, ...other } = childRef.formModel
+          const params = { ...other }
+          params.userQrcode = fileList[0] ? fileList[0].url : ''
           const curAction = this.dialogObj.isEdit
             ? 'updateShopMember'
             : 'addShopMember'
