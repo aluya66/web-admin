@@ -83,7 +83,7 @@
             <th
               style="width: 150px;"
               v-for="(item, index) in batchList"
-              v-show="index===1 || index===6"
+              v-show="index===1 || index===6 || index===8"
               :key="'th_'+index"
               :title="item.name"
             >{{item.name !== 'skuStock' ? item.label + '(元)': item.label}}</th>
@@ -141,6 +141,16 @@
                 :placeholder="tdItem.label"
                 @change="(val) => { changeSkuPrice(val, index, tdItem.name) }"
                 :disabled="tdItem.name === 'sampleCostPrice' || tdItem.name === 'skuStock'"
+              ></el-input>
+            </td>
+            <!--ipx临时批发价-->
+            <td v-for="(tdItem, tdIndex) in batchList" v-show="tdIndex ===8" :key="'td_ipx_' + tdIndex">
+              <el-input
+                size="small"
+                type="text"
+                v-if="childProductArray[index]"
+                v-model.number="childProductArray[index][tdItem.name]"
+                @change="(val) => { changeIpxPrice(val, index, tdItem.name) }"
               ></el-input>
             </td>
             <!-- <td>
@@ -305,6 +315,10 @@ export default {
         label: '成衣库存',
         value: '',
         name: 'skuStock'
+      }, {
+        label: 'IPX批发价（临时）',
+        value: '',
+        name: 'ipxBatchPrice'
       }]
     }
   },
@@ -490,7 +504,8 @@ export default {
           retailPrice: curSkuInfo.retailPrice, // 零售价
           memberPrice: curSkuInfo.memberPrice, // 成衣会员价
           skuStock: curSkuInfo.skuStock || 0, // 成衣库存
-          isDefalut: curSkuInfo.isDefalut === 1
+          isDefalut: curSkuInfo.isDefalut === 1,
+          ipxBatchPrice:curSkuInfo.ipxBatchPrice,//ipx临时批发价
         }
       }
       const spec = childProduct.childProductSpec
@@ -559,6 +574,12 @@ export default {
       if (val) {
         this.$set(this.childProductArray[index], priceType, Number(val).toFixed(2))
         this.childProductArray[index].isDefalut && this.handleMinPrice(this.childProductArray[index])
+      }
+    },
+    changeIpxPrice(val, index, priceType) {
+      if (val) {
+        this.$set(this.childProductArray[index], priceType, Number(val).toFixed(2))
+        this.handleMinPrice(this.childProductArray[index])
       }
     },
     // 倍率设置
