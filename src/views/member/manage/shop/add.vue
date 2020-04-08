@@ -27,6 +27,7 @@
           v-model="formModel.shopId"
           class="select-type"
           clearable
+          :disabled="isEdit"
         >
           <el-option
             v-for="item in shopList"
