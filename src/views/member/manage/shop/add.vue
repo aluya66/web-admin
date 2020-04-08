@@ -118,12 +118,13 @@ export default {
   created() {
     this.formModel = {
       fileList: [],
-      ...this.initData
-      // name:this.initData.name,
-      // phone:this.initData.phone,
-      // role:this.initData.role,
-      // shopId:this.initData.shopId,
-      // status:this.initData.status
+      // ...this.initData,
+      name:this.initData.name,
+      phone:this.initData.phone,
+      role:this.initData.role,
+      shopId:this.initData.shopId,
+      status:this.initData.status,
+      staffId:this.initData.staffId
     }
     if (this.initData.userQrcode) {
       this.formModel.fileList = [{ name: '图片', url: this.initData.userQrcode }]
