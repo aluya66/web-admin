@@ -734,6 +734,15 @@ const shopRole = [{
   value: 3
 }]
 
+// POS类型
+const posType = [{
+  label: '拉卡拉',
+  value: 0
+}, {
+  label: '通联支付',
+  value: 1
+}]
+
 export default {
   afterSalesTypes,
   afterSalesStatus,
@@ -779,5 +788,6 @@ export default {
   bussinessType,
   inOutType,
   inOutStatusList,
-  shopRole
+  shopRole,
+  posType
 }

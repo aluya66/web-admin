@@ -194,6 +194,8 @@ export default {
             contact, // 联系人
             contactTel, // 联系手机
             usePos, // 是否使用pos
+            posType, // pos类型
+            posAccount, // POS终端号
             isConnectPrinter, // 是否关联打印机
             printer, // 打印机编号
             isRecommend, // 是否推荐
@@ -230,6 +232,8 @@ export default {
             contact, // 联系人
             contactTel, // 联系手机
             usePos, // 是否使用pos
+            posType, // pos类型
+            posAccount, // POS终端号
             businessType, // 经营方式
             settleType, // 结算方式
             status, // 状态

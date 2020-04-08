@@ -140,6 +140,26 @@
         >{{ item.label }}</el-radio>
       </el-radio-group>
     </el-form-item>
+     <el-form-item label="POS类型" v-if="formModel.usePos">
+      <el-radio-group v-model="formModel.posType">
+        <el-radio
+          class="checkbox-item"
+          :label="item.value"
+          v-for="(item, index) in posType"
+          :key="index"
+        >{{ item.label }}</el-radio>
+      </el-radio-group>
+    </el-form-item>
+     <el-form-item label="POS终端号" prop="posAccount" v-if="formModel.usePos">
+      <el-input
+        class="form-item"
+        v-model.trim="formModel.posAccount"
+        :size="size"
+        placeholder="请输入POS终端号"
+        clearable
+        maxlength="30"
+      />
+    </el-form-item>
     <el-form-item label="关联打印机">
       <el-radio-group v-model="formModel.isConnectPrinter">
         <el-radio
@@ -479,7 +499,8 @@ export default {
       }, {
         label: '非推荐',
         value: 2
-      }]
+      }],
+      posType: dictObj.posType
     }
   },
   created() {
