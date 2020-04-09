@@ -100,7 +100,13 @@ export default {
   },
   data() {
     return {
-      shopRole: dictObj.shopRole,
+      shopRole: [{
+        label: '店长',
+        value: 2
+      }, {
+        label: '店员',
+        value: 3
+      }],//dictObj.shopRole
       shopStatus: dictObj.openStatus,
       rules: {
         name: [{ required: true, message: '请填写地区编码', trigger: 'blur' }],
