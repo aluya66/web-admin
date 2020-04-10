@@ -23,7 +23,7 @@
       </el-input>
     </el-form-item>
 
-    <el-form-item label="条件等级：" v-if="formModel.priceId === 7&& formModel.appliedType === 2" prop="customLevel"></el-form-item>
+    <el-form-item label="条件等级：" v-if="formModel.priceId === 7&& formModel.appliedType === 2 && appType!== 'cxgo'" prop="customLevel"></el-form-item>
     <!--星go && yoshop-->
     <div v-if="(appType=='ysgo'|| appType=='yssp')&&formModel.priceId === 7&& formModel.appliedType === 2">
       <el-form-item label="yoshop会员等级:">
