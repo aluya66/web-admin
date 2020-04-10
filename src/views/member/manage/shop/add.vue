@@ -100,13 +100,7 @@ export default {
   },
   data() {
     return {
-      shopRole: [{
-        label: '店长',
-        value: 2
-      }, {
-        label: '店员',
-        value: 3
-      }], // dictObj.shopRole
+      shopRole: dictObj.shopRole,
       shopStatus: dictObj.openStatus,
       rules: {
         name: [{ required: true, message: '请填写地区编码', trigger: 'blur' }],
@@ -125,7 +119,6 @@ export default {
   created() {
     this.formModel = {
       fileList: [],
-      // ...this.initData,
       name: this.initData.name,
       phone: this.initData.phone,
       role: this.initData.role,
@@ -135,6 +128,13 @@ export default {
     }
     if (this.initData.userQrcode) {
       this.formModel.fileList = [{ name: '图片', url: this.initData.userQrcode }]
+    }
+    if(this.formModel.role===1){
+      this.shopRole =[{
+        label: '老板',
+        value: 1,
+        disabled:true,
+      }]
     }
   },
   watch: {
