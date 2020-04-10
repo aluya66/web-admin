@@ -140,7 +140,7 @@
         >{{ item.label }}</el-radio>
       </el-radio-group>
     </el-form-item>
-     <el-form-item label="POS类型" v-if="formModel.usePos">
+     <el-form-item label="POS类型" v-if="formModel.usePos" prop="posType">
       <el-radio-group v-model="formModel.posType">
         <el-radio
           class="checkbox-item"
@@ -453,6 +453,12 @@ export default {
         ],
         exhibitionImage: [
           { required: true, message: '请上传展馆图', trigger: 'blur' }
+        ],
+        posType:[
+          { required: true, message: '请选择pos类型', trigger: 'blur' }
+        ],
+        posAccount:[
+          { required: true, message: '请填写pos终端号', trigger: 'blur' }
         ]
         // videoUrl: [
         //   { required: true, message: '请上传店铺视频', trigger: 'blur' }

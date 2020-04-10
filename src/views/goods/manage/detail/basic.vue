@@ -51,8 +51,8 @@
         <el-form-item label="经营类型:">{{formModel.businessValue}}</el-form-item>
       </template>
        <el-form-item label="商品分类:">
-        <span>{{productTypeMap[formModel.productType]}}</span>
-        <span>注：以下情况任何一种均为代销货品代销货品的订单需要人工手动处理订单代销货品不进云尚星仓库，由第三方承接货品出库及配送</span>
+        <div>{{productTypeMap[formModel.productType]}}</div>
+        <div>注：以下情况任何一种均为代销货品代销货品的订单需要人工手动处理订单代销货品不进云尚星仓库，由第三方承接货品出库及配送</div>
       </el-form-item>
       <el-form-item label="基础分类:">
         <el-cascader
@@ -244,7 +244,7 @@ import utils from 'utils'
 export default {
   data() {
     return {
-      productTypeMap:{1:'代销',2:'采买'},
+      productTypeMap: { 1: '代销', 2: '采买' },
       businessArr: [{
         label: '自营',
         value: 1

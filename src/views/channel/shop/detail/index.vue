@@ -232,8 +232,8 @@ export default {
             contact, // 联系人
             contactTel, // 联系手机
             usePos, // 是否使用pos
-            posType:usePos?posType:2, // pos类型
-            posAccount:usePos?posAccount:'', // POS终端号
+            posType: usePos ? posType : 2, // pos类型
+            posAccount: usePos ? posAccount : '', // POS终端号
             businessType, // 经营方式
             settleType, // 结算方式
             status, // 状态
