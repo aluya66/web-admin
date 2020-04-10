@@ -50,7 +50,7 @@
       <template v-else>
         <el-form-item label="经营类型:">{{formModel.businessValue}}</el-form-item>
       </template>
-       <el-form-item label="商品分类:">
+       <el-form-item label="商品类型:">
         <div>{{productTypeMap[formModel.productType]}}</div>
         <div>注：以下情况任何一种均为代销货品代销货品的订单需要人工手动处理订单代销货品不进云尚星仓库，由第三方承接货品出库及配送</div>
       </el-form-item>
