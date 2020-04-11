@@ -305,6 +305,16 @@ export const validater = {
       callback()
     }
   },
+    /**
+   * 非中文
+   */
+  notCnText (rule, value, callback) {
+    if (value && /[\u4e00-\u9fa5]/.test(value)) {
+      callback(new Error('不能填写中文字符'))
+    } else {
+      callback()
+    }
+  },
   /**
    * 只能输入英文或者数字
    */
