@@ -726,7 +726,7 @@ const inOutStatusList = [{
 const shopRole = [{
   label: '老板',
   value: 1,
-  disabled:true,
+  disabled: true
 }, {
   label: '店长',
   value: 2

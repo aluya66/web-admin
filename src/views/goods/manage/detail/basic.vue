@@ -321,7 +321,7 @@ export default {
         newTime, // 上新时间
         updated,
         created,
-        productType//商品分类
+        productType// 商品分类
       } = this.dataObj
       let seasonCN = ''
       switch (season) {
@@ -378,7 +378,7 @@ export default {
         newTime, // 上新时间
         updated,
         created,
-        productType,//商品分类
+        productType// 商品分类
       }
     },
     getCategoryList() {

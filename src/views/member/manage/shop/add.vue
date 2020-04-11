@@ -129,11 +129,11 @@ export default {
     if (this.initData.userQrcode) {
       this.formModel.fileList = [{ name: '图片', url: this.initData.userQrcode }]
     }
-    if(this.formModel.role===1){
-      this.shopRole =[{
+    if (this.formModel.role === 1) {
+      this.shopRole = [{
         label: '老板',
         value: 1,
-        disabled:true,
+        disabled: true
       }]
     }
   },
