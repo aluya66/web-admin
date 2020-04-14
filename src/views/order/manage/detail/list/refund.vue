@@ -42,15 +42,18 @@ export default {
       tableHeader: [
         {
           label: '退款单号',
-          prop: 'refundId'
+          prop: 'flowCode'
         },
         {
           label: '退款方式',
-          prop: 'payType'
+          prop: 'payType',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.payType.split(','), 'payTypeList')
+          }
         },
         {
           label: '第三方流水号',
-          prop: 'flowCode'
+          prop: ''
         },
         {
           label: '退款金额(元)',
