@@ -191,7 +191,7 @@ export const validater = {
   phoneNumber (rule, value, callback) {
     if (!value) {
       callback(new Error('手机号码不能为空'))
-    } else if (value && (!/^[1][34578]\d{9}$/.test(value) || !/^[1-9]\d*$/.test(value) || value.length !== 11)) {
+    } else if (value && (!/^[1][3456789]\d{9}$/.test(value) || !/^[1-9]\d*$/.test(value) || value.length !== 11)) {
       callback(new Error('手机号码不符合规范'))
     } else {
       callback()
@@ -301,6 +301,16 @@ export const validater = {
     // }
     if (value && /[^\u4e00-\u9fa5]/.test(value)) {
       callback(new Error('只能填写中文字符'))
+    } else {
+      callback()
+    }
+  },
+  /**
+   * 非中文
+   */
+  notCnText (rule, value, callback) {
+    if (value && /[\u4e00-\u9fa5]/.test(value)) {
+      callback(new Error('不能填写中文字符'))
     } else {
       callback()
     }

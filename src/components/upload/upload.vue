@@ -226,21 +226,21 @@ export default {
         return false
       }
       if (this.fileType === 'excel') {
-        const isXlxs = /\.(xlsx|xls)$/.test(file.name)
+        const isXlxs = /\.(xlsx|xls)$/.test(file.name.toLowerCase())
         if (isXlxs) {
           return this.showTip(file)
         } else {
           this.$message.error('请上传后缀为.xlsx,.xls格式文件!')
         }
       } else if (this.fileType === 'video') {
-        const isJPG = /\.(mp4)$/.test(file.name)
+        const isJPG = /\.(mp4)$/.test(file.name.toLowerCase())
         if (isJPG) {
           return this.showTip(file)
         } else {
           this.$message.error('请上传后缀为mp4格式的文件!')
         }
       } else {
-        const isJPG = /\.(png|jpeg|jpg|gif)$/.test(file.name)
+        const isJPG = /\.(png|jpeg|jpg|gif)$/.test(file.name.toLowerCase())
         if (isJPG) {
           return this.showTip(file)
         } else {

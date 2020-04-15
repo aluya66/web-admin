@@ -130,7 +130,7 @@
         clearable
       />
     </el-form-item>
-    <el-form-item label="使用POS">
+    <el-form-item label="使用POS" prop="usePos">
       <el-radio-group v-model="formModel.usePos">
         <el-radio
           class="checkbox-item"
@@ -140,6 +140,31 @@
         >{{ item.label }}</el-radio>
       </el-radio-group>
     </el-form-item>
+    <div v-if="formModel.usePos">
+      <el-form-item label="POS类型"  prop="posType">
+        <el-radio-group v-model="formModel.posType">
+          <el-radio
+            class="checkbox-item"
+            :label="item.value"
+            v-for="(item, index) in posType"
+            :key="index"
+          >{{ item.label }}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item
+        label="POS终端号"
+        prop="posAccount"
+        >
+        <el-input
+          class="form-item"
+          v-model.trim="formModel.posAccount"
+          :size="size"
+          placeholder="请输入POS终端号"
+          clearable
+          maxlength="30"
+        />
+      </el-form-item>
+    </div>
     <el-form-item label="关联打印机">
       <el-radio-group v-model="formModel.isConnectPrinter">
         <el-radio
@@ -433,10 +458,17 @@ export default {
         ],
         exhibitionImage: [
           { required: true, message: '请上传展馆图', trigger: 'blur' }
+        ],
+        posType: [
+          { required: true, message: '请选择pos类型', trigger: 'blur' }
+        ],
+        usePos: [
+          { required: true, message: '请选择是否使用pos', trigger: 'blur' }
+        ],
+        posAccount: [
+          { required: true, message: '请填写pos终端号', trigger: 'blur' },
+          { validator: utils.validater.notCnText, trigger: 'blur' }
         ]
-        // videoUrl: [
-        //   { required: true, message: '请上传店铺视频', trigger: 'blur' }
-        // ]
       },
       cacheShopType: '', // 缓存旧的门店类型
       tableHeader: [
@@ -479,7 +511,8 @@ export default {
       }, {
         label: '非推荐',
         value: 2
-      }]
+      }],
+      posType: dictObj.posType
     }
   },
   created() {

@@ -68,6 +68,7 @@ export default {
     shopDetail: '门店详情',
     memberCenter: '会员中心',
     memberManage: '会员管理',
+    shopMemberManageList: '店铺用户管理',
     memberManageList: '会员列表',
     memberManagePoint: '会员积分',
     memberManageEquity: '会员权益',

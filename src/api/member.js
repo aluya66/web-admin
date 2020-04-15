@@ -249,3 +249,39 @@ export const exportEarnings = params =>
     responseType: 'arraybuffer',
     hasErrMsg: true
   })
+
+/**
+ * 店铺用户列表
+ * @param {*} params
+ */
+export const getShopMemberList = params =>
+  Http.fetch(`${context}/api/shop/user/list`, params, {
+    method: 'get'
+  })
+
+/**
+ * 店铺用户更新
+ * @param {*} params
+ */
+export const updateShopMember = params =>
+  Http.fetch(`${context}/api/shop/user/update`, params, {
+    method: 'put'
+  })
+
+/**
+ * 店铺用户详情
+ * @param {*} params
+ */
+export const getShopMemberDetail = params =>
+  Http.fetch(`${context}/api/shop/user/detail`, params, {
+    method: 'get'
+  })
+
+/**
+ * 店铺用户创建
+ * @param {*} params
+ */
+export const addShopMember = params =>
+  Http.fetch(`${context}/api/shop/user/add`, params, {
+    method: 'post'
+  })

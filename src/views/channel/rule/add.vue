@@ -94,7 +94,7 @@ export default {
   methods: {
     // 搜索品牌
     searchBrand() {
-      this.$api.basic.brandList({ pageNo: 1, pageSize: 100, status: 1 }).then(res => {
+      this.$api.basic.brandList({ pageNo: 1, pageSize: 1000, status: 1 }).then(res => {
         if (res && res.totalCount) {
           this.brandList = res.data
           this.getCurBrand(this.formModel.brands)

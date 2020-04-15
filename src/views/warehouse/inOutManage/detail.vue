@@ -105,9 +105,6 @@ export default {
       ]
     }
   },
-  created() {
-    console.log('createeeeeee?????', this.initData)
-  },
   computed: {
     formModel: {
       get() {

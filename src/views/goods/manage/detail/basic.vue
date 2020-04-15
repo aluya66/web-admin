@@ -50,6 +50,9 @@
       <template v-else>
         <el-form-item label="经营类型:">{{formModel.businessValue}}</el-form-item>
       </template>
+       <el-form-item label="商品类型:">
+        <div>{{productTypeMap[formModel.productType]}}</div>
+      </el-form-item>
       <el-form-item label="基础分类:">
         <el-cascader
           v-if="!isView"
@@ -240,6 +243,7 @@ import utils from 'utils'
 export default {
   data() {
     return {
+      productTypeMap: { 1: '代销', 2: '采买' },
       businessArr: [{
         label: '自营',
         value: 1
@@ -316,7 +320,8 @@ export default {
         skus,
         newTime, // 上新时间
         updated,
-        created
+        created,
+        productType// 商品分类
       } = this.dataObj
       let seasonCN = ''
       switch (season) {
@@ -372,7 +377,8 @@ export default {
         skuList,
         newTime, // 上新时间
         updated,
-        created
+        created,
+        productType// 商品分类
       }
     },
     getCategoryList() {

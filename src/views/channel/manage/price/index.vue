@@ -276,7 +276,7 @@ export default {
         // 选中的查看平台价
         const viewChecked = platPrices ? platPrices.map(val => val.platPriceId) : []
         this.tableList = priceRelations ? priceRelations.map(val => {
-          if (val.priceId === 7) { // 会员价时
+          if (val.priceId === 7 && this.appType !== 'cxgo') { // 会员价时
             this.memberPriceList.push(val.appCode + '_' + val.customLevel)
           }
           if (val.priceType === 2) {
@@ -289,7 +289,7 @@ export default {
             }
           }
           const { customLevel, appCode, ...other } = val
-          if (val.customLevel !== '' && val.priceId === 7) { // 会员价
+          if (val.customLevel !== '' && val.priceId === 7 && this.appType !== 'cxgo') { // 会员价
             return { ...other, appCode, customLevel: appCode + '_' + customLevel }
           }
           return val
@@ -321,7 +321,7 @@ export default {
       let errFlag = false
       const channelPriceRelVos = this.tableList.map(res => {
         const { customLevel, ...other } = res
-        if (res.priceId === 7) {
+        if (res.priceId === 7 && this.appType !== 'cxgo') { // 潮星星go不校验会员等级
           if (res.customLevel === '') {
             errFlag = true
           } else {
