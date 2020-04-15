@@ -305,7 +305,7 @@ export const validater = {
       callback()
     }
   },
-    /**
+  /**
    * 非中文
    */
   notCnText (rule, value, callback) {

@@ -151,9 +151,9 @@
           >{{ item.label }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item 
-        label="POS终端号" 
-        prop="posAccount" 
+      <el-form-item
+        label="POS终端号"
+        prop="posAccount"
         >
         <el-input
           class="form-item"
@@ -462,13 +462,13 @@ export default {
         posType: [
           { required: true, message: '请选择pos类型', trigger: 'blur' }
         ],
-        usePos:[
+        usePos: [
           { required: true, message: '请选择是否使用pos', trigger: 'blur' }
         ],
-        posAccount:[
+        posAccount: [
           { required: true, message: '请填写pos终端号', trigger: 'blur' },
-          { validator:utils.validater.notCnText, trigger: 'blur' }
-        ],
+          { validator: utils.validater.notCnText, trigger: 'blur' }
+        ]
       },
       cacheShopType: '', // 缓存旧的门店类型
       tableHeader: [
