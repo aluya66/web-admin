@@ -26,13 +26,13 @@
             @submit-form="searchSubmit"
             @reset-form="searchReset"
           ></c-search>
-          <el-radio-group v-model="searchObj.orderStatus">
+          <el-radio-group v-model="searchObj.orderStatus" @change="statusOnchange">
             <el-radio-button
               v-for="(item, index) in statusTabList"
               :size="size"
               :key="index"
               :label="item.value"
-            >{{item.label}}</el-radio-button>
+            >{{item.label}}({{item.counts}})</el-radio-button>
           </el-radio-group>
         </template>
       </c-table>
@@ -49,6 +49,25 @@
           ref="detailRef"
           :init-data.sync="detailDialog.initData"
         ></detail-dialog>
+      </c-dialog>
+    </div>
+    <!--设置延迟收货弹框-->
+    <div v-if="delayDialog.isShow">
+      <c-dialog
+        :is-show="delayDialog.isShow"
+        close-btn
+        @before-close="delayDialog.isShow = false"
+        :title="delayDialog.title"
+        @on-submit="delayDayConfirm"
+      >
+       <el-radio-group v-model="delayDay">
+        <el-radio-button
+          :label="item.value"
+          v-for="(item,index) in delayGrp"
+          :key="index">
+          {{item.label}}
+        </el-radio-button>
+      </el-radio-group>
       </c-dialog>
     </div>
     <div v-if="dialogObj.isShow">
@@ -99,29 +118,47 @@ export default {
   data(vm) {
     return {
       dialogObj: {},
+      delayGrp: [{
+        label: '3天',
+        value: 1
+      }, {
+        label: '7天',
+        value: 2
+      }, {
+        label: '15天',
+        value: 3
+      }],
+      delayDay: 1,
       detailDialog: {}, // 详情弹框
+      delayDialog: {}, // 设置延迟收货弹框
       listInfo: {}, // 列表统计数据
       orderStatus: '', // 订单状态
       areaOptions: [], // 全部区域集合
       afterSaleStatus: '', // 售后状态
       statusTabList: [{
         value: '',
-        label: '全部订单'
+        label: '全部订单',
+        counts: 0
       }, {
         value: 80,
-        label: '待付款'
+        label: '待付款',
+        counts: 0
       }, {
         value: 81,
-        label: '待发货'
+        label: '待发货',
+        counts: 0
       }, {
         value: 82,
-        label: '待签收'
+        label: '待签收',
+        counts: 0
       }, {
         value: 60,
-        label: '已完成'
+        label: '已完成',
+        counts: 0
       }, {
         value: 50,
-        label: '已取消'
+        label: '已取消',
+        counts: 0
       }], // tab订单状态集合
       tableInnerBtns: [{
         width: 180,
@@ -146,6 +183,20 @@ export default {
             },
             isEdit: true
           })
+        }
+      },
+      {
+        name: '延时收货',
+        notBtn(row) {
+          // 待签收
+          return row.orderStatus !== 82
+        },
+        handle(row) {
+          vm.delayDialog = {
+            isShow: true,
+            title: '设置延时收货时间',
+            orderCode: row.parentCode
+          }
         }
       },
       {
@@ -176,6 +227,7 @@ export default {
         {
           label: '订单编号',
           prop: 'orderCode',
+          fixed: true,
           width: 150,
           search: {
             type: 'input'
@@ -317,7 +369,7 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    // this.fetchData()
     this.getOrderInfo()
     this.fetchAreaData()
   },
@@ -331,9 +383,6 @@ export default {
     }
   },
   methods: {
-    detailDialogConfirm() {
-
-    },
     dialogConfirm() {
       const childRef = this.$refs.childRef
       childRef.$refs.formRef.validate(valid => {
@@ -393,33 +442,33 @@ export default {
         if (res) {
           this.listInfo = res
           this.statusTabList = this.statusTabList.map(info => {
-            let label = ''
+            let counts = ''
             switch (info.value) {
               case '':
-                label = `${info.label}${res.orderQuantity}`
+                counts = res.orderQuantity
                 break
               case 80:
-                label = `${info.label}${res.unpaidQuantity}`
+                counts = res.unpaidQuantity
                 break
               case 81:
-                label = `${info.label}${res.unfilledOrderQuantity}`
+                counts = res.unfilledOrderQuantity
                 break
               case 82:
-                label = `${info.label}${res.noReceivedQuantity}`
+                counts = res.noReceivedQuantity
                 break
               case 83:
-                label = `${info.label}${res.noEvaluationQuantity}`
+                counts = res.noEvaluationQuantity
                 break
               case 60:
-                label = `${info.label}${res.completedQuantity}`
+                counts = res.completedQuantity
                 break
               case 50:
-                label = `${info.label}${res.cancelQuantity}`
+                counts = res.cancelQuantity
                 break
             }
             return {
               ...info,
-              label
+              counts
             }
           })
         }
@@ -446,6 +495,21 @@ export default {
         } else {
           this.tableList = res || []
         }
+      })
+    },
+    // 切换订单状态，更新订单统计数据
+    statusOnchange() {
+      this.getOrderInfo()
+    },
+    // 设置延时收货时间
+    delayDayConfirm() {
+      const params = {
+        orderCode: this.delayDialog.orderCode,
+        prolongSignStatus: this.delayDay // 延长收货时间（0：未延长  1：延长3天  2：延长7天   3：延长15天
+      }
+      this.$api.order.delayReceiveGoods(params).then(res => {
+        console.log('resssss????', res)
+        this.delayDialog.isShow = false
       })
     }
   }

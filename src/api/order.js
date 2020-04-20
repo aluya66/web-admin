@@ -120,6 +120,15 @@ export const editOrderRemark = params =>
   })
 
 /**
+ * 延迟收货操作
+ * @param {*}
+ */
+export const delayReceiveGoods = params =>
+  Http.fetch(`${context}/api/order/prolongsign`, params, {
+    method: 'put'
+  })
+
+/**
  * 商品销量统计
  * @param {*}
  */

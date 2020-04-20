@@ -10,6 +10,8 @@
       <div class="row">
         <span>所属店铺：{{orderInfo.orderNewResp.storeName}}</span>
         <span>结算状态：{{setEnumValue(orderInfo.orderNewResp.settleStatus, orderSettleStatusList)}}</span>
+        <span v-if="orderInfo.orderNewResp.orderSourceWay===2">销售员：{{orderInfo.orderNewResp.staff}}</span>
+        <span v-if="orderInfo.orderNewResp.orderSourceWay===2">销售员手机号：{{orderInfo.orderNewResp.staffPhone}}</span>
       </div>
       <div class="row">
         <span>客户名称：{{orderInfo.orderNewResp.buyerNick}}</span>
