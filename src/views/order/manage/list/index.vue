@@ -249,18 +249,18 @@ export default {
             return row && vm.setTableColumnLabel(row.deliveryTimeType, 'deliveryTimeTypeList')
           }
         },
-        {
-          label: '支付方式',
-          prop: 'payType',
-          formatter(row) {
-            // row.payType  这里可返回多个方式，要转化成数组形式进行转化处理
-            return row && vm.setTableColumnLabel(row.payType.split(','), 'payTypeList')
-          },
-          search: {
-            type: 'dict',
-            optionsList: dictObj.payTypeList
-          }
-        },
+        // {
+        //   label: '支付方式',
+        //   prop: 'payType',
+        //   formatter(row) {
+        //     // row.payType  这里可返回多个方式，要转化成数组形式进行转化处理
+        //     return row && vm.setTableColumnLabel(row.payType.split(','), 'payTypeList')
+        //   },
+        //   search: {
+        //     type: 'dict',
+        //     optionsList: dictObj.payTypeList
+        //   }
+        // },
         {
           label: '订单状态',
           prop: 'orderStatus',
@@ -272,13 +272,13 @@ export default {
             optionsList: dictObj.orderStatusList
           }
         },
-        {
-          label: '结算状态',
-          prop: 'settleStatus',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.settleStatus, 'orderSettleStatusList')
-          }
-        },
+        // {
+        //   label: '结算状态',
+        //   prop: 'settleStatus',
+        //   formatter(row) {
+        //     return row && vm.setTableColumnLabel(row.settleStatus, 'orderSettleStatusList')
+        //   }
+        // },
         {
           label: '订单渠道',
           prop: 'appCode',
@@ -290,22 +290,36 @@ export default {
             optionsList: dictObj.lobList
           }
         },
+        // {
+        //   label: '订单类型',
+        //   prop: 'orderCategory',
+        //   formatter(row) {
+        //     return row && vm.setTableColumnLabel(row.orderCategory, 'shopTypeList')
+        //   },
+        //   search: {
+        //     type: 'dict',
+        //     optionsList: dictObj.shopTypeList
+        //   }
+        // },
+        // {
+        //   label: '支付单号',
+        //   prop: 'flowCode',
+        //   search: {
+        //     type: 'input'
+        //   }
+        // },
         {
-          label: '订单类型',
-          prop: 'orderCategory',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.orderCategory, 'shopTypeList')
-          },
+          label: '收货人信息',
+          prop: 'orderTotalAmount',//todo
           search: {
-            type: 'dict',
-            optionsList: dictObj.shopTypeList
+            type: 'input',
           }
         },
         {
-          label: '支付单号',
-          prop: 'flowCode',
+          label: '第三方交易流水号',
+          prop: 'orderTotalAmount',//todo
           search: {
-            type: 'input'
+            type: 'input',
           }
         },
         {
