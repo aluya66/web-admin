@@ -249,18 +249,18 @@ export default {
             return row && vm.setTableColumnLabel(row.deliveryTimeType, 'deliveryTimeTypeList')
           }
         },
-        // {
-        //   label: '支付方式',
-        //   prop: 'payType',
-        //   formatter(row) {
-        //     // row.payType  这里可返回多个方式，要转化成数组形式进行转化处理
-        //     return row && vm.setTableColumnLabel(row.payType.split(','), 'payTypeList')
-        //   },
-        //   search: {
-        //     type: 'dict',
-        //     optionsList: dictObj.payTypeList
-        //   }
-        // },
+        {
+          label: '支付方式',
+          prop: 'payType',
+          formatter(row) {
+            // row.payType  这里可返回多个方式，要转化成数组形式进行转化处理
+            return row && vm.setTableColumnLabel(row.payType.split(','), 'payTypeList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.payTypeList
+          }
+        },
         {
           label: '订单状态',
           prop: 'orderStatus',
@@ -272,13 +272,13 @@ export default {
             optionsList: dictObj.orderStatusList
           }
         },
-        // {
-        //   label: '结算状态',
-        //   prop: 'settleStatus',
-        //   formatter(row) {
-        //     return row && vm.setTableColumnLabel(row.settleStatus, 'orderSettleStatusList')
-        //   }
-        // },
+        {
+          label: '结算状态',
+          prop: 'settleStatus',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.settleStatus, 'orderSettleStatusList')
+          }
+        },
         {
           label: '订单渠道',
           prop: 'appCode',
@@ -290,36 +290,22 @@ export default {
             optionsList: dictObj.lobList
           }
         },
-        // {
-        //   label: '订单类型',
-        //   prop: 'orderCategory',
-        //   formatter(row) {
-        //     return row && vm.setTableColumnLabel(row.orderCategory, 'shopTypeList')
-        //   },
-        //   search: {
-        //     type: 'dict',
-        //     optionsList: dictObj.shopTypeList
-        //   }
-        // },
-        // {
-        //   label: '支付单号',
-        //   prop: 'flowCode',
-        //   search: {
-        //     type: 'input'
-        //   }
-        // },
         {
-          label: '收货人信息',
-          prop: 'orderTotalAmount',//todo
+          label: '订单类型',
+          prop: 'orderCategory',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.orderCategory, 'shopTypeList')
+          },
           search: {
-            type: 'input',
+            type: 'dict',
+            optionsList: dictObj.shopTypeList
           }
         },
         {
-          label: '第三方交易流水号',
-          prop: 'orderTotalAmount',//todo
+          label: '支付单号',
+          prop: 'flowCode',
           search: {
-            type: 'input',
+            type: 'input'
           }
         },
         {
@@ -522,7 +508,6 @@ export default {
         prolongSignStatus: this.delayDay // 延长收货时间（0：未延长  1：延长3天  2：延长7天   3：延长15天
       }
       this.$api.order.delayReceiveGoods(params).then(res => {
-        console.log('resssss????', res)
         this.delayDialog.isShow = false
       })
     }
