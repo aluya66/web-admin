@@ -8,6 +8,7 @@
       :size="size"
       :auto-scroll="false"
       :loading="isLoading"
+      :table-inner-btns="tableInnerBtns"
       :table-header="tableHeader"
       :table-list="deliveryList"
     ></c-table>
@@ -28,17 +29,14 @@ export default {
   },
   data(vm) {
     return {
-      // tableInnerBtns: [{
-      //   name: '详情',
-      //   icon: 'el-icon-review',
-      //   handle(row) {
-      //     vm.$emit('show-dialog', {
-      //       isEdit: true,
-      //       initData: row,
-      //       title: '物流详情'
-      //     })
-      //   }
-      // }],
+      tableInnerBtns: [{
+        name: '物流跟踪',
+        icon: 'el-icon-review',
+        handle(row) {
+          const { id } = this.$route.params
+          vm.routerLink(`/order/manage/send/detail/${id}`)
+        }
+      }],
       tableHeader: [
         {
           label: '物流公司',

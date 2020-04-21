@@ -27,7 +27,7 @@
         </template>
       </c-table>
     </div>
-    <div v-if="dialogObj.isShow">
+    <!-- <div v-if="dialogObj.isShow">
       <c-dialog
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
@@ -41,34 +41,31 @@
           :is-edit="dialogObj.isEdit"
         ></send-detail>
       </c-dialog>
-    </div>
+    </div> -->
   </c-view>
 </template>
 <script>
 import mixinTable from 'mixins/table'
-import CDialog from 'components/dialog'
-import sendDetail from './detail'
+// import CDialog from 'components/dialog'
+// import sendDetail from './detail'
 export default {
   name: 'orderManageSend',
   mixins: [mixinTable],
   components: {
-    CDialog,
-    sendDetail
+    // CDialog,
+    // sendDetail
   },
   data(vm) {
     return {
       // 对话框对象
-      dialogObj: {},
+      // dialogObj: {},
       // 表格内操作按钮
       tableInnerBtns: [
         {
           name: '明细',
           icon: 'el-icon-view',
           handle(row) {
-            vm.showDialog({
-              title: '发货单明细',
-              initData: row
-            })
+            vm.routerLink(`/order/manage/send/detail/${row.orderCode}`)
           }
         }
       ],
@@ -152,18 +149,18 @@ export default {
         }
       })
     },
-    /**
-     * dialog对话框数据处理
-     * @opts {*}
-     */
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        isEdit: opts.isEdit || false,
-        title: opts.title || '新增',
-        initData: opts.initData
-      }
-    }
+    // /**
+    //  * dialog对话框数据处理
+    //  * @opts {*}
+    //  */
+    // showDialog(opts) {
+    //   this.dialogObj = {
+    //     isShow: true,
+    //     isEdit: opts.isEdit || false,
+    //     title: opts.title || '新增',
+    //     initData: opts.initData
+    //   }
+    // }
   }
 }
 

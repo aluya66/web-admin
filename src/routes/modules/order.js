@@ -82,6 +82,18 @@ export default {
         }
       },
       {
+        path: '/order/manage/send/detail/:id?',
+        name: 'orderManageSendDetail',
+        hidden:true,
+        component: () => import('@/views/order/manage/send/detail'),
+        meta: {
+          title: 'orderManageSendDetail',
+          icon: 'table',
+          activeMenu:'/order/manage/send',
+          roles: ['admin']
+        }
+      },
+      {
         path: '/order/manage/viplist',
         name: 'orderManageVip',
         component: () => import('@/views/order/manage/viplist/index'),
