@@ -138,6 +138,14 @@ export default {
           fixed: true
         },
         {
+          label: '订单号',
+          prop: 'orderCode',
+          search: {
+            type: 'input'
+          },
+          fixed: true
+        },
+        {
           label: '用户名称',
           prop: 'userName',
           fixed: true
@@ -189,7 +197,7 @@ export default {
           }
         },
         {
-          label: '扣款金额',
+          label: '应退金额',
           prop: 'refundFee'
         },
         {

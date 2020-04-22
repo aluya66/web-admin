@@ -62,7 +62,7 @@ export default {
         { label: '状态', value: 'status' },
         { label: '客户名称', value: 'userName' },
         { label: '客户电话', value: 'userPhone' },
-        { label: '退款金额', value: 'refundFee' },
+        { label: '应退金额', value: 'refundFee' },
         { label: '实际退款金额', value: 'actualRefundFee' },
         { label: '退款类型', value: 'refundType' },
         { label: '售后时间', value: 'afterTime' }
