@@ -52,6 +52,14 @@ export default {
           prop: 'money'
         },
         {
+          label: '物流公司',
+          prop: 'deliveryName'
+        },
+        {
+          label: '物流单号',
+          prop: 'deliveryNo'
+        },
+        {
           label: '备注',
           prop: 'remark'
         }

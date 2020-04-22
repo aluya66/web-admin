@@ -32,6 +32,12 @@
         <el-form-item label="备注:">
           <el-input v-model.trim="formModel.afterRefundLogList[index].remark"></el-input>
         </el-form-item>
+         <el-form-item label="物流公司:">
+          <el-input v-model.trim="formModel.afterRefundLogList[index].deliveryName"></el-input>
+        </el-form-item>
+         <el-form-item label="物流单号:">
+          <el-input v-model.trim="formModel.afterRefundLogList[index].deliveryNo"></el-input>
+        </el-form-item>
         <el-button @click="addItem(item)" type="primary">新增</el-button>
         <el-button @click.prevent="removeItem(index)">删除</el-button>
       </div>
@@ -67,7 +73,9 @@ export default {
           {
             typeId: '',
             money: 0,
-            remark: ''
+            remark: '',
+            deliveryName:'',
+            deliveryNo:''
           }
         ]
       },
