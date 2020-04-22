@@ -45,7 +45,7 @@ export default {
     order: '订单中心',
     orderManage: '订单管理',
     orderManageSend: '发货单列表',
-    orderManageSendDetail:'发货单详情',
+    orderManageSendDetail: '发货单详情',
     orderManageVip: 'VIP订单列表',
     orderManageList: '订单列表',
     orderManageDetail: '订单详情',

@@ -148,7 +148,7 @@ export default {
           this.tableList = res || []
         }
       })
-    },
+    }
     // /**
     //  * dialog对话框数据处理
     //  * @opts {*}

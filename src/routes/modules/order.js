@@ -84,12 +84,12 @@ export default {
       {
         path: '/order/manage/send/detail/:id?',
         name: 'orderManageSendDetail',
-        hidden:true,
+        hidden: true,
         component: () => import('@/views/order/manage/send/detail'),
         meta: {
           title: 'orderManageSendDetail',
           icon: 'table',
-          activeMenu:'/order/manage/send',
+          activeMenu: '/order/manage/send',
           roles: ['admin']
         }
       },

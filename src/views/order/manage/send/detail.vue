@@ -52,7 +52,7 @@ import mixinTable from 'mixins/table'
 import MixinForm from 'mixins/form'
 
 export default {
-  mixins: [mixinTable,MixinForm],
+  mixins: [mixinTable, MixinForm],
   // props: {
   //   initData: {
   //     type: Object,
@@ -90,7 +90,7 @@ export default {
   methods: {
     getDeliveryDetail() {
       const { id } = this.$route.params
-      this.$api.order.queryDeliveryDetail({ orderCode:id }).then(res => {
+      this.$api.order.queryDeliveryDetail({ orderCode: id }).then(res => {
         this.formModel = res
       })
     }

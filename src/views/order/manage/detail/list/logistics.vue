@@ -33,7 +33,7 @@ export default {
         name: '物流跟踪',
         icon: 'el-icon-review',
         handle(row) {
-          const { id } = this.$route.params
+          const { id } = vm.$route.params
           vm.routerLink(`/order/manage/send/detail/${id}`)
         }
       }],
