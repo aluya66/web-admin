@@ -40,11 +40,11 @@
       <span>星购卡抵扣：{{formModel.totalStoredCardAmount}}</span>
     </div>
      <div class="row">
-      <span>客服审核说明：{{formModel.remark}}</span>
-      <span>仓库拒收说明：{{formModel.confirmRemark}}</span>
+      <span>客服审核说明：{{formModel.approveRemark}}</span>
+      <span>仓库拒收说明：{{formModel.confirmResult}}</span>
     </div>
     <div class="row">
-      <span>备注：{{formModel.approveRemark}}</span>
+      <span>备注：{{formModel.reasonDesc}}</span>
     </div>
     <div class="table-row">
       <el-divider content-position="left">退货商品信息</el-divider>
