@@ -222,6 +222,14 @@ export default {
           }
         },
         {
+          label: '实退金额',
+          prop: 'realRefundAmount',
+        },
+        {
+          label: '应退金额',
+          prop: 'totalActualRefundAmount',
+        },
+        {
           width: 150,
           label: '售后时间',
           prop: 'created',

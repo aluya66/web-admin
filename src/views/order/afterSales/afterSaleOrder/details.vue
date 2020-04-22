@@ -13,10 +13,18 @@
       <span>客户电话：{{formModel.buyerMobile}}</span>
     </div>
     <div class="row">
+      <span>退款方式：{{formModel.returnType===1?'原路退回':formModel.returnType===2?'余额退回':formModel.returnType}}</span>
+      <span>扣费项目：{{formModel.afterRefundLogs}}</span>
+    </div>
+    <div class="row">
+      <span>应退金额：{{formModel.totalActualRefundAmount}}</span>
+      <span>实退金额：{{formModel.realRefundAmount}}</span>
+    </div>
+    <div class="row">
       <span>售后状态：{{formModel.statusName}}</span>
       <span>
         售后类型：
-        <span v-if="formModel.dialogType === 1">{{formModel.afterSalesTypeName}}</span>
+        <b v-if="formModel.dialogType === 1">{{formModel.afterSalesTypeName}}</b>
         <query-dict
           v-else
           showType="select"
@@ -30,6 +38,13 @@
     <div class="row" v-if="formModel.dialogType === '1'">
       <span>星购卡优惠：{{formModel.totalStoredCardDiscountAmount}}</span>
       <span>星购卡抵扣：{{formModel.totalStoredCardAmount}}</span>
+    </div>
+     <div class="row">
+      <span>客服审核说明：{{formModel.remark}}</span>
+      <span>仓库拒收说明：{{formModel.confirmRemark}}</span>
+    </div>
+    <div class="row">
+      <span>备注：{{formModel.approveRemark}}</span>
     </div>
     <div class="table-row">
       <el-divider content-position="left">退货商品信息</el-divider>
@@ -91,12 +106,38 @@
         </div>
       </div>
     </div>
+
+    <!--售后信息-->
+    <div class="detail">
+      <el-divider content-position="left">申请售后的信息</el-divider>
+      <div class="row">
+        <span>售后类型：{{formModel.afterSalesTypeName}}</span>
+        <span>货物状态：{{formModel.orderShipStatusName}}</span>
+      </div>
+       <div class="row">
+        <span>选择的问题：{{formModel.reasonName}}</span>
+        <span>售后说明：{{formModel.reasonDesc}}</span>
+      </div>
+      <div class="row">
+        <span>凭证图片：
+          <c-image
+            v-for="(item,index) in formModel.attachmentList"
+            :key="index"
+            class="coverImg"
+            :url="item.attachmentPath"
+            fit="contain"
+            :preview-src-list="[item.attachmentPath]"
+          ></c-image>
+          </span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import dictObj from '@/store/dictData'
 import mixinTable from 'mixins/table'
+import CImage from 'components/image'
 
 export default {
   mixins: [mixinTable],
@@ -107,6 +148,9 @@ export default {
         return {}
       }
     }
+  },
+  components:{
+    CImage
   },
   data() {
     return {
@@ -156,7 +200,11 @@ export default {
           }
         },
         {
-          label: '退款金额',
+          label: '应退金额',
+          prop: 'refundAmount'
+        },
+        {
+          label: '实退金额',
           prop: 'refundAmount'
         },
         {
@@ -182,14 +230,24 @@ export default {
     }
   },
   created() {
-    if (this.initData.deliveryList.length) {
-      this.logiticFormModel = {
-        deliveryName: this.initData.deliveryList[0].deliveryName,
-        deliveryNo: this.initData.deliveryList[0].deliveryNo
-      }
-    }
+    this.handleData()
   },
   methods: {
+    handleData(){
+      const {deliveryList,afterRefundLogs } = this.initData
+      if (deliveryList.length) {
+        this.logiticFormModel = {
+          deliveryName: deliveryList[0].deliveryName,
+          deliveryNo: deliveryList[0].deliveryNo
+        }
+      }
+      if(afterRefundLogs&&afterRefundLogs.length){
+        let refunds = afterRefundLogs.map((elem)=>{//组装扣费项目
+          return elem.typeName
+        })||[]
+        this.formModel.afterRefundLogs=refunds.join('')
+      }
+    },
     submitHandle() {
       this.$refs.formRef.validate(valid => {
         const deliveryInfo = this.logiticFormModel.deliveryName
@@ -230,4 +288,10 @@ export default {
     width:50%
   }
 }
+  .coverImg {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    margin-right: 5px;
+  }
 </style>

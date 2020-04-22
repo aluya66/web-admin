@@ -126,7 +126,10 @@ export default {
           search: {
             prop: 'applyAfterSalesType',
             type: 'dict',
-            optionsList: dictObj.afterSalesTypes
+            optionsList: [{
+              label: '退款退货',
+              value: 2
+            }]
           }
         },
         {
@@ -161,8 +164,25 @@ export default {
           prop: 'deliveryNo'
         },
         {
+          label: '实退金额',
+          prop: 'realRefundAmount',
+        },
+        {
+          label: '应退金额',
+          prop: 'totalActualRefundAmount',
+        },
+         {
+          label: '受理人',
+          prop: 'createName',
+        },
+        {
           width: 150,
-          label: '售后时间',
+          label: '更新时间',
+          prop: 'updated',
+        },
+        {
+          width: 150,
+          label: '申请时间',
           prop: 'created',
           search: {
             type: 'dateTime',

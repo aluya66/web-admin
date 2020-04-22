@@ -1,54 +1,97 @@
 <template>
-  <div class="detail">
-    <div class="row">
-      <span>订单号：{{formModel.thirdOrderCode}}</span>
-      <span>售后单号：{{formModel.afterSalesCode}}</span>
+  <div>
+    <div class="detail">
+      <div class="row">
+        <span>订单号：{{formModel.thirdOrderCode}}</span>
+        <span>售后单号：{{formModel.afterSalesCode}}</span>
+      </div>
+      <div class="row">
+        <span>所属店铺：{{formModel.storeName}}</span>
+        <span>售后时间：{{formModel.created}}</span>
+      </div>
+      <div class="row">
+        <span>客户名称：{{formModel.buyerNick}}</span>
+        <span>客户电话：{{formModel.buyerMobile}}</span>
+      </div>
+      <div class="row">
+        <span>售后状态：{{formModel.statusName}}</span>
+        <span>售后类型：{{formModel.afterSalesTypeName}}</span>
+      </div>
+      <div class="row">
+        <span>退款方式：{{formModel.returnType===1?'原路退回':formModel.returnType===2?'余额退回':formModel.returnType}}</span>
+        <span>扣费项目：{{formModel.afterRefundLogs}}</span>
+      </div>
+      <div class="row">
+        <span>应退金额：{{formModel.totalActualRefundAmount}}</span>
+        <span>实退金额：{{formModel.realRefundAmount}}</span>
+      </div>
+      <div class="row">
+        <span>客服审核说明：{{formModel.remark}}</span>
+        <span>仓库拒收说明：{{formModel.confirmRemark}}</span>
+      </div>
+      <div class="row">
+        <span>备注：{{formModel.approveRemark}}</span>
+        <span>原因：{{formModel.reasonDesc}}</span>
+      </div>
+      <div class="table-row">
+        <c-table
+          ref="cTable"
+          hasBorder
+          noPage
+          :loading="false"
+          :max-height="300"
+          :size="size"
+          :table-header="tableHeader"
+          :table-list="formModel.detailList"
+        ></c-table>
+      </div>
+      <div class="row">
+        <span>物流公司：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryName : ''}}</span>
+        <span>物流单号：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryNo : ''}}</span>
+      </div>
+      <div class="row">
+        <span>发货备注：{{formModel.deliveryList.length && formModel.deliveryList.detailList && formModel.deliveryList.detailList.length ? formModel.deliveryList[0].detailList.remark : ''}}</span>
+      </div>
+      <div class="row">
+        <span>操作物流发货时间：{{formModel.deliveryList.length ? formModel.deliveryList[0].created : ''}}</span>
+      </div>
     </div>
-    <div class="row">
-      <span>所属店铺：{{formModel.storeName}}</span>
-      <span>售后时间：{{formModel.created}}</span>
-    </div>
-    <div class="row">
-      <span>客户名称：{{formModel.buyerNick}}</span>
-      <span>客户电话：{{formModel.buyerMobile}}</span>
-    </div>
-    <div class="row">
-      <span>售后状态：{{formModel.statusName}}</span>
-      <span>售后类型：{{formModel.afterSalesTypeName}}</span>
-    </div>
-    <div class="row">
-      <span>原因：{{formModel.reasonDesc}}</span>
-    </div>
-    <div class="table-row">
-      <c-table
-        ref="cTable"
-        hasBorder
-        noPage
-        :loading="false"
-        :max-height="300"
-        :size="size"
-        :table-header="tableHeader"
-        :table-list="formModel.detailList"
-      ></c-table>
-    </div>
-    <div class="row">
-      <span>物流公司：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryName : ''}}</span>
-      <span>物流单号：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryNo : ''}}</span>
-    </div>
-    <div class="row">
-      <span>发货备注：{{formModel.deliveryList.length && formModel.deliveryList.detailList && formModel.deliveryList.detailList.length ? formModel.deliveryList[0].detailList.remark : ''}}</span>
-    </div>
-    <div class="row">
-      <span>操作物流发货时间：{{formModel.deliveryList.length ? formModel.deliveryList[0].created : ''}}</span>
-    </div>
+        <!--售后信息-->
+      <div class="detail">
+        <el-divider content-position="left">申请售后的信息</el-divider>
+        <div class="row">
+          <span>售后类型：{{formModel.afterSalesTypeName}}</span>
+          <span>货物状态：{{formModel.orderShipStatusName}}</span>
+        </div>
+        <div class="row">
+          <span>选择的问题：{{formModel.reasonName}}</span>
+          <span>售后说明：{{formModel.reasonDesc}}</span>
+        </div>
+        <div class="row">
+          <span>凭证图片：
+            <c-image
+              v-for="(item,index) in formModel.attachmentList"
+              :key="index"
+              class="coverImg"
+              :url="item.attachmentPath"
+              fit="contain"
+              :preview-src-list="[item.attachmentPath]"
+            ></c-image>
+            </span>
+        </div>
+      </div>
   </div>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
+import CImage from 'components/image'
 
 export default {
   mixins: [mixinTable],
+  components:{
+    CImage
+  },
   props: {
     initData: {
       type: Object,
@@ -90,8 +133,12 @@ export default {
           label: '退货数量',
           prop: 'skuQty'
         },
+         {
+          label: '应退金额',
+          prop: 'refundAmount'
+        },
         {
-          label: '退款金额',
+          label: '实退金额',
           prop: 'refundAmount'
         },
         {
