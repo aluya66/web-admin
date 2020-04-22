@@ -89,7 +89,7 @@ import CImage from 'components/image'
 
 export default {
   mixins: [mixinTable],
-  components:{
+  components: {
     CImage
   },
   props: {
@@ -133,7 +133,7 @@ export default {
           label: '退货数量',
           prop: 'skuQty'
         },
-         {
+        {
           label: '应退金额',
           prop: 'refundAmount'
         },

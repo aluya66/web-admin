@@ -149,7 +149,7 @@ export default {
       }
     }
   },
-  components:{
+  components: {
     CImage
   },
   data() {
@@ -233,19 +233,19 @@ export default {
     this.handleData()
   },
   methods: {
-    handleData(){
-      const {deliveryList,afterRefundLogs } = this.initData
+    handleData() {
+      const { deliveryList, afterRefundLogs } = this.initData
       if (deliveryList.length) {
         this.logiticFormModel = {
           deliveryName: deliveryList[0].deliveryName,
           deliveryNo: deliveryList[0].deliveryNo
         }
       }
-      if(afterRefundLogs&&afterRefundLogs.length){
-        let refunds = afterRefundLogs.map((elem)=>{//组装扣费项目
+      if (afterRefundLogs && afterRefundLogs.length) {
+        let refunds = afterRefundLogs.map((elem) => { // 组装扣费项目
           return elem.typeName
-        })||[]
-        this.formModel.afterRefundLogs=refunds.join('')
+        }) || []
+        this.formModel.afterRefundLogs = refunds.join('')
       }
     },
     submitHandle() {

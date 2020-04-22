@@ -74,8 +74,8 @@ export default {
             typeId: '',
             money: 0,
             remark: '',
-            deliveryName:'',
-            deliveryNo:''
+            deliveryName: '',
+            deliveryNo: ''
           }
         ]
       },

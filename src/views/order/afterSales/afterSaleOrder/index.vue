@@ -181,6 +181,10 @@ export default {
           }
         },
         {
+          label: '操作状态',
+          prop: 'actionStatusName'
+        },
+        {
           label: '售后类型',
           prop: 'afterSalesType',
           formatter(row) {
@@ -191,6 +195,14 @@ export default {
             type: 'dict',
             optionsList: dictObj.afterSalesTypes
           }
+        },
+        {
+          label: '应退金额',
+          prop: 'totalActualRefundAmount'
+        },
+        {
+          label: '实退金额',
+          prop: 'realRefundAmount'
         },
         {
           label: '所属店铺',
@@ -222,21 +234,26 @@ export default {
           }
         },
         {
-          label: '实退金额',
-          prop: 'realRefundAmount',
-        },
-        {
-          label: '应退金额',
-          prop: 'totalActualRefundAmount',
+          label: '受理人',
+          prop: 'createName',
+          search: {
+            type: 'input',
+            prop: 'createName'
+          }
         },
         {
           width: 150,
-          label: '售后时间',
+          label: '申请时间',
           prop: 'created',
           search: {
             type: 'dateTime',
             prop: 'dateTime'
           }
+        },
+        {
+          width: 150,
+          label: '更新时间',
+          prop: 'updated'
         }
       ]
     }
