@@ -19,17 +19,18 @@
       </div>
       <div class="row">
         <span>退款方式：{{formModel.returnType===1?'原路退回':formModel.returnType===2?'余额退回':formModel.returnType}}</span>
-        <span>扣费项目：{{formModel.afterRefundLogs}}</span>
+        <span v-if="formModel.afterRefundLogs">扣费项目：{{formModel.afterRefundLogs}}</span>
       </div>
       <div class="row">
         <span>应退金额：{{formModel.totalActualRefundAmount}}</span>
         <span>实退金额：{{formModel.realRefundAmount}}</span>
+        <span v-if="formModel.afterRefundLogs">扣款金额：{{formModel.totalRefundAmount}}</span>
       </div>
       <div class="row">
         <span>客服审核说明：{{formModel.approveRemark}}</span>
         <span>仓库拒收说明：{{formModel.confirmRemark}}</span>
       </div>
-      <div class="row">
+      <div class="row" v-if="formModel.afterRefundLogs">
         <span>备注：{{formModel.reasonDesc}}</span>
       </div>
       <div class="table-row">
