@@ -53,20 +53,20 @@ export default {
           width: 140
         },
         {
-          label: '下单数量',
+          label: '数量',
           prop: 'quantity',
           width: 140
         },
-        {
-          label: '实发数量',
-          prop: 'consignQuantity',
-          width: 140
-        },
-        {
-          label: '售后数量',
-          prop: 'canAfterSalesQuantity',
-          width: 140
-        },
+        // {
+        //   label: '实发数量',
+        //   prop: 'consignQuantity',
+        //   width: 140
+        // },
+        // {
+        //   label: '售后数量',
+        //   prop: 'canAfterSalesQuantity',
+        //   width: 140
+        // },
         {
           label: '商品实付金额',
           prop: 'actualSalPrice',
