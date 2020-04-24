@@ -31,11 +31,11 @@ export default {
     return {
       tableList: [],
       tableHeader: [
-        {
-          label: 'sku编码',
-          prop: 'starasSkuCode',
-          width: 140
-        },
+        // {
+        //   label: 'sku编码',
+        //   prop: 'starasSkuCode',
+        //   width: 140
+        // },
         {
           label: '商品图片',
           prop: 'picturePath',
@@ -48,7 +48,7 @@ export default {
           width: 140
         },
         {
-          label: '规格',
+          label: '商品规格',
           prop: 'specifications',
           width: 140
         },
@@ -65,6 +65,11 @@ export default {
         {
           label: '售后数量',
           prop: 'canAfterSalesQuantity',
+          width: 140
+        },
+        {
+          label: '商品实付金额',
+          prop: 'actualSalPrice',
           width: 140
         }
       ]
