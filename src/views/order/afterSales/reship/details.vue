@@ -27,7 +27,7 @@
       </div>
       <div class="row">
         <span>客服审核说明：{{formModel.approveRemark}}</span>
-        <span>仓库拒收说明：{{formModel.confirmResult}}</span>
+        <span>仓库拒收说明：{{formModel.confirmRemark}}</span>
       </div>
       <div class="row">
         <span>备注：{{formModel.reasonDesc}}</span>
