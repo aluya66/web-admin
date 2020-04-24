@@ -53,7 +53,7 @@
         @before-close="detailDialog.isShow = false"
         noBtn
         :title="detailDialog.title"
-      >
+      > 
         <detail-dialog
           ref="detailRef"
           :init-data.sync="detailDialog.initData"
@@ -70,10 +70,12 @@
       >
         <dialog-info
           ref="childRef"
+          v-if="dialogObj.type==='edit'"
           :init-data.sync="dialogObj.initData"
           :area-options="areaOptions"
           :is-edit="dialogObj.isEdit"
         ></dialog-info>
+        <export-tip v-else @handle="dialogObj.isShow=false"></export-tip>
       </c-dialog>
     </div>
   </c-view>
@@ -86,6 +88,7 @@ import CDialog from 'components/dialog'
 import DetailDialog from './detailDialog'
 import DialogInfo from './dialogInfo'
 import dictObj from '@/store/dictData'
+import ExportTip from '../../../common/exportTip.vue'
 
 // 售后状态
 const afterSalesTabList = [{
@@ -103,7 +106,8 @@ export default {
     OrderInfo,
     CDialog,
     DialogInfo,
-    DetailDialog
+    DetailDialog,
+    ExportTip
   },
   data(vm) {
     return {
@@ -153,6 +157,7 @@ export default {
               orderTotalAmount: row.orderTotalAmount,
               orderCode: row.orderCode
             },
+            type:'edit',
             isEdit: true
           })
         }
@@ -202,6 +207,9 @@ export default {
         {
           label: '售后状态',
           prop: 'afterSaleStatus',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.afterSaleStatus, 'afterSaleStatusList')
+          },
           search: {
             type: 'dict',
             optionsList: afterSalesTabList
@@ -495,10 +503,9 @@ export default {
         ...other
       }).then(res => {
         if (res) {
-          // this.showDialog({
-          //   title: '售后单导出',
-          //   type: 3
-          // })
+          this.showDialog({
+            title:'订单导出',
+          })
         } else {
           this.$msgTip('导出数据失败', 'warning')
         }

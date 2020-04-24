@@ -1,6 +1,6 @@
 <template>
   <p class="dialog-text">
-    您导出的商品数据量较大，请等待5分钟后，在
+    您导出的数据量较大，请等待5分钟后，在
     <em class="router-link" @click="toExportList">基础服务-导出列表</em> 查看下载！
   </p>
 </template>
