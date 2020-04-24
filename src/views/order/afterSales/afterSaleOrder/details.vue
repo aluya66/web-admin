@@ -116,7 +116,7 @@
       </div>
        <div class="row">
         <span>选择的问题：{{formModel.reasonName}}</span>
-        <span>售后说明：{{formModel.reasonDesc}}</span>
+        <span>售后说明：{{formModel.remark}}</span>
       </div>
       <div class="row">
         <span>凭证图片：
