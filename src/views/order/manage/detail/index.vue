@@ -56,7 +56,7 @@ export default {
     AfterSale,
     LogList,
     refundList,
-    payList,
+    payList
   },
   data() {
     return {

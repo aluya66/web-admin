@@ -370,7 +370,7 @@ const settleStatusList = [{
 }
 ]
 
-// 付款状态
+// 付款状态 结算
 const payStatusList = [{
   label: '未支付',
   value: 1
@@ -382,6 +382,21 @@ const payStatusList = [{
 {
   label: '已支付',
   value: 3
+}
+]
+
+// 付款状态  订单相关的  全局两种付款状态定值
+const orderPayStatusList = [{
+  label: '未支付',
+  value: 0
+},
+// {
+//   label: '部分支付',
+//   value: 1
+// },
+{
+  label: '已支付',
+  value: 2
 }
 ]
 
@@ -748,6 +763,7 @@ export default {
   afterSalesTypes,
   afterSalesStatus,
   payStatusList,
+  orderPayStatusList,
   settleStatusList,
   pointTypeList,
   lobList,

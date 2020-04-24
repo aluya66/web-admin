@@ -103,7 +103,6 @@ export default {
       listInfo: {}, // 列表统计数据
       orderStatus: '', // 订单状态
       areaOptions: [], // 全部区域集合
-      afterSaleStatus: '', // 售后状态
       statusTabList: [{
         value: '',
         label: '全部订单'
@@ -191,10 +190,23 @@ export default {
           }
         },
         {
+          label: '售后状态',
+          prop: 'afterSaleStatus',
+          search: {
+            type: 'dict',
+            optionsList: afterSalesTabList
+          }
+        },
+        {
           label: '配送方式',
           prop: 'deliveryTimeType',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.deliveryTimeType, 'deliveryTimeTypeList')
+          },
+          search: {
+            type: 'input',
+            label: '收货人信息',
+            prop: 'searchReceiveInfo'
           }
         },
         // {
@@ -210,13 +222,26 @@ export default {
         //   }
         // },
         {
+          label: '支付状态', // 0:未付款  2：支付完成
+          prop: 'payStatus',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.payStatus, 'orderPayStatusList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: dictObj.orderPayStatusList
+          }
+        },
+        {
           label: '订单状态',
           prop: 'orderStatus',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.orderStatus, 'orderStatusList')
           },
-          search: {//改成多选筛选  todo
+          search: {
             type: 'dict',
+            multiple: true,
+            prop: 'orderStatusSet',
             optionsList: dictObj.orderStatusList
           }
         },
@@ -286,13 +311,8 @@ export default {
         },
         {
           label: '售后金额(元)',
-          prop: 'afterSalesAmount',
-          search: {
-            label: '售后状态',
-            prop: 'afterSaleStatus',
-            type: 'dict',
-            optionsList: afterSalesTabList
-          }
+          prop: 'afterSalesAmount'
+
         },
         {
           label: '余额金额(元)',
