@@ -2,6 +2,15 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{$route.meta.name || $t(`route.${$route.meta.title}`)}}</div>
+      <div class="header-btn">
+        <el-button
+          :size="size"
+          type="primary"
+          :loading="exportLoading"
+          icon="el-icon-download"
+          @click="exportFile"
+        >导出</el-button>
+      </div>
     </template>
     <div class="main__box">
       <order-info :init-data.sync="listInfo"></order-info>
@@ -99,6 +108,7 @@ export default {
   data(vm) {
     return {
       dialogObj: {},
+      exportLoading:false,
       detailDialog: {}, // 详情弹框
       listInfo: {}, // 列表统计数据
       orderStatus: '', // 订单状态
@@ -473,6 +483,26 @@ export default {
         } else {
           this.tableList = res || []
         }
+      })
+    },
+    //导出文件
+    exportFile() {
+      const {  dateTime,...other } = this.searchObj
+      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
+      this.exportLoading = true
+      this.$api.order.orderListExport({
+        ...searchDate,
+        ...other
+      }).then(res => {
+        if (res) {
+          // this.showDialog({
+          //   title: '售后单导出',
+          //   type: 3
+          // })
+        } else {
+          this.$msgTip('导出数据失败', 'warning')
+        }
+        this.exportLoading = false
       })
     }
   }
