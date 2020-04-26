@@ -41,7 +41,7 @@
         :is-show="dialogObj.isShow"
         :title="dialogObj.title"
         close-btn
-        :no-btn="dialogObj.type === '2'"
+        :no-btn="dialogObj.type === 2|| dialogObj.type === 3"
         :btns="dialogObj.btns"
         @before-close="dialogObj.isShow = false"
         @on-submit="showRemarkDialog"
