@@ -133,10 +133,10 @@ export default {
           label: '退货数量',
           prop: 'skuQty'
         },
-        {
-          label: '应退金额',
-          prop: 'refundAmount'
-        },
+        // {
+        //   label: '应退金额',
+        //   prop: 'refundAmount'
+        // },
         // {
         //   label: '实退金额',
         //   prop: 'realRefundAmount',

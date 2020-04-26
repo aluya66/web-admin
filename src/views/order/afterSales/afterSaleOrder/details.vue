@@ -200,10 +200,10 @@ export default {
             return (row.salePrice * row.skuQty).toFixed(2)
           }
         },
-        {
-          label: '应退金额',
-          prop: 'refundAmount'
-        },
+        // {
+        //   label: '应退金额',
+        //   prop: 'refundAmount'
+        // },
         // {
         //   label: '实退金额',
         //   prop: 'realRefundAmount'
