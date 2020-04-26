@@ -24,7 +24,7 @@
       <div class="row">
         <span>应退金额：{{formModel.totalActualRefundAmount}}</span>
         <span>实退金额：{{formModel.realRefundAmount}}</span>
-        <span v-if="formModel.afterRefundLogs">扣款金额：{{formModel.totalRefundAmount}}</span>
+        <span v-if="formModel.afterRefundLogs">扣款金额：{{(formModel.totalActualRefundAmount-formModel.realRefundAmount).toFixed(2)}}</span>
       </div>
       <div class="row">
         <span>客服审核说明：{{formModel.approveRemark}}</span>
@@ -137,10 +137,10 @@ export default {
           label: '应退金额',
           prop: 'refundAmount'
         },
-        {
-          label: '实退金额',
-          prop: 'refundAmount'
-        },
+        // {
+        //   label: '实退金额',
+        //   prop: 'realRefundAmount',
+        // },
         {
           label: '备注',
           prop: 'remark'
