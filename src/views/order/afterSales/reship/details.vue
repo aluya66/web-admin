@@ -157,6 +157,20 @@ export default {
         this.$emit('update:init-data', val)
       }
     }
+  },
+  created() {
+    this.handleData()
+  },
+  methods: {
+    handleData() {
+      const { afterRefundLogs } = this.initData
+      if (afterRefundLogs && afterRefundLogs.length) {
+        let refunds = afterRefundLogs.map((elem) => { // 组装扣费项目
+          return elem.typeName
+        }) || []
+        this.formModel.afterRefundLogs = refunds.join('、')
+      }
+    }
   }
 }
 </script>

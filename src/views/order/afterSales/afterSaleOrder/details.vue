@@ -246,7 +246,7 @@ export default {
         let refunds = afterRefundLogs.map((elem) => { // 组装扣费项目
           return elem.typeName
         }) || []
-        this.formModel.afterRefundLogs = refunds.join('')
+        this.formModel.afterRefundLogs = refunds.join('、')
       }
     },
     submitHandle() {
