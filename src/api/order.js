@@ -232,7 +232,7 @@ export const afterSalesCostSettingDelete = params =>
 * @param {*}
 */
 export const afterSalesExport = params =>
-  Http.fetch(`${context}/api/ass/asexport`, params, {
+  Http.fetch(`${context}/api/ass/list/export`, params, {
     method: 'get'
   })
 
