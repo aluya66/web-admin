@@ -19,7 +19,6 @@
        <!--设计图模块 -->
        <g-img :data-obj.sync="formModel" title="设计图列表" ref="addressRef"></g-img>
 
-
       <div class="btn-wrapper">
         <el-button
           :size="size"
@@ -88,17 +87,29 @@ export default {
     dialogConfirm() {
       this.dialogObj.isShow = false
     },
+    goBack() {
+        this.$confirm('当前页面如有更改，直接返回会导致您更改的信息数据丢失！', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            this.$router.go(-1)
+        }).catch(() => {
+            //取消 todo...
+        });      
+    },
     submitHandle() {
-        const params = {
-            ...this.formModel,
-            logRespList:[]  //不需要传入操作日志数据
+      const params = {
+        ...this.formModel,
+        logRespList: [] // 不需要传入操作日志数据
+      }
+      this.$api.operationManage.updateIntention(params).then(res => {
+        if (res) {
+            this.$msgTip('编辑成功')
+            this.closeCurrentTag()
+            this.$router.go(-1)
         }
-        this.$api.operationManage.updateIntention(params).then(res=>{
-              if(res){
-                
-              }
-        })
-
+      })
     }
   }
 }
