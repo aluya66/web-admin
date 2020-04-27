@@ -46,9 +46,9 @@
         <span>物流公司：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryName : ''}}</span>
         <span>物流单号：{{formModel.deliveryList.length ? formModel.deliveryList[0].deliveryNo : ''}}</span>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <span>发货备注：{{formModel.deliveryList.length && formModel.deliveryList.detailList && formModel.deliveryList.detailList.length ? formModel.deliveryList[0].detailList.remark : ''}}</span>
-      </div>
+      </div> -->
       <div class="row">
         <span>操作物流发货时间：{{formModel.deliveryList.length ? formModel.deliveryList[0].created : ''}}</span>
       </div>
@@ -122,10 +122,10 @@ export default {
           label: '金额',
           prop: 'salePrice'
         },
-        {
-          label: '购买数量',
-          prop: 'salesSkuQty'
-        },
+        // {
+        //   label: '购买数量',
+        //   prop: 'salesSkuQty'
+        // },
         {
           label: '退货数量',
           prop: 'skuQty'
