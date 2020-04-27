@@ -11,7 +11,7 @@
       <el-form-item label="定制单金额:" prop="payAmount">
         <el-input
           class="select-item"
-           v-model="formModel.payAmount"
+           v-model.number="formModel.payAmount"
           :size="size"
           placeholder="请输入定制单号"
           clearable
@@ -86,10 +86,7 @@ export default {
       rules: {
           payAmount: [
             {type:'number', message: '请输入正确的定制单金额', trigger: 'blur'},
-          ],
-          payTime: [
-            {type:'date', message: '请输入正确格式的付款时间', trigger: 'change'},
-          ],
+          ]
       }   
     }
   },

@@ -11,7 +11,7 @@
       <el-form-item label="收货人:" prop="deliveryName">
         <el-input
           class="select-item"
-          v-model="formModel.deliveryAddress.name"
+          v-model="formModel.deliveryName"
           :size="size"
           placeholder="请输入收货人"
           clearable
@@ -20,26 +20,26 @@
         <el-form-item label="手机:" prop="deliveryMobile">
         <el-input
           class="select-item"
-          v-model="formModel.deliveryAddress.mobile"
+          v-model="formModel.deliveryMobile"
           :size="size"
           placeholder="请输入手机"
           clearable
         />
       </el-form-item>
-     <el-form-item label="收货时间:" prop="deliveryTime">
-        <el-input
-          class="select-item"
-          v-model="formModel.deliveryAddress.receiptTime"
-          :size="size"
-          placeholder="请输入收货时间"
-          clearable
-        />
+     <el-form-item label="收货时间:" prop="receiptTime">
+        <el-date-picker
+            v-model="formModel.receiptTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            class="select-item"
+            placeholder="请选择收货时间">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="收货区域:" prop="deliveryArea">
         <el-cascader
             clearable
             class="select-item"
-            v-model="formModel.deliveryAddress.area"
+            v-model="formModel.deliveryArea"
             :props="optionsProps"
             :options="areaOptions"
             placeholder="请选择区域"
@@ -50,7 +50,7 @@
         <el-form-item label="详细地址:" prop="address">
       <el-input
         class="select-item"
-        v-model.trim="formModel.deliveryAddress.address"
+        v-model.trim="formModel.address"
         :size="size"
         placeholder="请输入详细地址"
         clearable
@@ -82,7 +82,7 @@ export default {
       areaOptions: [], // 地址列表
       rule: {
           deliveryMobile: [
-            { validator: utils.validater.phoneNumber, message: '请输入正确的手机号码格式', trigger: 'blur'}
+            { validator: utils.validater.phoneNumber, trigger: 'blur'}
           ]
       },
     }

@@ -17,7 +17,7 @@
                 list-type="picture-card"
                 :size="20"
                 :limit="9"
-                :fileList="formModel.productImage"
+                :fileList="formModel.productImages"
                 @on-success="uploadSuccess"
                 :on-remove="uploadRemove.bind(this,'imgList')"
             >
@@ -68,7 +68,7 @@ export default {
     },
     uploadSuccess(response, file, fileList) {
       console.info(response,file,fileList,"=====")
-      this.formModel.productImage = fileList.map((item) => {
+      this.formModel.productImages = fileList.map((item) => {
         return {
           ...item,
           fileType: 'image'
@@ -76,7 +76,7 @@ export default {
       })
     },
     uploadRemove(type, file, fileList) {
-      this.formModel.productImage = fileList || []
+      this.formModel.productImages = fileList || []
     },
     uploadHandle(file) {
       this.$refs.imgList.customUpload(file)

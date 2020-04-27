@@ -312,8 +312,7 @@ export default {
               { type: 'number', message: '请输入正确的数字', trigger: 'blur'}
           ],
           expectedDtime:[
-              { required: true, message: '请选择预期交付时间', trigger: 'change'},
-              { type: 'date', message: '请选择预期交付时间', trigger: 'change'}
+              { required: true, message: '请选择预期交付时间', trigger: 'change'}
           ],
           username:[
               { required: true, message: '请输入客户姓名', trigger: 'blur'}

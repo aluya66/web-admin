@@ -17,7 +17,7 @@
        <g-address :data-obj.sync="formModel" title="收货信息" ref="addressRef"></g-address>
 
        <!--设计图模块 -->
-       <g-img :data-obj.sync="formModel" title="设计图列表" ref="addressRef"></g-img>
+       <g-img :data-obj.sync="formModel" title="设计图列表" ref="imgsRef"></g-img>
 
       <div class="btn-wrapper">
         <el-button
@@ -70,16 +70,18 @@ export default {
         if (res) {
           const {
             deliveryAddress,
-            productImage
+            productImages,
+            receiptTime
           } = res
           this.formModel = {
             ...this.formModel,
             ...res,
-            productImage: Array.isArray(productImage) ? productImage : [],
-            deliveryAddress: {
-              ...deliveryAddress,
-              area: [deliveryAddress.provinceCode, deliveryAddress.cityCode, deliveryAddress.regionCode]
-            }
+            receiptTime: receiptTime ? receiptTime : '',
+            productImages: Array.isArray(productImages) ? productImages : [],
+            deliveryName: deliveryAddress ? deliveryAddress.name : '',
+            deliveryMobile:deliveryAddress ? deliveryAddress.mobile : '',
+            deliveryArea: deliveryAddress ? [deliveryAddress.provinceCode, deliveryAddress.cityCode, deliveryAddress.regionCode] : [],
+            address: deliveryAddress ? deliveryAddress.address : ''
           }
         }
       })
@@ -93,7 +95,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            this.$router.go(-1)
+          this.$router.go(-1)
         }).catch(() => {
             //取消 todo...
         });      
@@ -101,8 +103,25 @@ export default {
     submitHandle() {
       const params = {
         ...this.formModel,
+        deliveryAddress:{
+            address: this.formModel.address || '',
+            provinceCode: this.formModel.deliveryArea[0] || '',
+            cityCode: this.formModel.deliveryArea[1] || '',
+            regionCode: this.formModel.deliveryArea[2] || '',
+            mobile: this.formModel.mobile || '',
+            name: this.formModel.name || '',
+        },
         logRespList: [] // 不需要传入操作日志数据
       }
+
+      // 确认完成按钮，需要做必填项校验
+      // const customizeForm = this.$refs.customizeRef.$refs.salesFormRef
+      // const payForm = this.$refs.payRef.$refs.paramsFormRef
+      // const paramsForm = this.$refs.payRef.$refs.paramsFormRef
+      // const paramsForm = this.$refs.payRef.$refs.paramsFormRef
+
+
+
       this.$api.operationManage.updateIntention(params).then(res => {
         if (res) {
             this.$msgTip('编辑成功')
