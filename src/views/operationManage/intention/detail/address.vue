@@ -108,7 +108,6 @@ export default {
     },
     fetchAreaData() {
       this.$api.basic.getAreaAll().then(res => {
-        console.info(res, 111)
         if (res.length) {
           this.areaOptions = res
         }

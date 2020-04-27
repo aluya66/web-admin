@@ -83,7 +83,6 @@ export default {
               area: [deliveryAddress.provinceCode, deliveryAddress.cityCode, deliveryAddress.regionCode]
             }
           }
-          console.info(this.formModel, '获取详情数据')
         }
       })
     },
@@ -91,13 +90,14 @@ export default {
       this.dialogObj.isShow = false
     },
     submitHandle() {
-        console.info(this.formModel,"参数")
         const params = {
             ...this.formModel,
             logRespList:[]  //不需要传入操作日志数据
         }
         this.$api.operationManage.updateIntention(params).then(res=>{
-             console.info(res,"更新")
+              if(res){
+                
+              }
         })
 
     }

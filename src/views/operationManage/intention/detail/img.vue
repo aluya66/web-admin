@@ -22,7 +22,7 @@
                 :on-remove="uploadRemove.bind(this,'imgList')"
             >
             <i class="el-icon-plus"></i>
-            <div class="info">750px*350px</div>
+            <div class="info">350px*350px</div>
         </c-upload>
     </el-form-item>
     </el-form>
