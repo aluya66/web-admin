@@ -235,10 +235,10 @@ export default {
         },
         {
           label: '受理人',
-          prop: 'updateName',
+          prop: 'receiverName',
           search: {
             type: 'input',
-            prop: 'updateName'
+            prop: 'receiverName'
           }
         },
         {
