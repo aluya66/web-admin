@@ -99,13 +99,9 @@ export default {
     }
   },
   created() {
-    this.initData()
     this.fetchAreaData()
   },
   methods: {
-    initData() {
-
-    },
     fetchAreaData() {
       this.$api.basic.getAreaAll().then(res => {
         if (res.length) {

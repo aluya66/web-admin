@@ -76,10 +76,10 @@ export default {
           this.formModel = {
             ...this.formModel,
             ...res,
-            receiptTime: receiptTime ? receiptTime : '',
+            receiptTime: receiptTime || '',
             productImages: Array.isArray(productImages) ? productImages : [],
             deliveryName: deliveryAddress ? deliveryAddress.name : '',
-            deliveryMobile:deliveryAddress ? deliveryAddress.mobile : '',
+            deliveryMobile: deliveryAddress ? deliveryAddress.mobile : '',
             deliveryArea: deliveryAddress ? [deliveryAddress.provinceCode, deliveryAddress.cityCode, deliveryAddress.regionCode] : [],
             address: deliveryAddress ? deliveryAddress.address : ''
           }
@@ -90,45 +90,54 @@ export default {
       this.dialogObj.isShow = false
     },
     goBack() {
-        this.$confirm('当前页面如有更改，直接返回会导致您更改的信息数据丢失！', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$router.go(-1)
-        }).catch(() => {
-            //取消 todo...
-        });      
+      this.$confirm('当前页面如有更改，直接返回会导致您更改的信息数据丢失！', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$router.go(-1)
+      }).catch(() => {
+        // 取消 todo...
+      })
+    },
+    handleData(){
+        this.$api.operationManage.updateIntention(params).then(res => {
+          if (res) {
+            this.$msgTip('编辑成功')
+            this.closeCurrentTag()
+            this.$router.go(-1)
+          }
+      })
     },
     submitHandle() {
       const params = {
         ...this.formModel,
-        deliveryAddress:{
-            address: this.formModel.address || '',
-            provinceCode: this.formModel.deliveryArea[0] || '',
-            cityCode: this.formModel.deliveryArea[1] || '',
-            regionCode: this.formModel.deliveryArea[2] || '',
-            mobile: this.formModel.mobile || '',
-            name: this.formModel.name || '',
+        deliveryAddress: {
+          address: this.formModel.address || '',
+          provinceCode: this.formModel.deliveryArea[0] || '',
+          cityCode: this.formModel.deliveryArea[1] || '',
+          regionCode: this.formModel.deliveryArea[2] || '',
+          mobile: this.formModel.mobile || '',
+          name: this.formModel.name || ''
         },
         logRespList: [] // 不需要传入操作日志数据
       }
 
       // 确认完成按钮，需要做必填项校验
-      // const customizeForm = this.$refs.customizeRef.$refs.salesFormRef
-      // const payForm = this.$refs.payRef.$refs.paramsFormRef
-      // const paramsForm = this.$refs.payRef.$refs.paramsFormRef
-      // const paramsForm = this.$refs.payRef.$refs.paramsFormRef
-
-
-
-      this.$api.operationManage.updateIntention(params).then(res => {
-        if (res) {
-            this.$msgTip('编辑成功')
-            this.closeCurrentTag()
-            this.$router.go(-1)
+      const customizeForm = this.$refs.customizeRef.$refs.formRef
+      const payForm = this.$refs.payRef.$refs.formRef
+      const addressForm = this.$refs.addressRef.$refs.formRef
+      Promise.all([customizeForm, payForm, addressForm].map(this.getFormPromise)).then(res => {
+        // 所有子表单是否校验通过
+        const validateResult = res.every(item => !!item)
+        if (validateResult) {
+          this.handleData()
+        } else {
+          console.log('未校验通过')
         }
       })
+
+      
     }
   }
 }
