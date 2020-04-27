@@ -71,7 +71,6 @@ export default {
         if (res) {
           const {
             deliveryAddress,
-            images,
             productImage
           } = res
           this.formModel = {
