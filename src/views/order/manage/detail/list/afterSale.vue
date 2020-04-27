@@ -71,11 +71,19 @@ export default {
         },
         {
           label: '审核人',
-          prop: 'updateName'
+          prop: 'createName',
+          formatter(row){
+            const length = row.afterSalesAudits&&row.afterSalesAudits.length
+            return row &&length && row.afterSalesAudits[length-1].createName
+          }
         },
         {
           label: '审核说明',
-          prop: 'field_7'
+          prop: 'auditRemark',
+          formatter(row){
+            const length = row.afterSalesAudits&&row.afterSalesAudits.length
+            return row &&length && row.afterSalesAudits[length-1].auditRemark
+          }
         },
         {
           label: '售后发起人',

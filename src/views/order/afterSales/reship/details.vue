@@ -119,7 +119,7 @@ export default {
           prop: 'specifications'
         },
         {
-          label: '金额',
+          label: '商品单价',
           prop: 'salePrice'
         },
         // {
@@ -129,6 +129,12 @@ export default {
         {
           label: '退货数量',
           prop: 'skuQty'
+        },
+        {
+          label: '商品总价',
+          formatter(row) {
+            return (row.salePrice * row.skuQty).toFixed(2)
+          }
         },
         // {
         //   label: '应退金额',
