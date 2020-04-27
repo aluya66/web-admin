@@ -30,9 +30,6 @@
         <span>客服审核说明：{{formModel.approveRemark}}</span>
         <span>仓库拒收说明：{{formModel.confirmRemark}}</span>
       </div>
-      <div class="row" v-if="formModel.afterRefundLogs">
-        <span>备注：{{formModel.reasonDesc}}</span>
-      </div>
       <div class="table-row">
         <c-table
           ref="cTable"
