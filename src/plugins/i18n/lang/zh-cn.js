@@ -105,7 +105,10 @@ export default {
     inOutLogList: '出入库明细',
     platformStockList: '平台仓库',
     platformOccupiedStockList: '平台预占',
-    inOutManage: '出入库管理'
+    inOutManage: '出入库管理',
+    operationManage: '运营管理',
+    intentList: '意向单列表',
+    intentDetail: '意向单详情'
   },
   navbar: {
     logout: '退出',

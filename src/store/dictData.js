@@ -744,6 +744,62 @@ const posType = [{
   value: 1
 }]
 
+// 意向单版型
+const stereotype = [{
+  label: 'A',
+  value: 'A'
+}]
+
+// 意向单印花
+const intentionStamp = [{
+  label: '局部图案',
+  value: '局部图案'
+}, {
+  label: '满底印花',
+  value: '满底印花'
+}]
+
+// 意向单工艺
+const intentionCraft = [{
+  label: '抗菌',
+  value: '抗菌'
+}, {
+  label: '抗病毒',
+  value: '抗病毒'
+}, {
+  label: '玻尿酸',
+  value: '玻尿酸'
+}, {
+  label: '冰感',
+  value: '冰感'
+}, {
+  label: '香型',
+  value: '香型'
+}
+]
+
+// 意向单状态
+const intentionStaus = [{
+  label: '待确认',
+  value: 1
+}, {
+  label: '设计中',
+  value: 2
+}, {
+  label: '生产中',
+  value: 3
+}, {
+  label: '待收货',
+  value: 4
+}, {
+  label: '已完成',
+  value: 5
+}, {
+  label: '已取消',
+  value: 6
+}
+]
+
 export default {
   afterSalesTypes,
   afterSalesStatus,
@@ -790,5 +846,9 @@ export default {
   inOutType,
   inOutStatusList,
   shopRole,
-  posType
+  posType,
+  stereotype,
+  intentionStaus,
+  intentionStamp,
+  intentionCraft
 }
