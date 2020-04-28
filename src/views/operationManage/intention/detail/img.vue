@@ -15,14 +15,13 @@
             action="/api/upload/file"
             list-type="picture-card"
             :http-request="uploadHandle"
-            :size="10"
-            :limit="1"
+            :size="0.5"
+            :limit="9"
             :fileList="formModel.productImage"
             @on-success="uploadSuccess"
             :on-remove="uploadRemove"
           >
             <i class="el-icon-plus"></i>
-            <div class="info">建议尺寸120*120图片</div>
           </c-upload>
       </el-form-item>
     </el-form>
@@ -67,6 +66,7 @@ export default {
 
     },
     uploadSuccess(response, file, fileList) {
+      console.info(response,file,fileList,"=====")
       this.formModel.productImage = fileList.map((item) => {
         return {
           ...item,
@@ -80,7 +80,7 @@ export default {
     uploadHandle(file) {
       this.$refs.imgList.customUpload(file)
     }
-
+ 
   }
 
 }

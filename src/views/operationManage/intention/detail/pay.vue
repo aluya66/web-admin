@@ -59,15 +59,15 @@ import CCard from 'components/card'
 const payStatus = [
   {
     label: '待支付',
-    value: '1'
+    value: 1
   },
   {
     label: '已付款',
-    value: '2'
+    value: 2
   },
   {
     label: '已退款',
-    value: '3'
+    value: 3
   }
 ]
 
