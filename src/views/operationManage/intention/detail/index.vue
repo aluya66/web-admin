@@ -70,14 +70,33 @@ export default {
         if (res) {
           const {
             deliveryAddress,
-            productImages,
+            productImage,
+            images,
             receiptTime
-          } = res
+          } = res;
+          //图片json转换
+          let pImg = productImage ? JSON.parse(productImage) : [];
+          let img = images ? JSON.parse(images) : []
+
           this.formModel = {
             ...this.formModel,
             ...res,
             receiptTime: receiptTime || '',
-            productImages: Array.isArray(productImages) ? productImages : [],
+            productImage: pImg.map((item,index)=>{
+                 return {
+                     id:index + new Date().getTime(),
+                     name:"设计图",
+                     url: item
+                 }
+            }),
+            images: img.map((item,index)=>{
+                 return {
+                     id:index + new Date().getTime(),
+                     name:"设计图",
+                     url: item
+                 }
+            }),
+          
             deliveryName: deliveryAddress ? deliveryAddress.name : '',
             deliveryMobile: deliveryAddress ? deliveryAddress.mobile : '',
             deliveryArea: deliveryAddress ? [deliveryAddress.provinceCode, deliveryAddress.cityCode, deliveryAddress.regionCode] : [],
@@ -86,6 +105,7 @@ export default {
         }
       })
     },
+    
     dialogConfirm() {
       this.dialogObj.isShow = false
     },
@@ -100,16 +120,7 @@ export default {
         // 取消 todo...
       })
     },
-    handleData(){
-        this.$api.operationManage.updateIntention(params).then(res => {
-          if (res) {
-            this.$msgTip('编辑成功')
-            this.closeCurrentTag()
-            this.$router.go(-1)
-          }
-      })
-    },
-    submitHandle() {
+    handleData() {
       const params = {
         ...this.formModel,
         deliveryAddress: {
@@ -117,12 +128,27 @@ export default {
           provinceCode: this.formModel.deliveryArea[0] || '',
           cityCode: this.formModel.deliveryArea[1] || '',
           regionCode: this.formModel.deliveryArea[2] || '',
-          mobile: this.formModel.mobile || '',
-          name: this.formModel.name || ''
+          mobile: this.formModel.deliveryMobile || '',
+          name: this.formModel.deliveryName || ''
         },
+        productImages: this.formModel.productImage.map(item => {
+          return item.url
+        }),
+        images:JSON.stringify(this.formModel.images.map(item => {
+            return item.url
+        })),
         logRespList: [] // 不需要传入操作日志数据
       }
 
+      this.$api.operationManage.updateIntention(params).then(res => {
+        if (res) {
+          this.$msgTip('编辑成功')
+          this.closeCurrentTag()
+          this.$router.go(-1)
+        }
+      })
+    },
+    submitHandle() {
       // 确认完成按钮，需要做必填项校验
       const customizeForm = this.$refs.customizeRef.$refs.formRef
       const payForm = this.$refs.payRef.$refs.formRef
@@ -136,8 +162,6 @@ export default {
           console.log('未校验通过')
         }
       })
-
-      
     }
   }
 }

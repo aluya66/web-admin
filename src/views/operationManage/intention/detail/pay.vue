@@ -23,8 +23,8 @@
           placeholder="选择状态"
           v-model="formModel.payStatus"
         >
-        <el-option 
-            v-for="item in payStatus" 
+        <el-option
+            v-for="item in payStatus"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -84,10 +84,10 @@ export default {
     return {
       payStatus,
       rules: {
-          payAmount: [
-            {type:'number', message: '请输入正确的定制单金额', trigger: 'blur'},
-          ]
-      }   
+        payAmount: [
+          { type: 'number', message: '请输入正确的定制单金额', trigger: 'blur' }
+        ]
+      }
     }
   },
   props: {

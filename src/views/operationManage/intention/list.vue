@@ -56,32 +56,32 @@ import DDetail from './detailDialog'
 export default {
   name: 'operationManage',
   mixins: [mixinTable],
-  components:{
+  components: {
     CDialog,
     DDetail
   },
   data(vm) {
     return {
-      dialogObj:{}, //对话框对象
+      dialogObj: {}, // 对话框对象
       tableInnerBtns: [
-      {
-        name: '详情',
-        icon: '',
-        handle(row) {
+        {
+          name: '详情',
+          icon: '',
+          handle(row) {
           // TODO...
             vm.showDialog({
               title: '意向单详情',
               initData: row
             })
-        }
-      },{
-        name: '编辑',
-        icon: '',
-        handle(row) {
+          }
+        }, {
+          name: '编辑',
+          icon: '',
+          handle(row) {
           // TODO...
-          vm.routerLink(`/operation/manage/detail/${row.id}`)
-        }
-      }],
+            vm.routerLink(`/operation/manage/detail/${row.id}`)
+          }
+        }],
       // 表格内操作按钮
       tableHeader: [
         {
@@ -133,6 +133,9 @@ export default {
         {
           label: '状态',
           prop: 'operatorStatus',
+          formatter(row) {
+            return row && row.operatorName
+          },
           search: {
             type: 'select',
             optionsList: dictObj.intentionStaus

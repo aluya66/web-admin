@@ -81,10 +81,10 @@ export default {
       },
       areaOptions: [], // 地址列表
       rule: {
-          deliveryMobile: [
-            { validator: utils.validater.phoneNumber, trigger: 'blur'}
-          ]
-      },
+        deliveryMobile: [
+          { validator: utils.validater.isMobile, trigger: 'blur' }
+        ]
+      }
     }
   },
   props: {

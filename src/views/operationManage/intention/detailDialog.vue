@@ -35,7 +35,7 @@
           <span>设计参考图：</span>
           <el-image class="picImg" v-for="item in formModel.productImage" :key="item" :src="item"></el-image>
       </div>
-    
+
     </line-card>
      <line-card title="付款信息">
         <div class="row">
@@ -50,7 +50,7 @@
       <line-card title="设计图">
         <div class="row">
            <el-image class="picImg" v-for="item in formModel.images" :key="item" :src="item"></el-image>
-        </div>   
+        </div>
      </line-card>
      <line-card title="收货信息">
         <div class="row">
@@ -78,14 +78,14 @@
             :table-list="formModel.logRespList"
           ></c-table>
         </div>
-       </line-card> 
+       </line-card>
   </div>
 </template>
 
 <script>
-import dictObj from "@/store/dictData";
-import mixinTable from "mixins/table";
-import LineCard from "@/views/common/lineCard";
+import dictObj from '@/store/dictData'
+import mixinTable from 'mixins/table'
+import LineCard from '@/views/common/lineCard'
 
 export default {
   mixins: [mixinTable],
@@ -96,51 +96,51 @@ export default {
     initData: {
       type: Object,
       default() {
-        return {};
+        return {}
       }
     }
   },
   data() {
     return {
-      formModel:{},
+      formModel: {},
       tableHeader: [
-        
+
         {
-          label: "操作人",
-          prop: "intentionId"
+          label: '操作人',
+          prop: 'intentionId'
         },
         {
-          label: "操作时间",
-          prop: "created"
+          label: '操作时间',
+          prop: 'created'
         }
       ],
       payTypeList: dictObj.payTypeList,
       orderBusinessTypeList: dictObj.orderBusinessTypeList
-    };
+    }
   },
   created() {
-    this.getDeliveryDetail();
+    this.getDeliveryDetail()
   },
   methods: {
     /*
 	   * 查询意向单详情
 	   */
     getDeliveryDetail() {
-      const { id } = this.initData;
+      const { id } = this.initData
       this.$api.operationManage.queryIntentionDetail({ id }).then(res => {
-          this.formModel ={
-             ...res,
-             deliveryUser:res.deliveryAddress.name,
-             deliveryMobile:res.deliveryAddress.mobile,
-             provinceName: res.deliveryAddress.provinceName,
-             cityName: res.deliveryAddress.cityName,
-             regionName: res.deliveryAddress.regionName,
-             address: res.deliveryAddress.address
-          } ;
-      });
+        this.formModel = {
+          ...res,
+          deliveryUser: res.deliveryAddress.name,
+          deliveryMobile: res.deliveryAddress.mobile,
+          provinceName: res.deliveryAddress.provinceName,
+          cityName: res.deliveryAddress.cityName,
+          regionName: res.deliveryAddress.regionName,
+          address: res.deliveryAddress.address
+        }
+      })
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .pay-detail {

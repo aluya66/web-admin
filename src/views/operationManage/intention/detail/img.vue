@@ -7,24 +7,24 @@
       class="form"
       label-position="right"
     >
-       <el-form-item label="设计图:" prop="imgList">
-            <c-upload
-                ref="imgList"
-                class="pic"
-                auto-upload
-                action="/api/upload/file"
-                :http-request="uploadHandle"
-                list-type="picture-card"
-                :size="20"
-                :limit="9"
-                :fileList="formModel.productImages"
-                @on-success="uploadSuccess"
-                :on-remove="uploadRemove.bind(this,'imgList')"
-            >
+        <el-form-item label="设计图:" prop="imgList">
+          <c-upload
+            ref="imgList"
+            class="pic"
+            auto-upload
+            action="/api/upload/file"
+            list-type="picture-card"
+            :http-request="uploadHandle"
+            :size="10"
+            :limit="1"
+            :fileList="formModel.productImage"
+            @on-success="uploadSuccess"
+            :on-remove="uploadRemove"
+          >
             <i class="el-icon-plus"></i>
-            <div class="info">350px*350px</div>
-        </c-upload>
-    </el-form-item>
+            <div class="info">建议尺寸120*120图片</div>
+          </c-upload>
+      </el-form-item>
     </el-form>
 </c-card>
 </template>
@@ -68,22 +68,20 @@ export default {
     },
     uploadSuccess(response, file, fileList) {
       console.info(response,file,fileList,"=====")
-      this.formModel.productImages = fileList.map((item) => {
+      this.formModel.productImage = fileList.map((item) => {
         return {
           ...item,
           fileType: 'image'
         }
       })
     },
-    uploadRemove(type, file, fileList) {
-      this.formModel.productImages = fileList || []
+    uploadRemove(file, fileList) {
+      this.formModel.productImage = fileList || []
     },
     uploadHandle(file) {
       this.$refs.imgList.customUpload(file)
-    },
-    uploadReview(file) {
-      this.$emit('show-image', file)
     }
+ 
   }
 
 }
