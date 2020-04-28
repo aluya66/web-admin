@@ -158,9 +158,9 @@
       <el-form-item label="预期交付时间:" prop="expectedDtime">
         <el-date-picker
           v-model="formModel.expectedDtime"
-          value-format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd"
           :picker-options="pickerOptions"
-          type="datetime"
+          type="date"
           class="select-item"
           placeholder="选择日期">
       </el-date-picker>

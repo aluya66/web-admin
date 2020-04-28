@@ -29,8 +29,8 @@
      <el-form-item label="收货时间:" prop="receiptTime">
         <el-date-picker
             v-model="formModel.receiptTime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            value-format="yyyy-MM-dd"
+            type="date"
             class="select-item"
             placeholder="请选择收货时间">
         </el-date-picker>
