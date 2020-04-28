@@ -104,10 +104,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="工艺:" prop="features">
+      <el-form-item label="功能:" prop="features">
         <el-select
           class="select-item"
-          placeholder="选择工艺类型"
+          placeholder="选择功能类型"
           v-model="formModel.features"
         >
         <el-option

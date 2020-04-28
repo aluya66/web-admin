@@ -123,7 +123,7 @@ export default {
           }
         },
         {
-          label: '工艺',
+          label: '功能',
           prop: 'features',
           search: {
             type: 'select',
