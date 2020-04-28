@@ -66,7 +66,8 @@ export default {
       tableInnerBtns: [
         {
           name: '详情',
-          icon: '',
+          width: 150,
+          icon: 'el-icon-view',
           handle(row) {
           // TODO...
             vm.showDialog({
@@ -76,7 +77,7 @@ export default {
           }
         }, {
           name: '编辑',
-          icon: '',
+          icon: 'el-icon-edit',
           handle(row) {
           // TODO...
             vm.routerLink(`/operation/manage/detail/${row.id}`)
