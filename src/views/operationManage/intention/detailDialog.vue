@@ -40,7 +40,7 @@
      <line-card title="付款信息">
         <div class="row">
           <span>定制单金额：{{formModel.payAmount}}</span>
-           <span>付款状态：{{formModel.payStatusText}}</span>
+           <span>付款状态：{{formModel.payName}}</span>
       </div>
       <div class="row">
           <span>付款方式：{{formModel.payType}}</span>
