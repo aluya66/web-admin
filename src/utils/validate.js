@@ -13,13 +13,14 @@ export const isEmail = (value) => {
 }
 
 /**
- * 验证手机号
+ * 验证手机号（1.0）
  * @param {*} value
  */
 export const isMobile = (value) => {
   value = value.replace(/[^-|\d]/g, '')
   return /^((\+86)|(86))?(1)\d{10}$/.test(value) || /^0[0-9-]{10,13}$/.test(value)
 }
+
 
 /**
  * 验证数字
@@ -197,6 +198,17 @@ export const validater = {
       callback()
     }
   },
+  /**
+   * 手机号码校验(只校验符不符合要求,上面方法增加了空校验，由于之前已经在应用文件中，故新增一个方法只校验手机规则)
+   */
+  phoneRule (rule, value, callback) {
+    if (value && (!/^[1][3456789]\d{9}$/.test(value) || !/^[1-9]\d*$/.test(value) || value.length !== 11)) {
+      callback(new Error('手机号码不符合规范'))
+    } else {
+      callback()
+    }
+  },
+
 
   /**
    * 电话号码校验

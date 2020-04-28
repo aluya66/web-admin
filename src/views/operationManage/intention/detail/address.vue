@@ -82,7 +82,7 @@ export default {
       areaOptions: [], // 地址列表
       rule: {
         deliveryMobile: [
-          { validator: utils.validater.isMobile, trigger: 'blur' }
+          { validator: utils.validater.phoneRule, trigger: 'blur' }
         ]
       }
     }
