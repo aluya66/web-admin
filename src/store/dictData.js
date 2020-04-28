@@ -748,6 +748,14 @@ const posType = [{
 const stereotype = [{
   label: 'A',
   value: 'A'
+},
+{
+  label: 'B',
+  value: 'B'
+},
+{
+  label: 'C',
+  value: 'C'
 }]
 
 // 意向单印花
