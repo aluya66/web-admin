@@ -130,12 +130,12 @@ export default {
       this.$api.operationManage.queryIntentionDetail({ id }).then(res => {
         this.formModel = {
           ...res,
-          deliveryUser: res.deliveryAddress.name,
-          deliveryMobile: res.deliveryAddress.mobile,
-          provinceName: res.deliveryAddress.provinceName,
-          cityName: res.deliveryAddress.cityName,
-          regionName: res.deliveryAddress.regionName,
-          address: res.deliveryAddress.address
+          deliveryUser: res.deliveryAddress && res.deliveryAddress.name || "",
+          deliveryMobile: res.deliveryAddress && res.deliveryAddress.mobile,
+          provinceName: res.deliveryAddress && res.deliveryAddress.provinceName,
+          cityName: res.deliveryAddress && res.deliveryAddress.cityName,
+          regionName: res.deliveryAddress && res.deliveryAddress.regionName,
+          address: res.deliveryAddress && res.deliveryAddress.address
         }
       })
     }

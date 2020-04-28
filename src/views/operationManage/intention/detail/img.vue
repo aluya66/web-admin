@@ -67,7 +67,6 @@ export default {
 
     },
     uploadSuccess(response, file, fileList) {
-      console.info(response,file,fileList,"=====")
       this.formModel.productImage = fileList.map((item) => {
         return {
           ...item,
@@ -81,7 +80,7 @@ export default {
     uploadHandle(file) {
       this.$refs.imgList.customUpload(file)
     }
- 
+
   }
 
 }

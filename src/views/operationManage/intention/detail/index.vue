@@ -73,30 +73,30 @@ export default {
             productImage,
             images,
             receiptTime
-          } = res;
-          //图片json转换
-          let pImg = productImage ? JSON.parse(productImage) : [];
+          } = res
+          // 图片json转换
+          let pImg = productImage ? JSON.parse(productImage) : []
           let img = images ? JSON.parse(images) : []
 
           this.formModel = {
             ...this.formModel,
             ...res,
             receiptTime: receiptTime || '',
-            productImage: pImg.map((item,index)=>{
-                 return {
-                     id:index + new Date().getTime(),
-                     name:"设计图",
-                     url: item
-                 }
+            productImage: pImg.map((item, index) => {
+              return {
+                id: index + new Date().getTime(),
+                name: '设计图',
+                url: item
+              }
             }),
-            images: img.map((item,index)=>{
-                 return {
-                     id:index + new Date().getTime(),
-                     name:"设计图",
-                     url: item
-                 }
+            images: img.map((item, index) => {
+              return {
+                id: index + new Date().getTime(),
+                name: '设计图',
+                url: item
+              }
             }),
-          
+
             deliveryName: deliveryAddress ? deliveryAddress.name : '',
             deliveryMobile: deliveryAddress ? deliveryAddress.mobile : '',
             deliveryArea: deliveryAddress ? [deliveryAddress.provinceCode, deliveryAddress.cityCode, deliveryAddress.regionCode] : [],
@@ -105,7 +105,7 @@ export default {
         }
       })
     },
-    
+
     dialogConfirm() {
       this.dialogObj.isShow = false
     },
@@ -134,8 +134,8 @@ export default {
         productImages: this.formModel.productImage.map(item => {
           return item.url
         }),
-        images:JSON.stringify(this.formModel.images.map(item => {
-            return item.url
+        images: JSON.stringify(this.formModel.images.map(item => {
+          return item.url
         })),
         logRespList: [] // 不需要传入操作日志数据
       }
