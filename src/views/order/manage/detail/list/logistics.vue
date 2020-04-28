@@ -1,5 +1,5 @@
 <template>
-  <line-card title="物流信息">
+  <line-card title="发货信息">
     <c-table
       ref="cTable"
       hasBorder
@@ -39,6 +39,10 @@ export default {
       }],
       tableHeader: [
         {
+          label: '出库单号',
+          prop: 'outboundCode'
+        },
+        {
           label: '物流公司',
           prop: 'deliveryName'
         },
@@ -57,6 +61,10 @@ export default {
         {
           label: '物流费用(元)',
           prop: 'freightAmount'
+        },
+        {
+          label: '备注',
+          prop: 'remark'
         }
       ]
     }

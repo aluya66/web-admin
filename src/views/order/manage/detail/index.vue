@@ -13,7 +13,6 @@
         <refund-list :refund-list="detailData.orderRefundResp"></refund-list>
         <logistics-list :delivery-list="detailData.deliveryResp" @show-dialog="showDialog"></logistics-list>
         <after-sale :after-list="detailData.afterSalesRespList"></after-sale>
-        <out-stock-info :stock-info-list="detailData.stockLogOmsResps"></out-stock-info>
         <member-info :member-obj="detailData.memberResp"></member-info>
         <log-list :log-list="detailData.orderLogRespList"></log-list>
       </div>
@@ -47,7 +46,6 @@ import refundList from './list/refund'
 import AfterSale from './list/afterSale'
 import MemberInfo from './list/memberInfo'
 import LogList from './list/log'
-import outStockInfo from './list/outStockInfo'
 
 export default {
   mixins: [MixinForm],
@@ -62,7 +60,6 @@ export default {
     refundList,
     payList,
     MemberInfo,
-    outStockInfo
   },
   data() {
     return {
