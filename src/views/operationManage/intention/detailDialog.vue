@@ -130,6 +130,8 @@ export default {
       this.$api.operationManage.queryIntentionDetail({ id }).then(res => {
         this.formModel = {
           ...res,
+          productImage: res.productImage ? JSON.parse(res.productImage) : [],
+          images: res.images ? JSON.parse(res.images) : [],
           deliveryUser: res.deliveryAddress && res.deliveryAddress.name,
           deliveryMobile: res.deliveryAddress && res.deliveryAddress.mobile,
           provinceName: res.deliveryAddress && res.deliveryAddress.provinceName,
