@@ -59,7 +59,7 @@ export default {
     LogList,
     refundList,
     payList,
-    MemberInfo,
+    MemberInfo
   },
   data() {
     return {

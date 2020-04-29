@@ -201,6 +201,14 @@ export default {
           prop: 'refundFee'
         },
         {
+          label: '受理人',
+          prop: 'receiverName',
+          search: {
+            type: 'input',
+            prop: 'receiverName'
+          }
+        },
+        {
           label: '实际退款金额',
           prop: 'actualRefundFee'
         },

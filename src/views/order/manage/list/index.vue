@@ -189,7 +189,7 @@ export default {
         name: '延时收货',
         notBtn(row) {
           // 待签收
-          return row.orderStatus !== 82
+          return row.orderStatus !== 82 || (row.orderStatus === 82 && row.prolongSignStatus !== 0) // 0：未延长；1：延长3天；2：延长7天 ；3：延长15天
         },
         handle(row) {
           vm.delayDialog = {
