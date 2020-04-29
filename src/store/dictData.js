@@ -751,7 +751,7 @@ const stereotype = [{
 },
 {
   label: '版型B（双层两用3D口罩）',
-  value: '型B（双层两用3D口罩）'
+  value: '版型B（双层两用3D口罩）'
 },
 {
   label: '版型C（杯型3D口罩）',
