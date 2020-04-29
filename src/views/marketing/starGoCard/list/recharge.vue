@@ -92,7 +92,7 @@ export default {
           }
         },
         {
-          label: '金额(元)',
+          label: '剩余金额(元)',
           prop: 'couponAmount'
         },
         {
