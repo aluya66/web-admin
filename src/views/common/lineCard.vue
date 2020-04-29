@@ -31,5 +31,14 @@ export default {
       min-width: 220px;
     }
   }
+  .row-line {
+    padding: 0 80px;
+    display:flex;
+    align-items: center;
+    span {
+      display: inline-block;
+      margin: 10px 20px 10px 0;
+    }
+  }
 }
 </style>
