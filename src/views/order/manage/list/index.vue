@@ -509,6 +509,7 @@ export default {
       }
       this.$api.order.delayReceiveGoods(params).then(res => {
         this.delayDialog.isShow = false
+        this.fetchData()
       })
     }
   }
