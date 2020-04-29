@@ -33,7 +33,7 @@
       </div>
        <div class="row-line">
           <span>设计参考图：</span>
-          <el-image class="picImg" v-for="item in formModel.productImage" :key="item" :src="item"></el-image>
+          <el-image class="picImg" v-for="item in formModel.images" :key="item" :src="item"></el-image>
       </div>
 
     </line-card>
@@ -49,7 +49,7 @@
      </line-card>
       <line-card title="设计图">
         <div class="row">
-           <el-image class="picImg" v-for="item in formModel.images" :key="item" :src="item"></el-image>
+           <el-image class="picImg" v-for="item in formModel.productImage" :key="item" :src="item"></el-image>
         </div>
      </line-card>
      <line-card title="收货信息">
