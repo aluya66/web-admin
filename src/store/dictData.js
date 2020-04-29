@@ -746,16 +746,16 @@ const posType = [{
 
 // 意向单版型
 const stereotype = [{
-  label: 'A',
-  value: 'A'
+  label: '版型A（单层3D明星款立体口罩）',
+  value: '版型A（单层3D明星款立体口罩）'
 },
 {
-  label: 'B',
-  value: 'B'
+  label: '版型B（双层两用3D口罩）',
+  value: '型B（双层两用3D口罩）'
 },
 {
-  label: 'C',
-  value: 'C'
+  label: '版型C（杯型3D口罩）',
+  value: '版型C（杯型3D口罩）'
 }]
 
 // 意向单印花

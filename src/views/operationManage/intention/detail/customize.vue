@@ -151,6 +151,7 @@
           class="select-item"
           v-model.number="formModel.qty"
           :size="size"
+          maxlength="50"
           placeholder="请输入数量"
           clearable
         />
@@ -169,6 +170,7 @@
         <el-input
           class="select-item"
           v-model.trim="formModel.username"
+          maxlength="50"
           :size="size"
           placeholder="请输入客户姓名"
           clearable

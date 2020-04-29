@@ -14,6 +14,7 @@
           v-model="formModel.deliveryName"
           :size="size"
           placeholder="请输入收货人"
+          maxlength="50"
           clearable
         />
       </el-form-item>

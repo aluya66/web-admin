@@ -12,7 +12,8 @@
         <el-input
           class="select-item"
            v-model.number="formModel.payAmount"
-          :size="size"
+            :size="size"
+          maxlength="10"
           placeholder="请输入定制单号"
           clearable
         />
@@ -36,6 +37,7 @@
           class="select-item"
           v-model="formModel.payType"
           :size="size"
+          maxlength="50"
           placeholder="付款方式"
           clearable
         />
