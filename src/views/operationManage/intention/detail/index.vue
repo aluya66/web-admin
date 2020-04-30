@@ -34,6 +34,7 @@
 
 <script>
 import MixinForm from 'mixins/form'
+import dictObj from '@/store/dictData'
 import GCustomize from './customize'
 import GPay from './pay'
 import GAddress from './address'
@@ -72,6 +73,7 @@ export default {
             deliveryAddress,
             productImage,
             images,
+            type,
             receiptTime
           } = res
           // 图片json转换
@@ -82,6 +84,7 @@ export default {
             ...this.formModel,
             ...res,
             receiptTime: receiptTime || '',
+            isShowFeat: type != dictObj.diffIntentType ? true : false,  //是否需要显示口罩功能
             productImage: pImg.map((item, index) => {
               return {
                 id: index + new Date().getTime(),

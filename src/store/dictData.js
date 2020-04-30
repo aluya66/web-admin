@@ -758,6 +758,9 @@ const stereotype = [{
   value: '版型C（杯型3D口罩）'
 }]
 
+//判断类型
+const diffIntentType = "版型B（双层两用3D口罩）"
+
 // 意向单印花
 const intentionStamp = [{
   label: '局部图案',
@@ -858,5 +861,6 @@ export default {
   stereotype,
   intentionStaus,
   intentionStamp,
-  intentionCraft
+  intentionCraft,
+  diffIntentType
 }

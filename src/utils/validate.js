@@ -21,7 +21,6 @@ export const isMobile = (value) => {
   return /^((\+86)|(86))?(1)\d{10}$/.test(value) || /^0[0-9-]{10,13}$/.test(value)
 }
 
-
 /**
  * 验证数字
  * @param {*} value
@@ -208,7 +207,6 @@ export const validater = {
       callback()
     }
   },
-
 
   /**
    * 电话号码校验
@@ -416,8 +414,21 @@ export const validater = {
     } else {
       callback()
     }
+  },
+
+    /**
+   * 金额【大于0 支持2位小数】
+   */
+  checkMoney (rule, value, callback) {
+    const temp =  /^(\d+)(.\d{0,2})?$/
+    if (!temp.test(value)) {
+      callback(new Error('请输入大于0的数字'))
+    } else {
+      callback()
+    }
   }
 }
+
 
 export default {
   isEmail,
