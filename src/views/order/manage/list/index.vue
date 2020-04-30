@@ -329,8 +329,12 @@ export default {
         },
         {
           label: '售后金额(元)',
-          prop: 'afterSalesAmount'
-
+          prop: 'afterSalesAmount',
+          search: {
+            type: 'input',
+            label: '第三方交易流水号',
+            prop: 'thirdPartyPaycode'
+          }
         },
         {
           label: '余额金额(元)',
@@ -349,13 +353,6 @@ export default {
             label: '下单时间',
             prop: 'dateTime',
             type: 'dateTime'
-          }
-        },
-        {
-          label: '第三方交易流水号',
-          prop: 'thirdPartyPaycode',
-          search: {
-            type: 'input'
           }
         }
       ]
