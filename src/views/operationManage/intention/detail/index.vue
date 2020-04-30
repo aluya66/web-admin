@@ -84,7 +84,7 @@ export default {
             ...this.formModel,
             ...res,
             receiptTime: receiptTime || '',
-            isShowFeat: type != dictObj.diffIntentType ? true : false,  //是否需要显示口罩功能
+            isShowFeat: type !== dictObj.diffIntentType, // 是否需要显示口罩功能
             productImage: pImg.map((item, index) => {
               return {
                 id: index + new Date().getTime(),

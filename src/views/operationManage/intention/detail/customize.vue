@@ -120,7 +120,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      
+
       <el-form-item label="滤芯:" prop="filter">
         <el-select
           class="select-item"
@@ -301,7 +301,7 @@ export default {
           { required: true, message: '请选择印花', trigger: 'change' }
         ],
         features: [
-          {  message: '请选择功能', trigger: 'change' }
+          { message: '请选择功能', trigger: 'change' }
         ],
         filter: [
           { required: true, message: '请选择滤芯', trigger: 'change' }
@@ -350,21 +350,21 @@ export default {
     initData() {
 
     },
-    hanldeChange(){
-       this.formModel.isShowFeat = this.formModel.type == dictObj.diffIntentType ? false : true; 
-       let selectData = {
-           "版型A（单层3D明星款立体口罩）": ["玻尿酸","冰感"],
-           "版型B（双层两用3D口罩）": [],
-           "版型C（杯型3D口罩）": ["抗病毒","玻尿酸","冰感","香型"]
-       }
-       this.intentionCraft.forEach(item=>{
-            item.disabled = true;
-            this.formModel.features = selectData[this.formModel.type][0]
-            if(selectData[this.formModel.type].indexOf(item.value) > -1){
-                item.disabled = false;
-            } 
-        })
-    },
+    hanldeChange() {
+      this.formModel.isShowFeat = this.formModel.type !== dictObj.diffIntentType
+      let selectData = {
+        '版型A（单层3D明星款立体口罩）': ['玻尿酸', '冰感'],
+        '版型B（双层两用3D口罩）': [],
+        '版型C（杯型3D口罩）': ['抗病毒', '玻尿酸', '冰感', '香型']
+      }
+      this.intentionCraft.forEach(item => {
+        item.disabled = true
+        this.formModel.features = selectData[this.formModel.type][0]
+        if (selectData[this.formModel.type].indexOf(item.value) > -1) {
+          item.disabled = false
+        }
+      })
+    }
   }
 
 }

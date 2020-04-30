@@ -416,11 +416,11 @@ export const validater = {
     }
   },
 
-    /**
+  /**
    * 金额【大于0 支持2位小数】
    */
   checkMoney (rule, value, callback) {
-    const temp =  /^(\d+)(.\d{0,2})?$/
+    const temp = /^(\d+)(.\d{0,2})?$/
     if (!temp.test(value)) {
       callback(new Error('请输入大于0的数字'))
     } else {
@@ -428,7 +428,6 @@ export const validater = {
     }
   }
 }
-
 
 export default {
   isEmail,
