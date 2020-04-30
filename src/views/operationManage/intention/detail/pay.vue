@@ -11,7 +11,7 @@
       <el-form-item label="定制单金额:" prop="payAmount">
         <el-input
           class="select-item"
-           v-model.number="formModel.payAmount"
+           v-model="formModel.payAmount"
             :size="size"
           maxlength="10"
           placeholder="请输入定制单号"
@@ -57,6 +57,7 @@
 
 <script>
 import CCard from 'components/card'
+import utils from '@/utils'
 // 付款状态
 const payStatus = [
   {
@@ -87,7 +88,7 @@ export default {
       payStatus,
       rules: {
         payAmount: [
-          { type: 'number', message: '请输入正确的定制单金额', trigger: 'blur' }
+          { validator: utils.validater.checkMoney, message: '请输入正数且小数只能包含2位', trigger: 'blur' }
         ]
       }
     }

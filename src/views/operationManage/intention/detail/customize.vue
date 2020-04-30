@@ -67,12 +67,28 @@
           class="select-item"
           placeholder="选择版型"
           v-model="formModel.type"
+          @change="hanldeChange"
         >
           <el-option
               v-for="item in stereotype"
               :key="item.value"
               :label="item.label"
               :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="功能:" prop="features" v-show="formModel.isShowFeat" :required ="formModel.isShowFeat">
+        <el-select
+          class="select-item"
+          placeholder="选择功能类型"
+          v-model="formModel.features"
+        >
+        <el-option
+            v-for="item in intentionCraft"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            :disabled="item.disabled"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -104,20 +120,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="功能:" prop="features">
-        <el-select
-          class="select-item"
-          placeholder="选择功能类型"
-          v-model="formModel.features"
-        >
-        <el-option
-            v-for="item in intentionCraft"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
+      
       <el-form-item label="滤芯:" prop="filter">
         <el-select
           class="select-item"
@@ -151,7 +154,7 @@
           class="select-item"
           v-model.number="formModel.qty"
           :size="size"
-          maxlength="50"
+          maxlength="15"
           placeholder="请输入数量"
           clearable
         />
@@ -298,7 +301,7 @@ export default {
           { required: true, message: '请选择印花', trigger: 'change' }
         ],
         features: [
-          { required: true, message: '请选择工艺', trigger: 'change' }
+          {  message: '请选择功能', trigger: 'change' }
         ],
         filter: [
           { required: true, message: '请选择滤芯', trigger: 'change' }
@@ -346,7 +349,22 @@ export default {
   methods: {
     initData() {
 
-    }
+    },
+    hanldeChange(){
+       this.formModel.isShowFeat = this.formModel.type == dictObj.diffIntentType ? false : true; 
+       let selectData = {
+           "版型A（单层3D明星款立体口罩）": ["玻尿酸","冰感"],
+           "版型B（双层两用3D口罩）": [],
+           "版型C（杯型3D口罩）": ["抗病毒","玻尿酸","冰感","香型"]
+       }
+       this.intentionCraft.forEach(item=>{
+            item.disabled = true;
+            this.formModel.features = selectData[this.formModel.type][0]
+            if(selectData[this.formModel.type].indexOf(item.value) > -1){
+                item.disabled = false;
+            } 
+        })
+    },
   }
 
 }
