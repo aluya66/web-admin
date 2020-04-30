@@ -154,12 +154,12 @@
           class="select-item"
           v-model.number="formModel.qty"
           :size="size"
-          maxlength="15"
+          maxlength="10"
           placeholder="请输入数量"
           clearable
         />
       </el-form-item>
-      <el-form-item label="预期交付时间:" prop="expectedDtime">
+      <!-- <el-form-item label="预期交付时间:" prop="expectedDtime">
         <el-date-picker
           v-model="formModel.expectedDtime"
           value-format="yyyy-MM-dd"
@@ -167,7 +167,7 @@
           type="date"
           class="select-item"
           placeholder="选择日期">
-      </el-date-picker>
+      </el-date-picker> -->
     </el-form-item>
       <el-form-item label="客户姓名:" prop='username'>
         <el-input
@@ -313,9 +313,9 @@ export default {
           { required: true, message: '请输入预订数量', trigger: 'blur' },
           { type: 'number', message: '请输入正确的数字', trigger: 'blur' }
         ],
-        expectedDtime: [
-          { required: true, message: '请选择预期交付时间', trigger: 'change' }
-        ],
+        // expectedDtime: [
+        //   { required: true, message: '请选择预期交付时间', trigger: 'change' }
+        // ],
         username: [
           { required: true, message: '请输入客户姓名', trigger: 'blur' }
         ],
