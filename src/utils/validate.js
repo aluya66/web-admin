@@ -337,6 +337,18 @@ export const validater = {
       callback()
     }
   },
+
+    /**
+   * 只能输入英文和中文
+   */
+  usernameRule (rule, value, callback) {
+    debugger
+     if (!/^[A-Za-z\u4e00-\u9fa5]+$/.test(value)) {
+      callback(new Error('只能输入英文和中文'))
+    } else {
+      callback()
+    }
+  },
   /**
    * 20位数字国标编码校验，且为正整数
    */

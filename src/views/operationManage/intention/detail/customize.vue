@@ -195,11 +195,11 @@
         <el-input
           type="textarea"
           class="select-item"
+          :rows="4"
           v-model.trim="formModel.remark"
           placeholder="请输入备注"
           maxlength="200"
-          show-word-limit
-        ></el-input>
+        ></el-input>（注：最大限制输入200个字符）
       </el-form-item>
     </el-form>
 </c-card>
@@ -317,7 +317,8 @@ export default {
         //   { required: true, message: '请选择预期交付时间', trigger: 'change' }
         // ],
         username: [
-          { required: true, message: '请输入客户姓名', trigger: 'blur' }
+          { required: true, message: '请输入客户姓名', trigger: 'blur' },
+          {  validator :utils.validater.usernameRule , message: '只能输入中文和英文', trigger: 'blur'}
         ],
         mobile: [
           { required: true, message: '请输入客户手机号码', trigger: 'blur' },

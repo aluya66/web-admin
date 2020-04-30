@@ -14,7 +14,7 @@
           v-model="formModel.deliveryName"
           :size="size"
           placeholder="请输入收货人"
-          maxlength="50"
+          maxlength="10"
           clearable
         />
       </el-form-item>
@@ -84,7 +84,10 @@ export default {
       rule: {
         deliveryMobile: [
           { validator: utils.validater.phoneRule, trigger: 'blur' }
-        ]
+        ],
+        deliveryName:[
+          {  validator :utils.validater.usernameRule , message: '只能输入中文和英文', trigger: 'blur'}
+        ]  
       }
     }
   },
