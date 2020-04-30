@@ -75,13 +75,13 @@ export default {
               initData: row
             })
           }
-        }, {
-          name: '编辑',
-          icon: 'el-icon-edit',
-          handle(row) {
-          // TODO...
-            vm.routerLink(`/operation/manage/detail/${row.id}`)
-          }
+        // }, {
+        //   name: '编辑',
+        //   icon: 'el-icon-edit',
+        //   handle(row) {
+        //   // TODO...
+        //     vm.routerLink(`/operation/manage/detail/${row.id}`)
+        //   }
         }],
       // 表格内操作按钮
       tableHeader: [
