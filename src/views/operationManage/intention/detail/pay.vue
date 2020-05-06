@@ -57,7 +57,6 @@
 
 <script>
 import CCard from 'components/card'
-import utils from '@/utils'
 // 付款状态
 const payStatus = [
   {
