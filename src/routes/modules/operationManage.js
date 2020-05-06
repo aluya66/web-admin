@@ -27,7 +27,7 @@ export default {
     meta: {
       title: 'intentDetail',
       noCache: true,
-      activeMenu: '/operation/manage/list'
+      activeMenu: '/operation/intent/list'
     }
   }
   ]

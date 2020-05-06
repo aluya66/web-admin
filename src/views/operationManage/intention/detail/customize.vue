@@ -120,7 +120,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      
+
       <el-form-item label="滤芯:" prop="filter">
         <el-select
           class="select-item"
@@ -154,12 +154,12 @@
           class="select-item"
           v-model.number="formModel.qty"
           :size="size"
-          maxlength="15"
+          maxlength="10"
           placeholder="请输入数量"
           clearable
         />
       </el-form-item>
-      <el-form-item label="预期交付时间:" prop="expectedDtime">
+      <!-- <el-form-item label="预期交付时间:" prop="expectedDtime">
         <el-date-picker
           v-model="formModel.expectedDtime"
           value-format="yyyy-MM-dd"
@@ -167,7 +167,7 @@
           type="date"
           class="select-item"
           placeholder="选择日期">
-      </el-date-picker>
+      </el-date-picker> -->
     </el-form-item>
       <el-form-item label="客户姓名:" prop='username'>
         <el-input
@@ -195,11 +195,11 @@
         <el-input
           type="textarea"
           class="select-item"
+          :rows="4"
           v-model.trim="formModel.remark"
           placeholder="请输入备注"
           maxlength="200"
-          show-word-limit
-        ></el-input>
+        ></el-input>（注：最大限制输入200个字符）
       </el-form-item>
     </el-form>
 </c-card>
@@ -276,6 +276,15 @@ export default {
     }
   },
   data(vm) {
+    //校验数字不能大于10w
+    var validateMaxNums = (rule,value,callback) =>{
+         if (value > 100000) {
+          callback(new Error('预订数量不能大于10W'));
+        } else {
+          callback();
+        }
+    };
+
     return {
       operatorStatusList: dictObj.intentionStaus, // 意向单状态
       stereotype: dictObj.stereotype, // 类型列表
@@ -301,7 +310,7 @@ export default {
           { required: true, message: '请选择印花', trigger: 'change' }
         ],
         features: [
-          {  message: '请选择功能', trigger: 'change' }
+          { message: '请选择功能', trigger: 'change' }
         ],
         filter: [
           { required: true, message: '请选择滤芯', trigger: 'change' }
@@ -311,13 +320,15 @@ export default {
         ],
         qty: [
           { required: true, message: '请输入预订数量', trigger: 'blur' },
-          { type: 'number', message: '请输入正确的数字', trigger: 'blur' }
+          { type: 'number', message: '请输入正确的数字', trigger: 'blur' },
+           { validator: validateMaxNums, trigger: 'blur' }
         ],
-        expectedDtime: [
-          { required: true, message: '请选择预期交付时间', trigger: 'change' }
-        ],
+        // expectedDtime: [
+        //   { required: true, message: '请选择预期交付时间', trigger: 'change' }
+        // ],
         username: [
-          { required: true, message: '请输入客户姓名', trigger: 'blur' }
+          { required: true, message: '请输入客户姓名', trigger: 'blur' },
+          { validator: utils.validater.usernameRule, message: '只能输入中文和英文', trigger: 'blur' }
         ],
         mobile: [
           { required: true, message: '请输入客户手机号码', trigger: 'blur' },
@@ -350,21 +361,21 @@ export default {
     initData() {
 
     },
-    hanldeChange(){
-       this.formModel.isShowFeat = this.formModel.type == dictObj.diffIntentType ? false : true; 
-       let selectData = {
-           "版型A（单层3D明星款立体口罩）": ["玻尿酸","冰感"],
-           "版型B（双层两用3D口罩）": [],
-           "版型C（杯型3D口罩）": ["抗病毒","玻尿酸","冰感","香型"]
-       }
-       this.intentionCraft.forEach(item=>{
-            item.disabled = true;
-            this.formModel.features = selectData[this.formModel.type][0]
-            if(selectData[this.formModel.type].indexOf(item.value) > -1){
-                item.disabled = false;
-            } 
-        })
-    },
+    hanldeChange() {
+      this.formModel.isShowFeat = this.formModel.type !== dictObj.diffIntentType
+      let selectData = {
+        '版型A（单层3D明星款立体口罩）': ['玻尿酸', '冰感'],
+        '版型B（双层两用3D口罩）': [],
+        '版型C（杯型3D口罩）': ['抗病毒', '玻尿酸', '冰感', '香型']
+      }
+      this.intentionCraft.forEach(item => {
+        item.disabled = true
+        this.formModel.features = selectData[this.formModel.type][0]
+        if (selectData[this.formModel.type].indexOf(item.value) > -1) {
+          item.disabled = false
+        }
+      })
+    }
   }
 
 }

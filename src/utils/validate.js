@@ -337,6 +337,17 @@ export const validater = {
       callback()
     }
   },
+
+  /**
+   * 只能输入英文和中文
+   */
+  usernameRule (rule, value, callback) {
+    if (!/^[A-Za-z\u4e00-\u9fa5]+$/.test(value) && value) {
+      callback(new Error('只能输入英文和中文'))
+    } else {
+      callback()
+    }
+  },
   /**
    * 20位数字国标编码校验，且为正整数
    */
@@ -416,11 +427,11 @@ export const validater = {
     }
   },
 
-    /**
+  /**
    * 金额【大于0 支持2位小数】
    */
   checkMoney (rule, value, callback) {
-    const temp =  /^(\d+)(.\d{0,2})?$/
+    const temp = /^(\d+)(.\d{0,2})?$/
     if (!temp.test(value)) {
       callback(new Error('请输入大于0的数字'))
     } else {
@@ -428,7 +439,6 @@ export const validater = {
     }
   }
 }
-
 
 export default {
   isEmail,

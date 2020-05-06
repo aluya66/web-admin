@@ -66,7 +66,6 @@ export default {
 
     },
     uploadSuccess(response, file, fileList) {
-      console.info(response, file, fileList, '=====')
       this.formModel.productImage = fileList.map((item) => {
         return {
           ...item,
