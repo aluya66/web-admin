@@ -276,6 +276,15 @@ export default {
     }
   },
   data(vm) {
+    //校验数字不能大于10w
+    var validateMaxNums = (rule,value,callback) =>{
+         if (value > 100000) {
+          callback(new Error('预订数量不能大于10W'));
+        } else {
+          callback();
+        }
+    };
+
     return {
       operatorStatusList: dictObj.intentionStaus, // 意向单状态
       stereotype: dictObj.stereotype, // 类型列表
@@ -311,14 +320,15 @@ export default {
         ],
         qty: [
           { required: true, message: '请输入预订数量', trigger: 'blur' },
-          { type: 'number', message: '请输入正确的数字', trigger: 'blur' }
+          { type: 'number', message: '请输入正确的数字', trigger: 'blur' },
+           { validator: validateMaxNums, trigger: 'blur' }
         ],
         // expectedDtime: [
         //   { required: true, message: '请选择预期交付时间', trigger: 'change' }
         // ],
         username: [
           { required: true, message: '请输入客户姓名', trigger: 'blur' },
-          {  validator :utils.validater.usernameRule , message: '只能输入中文和英文', trigger: 'blur'}
+          { validator: utils.validater.usernameRule, message: '只能输入中文和英文', trigger: 'blur' }
         ],
         mobile: [
           { required: true, message: '请输入客户手机号码', trigger: 'blur' },

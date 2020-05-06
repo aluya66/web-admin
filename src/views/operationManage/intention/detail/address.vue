@@ -85,9 +85,9 @@ export default {
         deliveryMobile: [
           { validator: utils.validater.phoneRule, trigger: 'blur' }
         ],
-        deliveryName:[
-          {  validator :utils.validater.usernameRule , message: '只能输入中文和英文', trigger: 'blur'}
-        ]  
+        deliveryName: [
+          { validator: utils.validater.usernameRule, message: '只能输入中文和英文', trigger: 'blur' }
+        ]
       }
     }
   },

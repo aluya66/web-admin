@@ -134,7 +134,7 @@ export default {
       const hasFile = this.limit > 1 ? this.mutiFiles.getAll('files').find(res => res.uid === uid) : true
       if (hasFile) {
         this.isUpload = true
-        this.limit === 1 && this.$refs[this.uploadRef].clearFiles() // 清空未上传的文件列表
+        this.$refs[this.uploadRef].clearFiles() // 清空未上传的文件列表
         this.$api.common.uploadFile(this.mutiFiles).then(res => {
           if (res) {
             let fileList = res ? res.map(res => ({
@@ -145,8 +145,8 @@ export default {
             if (this.fileList.length) {
               fileList = this.fileList.concat(fileList)
             }
-            this.$emit('update:file-list', fileList)
-            this.$emit('on-success', '', fileObj.file, fileList)
+           this.$emit('update:file-list', fileList)
+           this.$emit('on-success', '', fileObj.file, fileList)
           }
         })
       }

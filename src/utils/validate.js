@@ -338,12 +338,11 @@ export const validater = {
     }
   },
 
-    /**
+  /**
    * 只能输入英文和中文
    */
   usernameRule (rule, value, callback) {
-    debugger
-     if (!/^[A-Za-z\u4e00-\u9fa5]+$/.test(value)) {
+    if (!/^[A-Za-z\u4e00-\u9fa5]+$/.test(value) && value) {
       callback(new Error('只能输入英文和中文'))
     } else {
       callback()

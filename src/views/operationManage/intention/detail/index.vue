@@ -89,14 +89,16 @@ export default {
               return {
                 id: index + new Date().getTime(),
                 name: '设计图',
-                url: item
+                url: item,
+                fileType: 'image',
+                 ref: 'imgList'
               }
             }),
             images: img.map((item, index) => {
               return {
-                id: index + new Date().getTime(),
                 name: '设计图',
-                url: item
+                url: item,
+                fileType: 'image'
               }
             }),
 
