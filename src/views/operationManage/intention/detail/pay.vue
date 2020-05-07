@@ -83,22 +83,22 @@ export default {
     }
   },
   data() {
-       //付款金额不能大于1000w
-    var validateMaxNums = (rule,value,callback) =>{
-        const temp = /^(\d+)(.\d{0,2})?$/
-        if (!temp.test(value) && value) {
-          callback(new Error('请输入正数且小数只能包含2位'))
-        }else if (value > 10000000) {
-          callback(new Error('预订数量不能大于1000W'));
-        } else {
-          callback();
-        }
-        };
+    // 付款金额不能大于1000w
+    var validateMaxNums = (rule, value, callback) => {
+      const temp = /^(\d+)(.\d{0,2})?$/
+      if (!temp.test(value) && value) {
+        callback(new Error('请输入正数且小数只能包含2位'))
+      } else if (value < 1 || value > 10000000) {
+        callback(new Error('付款金额不能小于1或大于1000W'))
+      } else {
+        callback()
+      }
+    }
     return {
       payStatus,
       rules: {
         payAmount: [
-            { validator: validateMaxNums, trigger: 'blur' },
+          { validator: validateMaxNums, trigger: 'blur' }
         ]
       }
     }

@@ -51,7 +51,7 @@
         <el-form-item label="详细地址:" prop="address">
       <el-input
         class="select-item"
-        v-model.trim="formModel.address"
+        v-model="formModel.address"
         :size="size"
         placeholder="请输入详细地址"
         clearable

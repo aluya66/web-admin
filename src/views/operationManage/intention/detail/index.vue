@@ -91,7 +91,7 @@ export default {
                 name: '设计图',
                 url: item,
                 fileType: 'image',
-                 ref: 'imgList'
+                ref: 'imgList'
               }
             }),
             images: img.map((item, index) => {

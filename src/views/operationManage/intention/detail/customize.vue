@@ -173,7 +173,7 @@
         <el-input
           class="select-item"
           v-model.trim="formModel.username"
-          maxlength="50"
+          maxlength="10"
           :size="size"
           placeholder="请输入客户姓名"
           clearable
@@ -196,7 +196,7 @@
           type="textarea"
           class="select-item"
           :rows="4"
-          v-model.trim="formModel.remark"
+          v-model="formModel.remark"
           placeholder="请输入备注"
           maxlength="200"
         ></el-input>（注：最大限制输入200个字符）
@@ -276,14 +276,14 @@ export default {
     }
   },
   data(vm) {
-    //校验数字不能大于10w
-    var validateMaxNums = (rule,value,callback) =>{
-         if (value > 100000) {
-          callback(new Error('预订数量不能大于10W'));
-        } else {
-          callback();
-        }
-    };
+    // 校验数字不能大于10w
+    var validateMaxNums = (rule, value, callback) => {
+      if (Number(value) > 100000 || Number(value) < 1) {
+        callback(new Error('预订数量不能小于1或者大于10W'))
+      } else {
+        callback()
+      }
+    }
 
     return {
       operatorStatusList: dictObj.intentionStaus, // 意向单状态
@@ -320,8 +320,7 @@ export default {
         ],
         qty: [
           { required: true, message: '请输入预订数量', trigger: 'blur' },
-          { type: 'number', message: '请输入正确的数字', trigger: 'blur' },
-           { validator: validateMaxNums, trigger: 'blur' }
+          { validator: validateMaxNums, trigger: 'blur' }
         ],
         // expectedDtime: [
         //   { required: true, message: '请选择预期交付时间', trigger: 'change' }
