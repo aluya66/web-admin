@@ -369,7 +369,7 @@ export default {
       }
       this.intentionCraft.forEach(item => {
         item.disabled = true
-        this.formModel.features = selectData[this.formModel.type][0] || "";
+        this.formModel.features = selectData[this.formModel.type][0] || ''
         if (selectData[this.formModel.type].indexOf(item.value) > -1) {
           item.disabled = false
         }

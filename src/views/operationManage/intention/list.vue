@@ -154,7 +154,7 @@ export default {
       ]
     }
   },
-  created(){
+  created() {
     this.fetchData()
   },
   activated() {
