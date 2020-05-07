@@ -13,7 +13,6 @@
         <refund-list :refund-list="detailData.orderRefundResp"></refund-list>
         <logistics-list :delivery-list="detailData.deliveryResp" @show-dialog="showDialog"></logistics-list>
         <after-sale :after-list="detailData.afterSalesRespList"></after-sale>
-        <member-info :member-obj="detailData.memberResp"></member-info>
         <log-list :log-list="detailData.orderLogRespList"></log-list>
       </div>
     <div v-if="dialogObj.isShow">
@@ -44,7 +43,6 @@ import GoodsList from './list/goods'
 import payList from './list/pay'
 import refundList from './list/refund'
 import AfterSale from './list/afterSale'
-import MemberInfo from './list/memberInfo'
 import LogList from './list/log'
 
 export default {
@@ -58,8 +56,7 @@ export default {
     AfterSale,
     LogList,
     refundList,
-    payList,
-    MemberInfo
+    payList
   },
   data() {
     return {

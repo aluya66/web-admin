@@ -2,6 +2,15 @@
   <c-view>
     <template v-slot:header>
       <div class="title">{{$route.meta.name || $t(`route.${$route.meta.title}`)}}</div>
+      <div class="header-btn">
+        <el-button
+          :size="size"
+          type="primary"
+          :loading="exportLoading"
+          icon="el-icon-download"
+          @click="exportFile"
+        >导出</el-button>
+      </div>
     </template>
     <div class="main__box">
       <order-info :init-data.sync="listInfo"></order-info>
@@ -80,10 +89,12 @@
       >
         <dialog-info
           ref="childRef"
+          v-if="dialogObj.type==='edit'"
           :init-data.sync="dialogObj.initData"
           :area-options="areaOptions"
           :is-edit="dialogObj.isEdit"
         ></dialog-info>
+        <export-tip v-else @handle="dialogObj.isShow=false"></export-tip>
       </c-dialog>
     </div>
   </c-view>
@@ -96,6 +107,7 @@ import CDialog from 'components/dialog'
 import DetailDialog from './detailDialog'
 import DialogInfo from './dialogInfo'
 import dictObj from '@/store/dictData'
+import ExportTip from '../../../common/exportTip.vue'
 
 // 售后状态
 const afterSalesTabList = [{
@@ -113,7 +125,8 @@ export default {
     OrderInfo,
     CDialog,
     DialogInfo,
-    DetailDialog
+    DetailDialog,
+    ExportTip
   },
   data(vm) {
     return {
@@ -129,12 +142,12 @@ export default {
         value: 3
       }],
       delayDay: 1,
+      exportLoading: false,
       detailDialog: {}, // 详情弹框
       delayDialog: {}, // 设置延迟收货弹框
       listInfo: {}, // 列表统计数据
       orderStatus: '', // 订单状态
       areaOptions: [], // 全部区域集合
-      afterSaleStatus: '', // 售后状态
       statusTabList: [{
         value: '',
         label: '全部订单',
@@ -181,6 +194,7 @@ export default {
               orderTotalAmount: row.orderTotalAmount,
               orderCode: row.orderCode
             },
+            type: 'edit',
             isEdit: true
           })
         }
@@ -243,22 +257,49 @@ export default {
           }
         },
         {
+          label: '售后状态',
+          prop: 'afterSaleStatus',
+          formatter(row) {
+            return row && vm.setTableColumnLabel(row.afterSaleStatus, 'afterSaleStatusList')
+          },
+          search: {
+            type: 'dict',
+            optionsList: afterSalesTabList
+          }
+        },
+        {
           label: '配送方式',
           prop: 'deliveryTimeType',
           formatter(row) {
             return row && vm.setTableColumnLabel(row.deliveryTimeType, 'deliveryTimeTypeList')
+          },
+          search: {
+            type: 'input',
+            label: '收货人信息',
+            prop: 'searchReceiveInfo'
           }
         },
+        // {
+        //   label: '支付方式',
+        //   prop: 'payType',
+        //   formatter(row) {
+        //     // row.payType  这里可返回多个方式，要转化成数组形式进行转化处理
+        //     return row && vm.setTableColumnLabel(row.payType.split(','), 'payTypeList')
+        //   },
+        //   search: {
+        //     type: 'dict',
+        //     optionsList: dictObj.payTypeList
+        //   }
+        // },
         {
-          label: '支付方式',
-          prop: 'payType',
+          label: '支付状态', // 0:未付款  2：支付完成
+          prop: 'payStatus',
           formatter(row) {
-            // row.payType  这里可返回多个方式，要转化成数组形式进行转化处理
-            return row && vm.setTableColumnLabel(row.payType.split(','), 'payTypeList')
+            return row && vm.setTableColumnLabel(row.payStatus, 'orderPayStatusList')
           },
           search: {
             type: 'dict',
-            optionsList: dictObj.payTypeList
+            optionsList: dictObj.orderPayStatusList
           }
         },
         {
@@ -269,16 +310,18 @@ export default {
           },
           search: {
             type: 'dict',
+            multiple: true,
+            prop: 'orderStatusSet',
             optionsList: dictObj.orderStatusList
           }
         },
-        {
-          label: '结算状态',
-          prop: 'settleStatus',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.settleStatus, 'orderSettleStatusList')
-          }
-        },
+        // {
+        //   label: '结算状态',
+        //   prop: 'settleStatus',
+        //   formatter(row) {
+        //     return row && vm.setTableColumnLabel(row.settleStatus, 'orderSettleStatusList')
+        //   }
+        // },
         {
           label: '订单渠道',
           prop: 'appCode',
@@ -290,24 +333,24 @@ export default {
             optionsList: dictObj.lobList
           }
         },
-        {
-          label: '订单类型',
-          prop: 'orderCategory',
-          formatter(row) {
-            return row && vm.setTableColumnLabel(row.orderCategory, 'shopTypeList')
-          },
-          search: {
-            type: 'dict',
-            optionsList: dictObj.shopTypeList
-          }
-        },
-        {
-          label: '支付单号',
-          prop: 'flowCode',
-          search: {
-            type: 'input'
-          }
-        },
+        // {
+        //   label: '订单类型',
+        //   prop: 'orderCategory',
+        //   formatter(row) {
+        //     return row && vm.setTableColumnLabel(row.orderCategory, 'shopTypeList')
+        //   },
+        //   search: {
+        //     type: 'dict',
+        //     optionsList: dictObj.shopTypeList
+        //   }
+        // },
+        // {
+        //   label: '支付单号',
+        //   prop: 'flowCode',
+        //   search: {
+        //     type: 'input'
+        //   }
+        // },
         {
           label: '订单金额(元)',
           prop: 'orderTotalAmount',
@@ -340,10 +383,9 @@ export default {
           label: '售后金额(元)',
           prop: 'afterSalesAmount',
           search: {
-            label: '售后状态',
-            prop: 'afterSaleStatus',
-            type: 'dict',
-            optionsList: afterSalesTabList
+            type: 'input',
+            label: '第三方交易流水号',
+            prop: 'thirdPartyPaycode'
           }
         },
         {
@@ -510,6 +552,25 @@ export default {
       this.$api.order.delayReceiveGoods(params).then(res => {
         this.delayDialog.isShow = false
         this.fetchData()
+      })
+    },
+    // 导出文件
+    exportFile() {
+      const { dateTime, ...other } = this.searchObj
+      const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
+      this.exportLoading = true
+      this.$api.order.orderListExport({
+        ...searchDate,
+        ...other
+      }).then(res => {
+        if (res) {
+          this.showDialog({
+            title: '订单导出'
+          })
+        } else {
+          this.$msgTip('导出数据失败', 'warning')
+        }
+        this.exportLoading = false
       })
     }
   }
