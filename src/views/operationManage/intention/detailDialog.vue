@@ -147,12 +147,11 @@ export default {
 <style lang="less" scoped>
 .pay-detail {
   .picImg{
-     width: 100px;
-     height: 100px;
+     width: 120px;
      margin-right: 20px;
   }
   .row {
-    display: flex;
+    display: -webkit-box;
     flex-wrap: wrap;
     span {
       display: inline-block;

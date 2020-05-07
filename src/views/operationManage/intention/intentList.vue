@@ -1,88 +1,58 @@
-<template>
-  <c-view>
+ <template>
+  <c-table
+    ref="cTable"
+    hasIndex
+    hasBorder
+    :max-height="maxHeight"
+    :size="size"
+    :loading="isLoading"
+    :table-header="tableHeader"
+    :table-list="tableList"
+    :table-inner-btns="tableInnerBtns"
+    :page-info="pageInfo"
+    @change-pagination="changePagination"
+  >
     <template v-slot:header>
-      <div class="title">
-				<!-- $route.meta.name || $t(`route.${$route.meta.title}`) -->
-      </div>
+      <c-search
+        :form-model="searchObj"
+        :form-items="searchItems"
+        @submit-form="searchSubmit"
+        @reset-form="searchReset"
+      ></c-search>
     </template>
-    <div class="main__box">
-      <c-table
-        ref="cTable"
-        hasIndex
-        hasBorder
-        :max-height="maxHeight"
-        :size="size"
-        :loading="isLoading"
-        :table-header="tableHeader"
-        :table-list="tableList"
-				:table-inner-btns="tableInnerBtns"
-				:page-info="pageInfo"
-        @change-pagination="changePagination"
-      >
-        <template v-slot:header>
-          <c-search
-            :form-model="searchObj"
-            :form-items="searchItems"
-            @submit-form="searchSubmit"
-            @reset-form="searchReset"
-          ></c-search>
-        </template>
-      </c-table>
-        <div v-if="dialogObj.isShow">
-          <c-dialog
-            :is-show="dialogObj.isShow"
-            :title="dialogObj.title"
-            close-btn
-            no-btn
-            @before-close="dialogObj.isShow = false"
-          >
-            <d-detail
-              ref="childRef"
-              :init-data.sync="dialogObj.initData"
-              :is-edit="dialogObj.isEdit"
-            ></d-detail>
-          </c-dialog>
-    </div>
-    </div>
-  </c-view>
+  </c-table>
 </template>
 
 <script>
 import mixinTable from 'mixins/table'
 import dictObj from '@/store/dictData'
-import CDialog from 'components/dialog'
-import DDetail from './detailDialog'
-
 export default {
   name: 'intentList',
   mixins: [mixinTable],
-  components: {
-    CDialog,
-    DDetail
-  },
   data(vm) {
     return {
-      dialogObj: {}, // 对话框对象
       tableInnerBtns: [
         {
           name: '详情',
           width: 150,
           icon: 'el-icon-view',
           handle(row) {
-          // TODO...
-            vm.showDialog({
+            // TODO...
+            vm.$emit('showDialog', {
               title: '意向单详情',
               initData: row
             })
           }
-        }, {
+        },
+        {
           name: '编辑',
           icon: 'el-icon-edit',
           handle(row) {
-          // TODO...
+            // TODO...
             vm.routerLink(`/operation/manage/detail/${row.id}`)
           }
-        }],
+        }
+      ],
       // 表格内操作按钮
       tableHeader: [
         {
@@ -150,12 +120,8 @@ export default {
           label: '更新时间',
           prop: 'updatedAt'
         }
-
       ]
     }
-  },
-  created(){
-    this.fetchData()
   },
   activated() {
     this.fetchData()
@@ -183,19 +149,6 @@ export default {
           this.tableList = res || []
         }
       })
-    },
-
-    /**
-     * dialog对话框数据处理
-     * @opts {*}
-     */
-    showDialog(opts) {
-      this.dialogObj = {
-        isShow: true,
-        isEdit: opts.isEdit || false,
-        title: opts.title || '新增',
-        initData: opts.initData
-      }
     }
   }
 }

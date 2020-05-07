@@ -145,8 +145,8 @@ export default {
             if (this.fileList.length) {
               fileList = this.fileList.concat(fileList)
             }
-           this.$emit('update:file-list', fileList)
-           this.$emit('on-success', '', fileObj.file, fileList)
+            this.$emit('update:file-list', fileList)
+            this.$emit('on-success', '', fileObj.file, fileList)
           }
         })
       }
