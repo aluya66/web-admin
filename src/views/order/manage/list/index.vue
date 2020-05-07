@@ -67,6 +67,7 @@
         close-btn
         @before-close="dialogObj.isShow = false"
         @on-submit="dialogConfirm"
+        :noBtn="dialogObj.type!=='edit'"
       >
         <dialog-info
           ref="childRef"
@@ -422,6 +423,7 @@ export default {
     showDialog(opts) {
       this.dialogObj = {
         isShow: true,
+        type: opts.type,
         isEdit: opts.isEdit || false,
         title: opts.title || '编辑收货人信息',
         initData: opts.initData
