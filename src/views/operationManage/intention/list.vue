@@ -54,7 +54,7 @@ import CDialog from 'components/dialog'
 import DDetail from './detailDialog'
 
 export default {
-  name: 'operationManage',
+  name: 'intentList',
   mixins: [mixinTable],
   components: {
     CDialog,
@@ -154,6 +154,7 @@ export default {
       ]
     }
   },
+
   created() {
     this.fetchData()
   },

@@ -278,7 +278,7 @@ export default {
   data(vm) {
     // 校验数字不能大于10w
     var validateMaxNums = (rule, value, callback) => {
-      if (Number(value) > 100000 || Number(value) < 1) {
+      if (value > 100000 || value < 1 || !/\d+/.test(value)) {
         callback(new Error('预订数量不能小于1或者大于10W'))
       } else {
         callback()
@@ -369,7 +369,7 @@ export default {
       }
       this.intentionCraft.forEach(item => {
         item.disabled = true
-        this.formModel.features = selectData[this.formModel.type][0]
+        this.formModel.features = selectData[this.formModel.type][0] || "";
         if (selectData[this.formModel.type].indexOf(item.value) > -1) {
           item.disabled = false
         }

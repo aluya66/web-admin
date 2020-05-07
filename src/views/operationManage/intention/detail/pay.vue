@@ -88,7 +88,7 @@ export default {
       const temp = /^(\d+)(.\d{0,2})?$/
       if (!temp.test(value) && value) {
         callback(new Error('请输入正数且小数只能包含2位'))
-      } else if (value < 1 || value > 10000000) {
+      } else if ((value < 1 || value > 10000000) && value) {
         callback(new Error('付款金额不能小于1或大于1000W'))
       } else {
         callback()
