@@ -154,8 +154,10 @@ export default {
       ]
     }
   },
-
-  created() {
+  created(){
+    this.fetchData()
+  },
+  activated() {
     this.fetchData()
   },
   methods: {
