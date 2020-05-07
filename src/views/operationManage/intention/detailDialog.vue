@@ -151,7 +151,7 @@ export default {
      margin-right: 20px;
   }
   .row {
-    display: flex;
+    display: -webkit-box;
     flex-wrap: wrap;
     span {
       display: inline-block;
