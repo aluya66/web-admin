@@ -53,7 +53,7 @@
         @before-close="detailDialog.isShow = false"
         noBtn
         :title="detailDialog.title"
-      > 
+      >
         <detail-dialog
           ref="detailRef"
           :init-data.sync="detailDialog.initData"
@@ -112,7 +112,7 @@ export default {
   data(vm) {
     return {
       dialogObj: {},
-      exportLoading:false,
+      exportLoading: false,
       detailDialog: {}, // 详情弹框
       listInfo: {}, // 列表统计数据
       orderStatus: '', // 订单状态
@@ -157,7 +157,7 @@ export default {
               orderTotalAmount: row.orderTotalAmount,
               orderCode: row.orderCode
             },
-            type:'edit',
+            type: 'edit',
             isEdit: true
           })
         }
@@ -490,9 +490,9 @@ export default {
         }
       })
     },
-    //导出文件
+    // 导出文件
     exportFile() {
-      const {  dateTime,...other } = this.searchObj
+      const { dateTime, ...other } = this.searchObj
       const searchDate = this.getSearchDate(dateTime, '', 'beginTime', 'endTime')
       this.exportLoading = true
       this.$api.order.orderListExport({
@@ -501,7 +501,7 @@ export default {
       }).then(res => {
         if (res) {
           this.showDialog({
-            title:'订单导出',
+            title: '订单导出'
           })
         } else {
           this.$msgTip('导出数据失败', 'warning')

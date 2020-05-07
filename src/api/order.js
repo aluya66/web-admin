@@ -274,12 +274,11 @@ export const updateRefundDelivery = params =>
     method: 'post'
   })
 
-
-  /**
+/**
 * 订单: 导出excel
 * @param {*}
 */
 export const orderListExport = params =>
-Http.fetch(`${context}/api/order/export`, params, {
-  method: 'get'
-})
+  Http.fetch(`${context}/api/order/export`, params, {
+    method: 'get'
+  })
