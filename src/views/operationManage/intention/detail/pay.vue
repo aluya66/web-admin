@@ -11,9 +11,10 @@
       <el-form-item label="定制单金额:" prop="payAmount">
         <el-input
           class="select-item"
-           v-model="formModel.payAmount"
+           v-model.trim="formModel.payAmount"
             :size="size"
           maxlength="10"
+          autocomplete="off"
           placeholder="请输入定制单金额"
           clearable
         />

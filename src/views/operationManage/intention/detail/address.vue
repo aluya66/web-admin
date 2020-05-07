@@ -15,6 +15,7 @@
           :size="size"
           placeholder="请输入收货人"
           maxlength="10"
+          autocomplete="off"
           clearable
         />
       </el-form-item>
@@ -24,6 +25,7 @@
           v-model="formModel.deliveryMobile"
           :size="size"
           placeholder="请输入手机"
+           autocomplete="off"
           clearable
         />
       </el-form-item>

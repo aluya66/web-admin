@@ -147,8 +147,7 @@ export default {
 <style lang="less" scoped>
 .pay-detail {
   .picImg{
-     width: 100px;
-     height: 100px;
+     width: 120px;
      margin-right: 20px;
   }
   .row {
