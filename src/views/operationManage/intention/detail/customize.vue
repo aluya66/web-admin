@@ -100,6 +100,7 @@
           class="select-item"
           v-model.trim="formModel.companyName"
           :size="size"
+          maxlength="50"
           placeholder="请输入公司名称"
           clearable
         />
@@ -285,7 +286,7 @@ export default {
         callback()
       }
     }
-        // 校验数字不能大于100
+    // 校验数字不能大于100
     var validateMax = (rule, value, callback) => {
       if (value > 100 || value < 1 || !/\d+/.test(value)) {
         callback(new Error('数量不能小于1或者大于100'))
@@ -322,8 +323,8 @@ export default {
         features: [
           { message: '请选择功能', trigger: 'change' }
         ],
-        style:[
-          { required: true, message: '请选择款式', trigger: 'blur' },
+        style: [
+          { required: true, message: '请选择款式', trigger: 'blur' }
         ],
         filter: [
           { required: true, message: '请输入滤芯数量', trigger: 'blur' },
