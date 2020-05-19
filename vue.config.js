@@ -3,7 +3,6 @@ const CompressionPlugin = require('compression-webpack-plugin') // Gzip
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const WebpackBar = require('webpackbar')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const autoprefixer = require('autoprefixer')
@@ -135,7 +134,6 @@ module.exports = {
         }
       ]),
       new WebpackBar(),
-      new CleanWebpackPlugin(),
       new UglifyJsPlugin({
         uglifyOptions: {
           // 移除 console

@@ -231,12 +231,12 @@ const intentionColor = [
 // 订单类型
 const orderTypeList = [
   {
-    label: '国内',
-    value: '国内'
+    label: '国内订单',
+    value: '国内订单'
   },
   {
-    label: '国外',
-    value: '国外'
+    label: '国外订单',
+    value: '国外订单'
   }
 ]
 
