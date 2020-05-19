@@ -100,7 +100,7 @@
           class="select-item"
           v-model.trim="formModel.companyName"
           :size="size"
-          maxlength="50"
+          maxlength="30"
           placeholder="请输入公司名称"
           clearable
         />
@@ -231,12 +231,12 @@ const intentionColor = [
 // 订单类型
 const orderTypeList = [
   {
-    label: '国内',
-    value: '国内'
+    label: '国内订单',
+    value: '国内订单'
   },
   {
-    label: '国外',
-    value: '国外'
+    label: '国外订单',
+    value: '国外订单'
   }
 ]
 
@@ -280,16 +280,16 @@ export default {
   data(vm) {
     // 校验数字不能大于10w
     var validateMaxNums = (rule, value, callback) => {
-      if (value > 100000 || value < 1 || !/\d+/.test(value)) {
-        callback(new Error('预订数量不能小于1或者大于10W'))
+      if (value > 1000000 || value < 1 || !/\d+/.test(value)) {
+        callback(new Error('预订数量不能小于1或者大于100W'))
       } else {
         callback()
       }
     }
     // 校验数字不能大于100
     var validateMax = (rule, value, callback) => {
-      if (value > 100 || value < 1 || !/\d+/.test(value)) {
-        callback(new Error('数量不能小于1或者大于100'))
+      if (value >= 100 || value < 0 || !/\d+/.test(value)) {
+        callback(new Error('数量不能小于0或者大于99'))
       } else {
         callback()
       }
