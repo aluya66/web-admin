@@ -21,7 +21,7 @@
         <el-form-item label="生产指令单号:" prop="makeNo">
         <el-input
           class="select-item"
-          v-model="formModel.confirmNo"
+          v-model="formModel.makeNo"
           :size="size"
           placeholder="生产指令单号"
            maxlength="20"
