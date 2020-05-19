@@ -62,12 +62,48 @@
           clearable
         />
       </el-form-item>
+       <el-form-item label="客户姓名:" prop='username'>
+        <el-input
+          class="select-item"
+          v-model.trim="formModel.username"
+          maxlength="10"
+          :size="size"
+          placeholder="请输入客户姓名"
+          clearable
+        />
+      </el-form-item>
+      <el-form-item label="手机:" prop="mobile">
+        <el-input
+          class="select-item"
+          v-model.trim="formModel.mobile"
+          :size="size"
+          placeholder="请输入手机号码"
+          clearable
+        />
+      </el-form-item>
+      <el-form-item label="订单类型:" prop="source">
+        <el-input
+          class="select-item"
+          v-model.trim="formModel.source"
+          :size="size"
+          placeholder="请输入订单类型"
+          clearable
+        />
+      </el-form-item>
+      <el-form-item label="公司名称:" prop="companyName">
+        <el-input
+          class="select-item"
+          v-model.trim="formModel.companyName"
+          :size="size"
+          placeholder="请输入公司名称"
+          clearable
+        />
+      </el-form-item>
       <el-form-item label="版型:" prop='type'>
         <el-select
           class="select-item"
           placeholder="选择版型"
           v-model="formModel.type"
-          @change="hanldeChange"
         >
           <el-option
               v-for="item in stereotype"
@@ -77,63 +113,29 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="功能:" prop="features" v-show="formModel.isShowFeat" :required ="formModel.isShowFeat">
-        <el-select
-          class="select-item"
-          placeholder="选择功能类型"
-          v-model="formModel.features"
-        >
-        <el-option
-            v-for="item in intentionCraft"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-            :disabled="item.disabled"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="颜色:" prop="color">
+      <el-form-item label="款式:" prop="style">
          <el-select
           class="select-item"
-          placeholder="选择颜色"
-          v-model="formModel.color"
+          placeholder="选择款式"
+          v-model="formModel.style"
         >
           <el-option
-              v-for="item in intentionColor"
+              v-for="item in intentionStyle"
               :key="item.value"
               :label="item.label"
               :value="item.value"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="印花:" prop="printing">
-         <el-select
+      <el-form-item label="滤芯(搭配口罩):" prop="filter">
+        <el-input
           class="select-item"
-          placeholder="选择印花图案"
-          v-model="formModel.printing"
-        >
-        <el-option
-            v-for="item in intentionStamp"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="滤芯:" prop="filter">
-        <el-select
-          class="select-item"
-          placeholder="选择滤芯"
-          v-model="formModel.filter"
-        >
-        <el-option
-            v-for="item in filterList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+          maxlength="2"
+          v-model.number="formModel.filter"
+          :size="size"
+          placeholder="请输入搭配口罩数量"
+          clearable
+        />
       </el-form-item>
       <el-form-item label="包装:" prop="packageName">
         <el-select
@@ -159,7 +161,7 @@
           clearable
         />
       </el-form-item>
-      <!-- <el-form-item label="预期交付时间:" prop="expectedDtime">
+      <el-form-item label="预期交付时间:" prop="expectedDtime">
         <el-date-picker
           v-model="formModel.expectedDtime"
           value-format="yyyy-MM-dd"
@@ -167,27 +169,9 @@
           type="date"
           class="select-item"
           placeholder="选择日期">
-      </el-date-picker> -->
+      </el-date-picker>
     </el-form-item>
-      <el-form-item label="客户姓名:" prop='username'>
-        <el-input
-          class="select-item"
-          v-model.trim="formModel.username"
-          maxlength="10"
-          :size="size"
-          placeholder="请输入客户姓名"
-          clearable
-        />
-      </el-form-item>
-      <el-form-item label="手机:" prop="mobile">
-        <el-input
-          class="select-item"
-          v-model.trim="formModel.mobile"
-          :size="size"
-          placeholder="请输入手机号码"
-          clearable
-        />
-      </el-form-item>
+
        <el-form-item label="设计参考图:">
           <el-image class="tempimg" v-for="item in formModel.images" :key="item.id" :src="item.url"></el-image>
       </el-form-item>
@@ -237,6 +221,17 @@ const intentionColor = [
     value: '黄色'
   }
 ]
+// 订单类型
+const orderTypeList = [
+  {
+    label: '国内',
+    value: '国内'
+  },
+  {
+    label: '国外',
+    value: '国外'
+  }
+]
 
 // 滤芯列表
 const filterList = [
@@ -257,12 +252,12 @@ const filterList = [
 // 滤芯列表
 const packageNameList = [
   {
-    label: '标准包装设计',
-    value: '标准包装设计'
+    label: '精装',
+    value: '精装'
   },
   {
-    label: '自定义设计',
-    value: '自定义设计'
+    label: '简装',
+    value: '简装'
   }
 ]
 
@@ -290,6 +285,7 @@ export default {
       stereotype: dictObj.stereotype, // 类型列表
       intentionColor, // 颜色列表
       filterList, // 功能列表
+      orderTypeList, // 订单类型
       packageNameList, // 包装列表
       pickerOptions: { // 日期过滤
         disabledDate(time) {
@@ -313,7 +309,8 @@ export default {
           { message: '请选择功能', trigger: 'change' }
         ],
         filter: [
-          { required: true, message: '请选择滤芯', trigger: 'change' }
+          { required: true, message: '请输入滤芯数量', trigger: 'blur' },
+          { type: 'number', message: '滤芯数量必须为数字值' }
         ],
         packageName: [
           { required: true, message: '请选择包装', trigger: 'change' }
@@ -338,7 +335,8 @@ export default {
         ]
       },
       intentionStamp: dictObj.intentionStamp,
-      intentionCraft: dictObj.intentionCraft
+      intentionCraft: dictObj.intentionCraft,
+      intentionStyle: dictObj.intentionStyle // 款式
 
     }
   },
@@ -359,21 +357,6 @@ export default {
   methods: {
     initData() {
 
-    },
-    hanldeChange() {
-      this.formModel.isShowFeat = this.formModel.type !== dictObj.diffIntentType
-      let selectData = {
-        '版型A（单层3D明星款立体口罩）': ['玻尿酸', '冰感'],
-        '版型B（双层两用3D口罩）': [],
-        '版型C（杯型3D口罩）': ['抗病毒', '玻尿酸', '冰感', '香型']
-      }
-      this.intentionCraft.forEach(item => {
-        item.disabled = true
-        this.formModel.features = selectData[this.formModel.type][0] || ''
-        if (selectData[this.formModel.type].indexOf(item.value) > -1) {
-          item.disabled = false
-        }
-      })
     }
   }
 

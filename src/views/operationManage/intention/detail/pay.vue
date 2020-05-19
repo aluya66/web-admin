@@ -61,16 +61,20 @@ import CCard from 'components/card'
 // 付款状态
 const payStatus = [
   {
-    label: '待支付',
+    label: '未支付',
     value: 1
   },
   {
-    label: '已付款',
+    label: '已完款',
     value: 2
   },
   {
     label: '已退款',
     value: 3
+  },
+  {
+    label: '部分支付',
+    value: 4
   }
 ]
 

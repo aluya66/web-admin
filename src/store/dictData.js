@@ -785,6 +785,15 @@ const intentionStamp = [{
   value: '满底印花'
 }]
 
+// 意向单款式
+const intentionStyle = [{
+  label: '成人款',
+  value: '成人款'
+}, {
+  label: '儿童款',
+  value: '儿童款'
+}]
+
 // 意向单工艺
 const intentionCraft = [{
   label: '抗菌',
@@ -809,7 +818,7 @@ const intentionStaus = [{
   label: '待确认',
   value: 1
 }, {
-  label: '设计中',
+  label: '待生产',
   value: 2
 }, {
   label: '生产中',
@@ -878,5 +887,6 @@ export default {
   intentionStaus,
   intentionStamp,
   intentionCraft,
+  intentionStyle,
   diffIntentType
 }
