@@ -82,13 +82,18 @@
         />
       </el-form-item>
       <el-form-item label="订单类型:" prop="source">
-        <el-input
+         <el-select
           class="select-item"
-          v-model.trim="formModel.source"
-          :size="size"
-          placeholder="请输入订单类型"
-          clearable
-        />
+          placeholder="请选择订单类型"
+          v-model="formModel.source"
+        >
+          <el-option
+              v-for="item in orderTypeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="公司名称:" prop="companyName">
         <el-input
@@ -181,6 +186,7 @@
           class="select-item"
           :rows="4"
           v-model="formModel.remark"
+          disabled
           placeholder="请输入备注"
           maxlength="200"
         ></el-input>（注：最大限制输入200个字符）
@@ -279,6 +285,14 @@ export default {
         callback()
       }
     }
+        // 校验数字不能大于100
+    var validateMax = (rule, value, callback) => {
+      if (value > 100 || value < 1 || !/\d+/.test(value)) {
+        callback(new Error('数量不能小于1或者大于100'))
+      } else {
+        callback()
+      }
+    }
 
     return {
       operatorStatusList: dictObj.intentionStaus, // 意向单状态
@@ -299,18 +313,21 @@ export default {
         type: [
           { required: true, message: '请选择版型', trigger: 'change' }
         ],
-        color: [
-          { required: true, message: '请选择颜色', trigger: 'change' }
+        source: [
+          { required: true, message: '请选择订单类型', trigger: 'change' }
         ],
-        printing: [
-          { required: true, message: '请选择印花', trigger: 'change' }
+        companyName: [
+          { required: true, message: '请输入公司名字', trigger: 'blur' }
         ],
         features: [
           { message: '请选择功能', trigger: 'change' }
         ],
+        style:[
+          { required: true, message: '请选择款式', trigger: 'blur' },
+        ],
         filter: [
           { required: true, message: '请输入滤芯数量', trigger: 'blur' },
-          { type: 'number', message: '滤芯数量必须为数字值' }
+          { validator: validateMax, trigger: 'blur' }
         ],
         packageName: [
           { required: true, message: '请选择包装', trigger: 'change' }
@@ -319,9 +336,9 @@ export default {
           { required: true, message: '请输入预订数量', trigger: 'blur' },
           { validator: validateMaxNums, trigger: 'blur' }
         ],
-        // expectedDtime: [
-        //   { required: true, message: '请选择预期交付时间', trigger: 'change' }
-        // ],
+        expectedDtime: [
+          { required: true, message: '请选择预期交付时间', trigger: 'change' }
+        ],
         username: [
           { required: true, message: '请输入客户姓名', trigger: 'blur' },
           { validator: utils.validater.usernameRule, message: '只能输入中文和英文', trigger: 'blur' }
