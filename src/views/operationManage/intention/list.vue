@@ -141,7 +141,7 @@ export default {
             type: 'input'
           }
         },
-          {
+        {
           label: '生产指令单号',
           prop: 'makeNo',
           search: {

@@ -71,10 +71,10 @@ export default {
     }
   },
   created() {
-   
+
   },
   methods: {
-    
+
   }
 
 }

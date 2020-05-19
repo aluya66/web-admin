@@ -171,7 +171,7 @@
           placeholder="选择日期">
       </el-date-picker>
     </el-form-item>
-     
+
        <el-form-item label="设计参考图:">
           <el-image class="tempimg" v-for="item in formModel.images" :key="item.id" :src="item.url"></el-image>
       </el-form-item>
@@ -221,9 +221,9 @@ const intentionColor = [
     value: '黄色'
   }
 ]
-//订单类型
+// 订单类型
 const orderTypeList = [
-    {
+  {
     label: '国内',
     value: '国内'
   },
@@ -285,7 +285,7 @@ export default {
       stereotype: dictObj.stereotype, // 类型列表
       intentionColor, // 颜色列表
       filterList, // 功能列表
-      orderTypeList, //订单类型
+      orderTypeList, // 订单类型
       packageNameList, // 包装列表
       pickerOptions: { // 日期过滤
         disabledDate(time) {
@@ -310,7 +310,7 @@ export default {
         ],
         filter: [
           { required: true, message: '请输入滤芯数量', trigger: 'blur' },
-          { type: 'number', message: '滤芯数量必须为数字值'}
+          { type: 'number', message: '滤芯数量必须为数字值' }
         ],
         packageName: [
           { required: true, message: '请选择包装', trigger: 'change' }
@@ -336,7 +336,7 @@ export default {
       },
       intentionStamp: dictObj.intentionStamp,
       intentionCraft: dictObj.intentionCraft,
-      intentionStyle: dictObj.intentionStyle //款式
+      intentionStyle: dictObj.intentionStyle // 款式
 
     }
   },

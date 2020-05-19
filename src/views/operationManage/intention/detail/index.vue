@@ -78,7 +78,6 @@ export default {
             deliveryAddress,
             productImage,
             images,
-            type,
             receiptTime
           } = res
           // 图片json转换
