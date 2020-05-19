@@ -10,6 +10,9 @@
        <!--定制信息模块 -->
       <g-customize :data-obj.sync="formModel" title="定制信息" ref="customizeRef"></g-customize>
 
+      <!--流程信息模块 -->
+      <g-flow :data-obj.sync="formModel" title="流程信息" ref="flowRef"></g-flow>
+
       <!--付款信息模块 -->
        <g-pay :data-obj.sync="formModel" title="付款信息" ref="payRef"></g-pay>
 
@@ -39,6 +42,7 @@ import GCustomize from './customize'
 import GPay from './pay'
 import GAddress from './address'
 import GImg from './img'
+import GFlow from './flow'
 
 export default {
   name: 'operationManage',
@@ -47,7 +51,8 @@ export default {
     GCustomize,
     GPay,
     GAddress,
-    GImg
+    GImg,
+    GFlow
   },
   data() {
     return {
@@ -84,7 +89,6 @@ export default {
             ...this.formModel,
             ...res,
             receiptTime: receiptTime || '',
-            isShowFeat: type !== dictObj.diffIntentType, // 是否需要显示口罩功能
             productImage: pImg.map((item, index) => {
               return {
                 id: index + new Date().getTime(),

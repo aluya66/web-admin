@@ -87,7 +87,10 @@ export default {
       tableHeader: [
         {
           label: '单号',
-          prop: 'intentionNo'
+          prop: 'intentionNo',
+          search: {
+            type: 'input'
+          }
         },
         {
           label: '姓名',
@@ -112,25 +115,47 @@ export default {
           }
         },
         {
-          label: '颜色',
-          prop: 'color'
-        },
-        {
-          label: '印花',
-          prop: 'printing',
+          label: '款式',
+          prop: 'style',
           search: {
             type: 'select',
-            optionsList: dictObj.intentionStamp
+            optionsList: dictObj.intentionStyle
           }
         },
+        // {
+        //   label: '颜色',
+        //   prop: 'color'
+        // },
+        // {
+        //   label: '印花',
+        //   prop: 'printing',
+        //   search: {
+        //     type: 'select',
+        //     optionsList: dictObj.intentionStamp
+        //   }
+        // },
         {
-          label: '功能',
-          prop: 'features',
+          label: '需求确认单号',
+          prop: 'confirmNo',
           search: {
-            type: 'select',
-            optionsList: dictObj.intentionCraft
+            type: 'input'
           }
         },
+          {
+          label: '生产指令单号',
+          prop: 'makeNo',
+          search: {
+            type: 'input'
+          }
+        },
+        // {
+        //   label: '功能',
+        //   prop: 'features',
+        //   search: {
+        //     type: 'select',
+        //     optionsList: dictObj.intentionCraft
+        //   }
+        // },
         {
           label: '状态',
           prop: 'operatorStatus',
@@ -154,7 +179,7 @@ export default {
       ]
     }
   },
-  created(){
+  created() {
     this.fetchData()
   },
   activated() {

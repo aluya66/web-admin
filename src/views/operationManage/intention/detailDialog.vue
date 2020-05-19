@@ -11,21 +11,20 @@
       </div>
       <div class="row">
         <span>手机：{{formModel.memberPhone}}</span>
-        <span>版型：{{formModel.type}}</span>
-        <span>颜色：{{formModel.color}}</span>
-      </div>
-      <div class="row">
-        <span>印花工艺：{{formModel.printing}}</span>
-        <span>功能：{{formModel.features}}</span>
         <span>客户姓名：{{formModel.username}}</span>
+        <span>公司名称：{{formModel.companyName}}</span>
       </div>
       <div class="row">
-        <span>客户手机：{{formModel.mobile}}</span>
+        <span>订单类型：{{formModel.source}}</span>
+        <span>款式：{{formModel.style}}</span>
         <span>滤芯：{{formModel.filter}}</span>
-        <span>包装：{{formModel.packageName}}</span>
       </div>
       <div class="row">
+        <span>包装：{{formModel.packageName}}</span>
         <span>预订数量：{{formModel.qty}}</span>
+        <span>版型：{{formModel.type}}</span>
+      </div>
+      <div class="row">
         <span>预期交付时间：{{formModel.expectedDtime}}</span>
       </div>
       <div class="row">
@@ -37,6 +36,15 @@
       </div>
 
     </line-card>
+     <line-card title="流程信心">
+        <div class="row">
+          <span>需求确认单号：{{formModel.confirmNo}}</span>
+          <span>生产指令单号：{{formModel.makeNo}}</span>
+      </div>
+        <div class="row">
+          <span>备注：{{formModel.makeRemark}}</span>
+      </div>
+     </line-card>
      <line-card title="付款信息">
         <div class="row">
           <span>定制单金额：{{formModel.payAmount}}</span>
