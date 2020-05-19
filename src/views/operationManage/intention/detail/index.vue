@@ -37,7 +37,6 @@
 
 <script>
 import MixinForm from 'mixins/form'
-import dictObj from '@/store/dictData'
 import GCustomize from './customize'
 import GPay from './pay'
 import GAddress from './address'

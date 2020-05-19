@@ -45,7 +45,6 @@
 
 <script>
 import CCard from 'components/card'
-import utils from '@/utils'
 export default {
   components: {
     CCard
