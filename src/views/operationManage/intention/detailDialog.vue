@@ -37,7 +37,7 @@
       </div>
 
     </line-card>
-     <line-card title="流程信心">
+     <line-card title="流程信息">
         <div class="row">
           <span>需求确认单号：{{formModel.confirmNo}}</span>
           <span>生产指令单号：{{formModel.makeNo}}</span>
