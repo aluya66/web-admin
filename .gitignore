@@ -21,7 +21,6 @@ yarn-error.log*
 *.sw*
 .svn
 _bak*
-package-lock.json
 devMock
 
 
