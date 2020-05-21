@@ -325,6 +325,16 @@ export const validater = {
       callback()
     }
   },
+    /**
+   * 非中文
+   */
+  notCnEnText (rule, value, callback) {
+    if (value && /[A-Za-z\u4e00-\u9fa5]/.test(value)) {
+      callback(new Error('只能填写手机号码格式'))
+    } else {
+      callback()
+    }
+  },
   /**
    * 只能输入英文或者数字
    */
