@@ -14,7 +14,7 @@
           v-model="formModel.deliveryName"
           :size="size"
           placeholder="请输入收货人"
-          maxlength="10"
+          maxlength="20"
           autocomplete="off"
           clearable
         />
@@ -25,6 +25,7 @@
           v-model="formModel.deliveryMobile"
           :size="size"
           placeholder="请输入手机"
+          maxlength="20"
            autocomplete="off"
           clearable
         />
@@ -85,7 +86,7 @@ export default {
       areaOptions: [], // 地址列表
       rule: {
         deliveryMobile: [
-          { validator: utils.validater.phoneRule, trigger: 'blur' }
+          { validator: utils.validater.notCnEnText, trigger: 'blur' }
         ],
         deliveryName: [
           { validator: utils.validater.usernameRule, message: '只能输入中文和英文', trigger: 'blur' }

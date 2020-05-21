@@ -66,7 +66,7 @@
         <el-input
           class="select-item"
           v-model.trim="formModel.username"
-          maxlength="10"
+          maxlength="20"
           :size="size"
           placeholder="请输入客户姓名"
           clearable
@@ -77,6 +77,7 @@
           class="select-item"
           v-model.trim="formModel.mobile"
           :size="size"
+          maxlength="20"
           placeholder="请输入手机号码"
           clearable
         />
@@ -346,7 +347,7 @@ export default {
         ],
         mobile: [
           { required: true, message: '请输入客户手机号码', trigger: 'blur' },
-          { validator: utils.validater.phoneNumber, message: '请输入正确的手机号码格式', trigger: 'blur' }
+          { validator: utils.validater.notCnEnText, message: '请输入正确的手机号码格式', trigger: 'blur' }
         ],
         remark: [
           { min: 0, max: 200, message: '长度在 0 到 200 个字符', trigger: 'blur' }
