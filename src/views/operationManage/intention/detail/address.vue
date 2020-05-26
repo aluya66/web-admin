@@ -61,6 +61,39 @@
         maxlength="50"
       />
     </el-form-item>
+    <el-form-item label="物流公司:" prop="deliveryName">
+        <el-input
+          class="select-item"
+          v-model="formModel.deliveryName"
+          :size="size"
+          maxlength="20"
+          placeholder="请输入物流公司"
+          autocomplete="off"
+          clearable
+        />
+      </el-form-item>
+       <el-form-item label="物流单号:" prop="deliveryName">
+        <el-input
+          class="select-item"
+          v-model="formModel.deliveryName"
+          :size="size"
+          maxlength="20"
+          placeholder="请输入物流单号"
+          autocomplete="off"
+          clearable
+        />
+      </el-form-item>
+      <el-form-item label="物流费用:" prop="deliveryName">
+        <el-input
+          class="select-item"
+          v-model="formModel.deliveryName"
+          :size="size"
+          maxlength="20"
+          placeholder="请输入物流费用"
+          autocomplete="off"
+          clearable
+        />
+      </el-form-item>
     </el-form>
 </c-card>
 </template>

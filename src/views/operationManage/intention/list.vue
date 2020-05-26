@@ -53,6 +53,22 @@ import dictObj from '@/store/dictData'
 import CDialog from 'components/dialog'
 import DDetail from './detailDialog'
 
+
+const goodType = [
+  {
+    label:'口罩',
+    value:'1'
+  },
+  {
+    label:'滤芯',
+    value:'2'
+  },
+  {
+    label:'包装袋',
+    value:'3'
+  }
+]
+
 export default {
   name: 'intentList',
   mixins: [mixinTable],
@@ -82,6 +98,13 @@ export default {
           // TODO...
             vm.routerLink(`/operation/manage/detail/${row.id}`)
           }
+        }, {
+          name: '删除',
+          icon: 'el-icon-delete',
+          handle(row) {
+          // TODO...
+             vm.deletedIntent(row)
+          }
         }],
       // 表格内操作按钮
       tableHeader: [
@@ -94,29 +117,34 @@ export default {
         },
         {
           label: '姓名',
-          prop: 'username',
+          prop: 'memberName',
           search: {
             type: 'input'
           }
         },
         {
           label: '电话',
-          prop: 'mobile',
+          prop: 'memberPhone',
           search: {
             type: 'input'
           }
         },
         {
-          label: '版型',
-          prop: 'type',
+          label: '客户名称',
+          prop: 'username',
+         
+        },
+        {
+          label: '商品类型',
+          prop: 'likeType',
           search: {
             type: 'select',
-            optionsList: dictObj.stereotype
+            optionsList: goodType
           }
         },
         {
           label: '款式',
-          prop: 'style',
+          prop: 'likeStyle',
           search: {
             type: 'select',
             optionsList: dictObj.intentionStyle
@@ -208,6 +236,16 @@ export default {
           this.tableList = res || []
         }
       })
+    },
+
+    /**
+     * 删除意向单
+     *  */
+    deletedIntent({id}){
+        this.$api.operationManage.deleteIntention(id).then(
+          res=>{
+              this.fetchData()
+          })
     },
 
     /**

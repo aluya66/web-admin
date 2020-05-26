@@ -28,3 +28,13 @@ export const queryIntentionDetail = params =>
   Http.fetch(`${context}/api/intention/detail`, params, {
     method: 'get'
   })
+
+
+  /**
+ * 删除意向单
+ * @param {*}
+ */
+export const deleteIntention = id =>
+  Http.fetch(`${context}/api/intention/${id}`,'',{
+    method: 'delete'
+  })

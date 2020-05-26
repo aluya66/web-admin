@@ -1,31 +1,50 @@
 <template>
   <div class="pay-detail">
-    <line-card title="定制信息">
       <div class="row">
         <span>当前状态：{{formModel.operatorName}}</span>
       </div>
+    <line-card title="订单信息">
       <div class="row">
-        <span>定制单号：{{formModel.intentionNo}}</span>
-        <span>提交时间：{{formModel.createdAt}}</span>
-        <span>用户昵称：{{formModel.memberName}}</span>
+          <span>定制单号：{{formModel.intentionNo}}</span>
+          <span>提交时间：{{formModel.createdAt}}</span>
+          <span>提交用户：{{formModel.memberName}}</span>
+          <span>手机：{{formModel.memberPhone}}</span>
       </div>
+    </line-card>  
+   <line-card title="客户信息">
       <div class="row">
-        <span>手机：{{formModel.memberPhone}}</span>
-        <span>客户姓名：{{formModel.username}}</span>
-        <span>客户手机：{{formModel.mobile}}</span>
+         <span>客户姓名：{{formModel.username}}</span>
+         <span>客户手机：{{formModel.mobile}}</span>
+         <span>订单类型：{{formModel.source}}</span>
+         <span>公司名称：{{formModel.companyName}}</span>
       </div>
+    </line-card> 
+    <line-card title="商品信息">
+        <table class="el-table goods-table" cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th style="width: 100px;">商品类型</th>
+              <th style="width: 200px;">版型</th>
+              <th style="width: 150px;">款式</th>
+              <th style="width: 150px;">预订数量</th>
+              <th style="width: 150px;">滤芯（搭配一片口罩）</th>
+              <th style="width: 150px;">备注</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr v-for="(item,index) in formModel.mockData" :key="index">
+                  <td>{{item.name}}</td>
+                  <td>{{item.specs.type || ''}}</td>
+                  <td>{{item.specs.style || ''}}</td>
+                  <td>{{item.qty}}</td>
+                  <td>{{item.specs.filter || ''}}</td>
+                  <td>{{item.remark}}</td>
+              </tr>
+          </tbody>
+        </table>
+    </line-card>
+    <line-card title="其他信息">
       <div class="row">
-        <span>订单类型：{{formModel.source}}</span>
-        <span>款式：{{formModel.style}}</span>
-        <span>公司名称：{{formModel.companyName}}</span>
-      </div>
-      <div class="row">
-        <span>滤芯：{{formModel.filter}}</span>
-        <span>包装：{{formModel.packageName}}</span>
-        <span>预订数量：{{formModel.qty}}</span>
-      </div>
-      <div class="row">
-        <span>版型：{{formModel.type}}</span>
         <span>预期交付时间：{{formModel.expectedDtime}}</span>
       </div>
       <div class="row">
@@ -35,8 +54,8 @@
           <span>设计参考图：</span>
           <el-image class="picImg" v-for="item in formModel.images" :key="item" :src="item" :preview-src-list="formModel.images"></el-image>
       </div>
-
-    </line-card>
+    </line-card> 
+    
      <line-card title="流程信息">
         <div class="row">
           <span>需求确认单号：{{formModel.confirmNo}}</span>
@@ -50,9 +69,9 @@
         <div class="row">
           <span>定制单金额：{{formModel.payAmount}}</span>
            <span>付款状态：{{formModel.payName}}</span>
+          <span>付款方式：{{formModel.payType}}</span>
       </div>
       <div class="row">
-          <span>付款方式：{{formModel.payType}}</span>
           <span>付款时间：{{formModel.payTime}}</span>
       </div>
      </line-card>
@@ -65,14 +84,20 @@
         <div class="row">
           <span>收货人：{{formModel.deliveryUser}}</span>
            <span>手机：{{formModel.deliveryMobile}}</span>
+          <span>收货时间：{{formModel.receiptTime}}</span>
+      </div>
+          <div class="row">
+          <span>物流公司：{{formModel.deliveryUser}}</span>
+           <span>物流单号：{{formModel.deliveryMobile}}</span>
+          <span>物流费用：{{formModel.receiptTime}}</span>
       </div>
       <div class="row">
-          <span>收货时间：{{formModel.receiptTime}}</span>
           <span>收货区域：{{formModel.provinceName}}-{{formModel.cityName}}-{{formModel.regionName}}</span>
       </div>
        <div class="row">
           <span>收货地址：{{formModel.address}}</span>
       </div>
+  
      </line-card>
        <line-card title="操作日志">
         <div class="table-row">
@@ -154,6 +179,22 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.goods-table{
+  width: 95%;
+  margin: 0 auto;
+           border: 1px solid @border-default;
+            td,
+            th {
+            border-right: 1px solid @border-default;
+            text-align: center;
+            .el-input {
+                width: 80%;
+            }
+            &:last-child {
+                border-right: none;
+            }
+        }
+      }   
 .pay-detail {
   .picImg{
      width: 120px;

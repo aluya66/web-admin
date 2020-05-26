@@ -7,8 +7,20 @@
       ></el-page-header>
     </template>
     <div class="detail-form">
-       <!--定制信息模块 -->
-      <g-customize :data-obj.sync="formModel" title="定制信息" ref="customizeRef"></g-customize>
+       <!--当前状态 -->
+      <g-status :data-obj.sync="formModel" title="当前状态" ref="statusRef"></g-status>
+
+       <!--订单信息模块 -->
+      <g-order :data-obj.sync="formModel" title="订单信息" ref="orderRef"></g-order>
+
+       <!--客户信息模块 -->
+      <g-custom :data-obj.sync="formModel" title="客户信息" ref="customRef"></g-custom>
+
+      <!--商品信息模块 -->
+      <g-goods :data-obj.sync="formModel" title="商品信息" ref="goodsRef"></g-goods>
+
+       <!--其他信息模块 -->
+      <g-other :data-obj.sync="formModel" title="其他信息" ref="otherRef"></g-other>
 
       <!--流程信息模块 -->
       <g-flow :data-obj.sync="formModel" title="流程信息" ref="flowRef"></g-flow>
@@ -37,21 +49,32 @@
 
 <script>
 import MixinForm from 'mixins/form'
-import GCustomize from './customize'
+import GOther from './other'
 import GPay from './pay'
 import GAddress from './address'
 import GImg from './img'
 import GFlow from './flow'
+import GStatus from "./status"
+import GOrder from "./order"
+import GCustom from  "./custom"
+import GGoods from "./goods"
+
+
+
 
 export default {
   name: 'operationManage',
   mixins: [MixinForm],
   components: {
-    GCustomize,
+    GOther,
     GPay,
     GAddress,
     GImg,
-    GFlow
+    GFlow,
+    GStatus,
+    GOrder,
+    GCustom,
+    GGoods
   },
   data() {
     return {
@@ -157,16 +180,23 @@ export default {
     },
     submitHandle() {
       // 确认完成按钮，需要做必填项校验
-      const customizeForm = this.$refs.customizeRef.$refs.formRef
+      const statusForm = this.$refs.statusRef.$refs.formRef
+      const orderForm = this.$refs.orderRef.$refs.formRef
+      const customForm = this.$refs.customRef.$refs.formRef
+      const otherForm = this.$refs.otherRef.$refs.formRef
       const payForm = this.$refs.payRef.$refs.formRef
       const addressForm = this.$refs.addressRef.$refs.formRef
-      Promise.all([customizeForm, payForm, addressForm].map(this.getFormPromise)).then(res => {
+      Promise.all([statusForm,orderForm,customForm,otherForm,payForm, addressForm].map(this.getFormPromise)).then(res => {
         // 所有子表单是否校验通过
         const validateResult = res.every(item => !!item)
-        if (validateResult) {
+        //商品信息是否填写正确
+        const goodFlag = this.formModel.goodFlag;
+        if (validateResult && goodFlag) {
           this.handleData()
+        } else if(!goodFlag) {
+           this.$msgTip('预订数量不能小于1或者大于100W/滤芯数量不能小于0或者大于99','error');   
         } else {
-          console.log('未校验通过')
+          console.log("校验未通过")
         }
       })
     }

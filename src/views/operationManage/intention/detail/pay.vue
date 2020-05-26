@@ -75,6 +75,10 @@ const payStatus = [
   {
     label: '部分支付',
     value: 4
+  },
+  {
+    label: '已取消',
+    value: 5
   }
 ]
 

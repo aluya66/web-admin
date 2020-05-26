@@ -794,6 +794,21 @@ const intentionStyle = [{
   value: '儿童款'
 }]
 
+// 意向单包装款式
+const intentionBoxStyle = [{
+  label: '口袋精装',
+  value: '口袋精装'
+}, {
+  label: '口袋简装',
+  value: '口袋简装'
+}, {
+  label: '滤芯精装',
+  value: '滤芯精装'
+}, {
+  label: '滤芯简装',
+  value: '滤芯简装'
+}]
+
 // 意向单工艺
 const intentionCraft = [{
   label: '抗菌',
@@ -888,5 +903,6 @@ export default {
   intentionStamp,
   intentionCraft,
   intentionStyle,
+  intentionBoxStyle,
   diffIntentType
 }
