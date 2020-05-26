@@ -10,7 +10,7 @@
           <span>提交用户：{{formModel.memberName}}</span>
           <span>手机：{{formModel.memberPhone}}</span>
       </div>
-    </line-card>  
+    </line-card>
    <line-card title="客户信息">
       <div class="row">
          <span>客户姓名：{{formModel.username}}</span>
@@ -18,7 +18,7 @@
          <span>订单类型：{{formModel.source}}</span>
          <span>公司名称：{{formModel.companyName}}</span>
       </div>
-    </line-card> 
+    </line-card>
     <line-card title="商品信息">
         <table class="el-table goods-table" cellspacing="0" cellpadding="0">
           <thead>
@@ -54,8 +54,8 @@
           <span>设计参考图：</span>
           <el-image class="picImg" v-for="item in formModel.images" :key="item" :src="item" :preview-src-list="formModel.images"></el-image>
       </div>
-    </line-card> 
-    
+    </line-card>
+
      <line-card title="流程信息">
         <div class="row">
           <span>需求确认单号：{{formModel.confirmNo}}</span>
@@ -97,7 +97,7 @@
        <div class="row">
           <span>收货地址：{{formModel.address}}</span>
       </div>
-  
+
      </line-card>
        <line-card title="操作日志">
         <div class="table-row">
@@ -194,7 +194,7 @@ export default {
                 border-right: none;
             }
         }
-      }   
+      }
 .pay-detail {
   .picImg{
      width: 120px;

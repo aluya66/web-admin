@@ -8,7 +8,7 @@
       class="form"
       label-position="right"
     >
-    
+
        <el-form-item label="客户姓名:" prop='username'>
         <el-input
           class="select-item"
@@ -53,7 +53,7 @@
           clearable
         />
       </el-form-item>
-     
+
     </el-form>
 </c-card>
 </template>
@@ -74,8 +74,6 @@ const orderTypeList = [
   }
 ]
 
-
-
 export default {
   components: {
     CCard
@@ -86,10 +84,8 @@ export default {
     }
   },
   data(vm) {
- 
-
     return {
-        orderTypeList,
+      orderTypeList,
       rules: {
         username: [
           { required: true, message: '请输入客户姓名', trigger: 'blur' },
@@ -100,12 +96,12 @@ export default {
           { validator: utils.validater.notCnEnText, message: '请输入正确的手机号码格式', trigger: 'blur' }
         ],
         source: [
-          { required: true, message: '请选择订单类型', trigger: 'change' },
+          { required: true, message: '请选择订单类型', trigger: 'change' }
         ],
-         companyName: [
+        companyName: [
           { required: true, message: '请输入公司名称', trigger: 'blur' }
         ]
-      },
+      }
 
     }
   },

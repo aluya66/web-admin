@@ -8,7 +8,7 @@
       class="form"
       label-position="right"
     >
-    
+
       <el-form-item label="预期交付时间:" prop="expectedDtime">
         <el-date-picker
           v-model="formModel.expectedDtime"
@@ -39,76 +39,8 @@
 </template>
 
 <script>
-import dictObj from '@/store/dictData'
 import CCard from 'components/card'
-import utils from '@/utils'
 
-// 意向单颜色
-const intentionColor = [
-  {
-    label: '黑色',
-    value: '黑色'
-  },
-  {
-    label: '白色',
-    value: '白色'
-  },
-  {
-    label: '灰色',
-    value: '灰色'
-  },
-  {
-    label: '红色',
-    value: '红色'
-  },
-  {
-    label: '绿色',
-    value: '绿色'
-  },
-  {
-    label: '黄色',
-    value: '黄色'
-  }
-]
-// 订单类型
-const orderTypeList = [
-  {
-    label: '国内订单',
-    value: '国内订单'
-  },
-  {
-    label: '国外订单',
-    value: '国外订单'
-  }
-]
-
-// 滤芯列表
-const filterList = [
-  {
-    label: '不需要',
-    value: '不需要'
-  },
-  {
-    label: '1片',
-    value: '1片'
-  },
-  {
-    label: '5片',
-    value: '5片'
-  }
-]
-
-// 滤芯列表
-const packageNameList = [
-  {
-    label: '精装',
-    value: '精装'
-  },
-  {
-    label: '简装',
-    value: '简装'
-  }
-]
 
 export default {
   components: {
@@ -120,9 +52,8 @@ export default {
     }
   },
   data(vm) {
-  
     return {
-    
+
       pickerOptions: { // 日期过滤
         disabledDate(time) {
           return new Date(vm.formModel.createdAt) > time
@@ -135,7 +66,7 @@ export default {
         remark: [
           { min: 0, max: 500, message: '长度在 0 到 500 个字符', trigger: 'blur' }
         ]
-      },
+      }
 
     }
   },

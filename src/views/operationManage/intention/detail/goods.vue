@@ -94,7 +94,6 @@
 <script>
 import dictObj from '@/store/dictData'
 import CCard from 'components/card'
-import utils from '@/utils'
 
 export default {
   components: {
@@ -153,7 +152,6 @@ export default {
             }
         }
          this.formModel.goodFlag = true;
-
       },
       deteldata(index){
          this.formModel.goodsList.splice(index,1)

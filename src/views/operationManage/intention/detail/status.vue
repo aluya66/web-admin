@@ -40,14 +40,13 @@ export default {
     }
   },
   data(vm) {
-   
     return {
       operatorStatusList: dictObj.intentionStaus, // 意向单状态
       rules: {
         operatorStatus: [
           { required: true, message: '请选择当前意向单状态', trigger: 'change' }
         ]
-       }  
+      }
     }
   },
   props: {
@@ -62,7 +61,7 @@ export default {
     }
   },
   created() {
-      //todo...
+    // todo...
   },
   methods: {
 

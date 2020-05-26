@@ -47,14 +47,13 @@
           clearable
         />
       </el-form-item>
-     
+
     </el-form>
 </c-card>
 </template>
 
 <script>
 import CCard from 'components/card'
-
 
 export default {
   components: {
@@ -66,9 +65,7 @@ export default {
     }
   },
   data(vm) {
-
     return {
-     
 
     }
   },

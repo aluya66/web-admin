@@ -54,13 +54,10 @@ import GPay from './pay'
 import GAddress from './address'
 import GImg from './img'
 import GFlow from './flow'
-import GStatus from "./status"
-import GOrder from "./order"
-import GCustom from  "./custom"
-import GGoods from "./goods"
-
-
-
+import GStatus from './status'
+import GOrder from './order'
+import GCustom from './custom'
+import GGoods from './goods'
 
 export default {
   name: 'operationManage',
@@ -186,17 +183,17 @@ export default {
       const otherForm = this.$refs.otherRef.$refs.formRef
       const payForm = this.$refs.payRef.$refs.formRef
       const addressForm = this.$refs.addressRef.$refs.formRef
-      Promise.all([statusForm,orderForm,customForm,otherForm,payForm, addressForm].map(this.getFormPromise)).then(res => {
+      Promise.all([statusForm, orderForm, customForm, otherForm, payForm, addressForm].map(this.getFormPromise)).then(res => {
         // 所有子表单是否校验通过
         const validateResult = res.every(item => !!item)
-        //商品信息是否填写正确
-        const goodFlag = this.formModel.goodFlag;
+        // 商品信息是否填写正确
+        const goodFlag = this.formModel.goodFlag
         if (validateResult && goodFlag) {
           this.handleData()
-        } else if(!goodFlag) {
-           this.$msgTip('预订数量不能小于1或者大于100W/滤芯数量不能小于0或者大于99','error');   
+        } else if (!goodFlag) {
+          this.$msgTip('预订数量不能小于1或者大于100W/滤芯数量不能小于0或者大于99', 'error')
         } else {
-          console.log("校验未通过")
+          console.log('校验未通过')
         }
       })
     }

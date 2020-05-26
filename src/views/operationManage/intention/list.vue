@@ -53,19 +53,18 @@ import dictObj from '@/store/dictData'
 import CDialog from 'components/dialog'
 import DDetail from './detailDialog'
 
-
 const goodType = [
   {
-    label:'口罩',
-    value:'1'
+    label: '口罩',
+    value: '1'
   },
   {
-    label:'滤芯',
-    value:'2'
+    label: '滤芯',
+    value: '2'
   },
   {
-    label:'包装袋',
-    value:'3'
+    label: '包装袋',
+    value: '3'
   }
 ]
 
@@ -103,7 +102,7 @@ export default {
           icon: 'el-icon-delete',
           handle(row) {
           // TODO...
-             vm.deletedIntent(row)
+            vm.deletedIntent(row)
           }
         }],
       // 表格内操作按钮
@@ -131,8 +130,8 @@ export default {
         },
         {
           label: '客户名称',
-          prop: 'username',
-         
+          prop: 'username'
+
         },
         {
           label: '商品类型',
@@ -241,11 +240,11 @@ export default {
     /**
      * 删除意向单
      *  */
-    deletedIntent({id}){
-        this.$api.operationManage.deleteIntention(id).then(
-          res=>{
-              this.fetchData()
-          })
+    deletedIntent({ id }) {
+      this.$api.operationManage.deleteIntention(id).then(
+        res => {
+          this.fetchData()
+        })
     },
 
     /**
