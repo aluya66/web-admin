@@ -33,12 +33,12 @@
           </thead>
           <tbody>
               <tr v-for="(item,index) in formModel.goodsList" :key="index">
-                  <td>{{item.name}}</td>
-                  <td>{{item.specs.type || ''}}</td>
-                  <td>{{item.specs.style || ''}}</td>
-                  <td>{{item.qty}}</td>
-                  <td>{{item.specs.filter || ''}}</td>
-                  <td>{{item.remark}}</td>
+                  <td>{{item.name || "--"}}</td>
+                  <td>{{item.specs.type || '--'}}</td>
+                  <td>{{item.specs.style || '--'}}</td>
+                  <td>{{item.qty || "--"}}</td>
+                  <td>{{item.specs.filter || '--'}}</td>
+                  <td>{{item.remark || "--"}}</td>
               </tr>
           </tbody>
         </table>

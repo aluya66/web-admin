@@ -123,14 +123,14 @@ export default {
         },
         {
           label: '电话',
-          prop: 'memberPhone',
+          prop: 'mobile',
           search: {
             type: 'input'
           }
         },
         {
           label: '公司名称',
-          prop: 'username'
+          prop: 'companyName'
 
         },
         {
