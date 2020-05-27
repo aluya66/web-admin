@@ -106,6 +106,7 @@ export default {
           this.formModel = {
             ...this.formModel,
             ...res,
+            goodFlag: true,
             receiptTime: receiptTime || '',
             productImage: pImg.map((item, index) => {
               return {
@@ -124,9 +125,9 @@ export default {
               }
             }),
 
-            deliveryName: deliveryAddress ? deliveryAddress.name : '',
-            deliveryMobile: deliveryAddress ? deliveryAddress.mobile : '',
-            deliveryArea: deliveryAddress ? [deliveryAddress.provinceCode, deliveryAddress.cityCode, deliveryAddress.regionCode] : [],
+            receiverName: deliveryAddress ? deliveryAddress.name : '',
+            receiverMobile: deliveryAddress ? deliveryAddress.mobile : '',
+            receiverArea: deliveryAddress ? [deliveryAddress.provinceCode, deliveryAddress.cityCode, deliveryAddress.regionCode] : [],
             address: deliveryAddress ? deliveryAddress.address : ''
           }
         }
@@ -152,11 +153,11 @@ export default {
         ...this.formModel,
         deliveryAddress: {
           address: this.formModel.address || '',
-          provinceCode: this.formModel.deliveryArea[0] || '',
-          cityCode: this.formModel.deliveryArea[1] || '',
-          regionCode: this.formModel.deliveryArea[2] || '',
-          mobile: this.formModel.deliveryMobile || '',
-          name: this.formModel.deliveryName || ''
+          provinceCode: this.formModel.receiverArea[0] || '',
+          cityCode: this.formModel.receiverArea[1] || '',
+          regionCode: this.formModel.receiverArea[2] || '',
+          mobile: this.formModel.receiverMobile || '',
+          name: this.formModel.receiverName || ''
         },
         productImages: this.formModel.productImage.map(item => {
           return item.url

@@ -56,15 +56,15 @@ import DDetail from './detailDialog'
 const goodType = [
   {
     label: '口罩',
-    value: '1'
+    value: '口罩'
   },
   {
     label: '滤芯',
-    value: '2'
+    value: '滤芯'
   },
   {
     label: '包装袋',
-    value: '3'
+    value: '包装袋'
   }
 ]
 
@@ -116,7 +116,7 @@ export default {
         },
         {
           label: '姓名',
-          prop: 'memberName',
+          prop: 'username',
           search: {
             type: 'input'
           }
@@ -129,7 +129,7 @@ export default {
           }
         },
         {
-          label: '客户名称',
+          label: '公司名称',
           prop: 'username'
 
         },

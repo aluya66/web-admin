@@ -41,7 +41,6 @@
 <script>
 import CCard from 'components/card'
 
-
 export default {
   components: {
     CCard

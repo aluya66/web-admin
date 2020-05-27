@@ -796,11 +796,11 @@ const intentionStyle = [{
 
 // 意向单包装款式
 const intentionBoxStyle = [{
-  label: '口袋精装',
-  value: '口袋精装'
+  label: '口罩精装',
+  value: '口罩精装'
 }, {
-  label: '口袋简装',
-  value: '口袋简装'
+  label: '口罩简装',
+  value: '口罩简装'
 }, {
   label: '滤芯精装',
   value: '滤芯精装'

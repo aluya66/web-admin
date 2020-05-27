@@ -36,8 +36,8 @@
                         </el-option>
                     </el-select>
                 </td>
-                <td> 
-                    <el-select v-model="item.style" placeholder="请选择" v-if='item.name != "包装袋" || item.id != "3"'>
+                <td>
+                    <el-select v-model="item.specs.style" placeholder="请选择" v-if='item.name != "包装袋"'>
                         <el-option
                             v-for="item in intentionStyle"
                             :key="item.value"
@@ -45,7 +45,7 @@
                             :value="item.value">
                         </el-option>
                     </el-select>
-                    <el-select v-model="item.style" placeholder="请选择" v-else>
+                    <el-select v-model="item.specs.style" placeholder="请选择" v-else>
                         <el-option
                             v-for="item in intentionBoxStyle"
                             :key="item.value"
@@ -80,10 +80,10 @@
                     ></el-input>
                 </td>
                 <td>
-                    <el-button type="text" icon="el-icon-delete" @click="deteldata(index)">删除</el-button>    
+                    <el-button type="text" icon="el-icon-delete" @click="deteldata(index)">删除</el-button>
                 </td>
             </tr>
-            
+
         </tbody>
       </table>
     </div>
@@ -101,19 +101,18 @@ export default {
   },
   computed: {
     formModel() {
-      console.info(this.dataObj,"11111")
+      console.info(this.dataObj, '11111')
       return this.dataObj
     }
   },
   data(vm) {
-   
     return {
       stereotype: dictObj.stereotype, // 类型列表
       intentionStyle: dictObj.intentionStyle, // 款式
-      intentionBoxStyle: dictObj.intentionBoxStyle, //包装款式
+      intentionBoxStyle: dictObj.intentionBoxStyle, // 包装款式
       rules: {
-      
-       }  
+
+      }
     }
   },
   props: {
@@ -128,34 +127,34 @@ export default {
     }
   },
   created() {
-      //todo...
+    // todo...
   },
   methods: {
-      numsRule(value,type){
-        if(value === ''){
-            this.formModel.goodFlag = true;
-            return
-        }
-        if(type === 0){ //预订数量
-            // 校验数字不能大于100w
-            if (value > 1000000 || value < 1 || !/\d+/.test(value)) {
-                this.formModel.goodFlag = false;
-                this.$msgTip('预订数量不能小于1或者大于100W','error');   
-                return
-            }
-        }
-        if(type === 1){ //滤芯
-            if(value >= 100 || value < 0 || !/\d+/.test(value)){
-                this.formModel.goodFlag = false;
-                this.$msgTip('滤芯数量不能小于0或者大于99','error');   
-                return      
-            }
-        }
-         this.formModel.goodFlag = true;
-      },
-      deteldata(index){
-         this.formModel.goodsList.splice(index,1)
+    numsRule(value, type) {
+      if (value === '') {
+        this.formModel.goodFlag = true
+        return
       }
+      if (type === 0) { // 预订数量
+        // 校验数字不能大于100w
+        if (value > 1000000 || value < 1 || !/\d+/.test(value)) {
+          this.formModel.goodFlag = false
+          this.$msgTip('预订数量不能小于1或者大于100W', 'error')
+          return
+        }
+      }
+      if (type === 1) { // 滤芯
+        if (value >= 100 || value < 0 || !/\d+/.test(value)) {
+          this.formModel.goodFlag = false
+          this.$msgTip('滤芯数量不能小于0或者大于99', 'error')
+          return
+        }
+      }
+      this.formModel.goodFlag = true
+    },
+    deteldata(index) {
+      this.formModel.goodsList.splice(index, 1)
+    }
   }
 
 }
@@ -197,7 +196,7 @@ export default {
                 border-right: none;
             }
         }
-      }   
+      }
   }
   .tempimg {
     width: 200px;

@@ -32,7 +32,7 @@
             </tr>
           </thead>
           <tbody>
-              <tr v-for="(item,index) in formModel.mockData" :key="index">
+              <tr v-for="(item,index) in formModel.goodsList" :key="index">
                   <td>{{item.name}}</td>
                   <td>{{item.specs.type || ''}}</td>
                   <td>{{item.specs.style || ''}}</td>

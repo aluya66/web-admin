@@ -8,10 +8,10 @@
       class="form"
       label-position="right"
     >
-      <el-form-item label="收货人:" prop="deliveryName">
+      <el-form-item label="收货人:" prop="receiverName">
         <el-input
           class="select-item"
-          v-model="formModel.deliveryName"
+          v-model="formModel.receiverName"
           :size="size"
           placeholder="请输入收货人"
           maxlength="20"
@@ -19,10 +19,10 @@
           clearable
         />
       </el-form-item>
-        <el-form-item label="手机:" prop="deliveryMobile">
+        <el-form-item label="手机:" prop="receiverMobile">
         <el-input
           class="select-item"
-          v-model="formModel.deliveryMobile"
+          v-model="formModel.receiverMobile"
           :size="size"
           placeholder="请输入手机"
           maxlength="20"
@@ -39,11 +39,11 @@
             placeholder="请选择收货时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="收货区域:" prop="deliveryArea">
+      <el-form-item label="收货区域:" prop="receiverArea">
         <el-cascader
             clearable
             class="select-item"
-            v-model="formModel.deliveryArea"
+            v-model="formModel.receiverArea"
             :props="optionsProps"
             :options="areaOptions"
             placeholder="请选择区域"
@@ -72,10 +72,10 @@
           clearable
         />
       </el-form-item>
-       <el-form-item label="物流单号:" prop="deliveryName">
+       <el-form-item label="物流单号:" prop="deliveryNo">
         <el-input
           class="select-item"
-          v-model="formModel.deliveryName"
+          v-model="formModel.deliveryNo"
           :size="size"
           maxlength="20"
           placeholder="请输入物流单号"
@@ -83,10 +83,10 @@
           clearable
         />
       </el-form-item>
-      <el-form-item label="物流费用:" prop="deliveryName">
+      <el-form-item label="物流费用:" prop="deliveryFee">
         <el-input
           class="select-item"
-          v-model="formModel.deliveryName"
+          v-model="formModel.deliveryFee"
           :size="size"
           maxlength="20"
           placeholder="请输入物流费用"
@@ -118,10 +118,10 @@ export default {
       },
       areaOptions: [], // 地址列表
       rule: {
-        deliveryMobile: [
+        receiverMobile: [
           { validator: utils.validater.notCnEnText, trigger: 'blur' }
         ],
-        deliveryName: [
+        receiverName: [
           { validator: utils.validater.usernameRule, message: '只能输入中文和英文', trigger: 'blur' }
         ]
       }
