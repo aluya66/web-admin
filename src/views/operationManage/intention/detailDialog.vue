@@ -75,11 +75,7 @@
           <span>付款时间：{{formModel.payTime}}</span>
       </div>
      </line-card>
-      <line-card title="设计图">
-        <div class="row">
-           <el-image class="picImg" v-for="item in formModel.productImage" :key="item" :src="item" :preview-src-list="formModel.productImage"></el-image>
-        </div>
-     </line-card>
+
      <line-card title="收货信息">
         <div class="row">
           <span>收货人：{{formModel.deliveryUser}}</span>
@@ -97,7 +93,11 @@
        <div class="row">
           <span>收货地址：{{formModel.address}}</span>
       </div>
-
+     <line-card title="设计图">
+        <div class="row">
+           <el-image class="picImg" v-for="item in formModel.productImage" :key="item" :src="item" :preview-src-list="formModel.productImage"></el-image>
+        </div>
+     </line-card>
      </line-card>
        <line-card title="操作日志">
         <div class="table-row">

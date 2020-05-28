@@ -145,9 +145,9 @@ export default {
         }
       }
       if (type === 1) { // 滤芯
-        if (value > 100 || value < 0 || !/\d+/.test(value)) {
+        if (value > 100 || value < 1 || !/\d+/.test(value)) {
           this.formModel.goodFlag = false
-          this.$msgTip('滤芯数量不能小于0或者大于100', 'error')
+          this.$msgTip('滤芯数量不能小于1或者大于100', 'error')
           return
         }
       }
