@@ -28,7 +28,7 @@
               <th style="width: 150px;">款式</th>
               <th style="width: 150px;">预订数量</th>
               <th style="width: 150px;">滤芯（搭配一片口罩）</th>
-              <th style="width: 150px;">备注</th>
+              <th style="width: 300px;">备注</th>
             </tr>
           </thead>
           <tbody>
@@ -38,7 +38,7 @@
                   <td>{{item.specs.style || '--'}}</td>
                   <td>{{item.qty || "--"}}</td>
                   <td>{{item.specs.filter || '--'}}</td>
-                  <td>{{item.remark || "--"}}</td>
+                  <td style="padding:10px">{{item.remark || "--"}}</td>
               </tr>
           </tbody>
         </table>

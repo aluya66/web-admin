@@ -76,6 +76,7 @@
                     <el-input
                         type="textarea"
                         placeholder="请输入备注"
+                        v-model="item.remark"
                         class="select-item"
                     ></el-input>
                 </td>
