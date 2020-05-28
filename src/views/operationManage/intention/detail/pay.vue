@@ -61,8 +61,12 @@ import CCard from 'components/card'
 // 付款状态
 const payStatus = [
   {
-    label: '未支付',
+    label: '待支付',
     value: 1
+  },
+  {
+    label: '部分支付',
+    value: 4
   },
   {
     label: '已完款',
@@ -72,10 +76,7 @@ const payStatus = [
     label: '已退款',
     value: 3
   },
-  {
-    label: '部分支付',
-    value: 4
-  },
+
   {
     label: '已取消',
     value: 5
@@ -97,8 +98,8 @@ export default {
       const temp = /^(\d+)(.\d{0,2})?$/
       if (!temp.test(value) && value) {
         callback(new Error('请输入正数且小数只能包含2位'))
-      } else if ((value < 1 || value > 10000000) && value) {
-        callback(new Error('付款金额不能小于1或大于1000W'))
+      } else if ((value < 0 || value > 99999999) && value) {
+        callback(new Error('付款金额不能小于0或大于99999999'))
       } else {
         callback()
       }

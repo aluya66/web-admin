@@ -89,7 +89,7 @@
           <div class="row">
           <span>物流公司：{{formModel.deliveryUser}}</span>
            <span>物流单号：{{formModel.deliveryMobile}}</span>
-          <span>物流费用：{{formModel.receiptTime}}</span>
+          <span>物流费用：{{formModel.deliveryFee}}</span>
       </div>
       <div class="row">
           <span>收货区域：{{formModel.provinceName}}-{{formModel.cityName}}-{{formModel.regionName}}</span>

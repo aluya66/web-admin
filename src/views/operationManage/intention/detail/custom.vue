@@ -48,7 +48,7 @@
           class="select-item"
           v-model.trim="formModel.companyName"
           :size="size"
-          maxlength="30"
+          maxlength="50"
           placeholder="请输入公司名称"
           clearable
         />

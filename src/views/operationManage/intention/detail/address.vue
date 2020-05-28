@@ -14,7 +14,7 @@
           v-model="formModel.receiverName"
           :size="size"
           placeholder="请输入收货人"
-          maxlength="20"
+          maxlength="50"
           autocomplete="off"
           clearable
         />
@@ -120,9 +120,6 @@ export default {
       rule: {
         receiverMobile: [
           { validator: utils.validater.notCnEnText, trigger: 'blur' }
-        ],
-        receiverName: [
-          { validator: utils.validater.usernameRule, message: '只能输入中文和英文', trigger: 'blur' }
         ]
       }
     }

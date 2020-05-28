@@ -13,7 +13,6 @@
         <el-date-picker
           v-model="formModel.expectedDtime"
           value-format="yyyy-MM-dd"
-          :picker-options="pickerOptions"
           type="date"
           class="select-item"
           placeholder="选择日期">
@@ -52,12 +51,6 @@ export default {
   },
   data(vm) {
     return {
-
-      pickerOptions: { // 日期过滤
-        disabledDate(time) {
-          return new Date(vm.formModel.createdAt) > time
-        }
-      },
       rules: {
         expectedDtime: [
           { required: true, message: '请选择预期交付时间', trigger: 'change' }

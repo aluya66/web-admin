@@ -67,7 +67,7 @@
                 <td>
                     <el-input v-if="item.specs.filter == '' || item.specs.filter"
                         type="text"
-                        placeholder="请输入1-99的正整数"
+                        placeholder="请输入1-100的正整数"
                         @change="numsRule(item.specs.filter,1)"
                         v-model.number="item.specs.filter"
                     ></el-input>
@@ -145,9 +145,9 @@ export default {
         }
       }
       if (type === 1) { // 滤芯
-        if (value >= 100 || value < 0 || !/\d+/.test(value)) {
+        if (value > 100 || value < 0 || !/\d+/.test(value)) {
           this.formModel.goodFlag = false
-          this.$msgTip('滤芯数量不能小于0或者大于99', 'error')
+          this.$msgTip('滤芯数量不能小于0或者大于100', 'error')
           return
         }
       }
