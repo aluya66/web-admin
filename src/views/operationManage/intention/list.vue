@@ -53,20 +53,20 @@ import dictObj from '@/store/dictData'
 import CDialog from 'components/dialog'
 import DDetail from './detailDialog'
 
-const goodType = [
-  {
-    label: '口罩',
-    value: '口罩'
-  },
-  {
-    label: '滤芯',
-    value: '滤芯'
-  },
-  {
-    label: '包装袋',
-    value: '包装袋'
-  }
-]
+// const goodType = [
+//   {
+//     label: '口罩',
+//     value: '口罩'
+//   },
+//   {
+//     label: '滤芯',
+//     value: '滤芯'
+//   },
+//   {
+//     label: '包装袋',
+//     value: '包装袋'
+//   }
+// ]
 
 export default {
   name: 'intentList',
