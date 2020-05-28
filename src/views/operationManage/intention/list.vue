@@ -131,23 +131,6 @@ export default {
         {
           label: '公司名称',
           prop: 'companyName'
-
-        },
-        {
-          label: '商品类型',
-          prop: 'likeType',
-          search: {
-            type: 'select',
-            optionsList: goodType
-          }
-        },
-        {
-          label: '款式',
-          prop: 'likeStyle',
-          search: {
-            type: 'select',
-            optionsList: dictObj.intentionStyle
-          }
         },
         // {
         //   label: '颜色',
