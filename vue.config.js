@@ -16,7 +16,7 @@ module.exports = {
   publicPath: !env.isDebug ? process.env.VUE_APP_BASEURLPATH : '',
   outputDir: `dist${process.env.VUE_APP_BASEURLPATH}`,
   // 放置生成的静态资源(s、css、img、fonts)的(相对于 outputDir 的)目录(默认'')
-  assetsDir: '',
+  assetsDir: 'http://www.aluya.cn/',
   // indexPath: 'index.html',
   // transpileDependencies: ["vue-echarts", "resize-detector"],
   chainWebpack: config => {
